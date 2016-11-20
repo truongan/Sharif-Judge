@@ -15,6 +15,7 @@ body {
 
 	-webkit-animation: login_background 8s ease infinite;
 	-moz-animation: login_background 8s ease infinite;
+	-o-animation: login_background 8s ease infinite;
 	animation: login_background 8s ease infinite;
 
 	@-webkit-keyframes login_background {
@@ -23,6 +24,11 @@ body {
 	    100%{background-position:0% 62%}
 	}
 	@-moz-keyframes login_background {
+	    0%{background-position:0% 62%}
+	    50%{background-position:100% 39%}
+	    100%{background-position:0% 62%}
+	}
+	@-o-keyframes login_background {
 	    0%{background-position:0% 62%}
 	    50%{background-position:100% 39%}
 	    100%{background-position:0% 62%}
