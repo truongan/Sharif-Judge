@@ -15,7 +15,7 @@ body {
 
 
 a {
-	color: #232323;
+	color: #fff;
 }
 
 ::selection {
@@ -140,6 +140,7 @@ input#sharif_submit {
 
 input#sharif_submit:hover {
 	background-color: #ffa624;
+	color: #fff;
 }
 
 input#sharif_submit:active {
