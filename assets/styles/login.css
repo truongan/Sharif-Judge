@@ -104,18 +104,12 @@ div.login2 a {
 input.sharif_input {
 	background-color: #fefefe;
 	width: 100%;
-	line-height: 1;
 	font-family: sans-serif;
 	font-size: 12px;
 	padding: 6px 5px;
 	margin-top: 4px;
-	border-radius: 5px;
+	border-radius: 10px;
 	border: 1px solid #c4c4c4;
-	transition: box-shadow 200ms ease;
-	-webkit-transition: box-shadow 200ms ease;
-	box-shadow: rgba(0,0,0,0.04) 0 0 0 1px inset;
-	-moz-box-shadow: rgba(0,0,0,0.04) 0 0 0 1px inset;
-	-webkit-box-shadow: rgba(0,0,0,0.04) 0 0 0 1px inset;
 }
 
 input.sharif_input:focus, input.sharif_input:valid {
