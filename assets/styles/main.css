@@ -185,7 +185,7 @@ div#shj_logo a {
 
 div#shj_logo img {
 	float:left;
-	height: 50px;
+	height: 40px;
 	width: auto;
 	margin:0 0px;
 }
@@ -206,7 +206,7 @@ div#shj_logo h1.shjlogo-text span {
 
 div.top_object {
 	float: right;
-	height: 55px;
+	height: 50px;
 	position: relative;
 	display: inline-block;
 	padding: 0 25px;
@@ -431,14 +431,14 @@ div#extra_time i {
 .color-scoreboard.selected i {background-color: #991B4A!important;border-color: #991B4A!important;}
 
 div#side_bar {
-	color:#fff;
+	color:#595959;
 	position: fixed;
 	left: 0;
 	top: 55px;
 	width: 160px;
 	bottom: 0;
 	z-index: 1;
-	background-color:#333333;
+	background-color:#F2F2EA;
 	box-shadow: #a9a9a9 0 0 4px;
 	-moz-box-shadow: #a9a9a9 0 0 4px;
 	-webkit-box-shadow: #a9a9a9 0 0 4px;
@@ -528,7 +528,7 @@ div#main_container {
 	z-index: 0;
 	color: #595959;
 	position: absolute;
-	top: 80px;
+	top: 55px;
 	left: 160px;
 	background-color: #f6f6f4;
 }
