@@ -64,12 +64,12 @@ div.login1 {
 	/*box-shadow: rgba(0, 0, 0, 0.2) 0 0 5px -1px;
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;*/
-	border: 5px solid #ddd;
+	border: 5px solid #ffa624;
 }
 
 div.login2 {
 	padding: 15px;
-	border: 5px solid #ccc;
+	border: 5px solid #ffa624;
 	border-top:none;
 	/*	border-bottom-right-radius: 4px;
 	border-bottom-left-radius: 4px;
@@ -125,7 +125,7 @@ input#sharif_submit {
 	border: 0;
 	height: 30px;
 	float: right;
-	color: #ffffff;
+	color: #ff7720;
 	cursor: pointer;
 	font-size: 12px;
 	font-weight: bold;
@@ -135,29 +135,11 @@ input#sharif_submit {
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	text-decoration: none;
-	text-shadow: 0px 1px 0px #3d768a;
-	box-shadow: 0px 10px 14px -7px #276873;
-	-moz-box-shadow: 0px 10px 14px -7px #276873;
-	-webkit-box-shadow: 0px 10px 14px -7px #276873;
-	background-color: #599bb3;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #599bb3), color-stop(1, #408c99));
-	background: -moz-linear-gradient(top, #599bb3 5%, #408c99 100%);
-	background: -webkit-linear-gradient(top, #599bb3 5%, #408c99 100%);
-	background: -o-linear-gradient(top, #599bb3 5%, #408c99 100%);
-	background: -ms-linear-gradient(top, #599bb3 5%, #408c99 100%);
-	background: linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
-	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#599bb3', endColorstr='#408c99',GradientType=0);
+	background-color: #fffff;
 }
 
 input#sharif_submit:hover {
-	background-color: #408c99;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #408c99), color-stop(1, #599bb3));
-	background: -moz-linear-gradient(top, #408c99 5%, #599bb3 100%);
-	background: -webkit-linear-gradient(top, #408c99 5%, #599bb3 100%);
-	background: -o-linear-gradient(top, #408c99 5%, #599bb3 100%);
-	background: -ms-linear-gradient(top, #408c99 5%, #599bb3 100%);
-	background: linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
-	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#408c99', endColorstr='#599bb3',GradientType=0);
+	background-color: #ffa624;
 }
 
 input#sharif_submit:active {
