@@ -55,6 +55,7 @@ div.judge_logo img {
 }
 
 div.login_form {
+	margin-top:20px;
 	width: 100%;
 	display: inline-block;
 	background: rgba(255,140,0,1);
@@ -65,6 +66,7 @@ div.login_form {
 	background: -ms-linear-gradient(-45deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
 	background: linear-gradient(135deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8c00', endColorstr='#ffce0a', GradientType=1 );
+	border-radius: 10px 10px;
 }
 
 div.login1 {
