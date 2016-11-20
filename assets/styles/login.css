@@ -7,10 +7,31 @@
 }
 
 body {
-	background: #333;
 	color: #8d8d8d;
 	font-size: 12px;
 	font-family: sans-serif;
+	background: linear-gradient(302deg, #e66902, #86ccba, #cc86aa, #ffb520, #206aff);
+	background-size: 1000% 1000%;
+
+	-webkit-animation: login_background 8s ease infinite;
+	-moz-animation: login_background 8s ease infinite;
+	animation: login_background 8s ease infinite;
+
+	@-webkit-keyframes login_background {
+	    0%{background-position:0% 62%}
+	    50%{background-position:100% 39%}
+	    100%{background-position:0% 62%}
+	}
+	@-moz-keyframes login_background {
+	    0%{background-position:0% 62%}
+	    50%{background-position:100% 39%}
+	    100%{background-position:0% 62%}
+	}
+	@keyframes login_background { 
+	    0%{background-position:0% 62%}
+	    50%{background-position:100% 39%}
+	    100%{background-position:0% 62%}
+	}
 }
 
 
