@@ -140,13 +140,13 @@ input.sharif_input:focus, input.sharif_input:valid {
 	background-position: 0 0;
 }
 
-input::-webkit-input-placeholder {
+input.sharif_input::-webkit-input-placeholder {
  font-family: 'roboto', sans-serif;
  -webkit-transition: all 0.3s ease-in-out;
  transition: all 0.3s ease-in-out;
 }
 
-input:focus::-webkit-input-placeholder, input:valid::-webkit-input-placeholder {
+input.sharif_input:focus::-webkit-input-placeholder, input:valid::-webkit-input-placeholder {
  color: #1abc9c;
  font-size: 11px;
  -webkit-transform: translateY(-20px);
