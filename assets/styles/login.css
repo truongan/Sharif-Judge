@@ -106,10 +106,10 @@ input.sharif_input {
 	width: 100%;
 	line-height: 1;
 	font-family: sans-serif;
-	font-size: 20px;
+	font-size: 12px;
 	padding: 6px 5px;
 	margin-top: 4px;
-	border-radius: 2px;
+	border-radius: 5px;
 	border: 1px solid #c4c4c4;
 	transition: box-shadow 200ms ease;
 	-webkit-transition: box-shadow 200ms ease;
