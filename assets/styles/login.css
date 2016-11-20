@@ -68,6 +68,7 @@ div.login_form {
 	background: linear-gradient(135deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8c00', endColorstr='#ffce0a', GradientType=1 );
 	border-radius: 10px 10px;
+	border: 3px solid #fff;
 }
 
 div.login1 {
@@ -109,7 +110,7 @@ input.sharif_input {
 	padding: 6px 5px;
 	margin-top: 4px;
 	border-radius: 10px;
-	/*border: 1px solid #c4c4c4;*/
+	border: 1px solid #fff;
 }
 
 input.sharif_input:focus, input.sharif_input:valid {
