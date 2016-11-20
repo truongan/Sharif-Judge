@@ -7,7 +7,8 @@
 }
 
 body {
-	background: #333;
+	/*background: #333;*/
+	background: #DDD;
 	color: #8d8d8d;
 	font-size: 12px;
 	font-family: sans-serif;
@@ -56,26 +57,35 @@ div.judge_logo img {
 div.login_form {
 	width: 100%;
 	display: inline-block;
+	background: rgba(255,140,0,1);
+	background: -moz-linear-gradient(-45deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
+	background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(255,140,0,1)), color-stop(100%, rgba(255,206,10,1)));
+	background: -webkit-linear-gradient(-45deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
+	background: -o-linear-gradient(-45deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
+	background: -ms-linear-gradient(-45deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
+	background: linear-gradient(135deg, rgba(255,140,0,1) 0%, rgba(255,206,10,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8c00', endColorstr='#ffce0a', GradientType=1 );
 }
 
 div.login1 {
-	background-color: #fbfbfb;
+	/*background-color: #fbfbfb;*/
+	color: #ffffff;
 	padding: 10px 20px 20px 20px;
 	/*box-shadow: rgba(0, 0, 0, 0.2) 0 0 5px -1px;
 	border-top-right-radius: 4px;
-	border-top-left-radius: 4px;*/
-	border: 5px solid #ffa624;
+	border-top-left-radius: 4px;
+	border: 5px solid #ffa624;*/
 }
 
 div.login2 {
 	padding: 15px;
-	border: 5px solid #ffa624;
-	border-top:none;
 	color: #ffffff;
-	/*	border-bottom-right-radius: 4px;
+	/*border: 5px solid #ffa624;
+	border-top:none;
+		border-bottom-right-radius: 4px;
 	border-bottom-left-radius: 4px;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px -1px;*/
-	background: #8c3200;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 0 4px -1px;
+	background: #8c3200;*/
 }
 
 div.login1 p {
