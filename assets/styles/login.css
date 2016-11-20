@@ -102,22 +102,25 @@ div.login2 a {
 }
 
 input.sharif_input {
-	background-color: #fefefe;
+	/*background-color: #fefefe;
 	width: 100%;
 	font-family: sans-serif;
-	font-size: 12px;
-	padding: 6px 5px;
 	margin-top: 4px;
 	border-radius: 10px;
-	border: 1px solid #c4c4c4;
+	border: 1px solid #c4c4c4;*/	
+	font-size: 12px;
+	padding: 6px 5px;
+	background: none;
+	border-bottom: thin solid #ffa624;
 }
 
 input.sharif_input:focus, input.sharif_input:valid {
-	outline: 0;
+	border-bottom: thin solid #fff;
+	/*outline: 0;
 	border-color: rgba(82, 168, 236, 0.6);
 	box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;
 	-moz-box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;
-	-webkit-box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;
+	-webkit-box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;*/
 }
 
 
