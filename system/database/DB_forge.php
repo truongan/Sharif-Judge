@@ -2,37 +2,26 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP
+ * An open source application development framework for PHP 5.2.4 or newer
  *
- * This content is released under the MIT License (MIT)
+ * NOTICE OF LICENSE
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Licensed under the Open Software License version 3.0
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This source file is subject to the Open Software License (OSL 3.0) that is
+ * bundled with this package in the files license.txt / license.rst.  It is
+ * also available through the world wide web at this URL:
+ * http://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world wide web, please send an email to
+ * licensing@ellislab.com so we can send you a copy immediately.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
- * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
+ * @package		CodeIgniter
+ * @author		EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2013, EllisLab, Inc. (http://ellislab.com/)
+ * @license		http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * @link		http://codeigniter.com
+ * @since		Version 1.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -42,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @category	Database
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/database/
+ * @link		http://codeigniter.com/user_guide/database/
  */
 abstract class CI_DB_forge {
 
@@ -143,7 +132,7 @@ abstract class CI_DB_forge {
 	protected $_unsigned		= TRUE;
 
 	/**
-	 * NULL value representation in CREATE/ALTER TABLE statements
+	 * NULL value representatin in CREATE/ALTER TABLE statements
 	 *
 	 * @var	string
 	 */
@@ -167,7 +156,7 @@ abstract class CI_DB_forge {
 	public function __construct(&$db)
 	{
 		$this->db =& $db;
-		log_message('info', 'Database Forge Class Initialized');
+		log_message('debug', 'Database Forge Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -184,7 +173,7 @@ abstract class CI_DB_forge {
 		{
 			return ($this->db->db_debug) ? $this->db->display_error('db_unsupported_feature') : FALSE;
 		}
-		elseif ( ! $this->db->query(sprintf($this->_create_database, $this->db->escape_identifiers($db_name), $this->db->char_set, $this->db->dbcollat)))
+		elseif ( ! $this->db->query(sprintf($this->_create_database, $db_name, $this->db->char_set, $this->db->dbcollat)))
 		{
 			return ($this->db->db_debug) ? $this->db->display_error('db_unable_to_drop') : FALSE;
 		}
@@ -207,11 +196,16 @@ abstract class CI_DB_forge {
 	 */
 	public function drop_database($db_name)
 	{
-		if ($this->_drop_database === FALSE)
+		if ($db_name === '')
+		{
+			show_error('A table name is required for that operation.');
+			return FALSE;
+		}
+		elseif ($this->_drop_database === FALSE)
 		{
 			return ($this->db->db_debug) ? $this->db->display_error('db_unsupported_feature') : FALSE;
 		}
-		elseif ( ! $this->db->query(sprintf($this->_drop_database, $this->db->escape_identifiers($db_name))))
+		elseif ( ! $this->db->query(sprintf($this->_drop_database, $db_name)))
 		{
 			return ($this->db->db_debug) ? $this->db->display_error('db_unable_to_drop') : FALSE;
 		}
@@ -237,14 +231,13 @@ abstract class CI_DB_forge {
 	 * @param	bool	$primary
 	 * @return	CI_DB_forge
 	 */
-	public function add_key($key, $primary = FALSE)
+	public function add_key($key = '', $primary = FALSE)
 	{
-		// DO NOT change this! This condition is only applicable
-		// for PRIMARY keys because you can only have one such,
-		// and therefore all fields you add to it will be included
-		// in the same, composite PRIMARY KEY.
-		//
-		// It's not the same for regular indexes.
+		if (empty($key))
+		{
+			show_error('Key information is required for that operation.');
+		}
+
 		if ($primary === TRUE && is_array($key))
 		{
 			foreach ($key as $one)
@@ -275,8 +268,13 @@ abstract class CI_DB_forge {
 	 * @param	array	$field
 	 * @return	CI_DB_forge
 	 */
-	public function add_field($field)
+	public function add_field($field = '')
 	{
+		if (empty($field))
+		{
+			show_error('Field information is required.');
+		}
+
 		if (is_string($field))
 		{
 			if ($field === 'id')
@@ -316,10 +314,9 @@ abstract class CI_DB_forge {
 	 *
 	 * @param	string	$table		Table name
 	 * @param	bool	$if_not_exists	Whether to add IF NOT EXISTS condition
-	 * @param	array	$attributes	Associative array of table attributes
 	 * @return	bool
 	 */
-	public function create_table($table, $if_not_exists = FALSE, array $attributes = array())
+	public function create_table($table = '', $if_not_exists = FALSE)
 	{
 		if ($table === '')
 		{
@@ -335,7 +332,7 @@ abstract class CI_DB_forge {
 			show_error('Field information is required.');
 		}
 
-		$sql = $this->_create_table($table, $if_not_exists, $attributes);
+		$sql = $this->_create_table($table, $if_not_exists);
 
 		if (is_bool($sql))
 		{
@@ -371,10 +368,9 @@ abstract class CI_DB_forge {
 	 *
 	 * @param	string	$table		Table name
 	 * @param	bool	$if_not_exists	Whether to add 'IF NOT EXISTS' condition
-	 * @param	array	$attributes	Associative array of table attributes
 	 * @return	mixed
 	 */
-	protected function _create_table($table, $if_not_exists, $attributes)
+	protected function _create_table($table, $if_not_exists)
 	{
 		if ($if_not_exists === TRUE && $this->_create_table_if === FALSE)
 		{
@@ -410,35 +406,11 @@ abstract class CI_DB_forge {
 		}
 
 		// _create_table will usually have the following format: "%s %s (%s\n)"
-		$sql = sprintf($this->_create_table.'%s',
+		$sql = sprintf($this->_create_table.';',
 			$sql,
 			$this->db->escape_identifiers($table),
-			$columns,
-			$this->_create_table_attr($attributes)
+			$columns
 		);
-
-		return $sql;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * CREATE TABLE attributes
-	 *
-	 * @param	array	$attributes	Associative array of table attributes
-	 * @return	string
-	 */
-	protected function _create_table_attr($attributes)
-	{
-		$sql = '';
-
-		foreach (array_keys($attributes) as $key)
-		{
-			if (is_string($key))
-			{
-				$sql .= ' '.strtoupper($key).' '.$attributes[$key];
-			}
-		}
 
 		return $sql;
 	}
@@ -459,7 +431,12 @@ abstract class CI_DB_forge {
 			return ($this->db->db_debug) ? $this->db->display_error('db_table_name_required') : FALSE;
 		}
 
-		if (($query = $this->_drop_table($this->db->dbprefix.$table_name, $if_exists)) === TRUE)
+		$query = $this->_drop_table($this->db->dbprefix.$table_name, $if_exists);
+		if ($query === FALSE)
+		{
+			return ($this->db->db_debug) ? $this->db->display_error('db_unsupported_feature') : FALSE;
+		}
+		elseif ($query === TRUE)
 		{
 			return TRUE;
 		}
@@ -561,10 +538,18 @@ abstract class CI_DB_forge {
 	 * @param	string	$_after	Column for AFTER clause (deprecated)
 	 * @return	bool
 	 */
-	public function add_column($table, $field, $_after = NULL)
+	public function add_column($table = '', $field = array(), $_after = NULL)
 	{
+		if ($table === '')
+		{
+			show_error('A table name is required for that operation.');
+		}
+
 		// Work-around for literal column definitions
-		is_array($field) OR $field = array($field);
+		if ( ! is_array($field))
+		{
+			$field = array($field);
+		}
 
 		foreach (array_keys($field) as $k)
 		{
@@ -604,8 +589,18 @@ abstract class CI_DB_forge {
 	 * @param	string	$column_name	Column name
 	 * @return	bool
 	 */
-	public function drop_column($table, $column_name)
+	public function drop_column($table = '', $column_name = '')
 	{
+		if ($table === '')
+		{
+			show_error('A table name is required for that operation.');
+		}
+
+		if ($column_name === '')
+		{
+			show_error('A column name is required for that operation.');
+		}
+
 		$sql = $this->_alter_table('DROP', $this->db->dbprefix.$table, $column_name);
 		if ($sql === FALSE)
 		{
@@ -624,10 +619,18 @@ abstract class CI_DB_forge {
 	 * @param	string	$field	Column definition
 	 * @return	bool
 	 */
-	public function modify_column($table, $field)
+	public function modify_column($table = '', $field = array())
 	{
+		if ($table === '')
+		{
+			show_error('A table name is required for that operation.');
+		}
+
 		// Work-around for literal column definitions
-		is_array($field) OR $field = array($field);
+		if ( ! is_array($field))
+		{
+			$field = array($field);
+		}
 
 		foreach (array_keys($field) as $k)
 		{
@@ -718,22 +721,24 @@ abstract class CI_DB_forge {
 				continue;
 			}
 
-			isset($attributes['TYPE']) && $this->_attr_type($attributes);
+			if (isset($attributes['TYPE']))
+			{
+				$this->_attr_type($attributes);
+				$this->_attr_unsigned($attributes, $field);
+			}
 
 			$field = array(
-				'name'			=> $key,
-				'new_name'		=> isset($attributes['NAME']) ? $attributes['NAME'] : NULL,
-				'type'			=> isset($attributes['TYPE']) ? $attributes['TYPE'] : NULL,
-				'length'		=> '',
-				'unsigned'		=> '',
-				'null'			=> '',
-				'unique'		=> '',
-				'default'		=> '',
-				'auto_increment'	=> '',
-				'_literal'		=> FALSE
+					'name'			=> $key,
+					'new_name'		=> isset($attributes['NAME']) ? $attributes['NAME'] : NULL,
+					'type'			=> isset($attributes['TYPE']) ? $attributes['TYPE'] : NULL,
+					'length'		=> '',
+					'unsigned'		=> '',
+					'null'			=> '',
+					'unique'		=> '',
+					'default'		=> '',
+					'auto_increment'	=> '',
+					'_literal'		=> FALSE
 			);
-
-			isset($attributes['TYPE']) && $this->_attr_unsigned($attributes, $field);
 
 			if ($create_table === FALSE)
 			{
@@ -768,11 +773,6 @@ abstract class CI_DB_forge {
 			$this->_attr_auto_increment($attributes, $field);
 			$this->_attr_unique($attributes, $field);
 
-			if (isset($attributes['COMMENT']))
-			{
-				$field['comment'] = $this->db->escape($attributes['COMMENT']);
-			}
-
 			if (isset($attributes['TYPE']) && ! empty($attributes['CONSTRAINT']))
 			{
 				switch (strtoupper($attributes['TYPE']))
@@ -782,8 +782,8 @@ abstract class CI_DB_forge {
 						$attributes['CONSTRAINT'] = $this->db->escape($attributes['CONSTRAINT']);
 					default:
 						$field['length'] = is_array($attributes['CONSTRAINT'])
-							? '('.implode(',', $attributes['CONSTRAINT']).')'
-							: '('.$attributes['CONSTRAINT'].')';
+								? "('".implode("','", $attributes['CONSTRAINT'])."')"
+								: '('.$attributes['CONSTRAINT'].')';
 						break;
 				}
 			}
@@ -825,7 +825,7 @@ abstract class CI_DB_forge {
 	 */
 	protected function _attr_type(&$attributes)
 	{
-		// Usually overridden by drivers
+		// Usually overriden by drivers
 	}
 
 	// --------------------------------------------------------------------
@@ -901,7 +901,7 @@ abstract class CI_DB_forge {
 				$field['default'] = empty($this->_null) ? '' : $this->_default.$this->_null;
 
 				// Override the NULL attribute if that's our default
-				$attributes['NULL'] = TRUE;
+				$attributes['NULL'] = NULL;
 				$field['null'] = empty($this->_null) ? '' : ' '.$this->_null;
 			}
 			else
@@ -1030,3 +1030,6 @@ abstract class CI_DB_forge {
 	}
 
 }
+
+/* End of file DB_forge.php */
+/* Location: ./system/database/DB_forge.php */

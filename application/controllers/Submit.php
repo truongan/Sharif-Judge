@@ -212,7 +212,7 @@ class Submit extends CI_Controller
 			mkdir($user_dir, 0700);
 
 		$a = $this->input->post('code');
-		if ($a != NULL){
+		if ($a != FALSE){
 			$this->ext = $this->language_to_ext[$this->filetype];
 
 			$file_name = "solution";

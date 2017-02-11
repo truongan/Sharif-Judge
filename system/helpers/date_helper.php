@@ -2,37 +2,26 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP
+ * An open source application development framework for PHP 5.2.4 or newer
  *
- * This content is released under the MIT License (MIT)
+ * NOTICE OF LICENSE
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Licensed under the Open Software License version 3.0
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This source file is subject to the Open Software License (OSL 3.0) that is
+ * bundled with this package in the files license.txt / license.rst.  It is
+ * also available through the world wide web at this URL:
+ * http://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world wide web, please send an email to
+ * licensing@ellislab.com so we can send you a copy immediately.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
- * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
+ * @package		CodeIgniter
+ * @author		EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2013, EllisLab, Inc. (http://ellislab.com/)
+ * @license		http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * @link		http://codeigniter.com
+ * @since		Version 1.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -44,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Helpers
  * @category	Helpers
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/helpers/date_helper.html
+ * @link		http://codeigniter.com/user_guide/helpers/date_helper.html
  */
 
 // ------------------------------------------------------------------------
@@ -287,11 +276,6 @@ if ( ! function_exists('days_in_month'))
 		elseif ( ! is_numeric($year) OR strlen($year) !== 4)
 		{
 			$year = date('Y');
-		}
-
-		if (defined('CAL_GREGORIAN'))
-		{
-			return cal_days_in_month(CAL_GREGORIAN, $month, $year);
 		}
 
 		if ($year >= 1970)
@@ -707,35 +691,93 @@ if ( ! function_exists('date_range'))
 
 		$range = array();
 
+		/* NOTE: Even though the DateTime object has many useful features, it appears that
+		 *	 it doesn't always handle properly timezones, when timestamps are passed
+		 *	 directly to its constructor. Neither of the following gave proper results:
+		 *
+		 *		new DateTime('<timestamp>')
+		 *		new DateTime('<timestamp>', '<timezone>')
+		 *
+		 *	 --- available in PHP 5.3:
+		 *
+		 *		DateTime::createFromFormat('<format>', '<timestamp>')
+		 *		DateTime::createFromFormat('<format>', '<timestamp>', '<timezone')
+		 *
+		 *	 ... so we'll have to set the timestamp after the object is instantiated.
+		 *	 Furthermore, in PHP 5.3 we can use DateTime::setTimestamp() to do that and
+		 *	 given that we have UNIX timestamps - we should use it.
+		*/
 		$from = new DateTime();
-		$from->setTimestamp($unix_start);
 
+		if (is_php('5.3'))
+		{
+			$from->setTimestamp($unix_start);
+			if ($is_unix)
+			{
+				$arg = new DateTime();
+				$arg->setTimestamp($mixed);
+			}
+			else
+			{
+				$arg = (int) $mixed;
+			}
+
+			$period = new DatePeriod($from, new DateInterval('P1D'), $arg);
+			foreach ($period as $date)
+			{
+				$range[] = $date->format($format);
+			}
+
+			/* If a period end date was passed to the DatePeriod constructor, it might not
+			 * be in our results. Not sure if this is a bug or it's just possible because
+			 * the end date might actually be less than 24 hours away from the previously
+			 * generated DateTime object, but either way - we have to append it manually.
+			 */
+			if ( ! is_int($arg) && $range[count($range) - 1] !== $arg->format($format))
+			{
+				$range[] = $arg->format($format);
+			}
+
+			return $range;
+		}
+
+		$from->setDate(date('Y', $unix_start), date('n', $unix_start), date('j', $unix_start));
+		$from->setTime(date('G', $unix_start), date('i', $unix_start), date('s', $unix_start));
 		if ($is_unix)
 		{
 			$arg = new DateTime();
-			$arg->setTimestamp($mixed);
+			$arg->setDate(date('Y', $mixed), date('n', $mixed), date('j', $mixed));
+			$arg->setTime(date('G', $mixed), date('i', $mixed), date('s', $mixed));
 		}
 		else
 		{
 			$arg = (int) $mixed;
 		}
+		$range[] = $from->format($format);
 
-		$period = new DatePeriod($from, new DateInterval('P1D'), $arg);
-		foreach ($period as $date)
+		if (is_int($arg)) // Day intervals
 		{
-			$range[] = $date->format($format);
+			do
+			{
+				$from->modify('+1 day');
+				$range[] = $from->format($format);
+			}
+			while (--$arg > 0);
 		}
-
-		/* If a period end date was passed to the DatePeriod constructor, it might not
-		 * be in our results. Not sure if this is a bug or it's just possible because
-		 * the end date might actually be less than 24 hours away from the previously
-		 * generated DateTime object, but either way - we have to append it manually.
-		 */
-		if ( ! is_int($arg) && $range[count($range) - 1] !== $arg->format($format))
+		else // end date UNIX timestamp
 		{
+			for ($from->modify('+1 day'), $end_check = $arg->format('Ymd'); $from->format('Ymd') < $end_check; $from->modify('+1 day'))
+			{
+				$range[] = $from->format($format);
+			}
+
+			// Our loop only appended dates prior to our end date
 			$range[] = $arg->format($format);
 		}
 
 		return $range;
 	}
 }
+
+/* End of file date_helper.php */
+/* Location: ./system/helpers/date_helper.php */

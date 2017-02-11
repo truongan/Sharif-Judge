@@ -2,37 +2,26 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP
+ * An open source application development framework for PHP 5.2.4 or newer
  *
- * This content is released under the MIT License (MIT)
+ * NOTICE OF LICENSE
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Licensed under the Open Software License version 3.0
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This source file is subject to the Open Software License (OSL 3.0) that is
+ * bundled with this package in the files license.txt / license.rst.  It is
+ * also available through the world wide web at this URL:
+ * http://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world wide web, please send an email to
+ * licensing@ellislab.com so we can send you a copy immediately.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
- * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
+ * @package		CodeIgniter
+ * @author		EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2013, EllisLab, Inc. (http://ellislab.com/)
+ * @license		http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * @link		http://codeigniter.com
+ * @since		Version 1.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -46,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Libraries
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/libraries/config.html
+ * @link		http://codeigniter.com/user_guide/libraries/config.html
  */
 class CI_Config {
 
@@ -72,8 +61,6 @@ class CI_Config {
 	 */
 	public $_config_paths =	array(APPPATH);
 
-	// --------------------------------------------------------------------
-
 	/**
 	 * Class constructor
 	 *
@@ -84,23 +71,16 @@ class CI_Config {
 	public function __construct()
 	{
 		$this->config =& get_config();
+		log_message('debug', 'Config Class Initialized');
 
 		// Set the base_url automatically if none was provided
 		if (empty($this->config['base_url']))
 		{
-			if (isset($_SERVER['SERVER_ADDR']))
+			if (isset($_SERVER['HTTP_HOST']))
 			{
-				if (strpos($_SERVER['SERVER_ADDR'], ':') !== FALSE)
-				{
-					$server_addr = '['.$_SERVER['SERVER_ADDR'].']';
-				}
-				else
-				{
-					$server_addr = $_SERVER['SERVER_ADDR'];
-				}
-
-				$base_url = (is_https() ? 'https' : 'http').'://'.$server_addr
-					.substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
+				$base_url = is_https() ? 'https' : 'http';
+				$base_url .= '://'.$_SERVER['HTTP_HOST']
+					.str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
 			}
 			else
 			{
@@ -109,8 +89,6 @@ class CI_Config {
 
 			$this->set_item('base_url', $base_url);
 		}
-
-		log_message('info', 'Config Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -126,63 +104,77 @@ class CI_Config {
 	public function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE)
 	{
 		$file = ($file === '') ? 'config' : str_replace('.php', '', $file);
-		$loaded = FALSE;
+		$found = $loaded = FALSE;
 
 		foreach ($this->_config_paths as $path)
 		{
-			foreach (array($file, ENVIRONMENT.DIRECTORY_SEPARATOR.$file) as $location)
+			foreach (array(ENVIRONMENT.'/'.$file, $file) as $location)
 			{
 				$file_path = $path.'config/'.$location.'.php';
+
 				if (in_array($file_path, $this->is_loaded, TRUE))
 				{
-					return TRUE;
+					$loaded = TRUE;
+					continue 2;
 				}
 
-				if ( ! file_exists($file_path))
+				if (file_exists($file_path))
 				{
-					continue;
+					$found = TRUE;
+					break;
 				}
+			}
 
-				include($file_path);
+			if ($found === FALSE)
+			{
+				continue;
+			}
 
-				if ( ! isset($config) OR ! is_array($config))
+			include($file_path);
+
+			if ( ! isset($config) OR ! is_array($config))
+			{
+				if ($fail_gracefully === TRUE)
 				{
-					if ($fail_gracefully === TRUE)
-					{
-						return FALSE;
-					}
-
-					show_error('Your '.$file_path.' file does not appear to contain a valid configuration array.');
+					return FALSE;
 				}
+				show_error('Your '.$file_path.' file does not appear to contain a valid configuration array.');
+			}
 
-				if ($use_sections === TRUE)
+			if ($use_sections === TRUE)
+			{
+				if (isset($this->config[$file]))
 				{
-					$this->config[$file] = isset($this->config[$file])
-						? array_merge($this->config[$file], $config)
-						: $config;
+					$this->config[$file] = array_merge($this->config[$file], $config);
 				}
 				else
 				{
-					$this->config = array_merge($this->config, $config);
+					$this->config[$file] = $config;
 				}
-
-				$this->is_loaded[] = $file_path;
-				$config = NULL;
-				$loaded = TRUE;
-				log_message('debug', 'Config file loaded: '.$file_path);
 			}
+			else
+			{
+				$this->config = array_merge($this->config, $config);
+			}
+
+			$this->is_loaded[] = $file_path;
+			unset($config);
+
+			$loaded = TRUE;
+			log_message('debug', 'Config file loaded: '.$file_path);
+			break;
 		}
 
-		if ($loaded === TRUE)
+		if ($loaded === FALSE)
 		{
-			return TRUE;
-		}
-		elseif ($fail_gracefully === TRUE)
-		{
-			return FALSE;
+			if ($fail_gracefully === TRUE)
+			{
+				return FALSE;
+			}
+			show_error('The configuration file '.$file.'.php does not exist.');
 		}
 
-		show_error('The configuration file '.$file.'.php does not exist.');
+		return TRUE;
 	}
 
 	// --------------------------------------------------------------------
@@ -245,15 +237,7 @@ class CI_Config {
 
 		if (isset($protocol))
 		{
-			// For protocol-relative links
-			if ($protocol === '')
-			{
-				$base_url = substr($base_url, strpos($base_url, '//'));
-			}
-			else
-			{
-				$base_url = $protocol.substr($base_url, strpos($base_url, '://'));
-			}
+			$base_url = $protocol.substr($base_url, strpos($base_url, '://'));
 		}
 
 		if (empty($uri))
@@ -308,18 +292,10 @@ class CI_Config {
 
 		if (isset($protocol))
 		{
-			// For protocol-relative links
-			if ($protocol === '')
-			{
-				$base_url = substr($base_url, strpos($base_url, '//'));
-			}
-			else
-			{
-				$base_url = $protocol.substr($base_url, strpos($base_url, '://'));
-			}
+			$base_url = $protocol.substr($base_url, strpos($base_url, '://'));
 		}
 
-		return $base_url.$this->_uri_string($uri);
+		return $base_url.ltrim($this->_uri_string($uri), '/');
 	}
 
 	// -------------------------------------------------------------
@@ -337,8 +313,11 @@ class CI_Config {
 	{
 		if ($this->item('enable_query_strings') === FALSE)
 		{
-			is_array($uri) && $uri = implode('/', $uri);
-			return ltrim($uri, '/');
+			if (is_array($uri))
+			{
+				$uri = implode('/', $uri);
+			}
+			return trim($uri, '/');
 		}
 		elseif (is_array($uri))
 		{
@@ -353,7 +332,6 @@ class CI_Config {
 	/**
 	 * System URL
 	 *
-	 * @deprecated	3.0.0	Encourages insecure practices
 	 * @return	string
 	 */
 	public function system_url()
@@ -377,3 +355,6 @@ class CI_Config {
 	}
 
 }
+
+/* End of file Config.php */
+/* Location: ./system/core/Config.php */
