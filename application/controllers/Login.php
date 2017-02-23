@@ -66,7 +66,7 @@ class Login extends CI_Controller
 				// for displaying error message in 'pages/authentication/login' view
 				$data['error'] = TRUE;
 		}
-
+		$data['site_name'] = $this->settings_model->get_setting('site_name');
 		$this->twig->display('pages/authentication/login.twig', $data);
 	}
 
