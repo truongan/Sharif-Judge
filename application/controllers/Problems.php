@@ -48,7 +48,7 @@ class Problems extends CI_Controller
 		$pdf_files = glob($pattern1);
 		if ( ! $pdf_files ){
 			$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-						."/assignment_{$assignment_id}/p{$problem_id}/template.public.cpp";
+						."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
 
 			$pdf_files = glob($pattern);
 			if(!$pdf_files)
