@@ -20,7 +20,7 @@
 		$("select#problems").change(function(){
 			var v = $(this).val();
 			$('select#languages').empty();
-			$('<option value="0" selected="selected">-- Select Language --</option>').appendTo('select#languages');
+			//$('<option value="0" selected="selected">-- Select Language --</option>').appendTo('select#languages');
 			if (v==0)
 				return;
 			for (var i=0;i<shj.p[v].length;i++)
