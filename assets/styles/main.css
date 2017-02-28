@@ -769,7 +769,7 @@ select.sharif_time {
 	border-left: 1px solid #AFAFAF;
 	border-top: 1px solid #AFAFAF;
 	padding: 3px 5px;
-
+	text-align: center;
 }
 
 .sharif_table td {
