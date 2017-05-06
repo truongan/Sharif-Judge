@@ -14,6 +14,11 @@
 {% block other_assets %}
 <link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
 <link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
+<style media="screen">
+.sharif_table td{
+	text-align: left;
+}
+</style>
 <script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
 <script>
 $(document).ready(function(){
@@ -109,7 +114,7 @@ $(document).ready(function(){
 				</label>
 				<br/>
 				<select id="languages" name="language" class="sharif_input full-width">
-				
+
 					{% for l in problem.allowed_languages %}
 						<option value="{{ l }}">{{ l }}</option>
 					{% endfor %}
