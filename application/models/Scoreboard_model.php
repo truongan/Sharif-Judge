@@ -71,7 +71,7 @@ class Scoreboard_model extends CI_Model
 				'username' => $submission['username'],
 			))->count_all_results('submissions');
 
-			$penalty[$submission['username']] += $delay + $number_of_submissions*$submit_penalty;
+			if($fullmark) $penalty[$submission['username']] += $delay + $number_of_submissions*$submit_penalty;
 			$users[] = $submission['username'];
 		}
 		$scoreboard = array(
