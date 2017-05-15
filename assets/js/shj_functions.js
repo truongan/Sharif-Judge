@@ -360,7 +360,7 @@ $(document).ready(function () {
 				url: shj.site_url + 'assignments/select',
 				data: {
 					assignment_select: id,
-					shj_csrf_token: shj.csrf_token
+					wcj_csrf_name : shj.csrf_token
 				},
 				beforeSend: shj.loading_start,
 				complete: shj.loading_finish,
