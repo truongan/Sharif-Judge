@@ -35,7 +35,7 @@ class Users extends CI_Controller
 			'users' => $this->user_model->get_all_users()
 		);
 
-		$this->twig->display('pages/admin/users.twig', $data);
+		$this->twig->display('pages/admin/user.twig', $data);
 	}
 
 

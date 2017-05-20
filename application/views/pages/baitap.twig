@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% block other_assets %}
+	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
+	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
+	<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
+	<script>
+	$(document).ready(function(){
+		// Syntax highlighting increases the page's height, and we need to update the scroll-bar
+		$('.problem_description').resize(function(){
+			$('.scroll-wrapper').nanoScroller();
+		});
+		// Fix text directions for rtl text
+		$.each($('.problem_description [dir="auto"]'), function(i, element){
+			if (getComputedStyle(element).direction == 'rtl')
+			{
+				$(element).css('direction', 'rtl');
+				$(element).parent('ul, ol').css('direction', 'rtl');
+			}
+		});
+		// Syntax highlighting
+		$('pre code.language-c').parent().snippet('c', {style: shj.color_scheme});
+		$('pre code.language-cpp').parent().snippet('cpp', {style: shj.color_scheme});
+		$('pre code.language-python').parent().snippet('python', {style: shj.color_scheme});
+		$('pre code.language-java').parent().snippet('java', {style: shj.color_scheme});
+	});
+	</script>
+	{% endblock %}
+	<meta content="text/html" charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
+
+	<link rel="icon" href="{{ base_url('assets/images/favicon.ico') }}"/>
+	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-1.10.2.min.js') }}"></script>
+	<!-- You can use google's cdn for loading jquery: -->
+	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-ui-1.10.3.custom.min.js') }}"></script>
+	<link rel="stylesheet" href="{{ base_url('assets/styles/flick/jquery-ui-1.10.3.custom.min.css') }}"/>
+	<script type="text/javascript" src="{{ base_url('assets/js/moment.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.hoverIntent.minified.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.cookie.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.ba-resize.min.js') }}"></script>
+
+	<script type="text/javascript" src="{{ base_url('assets/noty/jquery.noty.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/noty/layouts/center.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/noty/layouts/bottomRight.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/noty/themes/default.js') }}"></script>
+
+	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/nano_scroller/nanoscroller.css') }}'/>
+	<script type='text/javascript' src="{{ base_url('assets/nano_scroller/jquery.nanoscroller.min.js') }}"></script>
+
+	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/font/font-awesome/css/font-awesome.min.css') }}'/>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+</head>
+<body>
+	{% include 'templates/top_bar.twig' %}
+    <div class="baitapnar">
+	  	<div class="row">
+	  		{{ form_open_multipart('submit') }}
+	  		<div class="col-md-6 padding-left10 font-size">
+	  			{% block title_menu %}
+				{% if user.level >= 2 %}
+					<span class="title_menu_item"><a href="{{ site_url("problems/edit/md/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil color2"></i> Edit Markdown</a></span>
+					<span class="title_menu_item"><a href="{{ site_url("problems/edit/html/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil colór0"></i> Edit HTML</a></span>
+					<span class="title_menu_item"><a href="{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil color8"></i> Edit Plain HTML</a></span>
+				{% endif %}
+
+				{% if problem.has_pdf %}
+					<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-file-pdf-o colór"></i> PDF</a></span>
+				{% endif %}
+				{% if problem.has_template %}
+					<span class="title_menu_item"><a href="{{ site_url("problems/template/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-download colór"></i> Download the code template</a></span>
+				{% endif %}
+
+
+				{% endblock %}
+				<div class="problem_description">
+					{{ problem.description|raw }}
+				</div>
+	  		</div>
+	  		<div class="col-md-6">
+	  			{{ form_open_multipart('submit') }}
+	  			<ul class="nav navbar-nav nav-tabs font-face">
+  					<li class="active"><a href="#">CODE</a></li>
+					<li class="input_p">
+						<label>Select language</label>
+					</li>
+					<li class="">
+						<select id="languages" name="language" class="sharif_input full-width">
+						
+							{% for l in problem.allowed_languages %}
+								<option value="{{ l }}">{{ l }}</option>
+							{% endfor %}
+						</select>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right padding-right font-size15">
+			        <p class="input_p">
+						<label for="code" class="short">Code theme:</label>
+						<textarea  style="display:none;" rows="4" cols="80" name="code" class="sharif_input add_text">
+						</textarea>
+						<select id="theme" class="sharif_input">
+							<option value="ambiance">ambiance</option>
+							<option value="chaos">chaos</option>
+							<option value="chrome">chrome</option>
+							<option value="clouds">clouds</option>
+							<option value="clouds_midnight">clouds_midnight</option>
+							<option value="cobalt">cobalt</option>
+							<option value="crimson_editor">crimson_editor</option>
+							<option value="dawn">dawn</option>
+							<option value="dreamweaver">dreamweaver</option>
+							<option value="eclipse">eclipse</option>
+							<option value="github">github</option>
+							<option value="idle_fingers">idle_fingers</option>
+							<option value="iplastic">iplastic</option>
+							<option value="katzenmilch">katzenmilch</option>
+							<option value="kr_theme">kr_theme</option>
+							<option value="kuroir">kuroir</option>
+							<option value="merbivore">merbivore</option>
+							<option value="merbivore_soft">merbivore_soft</option>
+							<option value="mono_industrial">mono_industrial</option>
+							<option value="monokai">monokai</option>
+							<option value="pastel_on_dark">pastel_on_dark</option>
+							<option value="solarized_dark">solarized_dark</option>
+							<option value="solarized_light">solarized_light</option>
+							<option value="sqlserver">sqlserver</option>
+							<option value="terminal">terminal</option>
+							<option value="textmate">textmate</option>
+							<option value="tomorrow">tomorrow</option>
+							<option value="tomorrow_night">tomorrow_night</option>
+							<option value="tomorrow_night_blue">tomorrow_night_blue</option>
+							<option value="tomorrow_night_bright">tomorrow_night_bright</option>
+							<option value="tomorrow_night_eighties">tomorrow_night_eighties</option>
+							<option value="twilight">twilight</option>
+							<option value="vibrant_ink">vibrant_ink</option>
+						</select>
+					</p>
+			     </ul>
+			</div>
+			<div class="col-md-6">
+	  			<div id="editor">//Paste your code here
+//NOTE: If you use java, your Main class must be named solution</div>
+			</div>
+			<div class="col-md-6">
+				<ul class="nav nav-tabs font-size15" role="tablist">
+					<li class="active"><a href="#">Tests</a></li>
+					<li><a href="#">+Add custom test</a></li>
+					<li><p class="input_p">
+						<input type="file" id="file" class="sharif_input full-width" name="userfile"/>
+					</p></li>
+					<p class="input_p">
+						<input type="submit" value="Submit" class="sharif_input"/>
+					</p>
+				</ul>
+	  		</div>
+	  		</form>
+	  	</div>
+	</div>
+	<script src="{{ base_url('assets/js/src-min-noconflict/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+	<script  type="text/javascript" src="{{ base_url('assets/js/submit_page.js')   }}" charset="utf-8"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+</body>
+</html>

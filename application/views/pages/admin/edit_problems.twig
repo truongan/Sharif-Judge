@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html" charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/dataTables.bootstrap.min.css') }}">
+	<script type="text/javascript" src="{{ base_url('assets/js/thien-js.js') }}"></script>
+	<link rel="icon" href="{{ base_url('assets/images/favicon.ico') }}"/>
+	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/thien-js.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.dataTables.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/dataTables.bootstrap.min.js') }}"></script>
+
+
+</head>
+<body>
+	{% include 'templates/bar.twig' %}
+
+    <div class="container margin_70">
+    	{% for baitap in baitaps %}
+  		{{ form_open('dsbaitap/edit/'~baitap.id) }}
+	  	<p class="input_p clear">
+			<label for="name" class="short2">Problems name:<br></label>
+			<input id="name" type="text" name="name" class="sharif_input medium" value="{{ baitap.name }}"/>
+		</p>
+		<p class="input_p clear">
+			<label for="difficulty" class="short2">Difficulty:<br></label>
+			<input id="difficulty" type="text" name="difficulty" class="sharif_input medium" value="{{ baitap.difficulty }}"/>
+		</p>
+		<p class="input_p clear">
+			<label for="score" class="short2">Score:<br></label>
+			<input id="score" type="text" name="score" class="sharif_input medium" value="{{ baitap.score }}"/>
+		</p>
+		<p class="input_p clear">
+			<label for="c_time_limit" class="short2">C Time Limit:<br></label>
+			<input id="c_time_limit" type="text" name="c_time_limit" class="sharif_input medium" value="{{ baitap.c_time_limit }}"/>
+		</p>
+		<p class="input_p clear">
+			<label for="python_time_limit" class="short2">Python Time Limit:<br></label>
+			<input id="python_time_limit" type="text" name="python_time_limit" class="sharif_input medium" value="{{ baitap.python_time_limit }}"/>
+		</p>
+		<p class="input_p clear">
+			<label for="java_time_limit" class="short2">Java Time Limit:<br></label>
+			<input id="java_time_limit" type="text" name="java_time_limit" class="sharif_input medium" value="{{ baitap.java_time_limit }}"/>
+		</p>
+		<p class="input_p clear">
+			<label for="memory_limit" class="short2">Memory Limit:<br></label>
+			<input id="memory_limit" type="text" name="memory_limit" class="sharif_input medium" value="{{ baitap.memory_limit }}"/>
+		</p>
+		<p class="input_p clear">
+			<label for="allowed_languages" class="short2">Allowed_languege:<br></label>
+			<input id="allowed_languages" type="text" name="allowed_languages" class="sharif_input medium" value="{{ baitap.allowed_languages }}"/>
+		</p>
+		<p class="input_p">
+			<input type="submit" value="Save" class="sharif_input"/>
+		</p>
+		</form>
+		{% endfor %}
+	</div>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+</body>
+</html>

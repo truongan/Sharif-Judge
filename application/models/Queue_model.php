@@ -190,14 +190,12 @@ class Queue_model extends CI_Model
 	 * Saves the result of judge in database
 	 * This function is called from Queueprocess controller
 	 */
-	public function save_judge_result_in_db ($submission, $type)
+	public function save_judge_result_in_db ($submission, $type, $problem)
 	{
-
 		$arr = array(
 			'status' => $submission['status'],
 			'pre_score' => $submission['pre_score'],
 		);
-
 		if ($type === 'judge')
 		{
 			$this->db->where(array(

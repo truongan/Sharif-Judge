@@ -393,7 +393,54 @@ $(document).ready(function () {
 });
 
 
-
+/**
+ * "Problem" page
+ */
+$(document).ready(function(){
+	$('.delete_problems').click(function(){
+		var row = $(this).parents('tr');
+		var problem_id = row.data('id');
+		var problem_name = row.children('#un').html();
+		noty({
+			text: 'Are you sure you want to delete this problem?<br>Problem ID: '+problem_id+'<br>Problem_name: '+problem_name+'<br><i class="splashy-warning_triangle"></i> All submissions of this user will be deleted.',
+			layout: 'center',
+			type: 'confirm',
+			animation: {
+				open: {height: 'toggle'},
+				close: {height: 'toggle'},
+				easing: 'swing',
+				speed: 300
+			},
+			buttons: [
+				{addClass: 'btn shj-red', text: 'Yes, Delete', onClick: function($noty) {
+					$noty.close();
+					$.ajax({
+						type: 'POST',
+						url: shj.site_url+'dsbaitap/delete',
+						data: {
+							problem_id: problem_id,
+							shj_csrf_token: shj.csrf_token
+						},
+						beforeSend: shj.loading_start,
+						complete: shj.loading_finish,
+						error: shj.loading_error,
+						success: function(response){
+							if (response.done)
+							{
+								row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
+								noty({text: 'Problem '+problem_name+' deleted.', layout:'bottomRight', type: 'success', timeout: 5000});
+							}
+							else
+								shj.loading_failed(response.message);
+						}
+					});
+				}
+				},
+				{addClass: 'btn shj-blue', text: 'No, Don\'t Delete', onClick: function($noty){$noty.close();}}
+			]
+		});
+	});
+});
 
 
 /**

@@ -16,7 +16,7 @@ class Queueprocess extends CI_Controller
 		// This controller should not be called from a browser
 		if ( ! is_cli() )
 			show_404();
-		$this->load->model('queue_model')->model('submit_model');
+		$this->load->model('queue_model')->model('submit_model')->model('xephang_model');
 	}
 
 
@@ -33,7 +33,7 @@ class Queueprocess extends CI_Controller
 	 */
 	public function run()
 	{
-
+		// die;
 		// Set correct base_url
 		// Because we are in cli mode, base_url is not available, and we get
 		// it from an environment variable that we have set in shj_helper.php
@@ -120,7 +120,7 @@ class Queueprocess extends CI_Controller
 			// Deleting the jail folder, if still exists
 			shell_exec("cd $tester_path; rm -rf jail*");
 
-			echo $output;
+			// echo $output*$problem['score']/10000;
 
 			// Saving judge result
 			//if ( is_numeric($output) || $output === 'Compilation Error' || $output === 'Syntax Error' )
@@ -130,22 +130,24 @@ class Queueprocess extends CI_Controller
 			}
 
 			if (is_numeric($output)) {
-				$submission['pre_score'] = $output;
+				$submission['pre_score'] = $output*$problem['score']/10000;
 				$submission['status'] = 'SCORE';
 			}
 			else {
 				$submission['pre_score'] = 0;
 				$submission['status'] = $output;
 			}
-
 			//reconnect to database incase we have run test for a long time.
 			$this->db->reconnect();
+			
+			// Tinh diem 1 submit for xephang
+			$this->xephang_model->save_db_xephang_for_one_problem($submission);
 
 			// Save the result
-			$this->queue_model->save_judge_result_in_db($submission, $type);
+			$this->queue_model->save_judge_result_in_db($submission, $type, $problem);
 
 			// Remove the judged item from queue
-			$this->queue_model->remove_item($username, $assignment, $problem['id'], $submit_id);
+			$this->queue_model->remove_item($username, $assignment, $problem['id'], $submit_id);	
 
 			// Get next item from queue
 			$queue_item = $this->queue_model->get_first_item();
@@ -153,7 +155,6 @@ class Queueprocess extends CI_Controller
 		}while($queue_item !== NULL && $this->settings_model->get_setting('queue_is_working'));
 
 		$this->settings_model->set_setting('queue_is_working', '0');
-
 	}
 
 }

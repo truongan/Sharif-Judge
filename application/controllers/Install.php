@@ -134,6 +134,7 @@ class Install extends CI_Controller
 				'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
 				'id'                => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
 				'name'              => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
+				'difficulty'        => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
 				'score'             => array('type' => 'INT', 'constraint' => 11),
 				'is_upload_only'    => array('type' => 'TINYINT', 'constraint' => 1, 'default' => '0'),
 				'c_time_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
@@ -232,12 +233,42 @@ class Install extends CI_Controller
 			if ( ! $result)
 				show_error("Error adding data to table ".$this->db->dbprefix('settings'));
 
+			// create table 'xephang'
+			$fields = array(
+				'user_id'        => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
+				'diembaitap'     => array('type' => 'INT', 'constraint' => 11),
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('user_id', TRUE);
+			if ( ! $this->dbforge->create_table('xephang', TRUE))
+				show_error("Error creating database table ".$this->db->dbprefix('xephang'));
 
+			// create table 'dsloaibt'
+			$fields = array(
+				'loaibt_id'   => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				'loaibt_name' => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('loaibt_id', TRUE);
+			if ( ! $this->dbforge->create_table('dsloaibt', TRUE))
+				show_error("Error creating database table ".$this->db->dbprefix('dsloaibt'));
+
+			// create table 'baitaploai'
+			$fields = array(
+				'btl_id'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				'baitap_id'   => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
+				'loaibt_id'   => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('btl_id', TRUE);
+			if ( ! $this->dbforge->create_table('baitaploai', TRUE))
+				show_error("Error creating database table ".$this->db->dbprefix('baitaploai'));
 
 			// create table 'users'
 			$fields = array(
 				'id'                  => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
 				'username'            => array('type' => 'VARCHAR', 'constraint' => 20),
+				'class'               => array('type' => 'VARCHAR', 'constraint' => 20),
 				'password'            => array('type' => 'VARCHAR', 'constraint' => 100),
 				'display_name'        => array('type' => 'VARCHAR', 'constraint' => 40, 'default' => ''),
 				'email'               => array('type' => 'VARCHAR', 'constraint' => 40),
@@ -279,6 +310,8 @@ class Install extends CI_Controller
 			$data['enc_key'] = $this->config->item('encryption_key');
 			$data['random_key'] = random_string('alnum', 32);
 		}
+
+		
 
 
 		$this->twig->display('pages/admin/install.twig', $data);

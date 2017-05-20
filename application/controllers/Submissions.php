@@ -127,7 +127,7 @@ class Submissions extends CI_Controller
 
 			$pi = $this->problems[$item['problem']];
 
-			$pre_score = ceil($item['pre_score']*$pi['score']/10000);
+			$pre_score = ceil($item['pre_score']);
 
 			$checked='';
 			if ($item['is_final'])
@@ -276,11 +276,12 @@ class Submissions extends CI_Controller
 
 		$names = $this->user_model->get_names();
 
+
 		foreach ($submissions as &$item)
 		{
 			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
+			$item['fullmark'] = ($item['pre_score']);
+			$item['pre_score'] = ceil($item['pre_score']);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
 			$item['language'] = filetype_to_language($item['file_type']);
 			if ($item['coefficient'] === 'error')
@@ -302,7 +303,6 @@ class Submissions extends CI_Controller
 			'page_number' => $this->page_number,
 			'per_page' => $config['per_page'],
 		);
-
 		$this->twig->display('pages/submissions.twig', $data);
 	}
 
@@ -343,8 +343,8 @@ class Submissions extends CI_Controller
 		foreach ($submissions as &$item)
 		{
 			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
+			$item['fullmark'] = $item['pre_score'];
+			$item['pre_score'] = ceil($item['pre_score']);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
 			$item['language'] = filetype_to_language($item['file_type']);
 			if ($item['coefficient'] === 'error')
@@ -555,8 +555,8 @@ class Submissions extends CI_Controller
 					$this->input->post('problem'),
 					$this->input->post('submit_id')
 			);
-		$submission['fullmark'] = ($submission['pre_score'] == 10000);
-		$submission['pre_score'] = ceil($submission['pre_score']*$this->problems[$submission['problem']]['score']/10000);
+		$submission['fullmark'] = $submission['pre_score'];
+		$submission['pre_score'] = ceil($submission['pre_score']);
 		if ($submission['coefficient'] === 'error')
 			$submission['final_score'] = 0;
 		else

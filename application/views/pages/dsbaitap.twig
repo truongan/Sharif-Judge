@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html" charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/dataTables.bootstrap.min.css') }}">
+	<script type="text/javascript" src="{{ base_url('assets/js/thien-js.js') }}"></script>
+	<link rel="icon" href="{{ base_url('assets/images/favicon.ico') }}"/>
+	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/thien-js.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.dataTables.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/dataTables.bootstrap.min.js') }}"></script>
+
+
+</head>
+<body>
+	{% include 'templates/bar.twig' %}
+
+    <div class="container margin_70">
+		<div class="row">
+			<div class="col-md-9">	
+		    	<h2>Danh sach bai tap</h2>
+		 		<table class="table table-hover table-striped databaitap">
+					<thead>
+			            <tr>
+			                <th>#</th>
+			                <th>Tên</th>
+			                <th>Độ khó</th>
+			                <th>Loaibt</th>
+			                <th>Điểm</th>
+			                <th>Bạn đạt được</th>
+			                <th>Actions</th>
+			            </tr>
+	  				</thead>
+			      	<tbody>
+			            {% for baitap in baitaps %}
+							<tr data-id="{{ baitap.id }}">
+								<td>{{ loop.index }}</td>
+								<td id="un"> <a href="{{site_url("problems/#{baitap.assignment}/#{baitap.id}")}}">{{ baitap.name }}
+								<td>{{ baitap.difficulty }}</td>
+								<td></td>
+								<td>{{ baitap.score }}</td>
+								<td></td>
+								<td>
+									<a title="Add" href="{{ site_url('dsbaitap/add') }}"><i class="fa fa-plus color11"></i></a>
+									<a title="Edit" href="{{ site_url('dsbaitap/edit/'~baitap.id) }}"><i class="fa fa-pencil fa-lg color9"></i></a>
+									<span title="Delete Problems" class="delete_problems pointer"><i title="Delete Problems" class="fa fa-times fa-lg color2"></i></span>
+								</td>
+							</tr>
+						{% endfor %}
+			        </tbody>
+		  		</table>
+		  	</div>
+			<div class="col-md-3 padding-left10">	
+		    	<h2>Danh sach loai bt</h2>
+		 		<table class="table table-hover table-striped databaitap">
+					<thead>
+			            <tr>
+			                <th>#</th>
+			                <th>Tên</th>
+			                <th>Actions</th>
+			            </tr>
+	  				</thead>
+			      	<tbody>
+			            {% for baitap in baitaps %}
+							<tr>
+								<td>{{ loop.index }}</td>
+								<td id="un"> <a href="{{site_url("problems/#{baitap.assignment}/#{baitap.id}")}}">{{ baitap.loaibt_name }}
+								<td>
+									<a title="Add" href="{{ site_url('dsbaitap/add') }}"><i class="fa fa-plus color11"></i></a>
+									<a title="Edit" href="{{ site_url('dsbaitap/add') }}"><i class="fa fa-pencil fa-lg color9"></i></a>
+									<span title="Delete Problems" class="delete_problems pointer"><i title="Delete Problems" class="fa fa-times fa-lg color2"></i></span>
+								</td>
+							</tr>
+						{% endfor %}
+			        </tbody>
+		  		</table>
+		  	</div>
+	  	</div>
+	</div>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+</body>
+</html>

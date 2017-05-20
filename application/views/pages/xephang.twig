@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html" charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/dataTables.bootstrap.min.css') }}">
+	
+	<link rel="icon" href="{{ base_url('assets/images/favicon.ico') }}"/>
+	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/thien-js.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.dataTables.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/dataTables.bootstrap.min.js') }}"></script>
+
+</head>
+<body>
+	{% include 'templates/top_bar.twig' %}
+
+	<div class="container margin_70">
+	<!-- Default panel contents -->
+  	<div class="panel-heading"></div>
+		<div class="row">
+    		<h2>Top 10</h2>
+	 		<table class="table table-hover table-striped dataxephang">
+				<thead>
+		            <tr>
+		                <th>Xếp hạng</th>
+		                <th>Lớp</th>
+		                <th>User</th>
+		                <th>HọTên</th>
+		                <th>Mail</th>
+		                <th>Điểm bài tập</th>
+		                <th>Điểm thi đấu</th>
+		                <th>Tổng điểm</th>
+		            </tr>
+  				</thead>
+
+		      	<tbody>
+		            {% for user in users %}
+						<tr data-id="{{ user.id }}">
+							<td>{{ loop.index }}</td>
+							<td>{{ user.class }}</td>
+							<td>{{ user.username }}</td>
+							<td>{{ user.display_name }}</td>
+							<td>{{ user.email }}</td>
+							<td>{{ user.diembaitap }}</td>
+							<td></td>
+							<td></td>
+						</tr>
+					{% endfor %}
+	        	</tbody>
+	  		</table>
+		</div>
+	</div>
+
+
+
+
+	{# <div class="container">
+	<!-- Default panel contents -->
+  	<div class="panel-heading"></div>
+		<div class="row">
+    		<h2>My Rank</h2>
+    		<div class="table-responsive">
+		 		<table class="table table-hover table-striped">
+					<thead>
+			            <tr>
+			                <th>Xếp hạng</th>
+			                <th>Lớp</th>
+			                <th>Họ Tên</th>
+			                <th>Điểm bài tập</th>
+			                <th>Điểm thi đấu</th>
+			                <th>Tổng điểm</th>
+			            </tr>
+	      			</thead>
+
+			      	<tbody>
+			            <tr class = "success">
+			                <td>1</td>
+			                <td>KHMT2015</td>
+			                <td>An Nam</td>
+			                <td>200</td>
+			                <td>192</td>
+			                <td>392</td>
+			            </tr>
+			            <tr class = "danger">
+			                <td>2</td>
+			                <td>KHMT2014</td>
+			                <td>An Nam</td>
+			                <td>200</td>
+			                <td>192</td>
+			                <td>392</td>
+			            </tr>
+			            <tr class = "info">
+			                <td>3</td>
+			                <td>KHMT2016</td>
+			                <td>An Nam</td>
+			                <td>200</td>
+			                <td>192</td>
+			                <td>392</td>
+			            </tr>
+			        </tbody>
+		  		</table>
+	  		</div>
+		</div>
+	</div>
+	 #}
+
+    
+	
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+</body>
+</html>

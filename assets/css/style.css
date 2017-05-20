@@ -1,0 +1,134 @@
+/*--Page chuong--*/
+.Solvedtasks{
+  width: 100%;
+  background-color: #FFFFFF;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-bottom: 40px;
+}
+.problem{
+  width: 100%;
+  height:130px;
+  background: url(../images/welcome_univ.png) no-repeat center;
+  background-size: cover;
+}
+.chuongbr{
+  height: 100%;
+  padding-top: 40px;
+  background-image: url(../images/glow.png);
+  background-position: bottom center;
+  background-size: 120% auto;
+  background-repeat: no-repeat;
+  background-color: #2B3D52;
+  display: block;
+}
+
+/*--Container--*/
+.margin_70{
+  margin-top: 70px;
+}
+
+/*--page compete--*/
+.compete{
+  width: 100%;
+  height:100px;
+  background: url(../images/welcome_univ.png) no-repeat center;
+  background-size: cover;
+  margin-top: 20px;
+}
+.trangthai{
+  width: 100%;
+  background-color: #664894;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+/*--Can giua--*/
+.align-center{
+  align-items: center;
+  text-align: center
+}
+
+/*--Dau bot--*/
+.daubot-avatar-br{
+  width: 100%;
+  padding: 20px 20px;
+  margin-top: 40px;
+  background-color: #FFFFFF;
+  border: solid 3px rgba(130, 145, 163, 0.3);
+}
+.bot-img-br{
+  width: 100%;
+  height:200px;
+  background: url(../images/uitbot.jpg) no-repeat center;
+  background-size: cover;
+  margin-top: 50px;
+}
+.bot-avatar{
+  overflow: hidden;
+  border-radius: 70%;
+  border: solid #F5F5F5;
+}
+.layout{
+  display: flex;
+}
+.featured-icon{
+  margin-top: 70px;
+  position: absolute;
+  width: 216px;
+  height: 216px;
+}
+.taskbot{
+  width: 100%;
+  background-color: #FFFFFF;
+  padding-left: 50px;
+  margin-bottom: 40px;
+}
+.task-value{
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  letter-spacing: 0;
+  font-weight: bold;
+  color: #FF6545;
+  border-bottom: 10px;
+}
+.task-label{
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  color: #666666;
+}
+
+/*--bai tap--*/
+.baitapnar{
+  padding-top: 50px;
+}
+.font-size{
+    font-size: 15px;
+}
+.font-face{
+    font-family: myFirstFont;
+    src: url(sansation_light.woff);
+    font-size: 15px;
+}
+.font-size15{
+    font-family: myFirstFont;
+    src: url(sansation_light.woff);
+    font-size: 15px;
+}
+.padding-left10{
+  padding-top: 25px;
+  padding-left: 25px;
+}
+.my-code-area{
+  height: 300px;
+  width: 100%;
+}
+#editor{
+  min-height: 100px;
+  height: 300px;
+} 
+.padding-right{
+  padding-right: 20px;
+}
