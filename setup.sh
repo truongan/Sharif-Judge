@@ -15,6 +15,7 @@ OPTIONS:
 	-p database password
 	-d database name
 	-n site name to display on top bar and construct base url for uit classes
+	base_url: Will be use to set base url for the siet when site_name is not specified. The https:// part must be included
 EOF
 }
 
@@ -39,11 +40,17 @@ while getopts "hi:o:u:p:d:n:" ops ; do
 done
 shift $((OPTIND-1))
 
+base_url=$1
+
 if [ "$site_name" = "" ]; then
-	base_url=$1
-	site_name="Wecode Judge"
+	if [ "$base_url" = "" ]; then
+		usage; exit 1
+	fi
+	site_name="Wecode-Judge"
 else
-	base_url="https://khmt.uit.edu.vn/laptrinh/`echo $site_name | tr '[:upper:]' '[:lower:]'`/"
+	if [ "$site_name" = "" ] ; then
+		base_url="https://khmt.uit.edu.vn/laptrinh/`echo $site_name | tr '[:upper:]' '[:lower:]'`/"
+	fi
 fi
 
 if [ "$db_user" = "" ]; then
@@ -100,7 +107,8 @@ mkdir $install/application/session/
 echo sed -i "s@base_url'] = ''@base_url'] = '$base_url'@g" config.php
 sed -i "s@base_url'] = ''@base_url'] = '$base_url'@g" config.php
 sed -i "s@index_page'] = 'index.php'@index_page'] = ''@g" config.php
-sed -i "s@cookie_path']		= '@cookie_path']		= '/$site_name/'@g" config.php
+sed -i "s@sess_save_path'] = NULL@sess_save_path'] = '$install/application/session/'@g" config.php
+sed -i "s@cookie_path']		= '/'@cookie_path']		= '/$site_name/'@g" config.php
 
 pwd
 sed -i "s/homestead/$db_user/g" database.php
