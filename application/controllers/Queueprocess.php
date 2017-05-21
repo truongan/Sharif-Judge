@@ -58,21 +58,29 @@ class Queueprocess extends CI_Controller
 
 			$submit_id = $queue_item['submit_id'];
 			$username = $queue_item['username'];
-			$assignment = $queue_item['assignment'];
-			$assignment_info = $this->assignment_model->assignment_info($assignment);
-			$problem = $this->assignment_model->problem_info($assignment, $queue_item['problem']);
+			// $assignment = $queue_item['assignment'];
+			// $assignment_info = $this->assignment_model->assignment_info($assignment);
+			$this->db->select('*');
+	        $this->db->from('problems'); 
+			$this->db->where('id', $queue_item['problem']);       
+	        $problem = $this->db->get()->row_array();
+
 			$type = $queue_item['type'];  // $type can be 'judge' or 'rejudge'
 
-			$submission = $this->submit_model->get_submission($username, $assignment, $problem['id'], $submit_id);
-
+			$this->db->select('*');
+	        $this->db->from('submissions'); 
+			$this->db->where('submit_id', $submit_id);       
+	        $submission = $this->db->get()->row_array();
 			$file_type = $submission['file_type'];
 			$file_extension = filetype_to_extension($file_type);
 			$raw_filename = $submission['file_name'];
 			$main_filename = $submission['main_file_name'];
 
 			$assignments_dir = rtrim($this->settings_model->get_setting('assignments_root'), '/');
+
 			$tester_path = rtrim($this->settings_model->get_setting('tester_path'), '/');
-			$problemdir = $assignments_dir."/assignment_$assignment/p".$problem['id'];
+			$problemdir = $assignments_dir."/p".$problem['id'];
+		
 			$userdir = "$problemdir/$username";
 			//$the_file = "$userdir/$raw_filename.$file_extension";
 
@@ -89,7 +97,7 @@ class Queueprocess extends CI_Controller
 			elseif ($file_type === 'py3')
 				$op4 = $this->settings_model->get_setting('enable_py3_shield');
 			$op5 = $this->settings_model->get_setting('enable_java_policy');
-			$op6 = $assignment_info['javaexceptions'];
+			// $op6 = $assignment_info['javaexceptions'];
 
 			if ($file_type === 'c' OR $file_type === 'cpp')
 				$time_limit = $problem['c_time_limit']/1000;
@@ -105,8 +113,8 @@ class Queueprocess extends CI_Controller
 			$diff_arg = $problem['diff_arg'];
 			$output_size_limit = $this->settings_model->get_setting('output_size_limit') * 1024;
 
-			$cmd = "cd $tester_path;\n./tester.sh $problemdir ".escapeshellarg($username).' '.escapeshellarg($main_filename).' '.escapeshellarg($raw_filename)." $file_type $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 $op2 $op3 $op4 $op5 $op6";
-
+			$cmd = "cd $tester_path;\n./tester.sh $problemdir ".escapeshellarg($username).' '.escapeshellarg($main_filename).' '.escapeshellarg($raw_filename)." $file_type $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 $op2 $op3 $op4 $op5";
+ // $op6
 			file_put_contents($userdir.'/log', $cmd);
 
 			///////////////////////////////////////

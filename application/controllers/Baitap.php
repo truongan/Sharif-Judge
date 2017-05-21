@@ -43,7 +43,7 @@ class Baitap extends CI_Controller
 			show_error("File not found");
 
 		$pattern1 = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-					."/assignment_{$assignment_id}/p{$problem_id}/template.public.cpp";
+					."/p{$problem_id}/template.public.cpp";
 
 		$pdf_files = glob($pattern1);
 		if ( ! $pdf_files ){

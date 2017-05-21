@@ -43,12 +43,12 @@ class Problems extends CI_Controller
 			show_error("File not found");
 
 		$pattern1 = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-					."/assignment_{$assignment_id}/p{$problem_id}/template.public.cpp";
+					."/p{$problem_id}/template.public.cpp";
 
 		$pdf_files = glob($pattern1);
 		if ( ! $pdf_files ){
 			$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-						."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
+						."/p{$problem_id}/template.cpp";
 
 			$pdf_files = glob($pattern);
 			if(!$pdf_files)
@@ -106,7 +106,7 @@ class Problems extends CI_Controller
 		$languages = explode(',',$data['all_problems'][$problem_id]['allowed_languages']);
 
 		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-		$problem_dir = "$assignments_root/assignment_{$assignment_id}/p{$problem_id}";
+		$problem_dir = "$assignments_root/p{$problem_id}";
 		$data['problem'] = array(
 			'id' => $problem_id,
 			'description' => '<p>Description not found</p>',
@@ -190,7 +190,7 @@ class Problems extends CI_Controller
 			'description' => ''
 		);
 
-		$path = rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/desc.".$ext;
+		$path = rtrim($this->settings_model->get_setting('assignments_root'),'/')."/p{$problem_id}/desc.".$ext;
 		if (file_exists($path))
 			$data['problem']['description'] = file_get_contents($path);
 

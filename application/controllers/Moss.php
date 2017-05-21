@@ -45,7 +45,7 @@ class Moss extends CI_Controller
 		$assignments_path = rtrim($this->settings_model->get_setting('assignments_root'), '/');
 		for($i=1; $i<=$data['moss_assignment']['problems']; $i++){
 			$data['moss_problems'][$i] = NULL;
-			$path = $assignments_path."/assignment_{$assignment_id}/p{$i}/";
+			$path = $assignments_path."/p{$i}/";
 			if (file_exists($path . "moss_link.txt") && file_get_contents($path . "moss_link.txt") != ''){
 				$data['moss_problems'][$i] = shell_exec("tail -n1 $path/moss_link.txt");
 				shell_exec("rm $path/moss_running");

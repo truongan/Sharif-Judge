@@ -207,7 +207,7 @@ class Submit extends CI_Controller
 		if ( ! in_array($this->filetype, $filetypes))
 			show_error('This file type is not allowed for this problem.');
 
-		$user_dir = rtrim($this->assignment_root, '/').'/assignment_'.$this->user->selected_assignment['id'].'/p'.$this->problem['id'].'/'.$this->user->username;
+		$user_dir = rtrim($this->assignment_root, '/').'/p'.$this->problem['id'].'/'.$this->user->username;
 		if ( ! file_exists($user_dir))
 			mkdir($user_dir, 0700);
 
