@@ -29,7 +29,7 @@ while getopts "hi:o:u:p:d:n:" ops ; do
 	case "${ops}" in
 		h)	usage ;;
 		i)	install=${OPTARG};;
-		o)	public=${OPTARg};;
+		o)	public=${OPTARG};;
 		u)	db_user=${OPTARG};;
 		p)	db_password=${OPTARG};;
 		d)	db=${OPTARG};;
@@ -49,7 +49,7 @@ fi
 if [ "$db_user" = "" ]; then
 	usage; exit 1
 fi
-
+echo $public
 if [ "$public" = "" ]; then
 	public="$install/../public_html"
 fi
@@ -74,8 +74,20 @@ git checkout working-updateci
 
 
 cd $public
-rm index.html index.php
-ln -s $install/index.php $install/assets $install/.htaccess .
+if cmp -s $install $public; then
+	echo "Installation dir and public dir are the same; that may pose security risk"
+else
+	read -p "$public/index.php $public/assets $public/.htaccess will be delete permenantly. Continue?"
+	echo
+	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	then
+	  	rm index.html index.php .htacess 
+	  	rm -rf ./assets
+		ln -s $install/index.php $install/assets $install/.htaccess .
+	else
+		echo "Abort"
+	fi
+fi
 echo sed -i "s@system_path = 'system'@system_path = '$install/system'@g" index.php
 sed -i "s@system_path = 'system'@system_path = '$install/system'@g" index.php
 sed -i "s@application_folder = 'application'@application_folder = '$install/application'@g" index.php
@@ -93,6 +105,7 @@ sed -i "s@cookie_path']		= '@cookie_path']		= '/$site_name/'@g" config.php
 pwd
 sed -i "s/homestead/$db_user/g" database.php
 sed -i "s/secret/$db_password/g" database.php
+echo sed -i "s/sharif/$db/g" database.php
 sed -i "s/sharif/$db/g" database.php
 
 cd $install/application/controllers
