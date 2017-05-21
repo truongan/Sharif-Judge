@@ -42,7 +42,7 @@ $(document).ready(function(){
 	When you edit as html, the markdown code will be removed.
 </p>
 {{ form_open("problems/edit/html/#{description_assignment.id}/#{problem.id}") }}
-{{ validation_errors() }}
+
 {{ form_error('text', '<div class="shj_error">', '</div>') }}
 <p class="input_p">
 	<textarea name="text">{{ problem.description }}</textarea>
