@@ -15,7 +15,7 @@ OPTIONS:
 	-p database password
 	-d database name
 	-n site name to display on top bar and construct base url for uit classes
-	base_url: Will be use to set base url for the siet when site_name is not specified. The https:// part must be included
+	base_url: Will be use to set base url for the site when site_name is not specified. The https:// part must be included
 EOF
 }
 
@@ -65,6 +65,18 @@ if [ "$db" = '' ]; then
 	db="$db_user"
 fi
 
+#convert install and public to absolute path
+if [ -d "$install" ]; then
+	install=`readlink -f $install`
+else
+	echo "Installation directory: $install not found"
+fi
+if [ -d "$public" ]; then
+	public=`readlink -f $public`
+else
+	echo "Public directory: $public not found"
+fi
+
 cat << EOF
 "install=$install"
 "public=$public"
@@ -93,6 +105,7 @@ else
 		ln -s $install/index.php $install/assets $install/.htaccess .
 	else
 		echo "Abort"
+		exit 0
 	fi
 fi
 echo sed -i "s@system_path = 'system'@system_path = '$install/system'@g" index.php
