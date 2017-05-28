@@ -48,7 +48,7 @@ if [ "$site_name" = "" ]; then
 	fi
 	site_name="Wecode-Judge"
 else
-	if [ "$site_name" = "" ] ; then
+	if [ "$base_url" = "" ] ; then
 		base_url="https://khmt.uit.edu.vn/laptrinh/`echo $site_name | tr '[:upper:]' '[:lower:]'`/"
 	fi
 fi
@@ -96,9 +96,9 @@ cd $public
 if cmp -s $install $public; then
 	echo "Installation dir and public dir are the same; that may pose security risk"
 else
-	read -p "$public/index.php $public/assets $public/.htaccess will be delete permenantly. Continue?"
+	read -p "$public/index.php $public/assets $public/.htaccess will be delete permenantly. Continue?" -n 1 -r REPLY
 	echo
-	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 	  	rm index.html index.php .htacess 
 	  	rm -rf ./assets
@@ -121,7 +121,7 @@ echo sed -i "s@base_url'] = ''@base_url'] = '$base_url'@g" config.php
 sed -i "s@base_url'] = ''@base_url'] = '$base_url'@g" config.php
 sed -i "s@index_page'] = 'index.php'@index_page'] = ''@g" config.php
 sed -i "s@sess_save_path'] = NULL@sess_save_path'] = '$install/application/session/'@g" config.php
-sed -i "s@cookie_path']		= '/'@cookie_path']		= '/$site_name/'@g" config.php
+#sed -i "s@cookie_path']		= '/'@cookie_path']		= '/$site_name/'@g" config.php
 
 pwd
 sed -i "s/homestead/$db_user/g" database.php
