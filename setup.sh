@@ -41,6 +41,7 @@ done
 shift $((OPTIND-1))
 
 base_url=$1
+lw_site_name=`echo $site_name | tr '[:upper:]' '[:lower:]'`
 
 if [ "$site_name" = "" ]; then
 	if [ "$base_url" = "" ]; then
@@ -121,7 +122,13 @@ echo sed -i "s@base_url'] = ''@base_url'] = '$base_url'@g" config.php
 sed -i "s@base_url'] = ''@base_url'] = '$base_url'@g" config.php
 sed -i "s@index_page'] = 'index.php'@index_page'] = ''@g" config.php
 sed -i "s@sess_save_path'] = NULL@sess_save_path'] = '$install/application/session/'@g" config.php
-#sed -i "s@cookie_path']		= '/'@cookie_path']		= '/$site_name/'@g" config.php
+
+#UIT Related settings 
+sed -i "s@cookie_path']		= '/'@cookie_path']		= '/laptrinh/$lw_site_name/'@g" config.php
+cp /opt/Login.php $install/application/controllers/Login.php
+cp /opt/Install.php $install/application/controllers/Install.php
+
+
 
 pwd
 sed -i "s/homestead/$db_user/g" database.php
