@@ -73,7 +73,7 @@ shj.sync_server_time = function () {
 		type: 'POST',
 		url: shj.site_url + 'server_time',
 		data: {
-			shj_csrf_token: shj.csrf_token
+			wcj_csrf_name: shj.csrf_token
 		},
 		success: function (response) {
 			shj.offset = moment(response).diff(moment());
@@ -193,7 +193,7 @@ shj.check_notifs = function () {
 		url: shj.site_url+'notifications/check',
 		data: {
 			time: shj.notif_check_time.format('YYYY-MM-DD HH:mm:ss'),
-			shj_csrf_token: shj.csrf_token
+			wcj_csrf_name: shj.csrf_token
 		},
 		success: function (data) {
 			if (data == "new_notification") {
@@ -252,7 +252,7 @@ $(document).ready(function () {
 						url: shj.site_url + 'notifications/delete',
 						data: {
 							id: id,
-							shj_csrf_token: shj.csrf_token
+							wcj_csrf_name: shj.csrf_token
 						},
 						beforeSend: shj.loading_start,
 						complete: shj.loading_finish,
@@ -422,7 +422,7 @@ $(document).ready(function(){
 						url: shj.site_url+'users/delete',
 						data: {
 							user_id: user_id,
-							shj_csrf_token: shj.csrf_token
+							wcj_csrf_name: shj.csrf_token
 						},
 						beforeSend: shj.loading_start,
 						complete: shj.loading_finish,
@@ -465,7 +465,7 @@ $(document).ready(function(){
 						url: shj.site_url+'users/delete_submissions',
 						data: {
 							user_id: user_id,
-							shj_csrf_token: shj.csrf_token
+							wcj_csrf_name: shj.csrf_token
 						},
 						beforeSend: shj.loading_start,
 						complete: shj.loading_finish,

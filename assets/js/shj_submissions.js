@@ -34,7 +34,7 @@ $(document).ready(function () {
 				assignment: row.data('a'),
 				problem: row.data('p'),
 				submit_id: row.data('s'),
-				shj_csrf_token: shj.csrf_token
+				wcj_csrf_name: shj.csrf_token
 			},
 			success: function (data) {
 				if (type == 'code')
@@ -76,7 +76,7 @@ $(document).ready(function () {
 				assignment: row.data('a'),
 				problem: row.data('p'),
 				submit_id: row.data('s'),
-				shj_csrf_token: shj.csrf_token
+				wcj_csrf_name: shj.csrf_token
 			},
 			beforeSend: shj.loading_start,
 			complete: shj.loading_finish,
@@ -105,7 +105,7 @@ $(document).ready(function () {
 					submit_id: submit_id,
 					problem: problem,
 					username: username,
-					shj_csrf_token: shj.csrf_token
+					wcj_csrf_name: shj.csrf_token
 				},
 				beforeSend: shj.loading_start,
 				complete: shj.loading_finish,
@@ -140,7 +140,7 @@ function update_status(){
 					assignment: $(this).data('a'),
 					problem: $(this).data('p'),
 					submit_id: $(this).data('s'),
-					shj_csrf_token: shj.csrf_token
+					wcj_csrf_name: shj.csrf_token
 				},
 				beforeSend: shj.loading_start,
 				complete: shj.loading_finish,
