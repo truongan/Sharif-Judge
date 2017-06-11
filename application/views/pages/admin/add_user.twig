@@ -34,7 +34,7 @@
 				send_mail: ($("#send_mail").is(":checked")?1:0),
 				delay: $("#delay").val(),
 				new_users:$("#new_users").val(),
-				shj_csrf_token: shj.csrf_token
+				wcj_csrf_name: shj.csrf_token
 			},
 					function(data) {
 						$("#main_content").html(data);

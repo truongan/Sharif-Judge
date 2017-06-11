@@ -18,7 +18,7 @@
 			var action=$(this).attr('id');
 			$.post(
 					'{{ site_url('queue') }}/'+action,
-					{shj_csrf_token: shj.csrf_token},
+					{wcj_csrf_name: shj.csrf_token},
 					function(data){
 						if (data=='success')
 							location.reload();
