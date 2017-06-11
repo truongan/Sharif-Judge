@@ -101,6 +101,55 @@ class Submit extends CI_Controller
 		return FALSE;
 	}
 
+	public function template(){
+		// Find pdf file
+		if ( ! $this->input->is_ajax_request() )
+			show_404();
+
+		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[0]');
+		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
+
+		if($this->form_validation->run())
+		{
+			$assignment_id = $this->input->post('assignment');
+			$problem_id = $this->input->post('problem');
+
+			$pattern1 = rtrim($this->settings_model->get_setting('assignments_root'),'/')
+						."/assignment_{$assignment_id}/p{$problem_id}/template.public.cpp";
+
+			$template_file = glob($pattern1);
+			if ( ! $template_file ){
+				$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')
+							."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
+
+				$template_file = glob($pattern);
+			}
+			if(!$template_file){
+				$result = array('banned' => '', 'before'  => '', 'after' => '');
+			} else {
+				$filename = shj_basename($template_file[0]);
+				$template = file_get_contents($template_file[0]);
+
+				preg_match("(\/\*###Begin banned.*\n)((.*\n)*)(###End banned keyword\*\/)"
+					, $template, $matches
+				);
+				$banned = $matches[2];
+
+				preg_match("(###End banned keyword\*\/)((.*\n)*)\/\/###INSERT CODE HERE -\n((.*\n)*)"
+					, $template, $mateches
+				);
+
+				$before = $matches[2];
+				$after = $matches[4];
+
+				$result = array('banned' => $banned, 'before'  => $before, 'after' => $after);
+			}
+			$this->output->set_content_type('application/json')
+				->set_output(json_encode($result));
+		}
+		else
+			exit('Are you trying to see other users\' codes? :)');
+	}
 
 	// ------------------------------------------------------------------------
 
