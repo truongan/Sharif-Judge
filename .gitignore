@@ -1,4 +1,5 @@
 application/config/database.php
 application/config/config.php
 application/cache
+application/session
 assignments/*
