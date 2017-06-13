@@ -166,7 +166,34 @@ class Assignment_model extends CI_Model
 		}
 	}
 
+	public function can_submit($assignment_info){
+		$result = array('error_message' => 'Uknown error', 'can_submit' => FALSE);
 
+		if ($this->user->level == 0 && ! $assignment_info['open']){
+			// if assignment is closed, non-student users (admin, instructors) still can submit
+			$result['error_message'] = 'Selected assignment is closed.';
+		}
+		elseif (shj_now() < strtotime($this->user->selected_assignment['start_time']) && $this->user->level == 0 ){
+			// non-student users can submit to not started assignments
+			$result['error_message'] = 'Selected assignment has not started.';
+		}
+		elseif (strtotime($this->user->selected_assignment['start_time']) < strtotime($this->user->selected_assignment['finish_time'])
+		  		&& shj_now() > strtotime($this->user->selected_assignment['finish_time'])+$this->user->selected_assignment['extra_time'])
+		{
+	  		// deadline = finish_time + extra_time
+			// but if start time is before finish time, the deadline is NEVER
+			$result['error_message'] =  'Selected assignment has finished.';
+		}
+		elseif ( ! $this->assignment_model->is_participant($this->user->selected_assignment['participants'],$this->user->username) )
+			$result['error_message'] = 'You are not registered for submitting.';
+		else{
+			$result['error_message'] = 'none';
+			$result['can_submit'] = TRUE;
+		}
+
+		return $result;
+
+	}
 
 	// ------------------------------------------------------------------------
 

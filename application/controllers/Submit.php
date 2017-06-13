@@ -187,26 +187,13 @@ class Submit extends CI_Controller
 			$items = substr($items,0,strlen($items)-1);
 			$this->data['problems_js'] .= "shj.p[{$problem['id']}]=[{$items}]; ";
 		}
+
 		if ($this->user->selected_assignment['id'] == 0)
 			$this->data['error']='Please select an assignment first.';
-		elseif ($this->user->level == 0 && ! $this->user->selected_assignment['open'])
-			// if assignment is closed, non-student users (admin, instructors) still can submit
-			$this->data['error'] = 'Selected assignment is closed.';
-		elseif (shj_now() < strtotime($this->user->selected_assignment['start_time']) && $this->user->level == 0 )
-			// non-student users can submit to not started assignments
-			$this->data['error'] = 'Selected assignment has not started.';
-		elseif (strtotime($this->user->selected_assignment['start_time']) < strtotime($this->user->selected_assignment['finish_time'])
-		  		&& shj_now() > strtotime($this->user->selected_assignment['finish_time'])+$this->user->selected_assignment['extra_time'])
-		{
-		  		// deadline = finish_time + extra_time
-				// but if start time is before finish time, the deadline is NEVER
-
-			$this->data['error'] =  'Selected assignment has finished.';
+		else {
+			$this->data['error'] = $this->assignment_model->can_submit($this->user->selected_assignment)['error_message'];
 		}
-		elseif ( ! $this->assignment_model->is_participant($this->user->selected_assignment['participants'],$this->user->username) )
-			$this->data['error'] = 'You are not registered for submitting.';
-		else
-			$this->data['error'] = 'none';
+
 
 		$this->data['from'] = "";
 		$this->load->library('user_agent');
