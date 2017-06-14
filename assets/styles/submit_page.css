@@ -1,0 +1,32 @@
+#editor {
+    min-height: 100px;
+    height: 100%;
+}
+.scroll-content{
+    display: flex;
+    flex-direction: column;
+}
+#page_title {
+    width: 100%;
+}
+#main_content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+form{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#main_content > p{
+    margin: 10px 6px 0 0;
+}
+
+div.input_p{
+    display: inline-block;
+    vertical-align: top;
+}
+div.input-group{
+    margin-top: 10px;
+}
