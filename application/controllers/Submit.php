@@ -103,6 +103,7 @@ class Submit extends CI_Controller
 
 	public function template(){
 		// Find pdf file
+
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 
@@ -110,6 +111,7 @@ class Submit extends CI_Controller
 		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 
 		if($this->form_validation->run())
+		if(1)
 		{
 			$assignment_id = $this->input->post('assignment');
 			$problem_id = $this->input->post('problem');
@@ -130,13 +132,13 @@ class Submit extends CI_Controller
 				$filename = shj_basename($template_file[0]);
 				$template = file_get_contents($template_file[0]);
 
-				preg_match("(\/\*###Begin banned.*\n)((.*\n)*)(###End banned keyword\*\/)"
+				preg_match("/(\/\*###Begin banned.*\n)((.*\n)*)(###End banned keyword\*\/)/"
 					, $template, $matches
 				);
 				$banned = $matches[2];
 
-				preg_match("(###End banned keyword\*\/)((.*\n)*)\/\/###INSERT CODE HERE -\n((.*\n)*)"
-					, $template, $mateches
+				preg_match("/(###End banned keyword\*\/)((.*\n)*)\/\/###INSERT CODE HERE -\n((.*\n)*)/"
+					, $template, $matches
 				);
 
 				$before = $matches[2];
@@ -144,6 +146,7 @@ class Submit extends CI_Controller
 
 				$result = array('banned' => $banned, 'before'  => $before, 'after' => $after);
 			}
+
 			$this->output->set_content_type('application/json')
 				->set_output(json_encode($result));
 		}

@@ -18,12 +18,25 @@ function getCookie(cname) {
     }
     return "";
 }
+
+function get_template(){
+    $.ajax({
+        cache: true,
+        type: 'POST',
+        url: shj.site_url + 'submit/template',
+        data: {
+            wcj_csrf_name: shj.csrf_token,
+            assignment: 1,
+            problem: 1
+        }
+    });
+}
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
-} 
+}
 
 var editor = ace.edit("editor");
 
@@ -39,6 +52,7 @@ $("form").submit(function(){
 });
 
 $("select[name=language]").change(function(){
+
 	var lang_to_mode = {"C++":"c_cpp"
 		, Java:"java"
 		, "Python 2":"python"
@@ -48,6 +62,7 @@ $("select[name=language]").change(function(){
 });
 
 $("#theme").change(function(){
+    console.log("SHIT");
 	t = $(this).val();
 	editor.setTheme("ace/theme/" + t);
 	setCookie('code_theme', t, 30);

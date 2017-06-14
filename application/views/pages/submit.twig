@@ -17,6 +17,7 @@
 	{{ problems_js|raw }}
 
 	$(document).ready(function(){
+		console.log("SHIT");
 		$("select#problems").change(function(){
 			var v = $(this).val();
 			$('select#languages').empty();
@@ -35,7 +36,6 @@
 			$("select#problems").val({{ from }});
 		{% endif %}
 		$("select#problems").change();
-
 	});
 </script>
 
