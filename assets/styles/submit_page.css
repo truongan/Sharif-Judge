@@ -1,11 +1,23 @@
 #editor {
     min-height: 120px;
     height: 100%;
+    flex: 1 1 auto;
 }
 .template{
-    min-height: 80px;
-    max-height: 150px;
-    height: 25%;
+    min-height: 40px;
+    flex: 1 1 auto;
+}
+.template-grp{
+    display: flex;
+    flex-flow: column;;
+
+    height: 25%
+}
+
+.editor-grp{
+    display: flex;
+    flex-flow: column;
+    height: 50%
 }
 .scroll-content{
     display: flex;
