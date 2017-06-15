@@ -4,6 +4,8 @@
 }
 .template{
     min-height: 80px;
+    max-height: 150px;
+    height: 25%;
 }
 .scroll-content{
     display: flex;
@@ -30,6 +32,10 @@ div.input_p{
     display: inline-block;
     vertical-align: top;
 }
-div.input-group{
+div.inp_grp{
     margin-top: 10px;
+}
+
+.banned_btn{
+    margin-right: 5px;
 }

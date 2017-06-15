@@ -19,6 +19,7 @@
 	shj.p={};
 	{{ problems_js|raw }}
 
+	shj.selected_assignment = {{ user.selected_assignment.id }};
 	$(document).ready(function(){
 		///Select the problem from referring page
 		{% if from == '' %}
@@ -43,9 +44,9 @@
 <p>{{ error }}</p>
 {% else %}
 	{{ form_open_multipart('submit') }}
-	<div class="input-group">
+	<div class="inp_grp">
 		<div class="input_p">
-			<label for="problems" class="short">Problem:</label>
+			<label for="problems" class="">Problem:</label>
 			<select id="problems" name ="problem" class="sharif_input">
 				<!--option value="0" selected="selected">-- Select Problem --</option-->
 				{% for problem in problems %}
@@ -57,7 +58,7 @@
 			{{ form_error('problem','<div class="shj_error">','</div>') }}
 		</div>
 		<div class="input_p">
-			<label for="languages" class="short">Language:</label>
+			<label for="languages" class="">Language:</label>
 			<select id="languages" name="language" class="sharif_input">
 				<!--option value="0" selected="selected">-- Select Language --</option-->
 			</select>
@@ -65,7 +66,7 @@
 		</div>
 
 		<div class="input_p">
-			<label for="code" class="short">Code theme:</label>
+			<label for="code" class="">Code theme:</label>
 			<select id="theme" class="sharif_input">
 				<option value="ambiance">ambiance</option>
 				<option value="chaos">chaos</option>
@@ -104,10 +105,25 @@
 		</div>
 	</div>
 
-	<div class="" id="banned"><h3>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)</h3></div>
-	<div class="input-group template" id="before" ></div>
-	<div id="editor"></div>
-	<div class="template" id="after" ></div>
+	<div class="" id="banned"></div>
+
+	<div id="before-grp">
+	  <label for="">Template's header</label> These lines will goes before your code
+	  	<div class="template" id="before" >abc</div>
+
+	</div>
+
+
+	  <label for="">Your code</label>
+	  		<div id="editor"></div>
+
+
+	<div id="after-grp">
+	  <label for="">Template's footer</label> These lines will goes after your code
+	<div class="template" id="after" >def</div>
+
+	</div>
+
 
 	<p class="input_p">
 		<input type="submit" value="Submit" class="sharif_input"/>

@@ -19,21 +19,45 @@ function getCookie(cname) {
     return "";
 }
 
-function get_template(){
+function get_template(problem_id){
     $.ajax({
         cache: true,
         type: 'POST',
         url: shj.site_url + 'submit/template',
         data: {
             wcj_csrf_name: shj.csrf_token,
-            assignment: 1,
-            problem: 1
+            assignment: shj.selected_assignment ,
+            problem: problem_id
         },
         success : function(data){
             if (data.banned != ""){
+                var ban_span = "";
                 data.banned.split("\n").map(function(str){
-                    $("#banned").append("<span class='label-danger'>"+ str +"</span>")
+                    if (str != "")
+                    ban_span += "<button class='btn btn-danger banned_btn'>"+ str +"</button>";
                 });
+                $("#banned").html('<h4>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)<br/>'
+                                + ban_span
+                                + '</h4>');
+                $("#banned").show();
+            } else {
+                $("#banned").hide();
+            }
+
+            if (data.before != ""){
+                ace.edit("before").setValue(data.before);
+                $("#before-grp").show();
+            }
+            else {
+                $("#before-grp").hide();
+            }
+
+            if (data.after != ""){
+                ace.edit("after").setValue(data.after);
+                $("#after-grp").show();
+            }
+            else {
+                $("#after-grp").hide();
             }
         }
     });
@@ -55,9 +79,9 @@ $(document).ready(function(){
             return;
         for (var i=0;i<shj.p[v].length;i++)
             $('<option value="'+shj.p[v][i]+'">'+shj.p[v][i]+'</option>').appendTo('select#languages');
-        $("#problem_link").attr('href', "/problems/{{ user.selected_assignment.id }}/" + $(this).val());
+        $("#problem_link").attr('href', "/problems/"+shj.selected_assignment+"/" + $(this).val());
 
-        get_template();
+        get_template($(this).val());
     });
 
     var theme = getCookie("code_theme");
@@ -71,13 +95,16 @@ $(document).ready(function(){
     before.setReadOnly(true);
     after.setReadOnly(true);
 
-    editor.setTheme("ace/theme/" + theme);
+    //editor.setTheme("ace/theme/" + theme);
+    all_ace_s.map(function(editor){
+        editor.setTheme("ace/theme/" + theme);
+    });
     $("#theme").val(theme);
 
     all_ace_s.map(function (editor){editor.session.setMode("ace/mode/c_cpp");});
 
     $("form").submit(function(){
-    	$("textarea").val(editor.getSession().getValue());
+    	$("textarea").val(editor.getValue());
     });
 
     $("select[name=language]").change(function(){

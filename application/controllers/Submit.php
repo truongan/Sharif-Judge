@@ -111,7 +111,6 @@ class Submit extends CI_Controller
 		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 
 		if($this->form_validation->run())
-		if(1)
 		{
 			$assignment_id = $this->input->post('assignment');
 			$problem_id = $this->input->post('problem');
@@ -125,7 +124,9 @@ class Submit extends CI_Controller
 							."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
 
 				$template_file = glob($pattern);
+				
 			}
+
 			if(!$template_file){
 				$result = array('banned' => '', 'before'  => '', 'after' => '');
 			} else {
