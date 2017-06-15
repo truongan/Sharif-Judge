@@ -28,6 +28,13 @@ function get_template(){
             wcj_csrf_name: shj.csrf_token,
             assignment: 1,
             problem: 1
+        },
+        success : function(data){
+            if (data.banned != ""){
+                data.banned.split("\n").map(function(str){
+                    $("#banned").append("<span class='label-danger'>"+ str +"</span>")
+                });
+            }
         }
     });
 }
@@ -50,17 +57,25 @@ $(document).ready(function(){
             $('<option value="'+shj.p[v][i]+'">'+shj.p[v][i]+'</option>').appendTo('select#languages');
         $("#problem_link").attr('href', "/problems/{{ user.selected_assignment.id }}/" + $(this).val());
 
+        get_template();
     });
-
-    var editor = ace.edit("editor");
 
     var theme = getCookie("code_theme");
     if (theme == "") theme = "dawn";
 
+    var before = ace.edit("before");
+    var after = ace.edit("after");
+    var editor = ace.edit("editor");
+    var all_ace_s = [before, editor, after];
+
+    before.setReadOnly(true);
+    after.setReadOnly(true);
+
     editor.setTheme("ace/theme/" + theme);
     $("#theme").val(theme);
 
-    editor.session.setMode("ace/mode/c_cpp");
+    all_ace_s.map(function (editor){editor.session.setMode("ace/mode/c_cpp");});
+
     $("form").submit(function(){
     	$("textarea").val(editor.getSession().getValue());
     });
@@ -72,12 +87,15 @@ $(document).ready(function(){
     		, "Python 2":"python"
     		, "Python 3":"python"
     	};
-    	editor.session.setMode("ace/mode/" + lang_to_mode[$(this).val()]);
+    	all_ace_s.map(function(editor){editor.session.setMode("ace/mode/" + lang_to_mode[$(this).val()]);});
     });
 
     $("#theme").change(function(){
-    	t = $(this).val();
-    	editor.setTheme("ace/theme/" + t);
+        t = $(this).val();
+
+        all_ace_s.map(function(editor){
+            editor.setTheme("ace/theme/" + t);
+        });
     	setCookie('code_theme', t, 30);
     });
 });

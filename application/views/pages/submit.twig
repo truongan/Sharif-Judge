@@ -31,7 +31,8 @@
 </script>
 
 <link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/submit_page.css') }}"/>
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 {% endblock %}
 
@@ -103,7 +104,11 @@
 		</div>
 	</div>
 
-	<div class="input-group" id="editor"></div>
+	<div class="" id="banned"><h3>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)</h3></div>
+	<div class="input-group template" id="before" ></div>
+	<div id="editor"></div>
+	<div class="template" id="after" ></div>
+
 	<p class="input_p">
 		<input type="submit" value="Submit" class="sharif_input"/>
 	</p>

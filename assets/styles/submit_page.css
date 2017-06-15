@@ -1,6 +1,9 @@
 #editor {
-    min-height: 100px;
+    min-height: 120px;
     height: 100%;
+}
+.template{
+    min-height: 80px;
 }
 .scroll-content{
     display: flex;
