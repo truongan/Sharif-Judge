@@ -136,14 +136,23 @@ class Submit extends CI_Controller
 				preg_match("/(\/\*###Begin banned.*\n)((.*\n)*)(###End banned keyword\*\/)/"
 					, $template, $matches
 				);
-				$banned = $matches[2];
+
+				
+				$set_or_empty = function($arr, $key){
+					//print_r($arr[$key]);
+					
+					if(isset($arr[$key])) return $arr[$key];
+					return "";
+				};
+
+				$banned = $set_or_empty($matches, 2);
 
 				preg_match("/(###End banned keyword\*\/)((.*\n)*)\/\/###INSERT CODE HERE -\n((.*\n)*)/"
 					, $template, $matches
 				);
-
-				$before = $matches[2];
-				$after = $matches[4];
+				//print_r($matches);
+				$before = $set_or_empty($matches, 2);
+				$after = $set_or_empty($matches, 4);
 
 				$result = array('banned' => $banned, 'before'  => $before, 'after' => $after);
 			}
