@@ -1,35 +1,35 @@
 #editor {
-    min-height: 120px;
+    min-height: 150px;
     height: 100%;
     flex: 1 1 auto;
 }
 .template{
-    min-height: 40px;
     flex: 1 1 auto;
 }
+
 .template-grp{
+    min-height: 40px;
+    max-height: 130px;
+    
     display: flex;
     flex-flow: column;;
-
-    height: 25%
+    flex:1;
 }
-
 .editor-grp{
     display: flex;
+
+
     flex-flow: column;
-    height: 50%
+
+    flex: 2;
 }
-.scroll-content{
-    display: flex;
-    flex-direction: column;
-}
+
+
 #page_title {
     width: 100%;
 }
 #main_content {
     height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 form{
     height: 100%;

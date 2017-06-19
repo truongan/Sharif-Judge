@@ -36,9 +36,9 @@ function get_template(problem_id){
                     if (str != "")
                     ban_span += "<button class='btn btn-danger banned_btn'>"+ str +"</button>";
                 });
-                $("#banned").html('<h4>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)<br/>'
+                $("#banned").html('<h5>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)<br/>'
                                 + ban_span
-                                + '</h4>');
+                                + '</h5>');
                 $("#banned").show();
             } else {
                 $("#banned").hide();
