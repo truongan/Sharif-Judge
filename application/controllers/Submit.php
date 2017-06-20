@@ -124,7 +124,7 @@ class Submit extends CI_Controller
 							."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
 
 				$template_file = glob($pattern);
-				
+
 			}
 
 			if(!$template_file){
@@ -137,17 +137,17 @@ class Submit extends CI_Controller
 					, $template, $matches
 				);
 
-				
+
 				$set_or_empty = function($arr, $key){
 					//print_r($arr[$key]);
-					
+
 					if(isset($arr[$key])) return $arr[$key];
 					return "";
 				};
 
 				$banned = $set_or_empty($matches, 2);
 
-				preg_match("/(###End banned keyword\*\/)((.*\n)*)\/\/###INSERT CODE HERE -\n((.*\n)*)/"
+				preg_match("/(###End banned keyword\*\/\n)((.*\n)*)\/\/###INSERT CODE HERE -\n((.*\n)*)/"
 					, $template, $matches
 				);
 				//print_r($matches);

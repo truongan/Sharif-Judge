@@ -10,7 +10,7 @@
 .template-grp{
     min-height: 40px;
     max-height: 130px;
-    
+
     display: flex;
     flex-flow: column;;
     flex:1;
@@ -29,7 +29,7 @@
     width: 100%;
 }
 #main_content {
-    height: 100%;
+    flex:1
 }
 form{
     height: 100%;
@@ -38,6 +38,11 @@ form{
 }
 #main_content > p{
     margin: 10px 6px 0 0;
+}
+
+.scroll-content{
+    display: flex;
+    flex-flow: column;
 }
 
 div.input_p{
