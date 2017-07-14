@@ -310,7 +310,7 @@ if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 				continue
 			fi
 			line=`echo $line | tr -d '\r'`
-			echo grep -q "$line" $f
+			#echo grep -q "$line" $f
 			if grep -q "$line" $f ;then
 				echo "code.c: forbidden phase: $line is banned" >> cerr
 				NEEDCOMPILE=0
