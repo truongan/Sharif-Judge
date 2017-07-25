@@ -48,6 +48,8 @@ ulimit -t $TIMELIMITINT
 if $TIMEOUT_EXISTS; then
 	# Run the command with REAL time limit of TIMELIMITINT*2
 	timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err
+	# echo $CMD
+	# echo $IN
 else
 	# Run the command
 	$CMD <$IN >out 2>err	

@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="Bootstrap Basic Carousel - Bootstrap Carousel - Collection by sevenXdemo - More Information: www.sevenX.de/blog" />
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+	<style>
+	body { padding-top: 50px; }
+	#myCarousel .nav a small {
+		display:block;
+	}
+	#myCarousel .nav {
+		background:#eee;
+	}
+	</style>
+</head>
+<body>
+	{% include 'templates/bar.twig' %}
+<div class="container">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="item active">
+        	<a href="{{ site_url('xephang') }}">
+	          	<img src="{{ base_url('assets/images/main_xephang.jpg') }}">
+           		<div class="carousel-caption">
+            		<h3>Headline</h3>
+            		<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+          		</div>
+        	</a>
+        </div>
+ 
+        <div class="item">
+        	<a href="{{ site_url('dsbaitap') }}">
+	          	<img src="{{ base_url('assets/images/main_baitap.jpg') }}">
+           		<div class="carousel-caption">
+            		<h3>Headline</h3>
+            		<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+          		</div>
+        	</a>
+        </div>
+        
+        <div class="item">
+        	<a href="{{ site_url('competition') }}">
+	          	<img src="{{ base_url('assets/images/main_competition.jpg') }}">
+           		<div class="carousel-caption">
+            		<h3>Headline</h3>
+            		<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+          		</div>
+        	</a>
+        </div>
+        
+        <div class="item">
+        	<a href="{{ site_url('submissions/all') }}">
+	          	<img src="{{ base_url('assets/images/main_submission.jpg') }}">
+           		<div class="carousel-caption">
+            		<h3>Headline</h3>
+            		<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+          		</div>
+        	</a>
+        </div>
+                
+      </div>
+
+
+		<ul class="nav nav-pills nav-justified">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"><a href="#"><span class="glyphicon glyphicon-king"></span> RANKING<small>Best of Score</small></a></li>
+          <li data-target="#myCarousel" data-slide-to="1"><a href="#"><span class="glyphicon glyphicon-folder-open"></span> PROBLEMS<small>Wishing you all the best!</small></a></li>
+          <li data-target="#myCarousel" data-slide-to="2"><a href="#"><span class="glyphicon glyphicon-fire"></span> COMPETITION<small>Everything will be fine. You can make it.</small></a></li>
+          <li data-target="#myCarousel" data-slide-to="3"><a href="#"><span class="glyphicon glyphicon-cloud-upload"></span> SUBMISSION<small>Well done! It's a fantastic result</small></a></li>
+        </ul>
+
+
+    </div>
+</div>
+
+<script>
+	$('#myCarousel').carousel({
+		interval:   4000
+	});
+	
+	var clickEvent = false;
+	$('#myCarousel').on('click', '.nav a', function() {
+			clickEvent = true;
+			$('.nav li').removeClass('active');
+			$(this).parent().addClass('active');		
+	}).on('slid.bs.carousel', function(e) {
+		if(!clickEvent) {
+			var count = $('.nav').children().length -1;
+			var current = $('.nav li.active');
+			current.removeClass('active').next().addClass('active');
+			var id = parseInt(current.data('slide-to'));
+			if(count == id) {
+				$('.nav li').first().addClass('active');	
+			}
+		}
+		clickEvent = false;
+	});
+</script>
+</body>
+</html>

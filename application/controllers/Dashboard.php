@@ -18,6 +18,10 @@ class Dashboard extends CI_Controller
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
 		$this->load->model('notifications_model')->helper('text');
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);	
 	}
 
 

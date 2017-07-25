@@ -20,6 +20,10 @@ class Notifications extends CI_Controller
 		parent::__construct();
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);		
 		$this->load->model('notifications_model');
 		$this->notif_edit = FALSE;
 	}
@@ -34,7 +38,8 @@ class Notifications extends CI_Controller
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'notifications' => $this->notifications_model->get_all_notifications()
 		);
-
+		
+		redirect("dashboard");
 		$this->twig->display('pages/notifications.twig', $data);
 
 	}
@@ -69,7 +74,6 @@ class Notifications extends CI_Controller
 
 
 		$this->twig->display('pages/admin/add_notification.twig', $data);
-
 	}
 
 

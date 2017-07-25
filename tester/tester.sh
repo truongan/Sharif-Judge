@@ -171,6 +171,7 @@ cp ../timeout ./timeout
 chmod +x timeout
 
 cp ../runcode.sh ./runcode.sh
+cp -ar $PROBLEMPATH/in in
 chmod +x runcode.sh
 
 shj_log "$(date)"
@@ -216,7 +217,7 @@ if [ "$EXT" = "java" ]; then
 		#(cat $JAIL/cerr) >> $PROBLEMPATH/$UN/result.html
 		echo "</span>" >> $PROBLEMPATH/$UN/result.html
 		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
+		# rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "Compilation Error"
 	fi
 fi
@@ -242,7 +243,7 @@ if [ "$EXT" = "py2" ]; then
 		(cat cerr | head -10 | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
 		echo "</span>" >> $PROBLEMPATH/$UN/result.html
 		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
+		# rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "Syntax Error"
 	fi
 	if $PY_SHIELD_ON; then
@@ -273,7 +274,7 @@ if [ "$EXT" = "py3" ]; then
 		(cat cerr | head -10 | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
 		echo "</span>" >> $PROBLEMPATH/$UN/result.html
 		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
+		# rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "Syntax Error"
 	fi
 	if $PY_SHIELD_ON; then
@@ -295,7 +296,7 @@ if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 		COMPILER="g++ -std=c++98"
 	fi
 	EXEFILE="s_$(echo $FILENAME | sed 's/[^a-zA-Z0-9]//g')" # Name of executable file
-
+	NEEDCOMPILE=1
 	if [ -f "$PROBLEMPATH/template.cpp" ]; then
 		t="$PROBLEMPATH/template.cpp"
 		f=$PROBLEMPATH/$UN/$FILENAME.$EXT
@@ -317,17 +318,16 @@ if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 		cp $PROBLEMPATH/$UN/$FILENAME.$EXT code.c
 	fi
 
-	shj_log "Compiling as $EXT"
-	if $SANDBOX_ON; then
-		shj_log "Enabling EasySandbox"
-		if cp ../easysandbox/EasySandbox.so EasySandbox.so; then
-			chmod +x EasySandbox.so
-		else
-			shj_log 'EasySandbox is not built. Disabling EasySandbox...'
+	# shj_log "Compiling as $EXT"
+	# if $SANDBOX_ON; then
+	# 	shj_log "Enabling EasySandbox"
+	# 	if cp ../easysandbox/EasySandbox.so EasySandbox.so; then
+	# 		chmod +x EasySandbox.so
+	# 	else
+	# 		shj_log 'EasySandbox is not built. Disabling EasySandbox...'
 			SANDBOX_ON=false
-		fi
-	fi
-
+	# 	fi
+	# fi
 	if [ $NEEDCOMPILE -eq 0 ]; then
 		EXITCODE=110
 	else
@@ -342,11 +342,13 @@ if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 				cp ../shield/def$EXT.h def.h
 				# adding define to beginning of code:
 				echo '#define main themainmainfunction' | cat - code.c > thetemp && mv thetemp code.c
+
 				$COMPILER shield.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
 				EXITCODE=$?
 			fi
 		else
 			mv code.c code.$EXT
+
 			$COMPILER code.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
 			EXITCODE=$?
 		fi
@@ -391,7 +393,7 @@ if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 		fi
 		echo "</span>" >> $PROBLEMPATH/$UN/result.html
 		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
+		# rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "Compilation Error"
 	fi
 fi
@@ -419,7 +421,7 @@ if [ -f "$PROBLEMPATH/tester.cpp" ] && [ ! -f "$PROBLEMPATH/tester.executable" ]
 	if [ $EC -ne 0 ]; then
 		shj_log "Compiling tester failed."
 		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
+		# rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "Invalid Tester Code"
 	else
 		shj_log "Tester compiled. Execution Time: $((TST_COMPILE_END_TIME-TST_COMPILE_BEGIN_TIME)) ms"
@@ -467,27 +469,32 @@ for((i=1;i<=TST;i++)); do
 		fi
 	elif [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 		#$TIMEOUT ./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
-		if $SANDBOX_ON; then
-			#LD_PRELOAD=./EasySandbox.so ./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
-			if $PERL_EXISTS; then
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill --sandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
-			else
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "LD_PRELOAD=./EasySandbox.so ./$EXEFILE"
-			fi
-			EXITCODE=$?
-			# remove <<entering SECCOMP mode>> from beginning of output:
-			tail -n +2 out >thetemp && mv thetemp out
-		else
+		# if $SANDBOX_ON; then
+		# 	#LD_PRELOAD=./EasySandbox.so ./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
+		# 	if $PERL_EXISTS; then
+		# 		./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill --sandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
+		# 	else
+		# 		./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "LD_PRELOAD=./EasySandbox.so ./$EXEFILE"
+		# 	fi
+		# 	EXITCODE=$?
+		# 	# remove <<entering SECCOMP mode>> from beginning of output:
+		# 	tail -n +2 out >thetemp && mv thetemp out
+		# else
 			#./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
 			if $PERL_EXISTS; then
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
+				
+				sudo docker run -it -v /home/vagrant/Code/tester/$JAIL:/$JAIL:rw --name='docker' ubuntu:16.04 cd $JAIL;./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
+				# exit
+				# sudo docker rm docker
+				# "./runcode.sh cpp 50000 0.5 1 ./in/input1.txt ./timeout --just-kill -nosandbox -l 1048576 -t 0.5 -m 50000 ./s_solution591
+
 				#shj_log "./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt ./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
-			else
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./$EXEFILE"
+			# else
+			# 	./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./in/input$i.txt "./$EXEFILE"
 			fi
 			EXITCODE=$?
 			shj_log "./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt ./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
-		fi
+		# fi
 
 	elif [ "$EXT" = "py2" ]; then
 		if $PERL_EXISTS; then
@@ -508,7 +515,7 @@ for((i=1;i<=TST;i++)); do
 	else
 		shj_log "File Format Not Supported"
 		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
+		# rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "File Format Not Supported"
 	fi
 
@@ -584,6 +591,9 @@ for((i=1;i<=TST;i++)); do
 		# Compare output files
 		if $DIFFTOOL $DIFFARGUMENT out correctout >/dev/null 2>/dev/null; then
 			ACCEPTED=true
+			# cat out 
+			# echo "--------- "
+			# cat correctout
 		fi
 	fi
 
@@ -612,7 +622,7 @@ done
 
 cd ..
 #cp -r $JAIL "debug-jail-backup"
-rm -r $JAIL >/dev/null 2>/dev/null # removing files
+# rm -r $JAIL >/dev/null 2>/dev/null # removing files
 
 
 ((SCORE=PASSEDTESTS*10000/TST)) # give score from 10,000

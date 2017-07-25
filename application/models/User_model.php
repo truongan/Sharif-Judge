@@ -118,182 +118,39 @@ class User_model extends CI_Model
 	 * @param $role
 	 * @return bool|string
 	 */
-	public function add_user($username, $email, $password, $role, $display_name="")
+	public function add_user($data)
 	{
-		if ( ! $this->form_validation->alpha_numeric($username) )
-			return 'Username may only contain alpha-numeric characters.';
-		if (strlen($username) < 3 OR strlen($username) > 20 OR strlen($password) < 6 OR strlen($password) > 200)
-			return 'Username or password length error.';
-		if ($this->have_user($username))
-			return 'User with this username exists.';
-		if ($this->have_email($email))
-			return 'User with this email exists.';
-		if (strtolower($username) !== $username)
-			return 'Username must be lowercase.';
-		$roles = array('admin', 'head_instructor', 'instructor', 'student');
-		if ( ! in_array($role, $roles))
-			return 'Users role is not valid.';
-		$this->load->library('password_hash', array(8, FALSE));
-		$user=array(
-			'username' => $username,
-			'email' => $email,
-			'password' => $this->password_hash->HashPassword($password),
-			'role' => $role
-			,'display_name' => $display_name
-		);
-		$this->db->insert('users', $user);
+		// if ( ! $this->form_validation->alpha_numeric($username) )
+		// 	return 'Username may only contain alpha-numeric characters.';
+		// if (strlen($username) < 3 OR strlen($username) > 20 OR strlen($password) < 6 OR strlen($password) > 200)
+		// 	return 'Username or password length error.';
+		// if ($this->have_user($username))
+		// 	return 'User with this username exists.';
+		// if ($this->have_email($email))
+		// 	return 'User with this email exists.';
+		// if (strtolower($username) !== $username)
+		// 	return 'Username must be lowercase.';
+		// $roles = array('admin', 'head_instructor', 'instructor', 'student');
+		// if ( ! in_array($role, $roles))
+		// 	return 'Users role is not valid.';
+		// $this->load->library('password_hash', array(8, FALSE));
+		// $user=array(
+		// 	'username' => $username,
+		// 	'email' => $email,
+		// 	'password' => $this->password_hash->HashPassword($password),
+		// 	'role' => $role
+		// 	,'display_name' => $display_name
+		// );
+		$this->db->insert('users', $data);
 		return TRUE; //success
 	}
 
-
-	// ------------------------------------------------------------------------
-
-
-	/**
-	 * Add Users
-	 *
-	 * Adds multiple users
-	 *
-	 * @param $text
-	 * @param $send_mail
-	 * @param $delay
-	 * @return array
-	 */
-	public function add_users($text, $send_mail, $delay)
-	{
-
-		$lines = preg_split('/\r?\n|\n?\r/', $text);
-		$users_ok = array();
-		$users_error = array();
-
-		// loop over lines of $text :
-		foreach ($lines as $line)
-		{
-			$line = trim($line);
-
-			if (strlen($line) == 0 OR $line[0] == '#')
-				continue; //ignore comments and empty lines
-
-			$parts = preg_split('/\s*,\s*/', $line);
-			if (count($parts) != 5)
-				continue; //ignore lines that not contain 5 parts
-//echo $line;
-			if (strtolower(substr($parts[2], 0, 6)) == 'random')
-			{
-				// generate random password
-				$len = trim(substr($parts[2], 6), '[]');
-				if (is_numeric($len)){
-					$this->load->helper('string');
-					$parts[2] = shj_random_password($len);
-				}
-			}
-
-			$result = $this->add_user($parts[0], $parts[1], $parts[2], $parts[3], $parts[4]);
-			$a = array($parts[0], $parts[1], $parts[2], $parts[3], $parts[4]);
-			if ($result === TRUE)
-				array_push($users_ok, $a);
-			else
-				array_push($users_error, $a);
-
-		} // end of loop
-
-		if ($send_mail)
-		{
-			// sending usernames and passwords by email
-			$this->load->library('email');
-			$config = array(
-				'mailtype'  => 'html',
-				'charset'   => 'iso-8859-1'
-			);
-			/*
-			// You can use gmail's smtp server
-			$config = Array(
-				'protocol' => 'smtp',
-				'smtp_host' => 'ssl://smtp.googlemail.com',
-				'smtp_port' => 465,
-				'smtp_user' => 'example@gmail.com',
-				'smtp_pass' => 'your-gmail-password',
-				'mailtype'  => 'html',
-				'charset'   => 'iso-8859-1'
-			);
-			*/
-			$this->email->initialize($config);
-			$this->email->set_newline("\r\n");
-			$count_users = count($users_ok);
-			$counter = 0;
-			foreach ($users_ok as $user)
-			{
-				$counter++;
-				$this->email->from($this->settings_model->get_setting('mail_from'), $this->settings_model->get_setting('mail_from_name'));
-				$this->email->to($user[1]);
-				$this->email->subject('Sharif Judge Username and Password');
-				$text = $this->settings_model->get_setting('add_user_mail');
-				$text = str_replace('{SITE_NAME}', $this->settings_model->get_setting('site_name'), $text);
-				$text = str_replace('{SITE_URL}', base_url(), $text);
-				$text = str_replace('{ROLE}', $user[3], $text);
-				$text = str_replace('{USERNAME}', $user[0], $text);
-				$text = str_replace('{PASSWORD}', htmlspecialchars($user[2]), $text);
-				$text = str_replace('{LOGIN_URL}', base_url(), $text);
-				$this->email->message($text);
-				$this->email->send();
-				if ($counter < $count_users)
-					sleep($delay);
-			}
-		}
-
-		return array($users_ok, $users_error);
-
-	}
-
-
-	// ------------------------------------------------------------------------
-
-
-	/**
-	 * Delete User
-	 *
-	 * Deletes a user with given user id
-	 * Returns TRUE (success) or FALSE (failure)
-	 *
-	 * @param $user_id
-	 * @return bool
-	 */
 	public function delete_user($user_id)
 	{
-		$this->db->trans_start();
-
-		$username = $this->user_id_to_username($user_id);
-		if ($username === FALSE)
-			return FALSE;
-		$this->db->delete('users', array('id'=>$user_id));
-		$this->db->delete('submissions', array('username' => $username));
-		// each time we delete a user, we should update all scoreboards
-		$this->load->model('scoreboard_model');
-		$this->scoreboard_model->update_scoreboards();
-
-		$this->db->trans_complete();
-
-		if ($this->db->trans_status()) {
-			// Delete submitted files
-			shell_exec("cd {$this->settings_model->get_setting('assignments_root')}; rm -r */*/{$username};");
-			return TRUE; //success
-		}
-		return FALSE; // failure
+		$this->db->where('id', $user_id)->delete('users');
+		return true;
 	}
 
-
-	// ------------------------------------------------------------------------
-
-
-	/**
-	 * Delete Submissions
-	 *
-	 * Deletes all submissions of user with given user id
-	 * Returns TRUE (success) or FALSE (failure)
-	 *
-	 * @param $user_id
-	 * @return bool
-	 */
 	public function delete_submissions($user_id)
 	{
 		$this->db->trans_start();
@@ -425,7 +282,15 @@ class User_model extends CI_Model
 		$this->db->where('username', $username)->update('users', $user);
 	}
 
+	public function edit_profile($data)
+	{
+		$this->db->where('username', $data['username'])->update('users', $data);
+	}
 
+	public function edit_user($data)
+	{
+		$this->db->where('username', $data['username'])->update('users', $data);
+	}
 	// ------------------------------------------------------------------------
 
 
@@ -585,6 +450,18 @@ class User_model extends CI_Model
 			$this->db->where('username', $username)->update('users', array('first_login_time'=>$now));
 
 		$this->db->where('username', $username)->update('users', array('last_login_time'=>$now));
+	}
+
+	/**
+	 * Update Status
+	 *
+	 * Updates First Login Time and Last Login Time for given username
+	 *
+	 */
+	public function status($username,$status)
+	{
+		/**Status*/
+		$this->db->where('username', $username)->update('users', array('status'=>$status));
 	}
 
 

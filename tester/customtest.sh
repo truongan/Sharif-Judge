@@ -1,0 +1,2 @@
+g++ /home/vagrant/Wecode/assignments/assignment_1/p1/solution.cpp -o solution;./solution</home/vagrant/Wecode/assignments/assignment_1/p1/in/input9.txt >out 2>err
+docker run ubuntu:16.04 -it -v $JAIL:r

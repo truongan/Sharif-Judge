@@ -17,15 +17,11 @@ class Users extends CI_Controller
 			redirect('login');
 		if ( $this->user->level <= 2) // permission denied
 			show_404();
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);	
 	}
-
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
 
 	public function index()
 	{
@@ -34,77 +30,50 @@ class Users extends CI_Controller
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'users' => $this->user_model->get_all_users()
 		);
+		$now = shj_now_str();
+		foreach ($data['users'] as $key => $value) {
+			if( strtotime($now) - strtotime($value['last_login_time']) < 7200 && $value['status'] == '1')
+				$data['users'][$key]['status'] = '1';
+			else
+				$data['users'][$key]['status'] = '0';
+		}
 
-		$this->twig->display('pages/admin/user.twig', $data);
+		$this->twig->display('pages/admin/users.twig', $data);
 	}
 
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-
-	public function add()
+	public function add_users()
 	{
-		$data = array(
-			'all_assignments' => $this->assignment_model->all_assignments(),
+		$this->load->library('password_hash', array(8, FALSE));
+		$data=array(
+			'username' => $this->input->post('username'),
+			'class' => $this->input->post('class'),
+			'display_name' => $this->input->post('display_name'),
+			'password' => $this->password_hash->HashPassword($this->input->post('password')),
+			'email' =>$this->input->post('email'),
+			'role' =>$this->input->post('role'),
 		);
-		$this->form_validation->set_rules('new_users', 'New Users', 'required');
-		if ($this->form_validation->run())
-		{
-
-			if ( ! $this->input->is_ajax_request() )
-				exit;
-			list($ok, $error) = $this->user_model->add_users(
-				$this->input->post('new_users'),
-				$this->input->post('send_mail'),
-				$this->input->post('delay')
-			);
-			$this->twig->display('pages/admin/add_user_result.twig', array('ok' => $ok, 'error' => $error));
-		}
-		else
-		{
-			$this->twig->display('pages/admin/add_user.twig', $data);
-		}
+		$this->user_model->add_user($data);
+		redirect('users/index');
 	}
-
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-
-	/**
-	 * Controller for deleting a user
-	 * Called by ajax request
-	 */
-	public function delete()
+	public function edit_users()
 	{
-		if ( ! $this->input->is_ajax_request() )
-			show_404();
-		$user_id = $this->input->post('user_id');
-		if ( ! is_numeric($user_id) )
-			$json_result = array('done' => 0, 'message' => 'Input Error');
-		elseif ($this->user_model->delete_user($user_id))
-			$json_result = array('done' => 1);
-		else
-			$json_result = array('done' => 0, 'message' => 'Deleting User Failed');
-
-		$this->output->set_header('Content-Type: application/json; charset=utf-8');
-		echo json_encode($json_result);
+		$data=array(
+			'username' => $this->input->post('edit_username'),
+			'class' => $this->input->post('edit_class'),
+			'display_name' => $this->input->post('edit_display_name'),
+			'email' =>$this->input->post('edit_email'),
+			'role' =>$this->input->post('edit_role'),
+		);
+		$this->user_model->edit_user($data);
+		redirect('users/index');
 	}
 
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
+	public function delete_users()
+	{
+		$user_id = $this->input->post('delete_users_id');
+		$this->user_model->delete_user($user_id);
+		redirect('users/index');
+	}
 
 	/**
 	 * Controller for deleting a user's submissions

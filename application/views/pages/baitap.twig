@@ -1,169 +1,159 @@
 <!DOCTYPE html>
 <html>
 <head>
-	{% block other_assets %}
-	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
-	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
-	<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
-	<script>
-	$(document).ready(function(){
-		// Syntax highlighting increases the page's height, and we need to update the scroll-bar
-		$('.problem_description').resize(function(){
-			$('.scroll-wrapper').nanoScroller();
-		});
-		// Fix text directions for rtl text
-		$.each($('.problem_description [dir="auto"]'), function(i, element){
-			if (getComputedStyle(element).direction == 'rtl')
-			{
-				$(element).css('direction', 'rtl');
-				$(element).parent('ul, ol').css('direction', 'rtl');
-			}
-		});
-		// Syntax highlighting
-		$('pre code.language-c').parent().snippet('c', {style: shj.color_scheme});
-		$('pre code.language-cpp').parent().snippet('cpp', {style: shj.color_scheme});
-		$('pre code.language-python').parent().snippet('python', {style: shj.color_scheme});
-		$('pre code.language-java').parent().snippet('java', {style: shj.color_scheme});
-	});
-	</script>
-	{% endblock %}
 	<meta content="text/html" charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	
 	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-select.min.css') }}">
 	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
 
-	<link rel="icon" href="{{ base_url('assets/images/favicon.ico') }}"/>
-	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery-1.10.2.min.js') }}"></script>
-	<!-- You can use google's cdn for loading jquery: -->
-	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery-ui-1.10.3.custom.min.js') }}"></script>
-	<link rel="stylesheet" href="{{ base_url('assets/styles/flick/jquery-ui-1.10.3.custom.min.css') }}"/>
-	<script type="text/javascript" src="{{ base_url('assets/js/moment.min.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery.hoverIntent.minified.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery.cookie.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery.ba-resize.min.js') }}"></script>
-
-	<script type="text/javascript" src="{{ base_url('assets/noty/jquery.noty.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/noty/layouts/center.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/noty/layouts/bottomRight.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/noty/themes/default.js') }}"></script>
-
-	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/nano_scroller/nanoscroller.css') }}'/>
-	<script type='text/javascript' src="{{ base_url('assets/nano_scroller/jquery.nanoscroller.min.js') }}"></script>
-
-	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/font/font-awesome/css/font-awesome.min.css') }}'/>
 	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/thien_function.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap-select.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+
 </head>
 <body>
-	{% include 'templates/top_bar.twig' %}
+	{% include 'templates/bar.twig' %}
     <div class="baitapnar">
 	  	<div class="row">
-	  		{{ form_open_multipart('submit') }}
-	  		<div class="col-md-6 padding-left10 font-size">
-	  			{% block title_menu %}
-				{% if user.level >= 2 %}
-					<span class="title_menu_item"><a href="{{ site_url("problems/edit/md/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil color2"></i> Edit Markdown</a></span>
-					<span class="title_menu_item"><a href="{{ site_url("problems/edit/html/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil colór0"></i> Edit HTML</a></span>
-					<span class="title_menu_item"><a href="{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil color8"></i> Edit Plain HTML</a></span>
-				{% endif %}
+	  		<div class="col-md-6 font-size">
+				<div class="row padding-left">
 
-				{% if problem.has_pdf %}
-					<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-file-pdf-o colór"></i> PDF</a></span>
-				{% endif %}
-				{% if problem.has_template %}
-					<span class="title_menu_item"><a href="{{ site_url("problems/template/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-download colór"></i> Download the code template</a></span>
-				{% endif %}
+					{% if user.level >= 2 %}
+						<!-- <span class="title_menu_item"><a href="{{ site_url("problems/edit/md/1/#{problem.id}") }}"><span class="glyphicon glyphicon-pencil"></span> Edit Markdown</a></span> -->
+						<span class="title_menu_item"><a href="{{ site_url("problems/edit/html/1/#{problem.id}") }}"><span class="glyphicon glyphicon-edit"></span> Edit HTML</a></span>
+						<span class="title_menu_item" style="padding-left: 15px;"><a href="{{ site_url("problems/edit/plain/1/#{problem.id}") }}"><span class="glyphicon glyphicon-edit"></span> Edit Plain HTML</a></span>
+					{% endif %}
 
+					{% if problem.has_pdf %}
+						<span class="title_menu_item" style="padding-left: 15px;"><a href="{{ site_url("problems/pdf/1/#{problem.id}") }}"><span class="glyphicon glyphicon-file"></span> PDF</a></span>
+					{% endif %}
 
-				{% endblock %}
-				<div class="problem_description">
-					{{ problem.description|raw }}
+					{% if problem.has_template %}
+						<span class="title_menu_item"><a href="{{ site_url("problems/template/1/#{problem.id}") }}"><span class="glyphicon glyphicon-download"></span> Download the code template</a></span>
+					{% endif %}
+
+					<div class="problem_description">
+						{{ problem.description|raw }}
+					</div>
 				</div>
 	  		</div>
+
+			{{ form_open_multipart('submit') }}
+		  	<input type="hidden" name="problem" value="{{ problem.id }}"/>
+		  	<input type="hidden" name="time_competition" id="time_competition" value="{{ problem.time_competition }}"/>
+		  	<input type="hidden" name="check_com" id="check_com"/>
 	  		<div class="col-md-6">
-	  			{{ form_open_multipart('submit') }}
-	  			<ul class="nav navbar-nav nav-tabs font-face">
-  					<li class="active"><a href="#">CODE</a></li>
-					<li class="input_p">
-						<label>Select language</label>
-					</li>
-					<li class="">
-						<select id="languages" name="language" class="sharif_input full-width">
-						
-							{% for l in problem.allowed_languages %}
-								<option value="{{ l }}">{{ l }}</option>
-							{% endfor %}
-						</select>
-					</li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right padding-right font-size15">
-			        <p class="input_p">
-						<label for="code" class="short">Code theme:</label>
-						<textarea  style="display:none;" rows="4" cols="80" name="code" class="sharif_input add_text">
-						</textarea>
-						<select id="theme" class="sharif_input">
-							<option value="ambiance">ambiance</option>
-							<option value="chaos">chaos</option>
-							<option value="chrome">chrome</option>
-							<option value="clouds">clouds</option>
-							<option value="clouds_midnight">clouds_midnight</option>
-							<option value="cobalt">cobalt</option>
-							<option value="crimson_editor">crimson_editor</option>
-							<option value="dawn">dawn</option>
-							<option value="dreamweaver">dreamweaver</option>
-							<option value="eclipse">eclipse</option>
-							<option value="github">github</option>
-							<option value="idle_fingers">idle_fingers</option>
-							<option value="iplastic">iplastic</option>
-							<option value="katzenmilch">katzenmilch</option>
-							<option value="kr_theme">kr_theme</option>
-							<option value="kuroir">kuroir</option>
-							<option value="merbivore">merbivore</option>
-							<option value="merbivore_soft">merbivore_soft</option>
-							<option value="mono_industrial">mono_industrial</option>
-							<option value="monokai">monokai</option>
-							<option value="pastel_on_dark">pastel_on_dark</option>
-							<option value="solarized_dark">solarized_dark</option>
-							<option value="solarized_light">solarized_light</option>
-							<option value="sqlserver">sqlserver</option>
-							<option value="terminal">terminal</option>
-							<option value="textmate">textmate</option>
-							<option value="tomorrow">tomorrow</option>
-							<option value="tomorrow_night">tomorrow_night</option>
-							<option value="tomorrow_night_blue">tomorrow_night_blue</option>
-							<option value="tomorrow_night_bright">tomorrow_night_bright</option>
-							<option value="tomorrow_night_eighties">tomorrow_night_eighties</option>
-							<option value="twilight">twilight</option>
-							<option value="vibrant_ink">vibrant_ink</option>
-						</select>
-					</p>
-			     </ul>
-			</div>
-			<div class="col-md-6">
-	  			<div id="editor">//Paste your code here
-//NOTE: If you use java, your Main class must be named solution</div>
-			</div>
-			<div class="col-md-6">
-				<ul class="nav nav-tabs font-size15" role="tablist">
-					<li class="active"><a href="#">Tests</a></li>
-					<li><a href="#">+Add custom test</a></li>
-					<li><p class="input_p">
-						<input type="file" id="file" class="sharif_input full-width" name="userfile"/>
-					</p></li>
-					<p class="input_p">
-						<input type="submit" value="Submit" class="sharif_input"/>
-					</p>
-				</ul>
+	  			<div class="row baitap-background">
+
+		  			<div class="col-md-offset-1">
+						<div class="form-group">
+							<select id="language" name ="language" class="selectpicker show-tick" title="Language" data-width="100px">
+								{% for l in problem.allowed_languages %}
+									<option selected="selected" value="{{ l }}">{{ l }}</option>
+								{% endfor %}
+							</select>
+							<textarea  style="display:none;" rows="4" cols="80" name="code" class="sharif_input add_text">
+							</textarea>
+							<select id="theme" class="selectpicker show-tick" title="Themes" data-width="100px">
+								<option value="ambiance">ambiance</option>
+								<option value="chaos">chaos</option>
+								<option value="chrome">chrome</option>
+								<option value="clouds">clouds</option>
+								<option value="clouds_midnight">clouds_midnight</option>
+								<option value="cobalt">cobalt</option>
+								<option value="crimson_editor">crimson_editor</option>
+								<option value="dawn">dawn</option>
+								<option value="dreamweaver">dreamweaver</option>
+								<option value="eclipse">eclipse</option>
+								<option value="github">github</option>
+								<option value="idle_fingers">idle_fingers</option>
+								<option value="iplastic">iplastic</option>
+								<option value="katzenmilch">katzenmilch</option>
+								<option value="kr_theme">kr_theme</option>
+								<option value="kuroir">kuroir</option>
+								<option value="merbivore">merbivore</option>
+								<option value="merbivore_soft">merbivore_soft</option>
+								<option value="mono_industrial">mono_industrial</option>
+								<option value="monokai">monokai</option>
+								<option value="pastel_on_dark">pastel_on_dark</option>
+								<option value="solarized_dark">solarized_dark</option>
+								<option value="solarized_light">solarized_light</option>
+								<option value="sqlserver">sqlserver</option>
+								<option value="terminal">terminal</option>
+								<option value="textmate">textmate</option>
+								<option value="tomorrow">tomorrow</option>
+								<option value="tomorrow_night">tomorrow_night</option>
+								<option value="tomorrow_night_blue">tomorrow_night_blue</option>
+								<option value="tomorrow_night_bright">tomorrow_night_bright</option>
+								<option value="tomorrow_night_eighties">tomorrow_night_eighties</option>
+								<option value="twilight">twilight</option>
+								<option value="vibrant_ink">vibrant_ink</option>
+							</select>
+						</div>
+					</div>
+		  			<div class="font-size15" id="editor" name="code"></div>
+
+					<div class="row">
+						<div class="col-md-offset-1 col-md-3 padding-editor">
+							<a title="Add Custom test" class="add_test" data-title="Ad" data-toggle="modal" data-target="#add-test"><span class="glyphicon glyphicon-plus custom-font"></span>Add Custom Test</a> 
+						</div>
+	                	<div class="col-md-offset-1 col-lg-2 col-md-2 col-12">
+				            <label class="btn btn-block btn-primary">
+				                Browse&hellip; <input type="file" name="userfile" style="display: none;">
+				            </label>
+				        </div>
+						<div class="col-md-offset-1 col-md-2">
+							<button type="submit" class="btn btn-success "><span class="glyphicon glyphicon-ok-sign"></span> Submit</button>
+						</div>
+					</div>
+				</div>
 	  		</div>
 	  		</form>
 	  	</div>
 	</div>
 	<script src="{{ base_url('assets/js/src-min-noconflict/ace.js') }}" type="text/javascript" charset="utf-8"></script>
 	<script  type="text/javascript" src="{{ base_url('assets/js/submit_page.js')   }}" charset="utf-8"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+
+
+
+	{{ form_open_multipart('testcase','id="testcase"') }}
+		<input type="hidden" id="problemid" name="problemid" value="{{ problem.id }}"/>
+		<div class="modal fade" id="add-test" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+	      	<div class="modal-dialog">
+	    		<div class="modal-content">
+	          		<div class="modal-header header-br">
+	        			<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+	        			<h4 class="modal-title custom_align" id="Heading"> Add Customtest</h4>
+	      			</div>
+		          	<div class="modal-body">
+						<div class="form-group">
+				            <label for="message-text" class="control-label">Input:</label>
+				            <textarea class="form-control" name="input_testcase" id="input_testcase"></textarea>
+				        </div>
+	      			</div>
+	      			<div class="modal-body">
+						<div class="form-group">
+				            <label for="message-text" class="control-label">Output:</label>
+				            <textarea class="form-control" id="output" style="height: 150px"></textarea>
+				        </div>
+	      			</div>
+		          	<div class="modal-footer ">
+	    				<button type="submit" class="btn btn-success" id="submit"><span class="glyphicon glyphicon-ok-sign"></span> SUBMIT</button>
+
+	    				<button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> CLOSE</button>
+		      		</div>
+	       	 	</div>
+	  		</div>
+	  	</div>
+  	</form>
+	<script type="text/javascript">
+		$("#check_com").val(location.search.split("=")[1]);
+		shj.check_drawn_time = $("#time_competition").val();
+	</script>
 </body>
 </html>

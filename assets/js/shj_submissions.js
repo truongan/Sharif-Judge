@@ -6,7 +6,7 @@
  *     Javascript codes for "All Submissions" and "Final Submissions" pages
  */
 
-shj.modal_open = false;
+// shj.modal_open = false;
 
 
 
@@ -20,6 +20,7 @@ $(document).ready(function () {
 		var button = $(this);
 		var row = button.parents('tr');
 		var type = button.data('type');
+		console.log(type);
 		if (type == 'download') {
 			window.location = shj.site_url + 'submissions/download_file/' + row.data('u') + '/' + row.data('a') + '/' + row.data('p') + '/' + row.data('s');
 			return;
@@ -37,8 +38,10 @@ $(document).ready(function () {
 				shj_csrf_token: shj.csrf_token
 			},
 			success: function (data) {
+				console.log(data);
 				if (type == 'code')
 					 data.text = shj.html_encode(data.text);
+
 				$('.modal_inside').html('<pre class="code-column">'+data.text+'</pre>');
 				$('.modal_inside').prepend('<p><code>'+data.file_name+' | Submit ID: '+row.data('s')+' | Username: '+row.data('u')+' | Problem: '+row.data('p')+'</code></p>');
 				if (type == 'code'){
@@ -68,9 +71,10 @@ $(document).ready(function () {
 	$(".shj_rejudge").attr('title', 'Rejudge');
 	$(".shj_rejudge").click(function () {
 		var row = $(this).parents('tr');
+		var domain ='http://wecode.dev/index.php/'
 		$.ajax({
 			type: 'POST',
-			url: shj.site_url + 'rejudge/rejudge_single',
+			url: domain + 'rejudge/rejudge_single',
 			data: {
 				username: row.data('u'),
 				assignment: row.data('a'),
@@ -83,8 +87,8 @@ $(document).ready(function () {
 			error: shj.loading_error,
 			success: function (response) {
 				if (response.done) {
-					row.children('.status').html('<div class="btn pending" data-code="0">PENDING</div>');
-					noty({text: 'Rejudge in progress', layout: 'bottomRight', type: 'success', timeout: 2500});
+					row.children('.status').html('<div class="btn btn-default pending" data-code="0">PENDING</div>');
+					// noty({text: 'Rejudge in progress', layout: 'bottomRight', type: 'success', timeout: 2500});
 					setTimeout(update_status, update_status_interval);
 				}
 				else
@@ -128,7 +132,7 @@ $(document).ready(function () {
 
 update_status_interval = 6000;
 function update_status(){
-	
+	console.log('status');
 	$('tr').each(function(){
 		var status = $(this).children('.status');
 		if (status.children('div').hasClass('pending')){
@@ -146,24 +150,23 @@ function update_status(){
 				complete: shj.loading_finish,
 				error: shj.loading_error,
 				success: function (response) {
+					console.log(response);
 					response = JSON.parse(response);
-					//console.log(response.status);
-					//console.log(typeof response);
 					var element;
 					switch (response.status.toLowerCase() ){
 						case 'pending':
-							element = ('<div class="btn pending" data-type="result" data-code="0">PENDING</div>');
-					 		noty({text: 'Still judging', layout: 'bottomRight', type: 'success', timeout: 2000});
+							element = ('<div style="white-space: normal; width: 120px;" class="btn btn-default pending" data-type="result" data-code="0">PENDING</div>');
+					 		// noty({text: 'Still judging', layout: 'bottomRight', type: 'success', timeout: 2000});
 						break;
 
 						case  'score' :
-							element = '<div class="btn ' + (response.fullmark ? 'shj-green' : 'shj-red');
+							element = '<div style="white-space: normal; width: 120px;" class="btn ' + (response.problem_score == response.pre_score ? 'btn-success' : 'btn-danger');
 							element += '" data-type="result" >' + response.final_score + '</div>';
-							noty({text: 'Submission has been judged', layout: 'bottomRight', type: 'success', timeout: 2000});
+							// noty({text: 'Submission has been judged', layout: 'bottomRight', type: 'success', timeout: 2000});
 						break;
 
 						default:
-							element = ('<div class="btn shj-blue" data-code="0" data-type="result">' 
+							element = ('<div class="btn btn-warning" style="white-space: normal; width: 120px;" data-code="0" data-type="result">' 
 															+ response.status + '</div>');
 					}
 					status.html(element);

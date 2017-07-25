@@ -18,6 +18,10 @@ class Queue extends CI_Controller
 		if ( $this->user->level <= 1) // permission denied
 			show_404();
 		$this->load->model('queue_model');
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);	
 	}
 
 

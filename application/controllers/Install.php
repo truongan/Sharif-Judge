@@ -69,23 +69,42 @@ class Install extends CI_Controller
 
 			// create table 'submissions'
 			$fields = array(
-				'submit_id'     => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
+				'submit_id'     => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
 				'username'      => array('type' => 'VARCHAR', 'constraint' => 20),
 				'assignment'    => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
 				'problem'       => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
 				'is_final'      => array('type' => 'TINYINT', 'constraint' => 1, 'default' => 0),
 				'time'          => array('type' => $DATETIME),
 				'status'        => array('type' => 'VARCHAR', 'constraint' => 100),
+				'problem_score'	=> array('type' => 'INT', 'constraint' => 11),
 				'pre_score'     => array('type' => 'INT', 'constraint' => 11),
 				'coefficient'   => array('type' => 'VARCHAR', 'constraint' => 6),
 				'file_name'     => array('type' => 'VARCHAR', 'constraint' => 30),
 				'main_file_name'=> array('type' => 'VARCHAR', 'constraint' => 30),
 				'file_type'     => array('type' => 'VARCHAR', 'constraint' => 6),
+				'check_com'     => array('type' => 'INT', 'constraint' => 11, 'default' => '0'),
 			);
 			$this->dbforge->add_field($fields);
-			$this->dbforge->add_key(array('assignment', 'submit_id'));
+			$this->dbforge->add_key('submit_id', TRUE); 
 			if ( ! $this->dbforge->create_table('submissions', TRUE))
 				show_error("Error creating database table ".$this->db->dbprefix('submissions'));
+
+			// create table 'competition'
+			$fields = array(
+				'id'              => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				'id_hero_a'       => array('type' => 'VARCHAR', 'constraint' => 50, 'unsigned' => TRUE),
+				'id_hero_b'       => array('type' => 'VARCHAR', 'constraint' => 50, 'unsigned' => TRUE),
+				'tiso'            => array('type' => 'INT', 'constraint' => 11, 'default' => '0'),
+				'xp_hero_a'       => array('type' => 'INT', 'constraint' => 11, 'default' => '0'),
+				'xp_hero_b'       => array('type' => 'INT', 'constraint' => 11, 'default' => '0'),
+				'answer_b'        => array('type' => 'VARCHAR', 'constraint' => 11, 'default' => 'null'),
+				'problem_id'      => array('type' => 'VARCHAR', 'constraint' => 11, 'default' => ''),
+				'time'            => array('type' => $DATETIME),
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('id', TRUE); 
+			if ( ! $this->dbforge->create_table('competition', TRUE))
+				show_error("Error creating database table ".$this->db->dbprefix('competition'));
 
 
 
@@ -96,15 +115,10 @@ class Install extends CI_Controller
 				'problems'      => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
 				'total_submits' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
 				'open'          => array('type' => 'TINYINT', 'constraint' => 1),
-				'scoreboard'    => array('type' => 'TINYINT', 'constraint' => 1),
 				'javaexceptions'=> array('type' => 'TINYINT', 'constraint' => 1),
 				'description'   => array('type' => 'TEXT'),
 				'start_time'    => array('type' => $DATETIME),
 				'finish_time'   => array('type' => $DATETIME),
-				'extra_time'    => array('type' => 'INT', 'constraint' => 11),
-				'late_rule'     => array('type' => 'TEXT'),
-				'participants'  => array('type' => 'TEXT'),
-				'moss_update'   => array('type' => 'VARCHAR', 'constraint' => 30, 'default' => 'Never'),
 			);
 			$this->dbforge->add_field($fields);
 			$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
@@ -132,10 +146,11 @@ class Install extends CI_Controller
 			// create table 'problems'
 			$fields = array(
 				'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-				'id'                => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
+				'id'                => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
 				'name'              => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
 				'difficulty'        => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
 				'score'             => array('type' => 'INT', 'constraint' => 11),
+				'time_competition'  => array('type' => 'INT', 'constraint' => 11, 'default' => '30'),
 				'is_upload_only'    => array('type' => 'TINYINT', 'constraint' => 1, 'default' => '0'),
 				'c_time_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
 				'python_time_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 1500),
@@ -146,7 +161,7 @@ class Install extends CI_Controller
 				'diff_arg'          => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => '-bB'),
 			);
 			$this->dbforge->add_field($fields);
-			$this->dbforge->add_key(array('assignment', 'id'));
+			$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
 			if ( ! $this->dbforge->create_table('problems', TRUE))
 				show_error("Error creating database table ".$this->db->dbprefix('problems'));
 
@@ -169,23 +184,6 @@ class Install extends CI_Controller
 			$this->db->query(
 				"ALTER TABLE {$this->db->dbprefix('queue')}
 				 ADD CONSTRAINT {$this->db->dbprefix('suap_unique')} UNIQUE (submit_id, username, assignment, problem);"
-			);
-
-
-
-			// create table 'scoreboard'
-			$fields = array(
-				'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-				'scoreboard'        => array('type' => 'TEXT'),
-			);
-			$this->dbforge->add_field($fields);
-			$this->dbforge->add_key('assignment');
-			if ( ! $this->dbforge->create_table('scoreboard', TRUE))
-				show_error("Error creating database table ".$this->db->dbprefix('scoreboard'));
-			//Add UNIQUE ( assignment) constraint
-			$this->db->query(
-				"ALTER TABLE {$this->db->dbprefix('scoreboard')}
-				 ADD CONSTRAINT {$this->db->dbprefix('suap_unique')} UNIQUE (assignment);"
 			);
 
 
@@ -237,6 +235,8 @@ class Install extends CI_Controller
 			$fields = array(
 				'user_id'        => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
 				'diembaitap'     => array('type' => 'INT', 'constraint' => 11),
+				'diemthidau'     => array('type' => 'INT', 'constraint' => 11),
+				'tongdiem'     => array('type' => 'INT', 'constraint' => 11),
 			);
 			$this->dbforge->add_field($fields);
 			$this->dbforge->add_key('user_id', TRUE);
@@ -268,16 +268,17 @@ class Install extends CI_Controller
 			$fields = array(
 				'id'                  => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
 				'username'            => array('type' => 'VARCHAR', 'constraint' => 20),
-				'class'               => array('type' => 'VARCHAR', 'constraint' => 20),
+				'class'               => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => ''),
 				'password'            => array('type' => 'VARCHAR', 'constraint' => 100),
 				'display_name'        => array('type' => 'VARCHAR', 'constraint' => 40, 'default' => ''),
 				'email'               => array('type' => 'VARCHAR', 'constraint' => 40),
 				'role'                => array('type' => 'VARCHAR', 'constraint' => 20),
 				'passchange_key'      => array('type' => 'VARCHAR', 'constraint' => 60, 'default' => ''),
 				'passchange_time'     => array('type' => $DATETIME, 'null' => TRUE),
+				'status'     		  => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => '0'),
 				'first_login_time'    => array('type' => $DATETIME, 'null' => TRUE),
 				'last_login_time'     => array('type' => $DATETIME, 'null' => TRUE),
-				'selected_assignment' => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE, 'default' => 0),
+				'selected_assignment' => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE, 'default' => 1),
 				'dashboard_widget_positions'   => array('type' => 'VARCHAR', 'constraint' => 500, 'default' => ''),
 			);
 			$this->dbforge->add_field($fields);
@@ -287,15 +288,27 @@ class Install extends CI_Controller
 				show_error("Error creating database table ".$this->db->dbprefix('users'));
 
 
-
+			$this->load->library('password_hash', array(8, FALSE));
 			// add admin user
-			$this->user_model->add_user(
-				$this->input->post('username'),
-				$this->input->post('email'),
-				$this->input->post('password'),
-				'admin'
+			$data=array(
+				'username'   => $this->input->post('username'),
+				'email'      => $this->input->post('email'),
+				'role'       => 'admin',
+				'password'   => $this->password_hash->HashPassword($this->input->post('password')),
 			);
+			$this->user_model->add_user($data);
 
+			$data=array(
+				'name'          => 'assignment',
+				'problems'      => '13',
+				'total_submits' => '0',
+				'open'          => '1',
+				'javaexceptions'=> '0',
+				'description'   => '',
+				'start_time'    => '2017-05-01 00:00:00',
+				'finish_time'   => '2017-11-30 00:00:00',
+			);
+			$this->db->insert('assignments',$data);			
 			// Using a random string as encryption key
 			$config_path = rtrim(APPPATH,'/').'/config/config.php';
 			$config_content = file_get_contents($config_path);

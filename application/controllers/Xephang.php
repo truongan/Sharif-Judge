@@ -5,6 +5,10 @@ class Xephang extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);	
 		$this->load->model('xephang_model');
 	}
 
@@ -20,7 +24,7 @@ class Xephang extends CI_Controller
 
 		// insert database xep hang
 
-		$submission = $this->xephang_model->get_all_submission();
+		$submission = $this->db->select('*')->get_where('submissions', array('check_com' => '0'))->result_array();
 		$users = $this->user_model->get_all_users();
 		foreach ($users as $value) {
 			$this->xephang_model->save_db_xephang_for_all_problem($value['id'], $submission);
@@ -29,12 +33,14 @@ class Xephang extends CI_Controller
 		$this->db->select('*');
 		$this->db->from('users');
 		$this->db->join('xephang', 'users.id = xephang.user_id', 'left');
-		$this->db->order_by('users.id');
+		$this->db->order_by('tongdiem',"desc");
 
 		$query = $this->db->get();
 		$data = array(
 			'users' => $query->result()
 		);
+		// var_dump($data);die;
+
 		$this->twig->display('pages/xephang.twig', $data);
 	}
 

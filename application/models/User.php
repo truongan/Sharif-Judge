@@ -13,7 +13,8 @@ class User extends CI_Model
 	public $selected_assignment;
 	public $level;
 	public $email;
-
+	public $display_name;
+	public $class;
 	/* We put site's name in here because this data is given in every pages
 	*  to display username.
 	*/
@@ -27,12 +28,13 @@ class User extends CI_Model
 			return;
 
 		$user = $this->db
-			->select('selected_assignment, role, email')
+			->select('*')
 			->get_where('users', array('username' => $this->username))
 			->row();
 
-		$this->email = $user->email;
-
+		$this->email        = $user->email;
+		$this->display_name = $user->display_name;
+		$this->class        = $user->class;
 		$query = $this->db->get_where('assignments', array('id' => $user->selected_assignment));
 		if ($query->num_rows() != 1)
 			$this->selected_assignment = array(

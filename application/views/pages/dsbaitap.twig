@@ -2,88 +2,325 @@
 <html>
 <head>
 	<meta content="text/html" charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	
+
 	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-select.min.css') }}">
 	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
 	<link rel="stylesheet" href="{{ base_url('assets/css/dataTables.bootstrap.min.css') }}">
-	<script type="text/javascript" src="{{ base_url('assets/js/thien-js.js') }}"></script>
-	<link rel="icon" href="{{ base_url('assets/images/favicon.ico') }}"/>
-	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
+
 	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/thien-js.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap-select.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/thien_datatable.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/thien_function.js') }}"></script>	
 	<script type="text/javascript" src="{{ base_url('assets/js/jquery.dataTables.min.js') }}"></script>
 	<script type="text/javascript" src="{{ base_url('assets/js/dataTables.bootstrap.min.js') }}"></script>
-
-
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
 </head>
 <body>
 	{% include 'templates/bar.twig' %}
-
-    <div class="container margin_70">
+	{% if user.level >= 2 %}
+		<div class="container" style="padding-top: 70px;">
+			<a data-placement="top" data-toggle="tooltip" title="ADD"><button class="btn btn-primary btn-xs" data-title="Add" data-toggle="modal" data-target="#add-problems" ><span class="glyphicon glyphicon-plus"></span> Add Problems</button></a>
+		</div>
+	{% endif %}
+    <div class="container">
 		<div class="row">
 			<div class="col-md-9">	
-		    	<h2>Danh sach bai tap</h2>
-		 		<table class="table table-hover table-striped databaitap">
+		    	<h2>List Problems</h2>
+		    {# 	<div class="checkbox">
+		          	<label>
+		            	<input type="checkbox" value="">
+		            	<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+		            	Show problem tags
+		          	</label>
+		        </div> #}
+		    	
+		 		<table id="mytable" class="table table-hover table-striped databaitap">
 					<thead>
 			            <tr>
 			                <th>#</th>
 			                <th>Tên</th>
 			                <th>Độ khó</th>
-			                <th>Loaibt</th>
 			                <th>Điểm</th>
 			                <th>Bạn đạt được</th>
-			                <th>Actions</th>
-			            </tr>
-	  				</thead>
-			      	<tbody>
-			            {% for baitap in baitaps %}
-							<tr data-id="{{ baitap.id }}">
-								<td>{{ loop.index }}</td>
-								<td id="un"> <a href="{{site_url("problems/#{baitap.assignment}/#{baitap.id}")}}">{{ baitap.name }}
-								<td>{{ baitap.difficulty }}</td>
-								<td></td>
-								<td>{{ baitap.score }}</td>
-								<td></td>
-								<td>
-									<a title="Add" href="{{ site_url('dsbaitap/add') }}"><i class="fa fa-plus color11"></i></a>
-									<a title="Edit" href="{{ site_url('dsbaitap/edit/'~baitap.id) }}"><i class="fa fa-pencil fa-lg color9"></i></a>
-									<span title="Delete Problems" class="delete_problems pointer"><i title="Delete Problems" class="fa fa-times fa-lg color2"></i></span>
-								</td>
-							</tr>
-						{% endfor %}
-			        </tbody>
-		  		</table>
-		  	</div>
-			<div class="col-md-3 padding-left10">	
-		    	<h2>Danh sach loai bt</h2>
-		 		<table class="table table-hover table-striped databaitap">
-					<thead>
-			            <tr>
-			                <th>#</th>
-			                <th>Tên</th>
-			                <th>Actions</th>
+			                {% if user.level >= 2 %}
+			                	<th>Actions</th>
+			                {% endif %}
 			            </tr>
 	  				</thead>
 			      	<tbody>
 			            {% for baitap in baitaps %}
 							<tr>
 								<td>{{ loop.index }}</td>
-								<td id="un"> <a href="{{site_url("problems/#{baitap.assignment}/#{baitap.id}")}}">{{ baitap.loaibt_name }}
-								<td>
-									<a title="Add" href="{{ site_url('dsbaitap/add') }}"><i class="fa fa-plus color11"></i></a>
-									<a title="Edit" href="{{ site_url('dsbaitap/add') }}"><i class="fa fa-pencil fa-lg color9"></i></a>
-									<span title="Delete Problems" class="delete_problems pointer"><i title="Delete Problems" class="fa fa-times fa-lg color2"></i></span>
+								<td id="un"> <a href="{{site_url("problems/#{baitap.assignment}/#{baitap.id}")}}">{{ baitap.name }}</a>
 								</td>
+								<td>{{ baitap.difficulty }}</td>
+								<td>{{ baitap.score }}</td>
+								<td>{{ baitap.you_score }}</td>
+								{% if user.level >= 2 %}
+									<td>
+										<a title="Edit Problems" class="problems_edit" data-title="Edit" data-toggle="modal" data-target="#edit-problems" data-id="{{ baitap|json_encode }}"><span class="glyphicon glyphicon-edit"></span></a> 
+										<a title="Delete Problems" class="problems_delete" data-title="Delete" data-toggle="modal" data-target="#delete-problems" data-id="{{ baitap.id }}"><span class="glyphicon glyphicon-trash"></span></a> 
+									</td>
+								{% endif %}
 							</tr>
 						{% endfor %}
 			        </tbody>
 		  		</table>
 		  	</div>
+			<div class="col-md-3 padding-left10">
+		    	<h2>List Tag</h2>
+		 		<table class="table table-hover table-striped">
+					<thead>
+			            <tr>
+			                <th>#</th>
+			                <th>Tên</th>
+			                {% if user.level >= 2 %}
+                       			<th>Actions</th>
+                       		{% endif %}
+			            </tr>
+	  				</thead>
+			      	<tbody>
+			            {% for loai in loaibt %}
+							<tr>
+								<td>{{ loop.index }}</td>
+								<td><a href="{{ site_url('dsbaitap/filter/'~loai.loaibt_id) }}">{{ loai.loaibt_name }}</a></td>
+								{% if user.level >= 2 %}
+									<td>
+										<a title="Edit Tag" class="tag_edit" data-title="Edit" data-toggle="modal" data-target="#edit-tag" data-id="{{ loai|json_encode }}"><span class="glyphicon glyphicon-edit"></span></a> 
+										<a title="Delete Tag" class="tag_delete" data-title="Delete" data-toggle="modal" data-target="#delete-tag" data-id="{{ loai.loaibt_id }}"><span class="glyphicon glyphicon-trash"></span></a> 
+									</td>
+								{% endif %}
+							</tr>
+						{% endfor %}
+							{% if user.level >= 2 %}
+								<tr>
+									{{ form_open_multipart('dsbaitap/add_tag') }}
+									<td></td>
+									<td><input type="text" name="tagname" class="form-control" placeholder="Tagname" aria-describedby="basic-addón"></td>
+									<td><button class="btn btn-default" type="submit" href="{{ site_url('dsbaitap/add_tag') }}"><span class="glyphicon glyphicon-plus"></span>Add</button></td>
+									</form>
+							</tr>
+							{% endif %}
+			        </tbody>
+		  		</table>
+		  	</div>
 	  	</div>
 	</div>
-	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+
+	{{ form_open_multipart('dsbaitap/add_problem') }}
+	<div class="modal fade" id="add-problems" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+      	<div class="modal-dialog">
+    		<div class="modal-content">
+          		<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        			<h4 class="modal-title custom_align" id="Heading"> PROBLEM INFO</h4>
+      			</div>
+	          	<div class="modal-body">
+			        <div class="form-group">
+			        	<input id="name" type="text" name="name" placeholder="PROBLEMS NAME" class="form-control input-md"/>
+			    	</div>
+			        <div class="form-group">
+				   		<select id="difficulty" name="difficulty" class="selectpicker show-tick" data-style="btn-info">
+							<option value="Easy">Easy</option>
+							<option value="Medium">Medium</option>
+							<option value="Hard">Hard</option>
+							<option value="Advanced">Advanced</option>
+							<option value="Expert">Expert</option>
+						</select>
+						<select id="tag{{i}}" name ="tag[{{i}}]" class="selectpicker show-tick font-color-white" multiple >
+							{% for loai in loaibt %}
+								<option dir="auto" value="{{ loai.loaibt_name }}">{{ loai.loaibt_name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+			        <div class="form-group">
+			        	<input id="score" type="text" name="score" placeholder="SCORE" class="form-control input-md"/>
+			    	</div>
+					<div class="form-group">
+			        	<input id="time_competition" type="text" name="time_competition" placeholder="Time Competition(s)" class="form-control input-md"/>
+			    	</div>
+			        <div class="form-group">
+			        	<input id="c_time_limit" type="text" name="c_time_limit" placeholder="C Time Limit(ms)" class="form-control input-md"/>
+			    	</div>
+			        <div class="form-group">
+			        	<input id="python_time_limit" type="text" name="python_time_limit" placeholder="Python Time Limit(ms)" class="form-control input-md"/>
+			    	</div>
+			        <div class="form-group">
+			        	<input id="java_time_limit" type="text" name="java_time_limit" placeholder="Java Time Limit(ms)" class="form-control input-md"/>
+			    	</div>		
+			        <div class="form-group">
+			        	<input id="memory_limit" type="text" name="memory_limit" placeholder="Memory Limit(kB)" class="form-control input-md"/>
+			    	</div>			    		    	
+			        <div class="form-group">
+			        	<select id="lang{{i}}" name="select_languages[{{i}}]" class="selectpicker show-tick font-color-white" multiple>
+							<option value="C">C</option>
+							<option value="C++">C++</option>
+							<option value="Python 2">Python 2</option>
+							<option value="Python 3">Python 3</option>
+							<option value="Java">Java</option>
+						</select>
+			    	</div>
+			        <div class="form-group">
+			        	<input type="file" name="tests_desc" id="form_tests_desc" onchange="fileSelected();"/>
+						<label for="form_tests_desc" class="shòrt">Tests and Descriptions<br> (zip file)<br>
+							<span class="form_comment">
+								<a href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/tests_structure.md" target="_blank">Use this structure</a>
+							</span>
+						</label>
+
+			    	</div>
+      			</div>
+	          	<div class="modal-footer ">
+	        		<button type="submit" class="btn btn-success btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> ADD PROBLEM</button>
+	      		</div>
+       	 	</div>
+  		</div>
+  	</div>
+	</form>
+
+	{{ form_open_multipart('dsbaitap/edit_problems') }}
+  	<input type="hidden" id="edit_problems_id" name="edit_problems_id"/>
+	<div class="modal fade" id="edit-problems" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+      	<div class="modal-dialog">
+    		<div class="modal-content">
+          		<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        			<h4 class="modal-title custom_align" id="Heading"> PROBLEM INFO</h4>
+      			</div>
+	          	<div class="modal-body">
+			        <div class="form-group">
+			        	<input id="edit_problems_name" type="text" name="edit_problems_name" placeholder="PROBLEMS NAME" class="form-control input-md"/>
+			    	</div>
+			        <div class="form-group">
+				   		<select id="edit_problems_difficulty" name="edit_problems_difficulty" class="selectpicker show-tick" data-style="btn-info">
+							<option value="Easy">Easy</option>
+							<option value="Medium">Medium</option>
+							<option value="Hard">Hard</option>
+							<option value="Advanced">Advanced</option>
+							<option value="Expert">Expert</option>
+						</select>
+						<select id="edit_problems_tag{{i}}" name ="edit_problems_tag[{{i}}]" class="selectpicker show-tick font-color-white" multiple >
+							{% for loai in loaibt %}
+								<option value="{{ loai.loaibt_name }}">{{ loai.loaibt_name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+			        <div class="form-group">
+			        	<input id="edit_problems_score" type="text" name="edit_problems_score" placeholder="SCORE" class="form-control input-md"/>
+			    	</div>
+					<div class="form-group">
+			        	<input id="edit_time_competition" type="text" name="edit_time_competition" placeholder="Time Competition(s)" class="form-control input-md"/>
+			    	</div>			    	
+			        <div class="form-group">
+			        	<input id="edit_problems_c_time_limit" type="text" name="edit_problems_c_time_limit" placeholder="C Time Limit(ms)" class="form-control input-md"/>
+			    	</div>
+			        <div class="form-group">
+			        	<input id="edit_problems_python_time_limit" type="text" name="edit_problems_python_time_limit" placeholder="Python Time Limit(ms)" class="form-control input-md"/>
+			    	</div>
+			        <div class="form-group">
+			        	<input id="edit_problems_java_time_limit" type="text" name="edit_problems_java_time_limit" placeholder="Java Time Limit(ms)" class="form-control input-md"/>
+			    	</div>		
+			        <div class="form-group">
+			        	<input id="edit_problems_memory_limit" type="text" name="edit_problems_memory_limit" placeholder="Memory Limit(kB)" class="form-control input-md"/>
+			    	</div>			    		    	
+			        <div class="form-group">
+			        	<select id="edit_problems_select_languages{{i}}" name="edit_problems_select_languages[{{i}}]" class="selectpicker show-tick font-color-white" multiple>
+							<option value="C">C</option>
+							<option value="C++">C++</option>
+							<option value="Python 2">Python 2</option>
+							<option value="Python 3">Python 3</option>
+							<option value="Java">Java</option>
+						</select>
+			    	</div>
+			        <div class="form-group">
+			        	<input type="file" name="tests_desc" id="form_tests_desc" onchange="fileSelected();"/>
+						<label for="form_tests_desc" class="shòrt">Tests and Descriptions<br> (zip file)<br>
+							<span class="form_comment">
+								<a href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/tests_structure.md" target="_blank">Use this structure</a>
+							</span>
+						</label>
+
+			    	</div>
+      			</div>
+	          	<div class="modal-footer ">
+	        		<button type="submit" class="btn btn-success btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> SAVE PROBLEM</button>
+	      		</div>
+       	 	</div>
+  		</div>
+  	</div>
+	</form>
+
+
+
+  	{{ form_open_multipart('dsbaitap/delete_problems')}}
+  	<input type="hidden" id="delete_problems_id" name="delete_problems_id"/>
+ 	<div class="modal fade" id="delete-problems" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+  		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    				<h4 class="modal-title custom_align" id="Heading">Delete Problems</h4>
+  				</div>
+      			<div class="modal-body">
+   
+   					<div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to delete this Problems?</div>
+   
+  				</div>
+    			<div class="modal-footer ">
+    				<button type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
+    				<button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
+  				</div>
+    		</div>
+		</div>
+	</div>
+	</form>
+
+	{{ form_open_multipart('dsbaitap/edit_tag')}}
+	<input class="hidden" id="edit_tag_id" name="edit_tag_id"/>  
+		<div class="modal fade" id="edit-tag" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+	      	<div class="modal-dialog">
+	    		<div class="modal-content">
+	          		<div class="modal-header">
+	        			<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+	        			<h4 class="modal-title custom_align" id="Heading">Edit Tag</h4>
+	      			</div>
+		          	<div class="modal-body">
+				        <div class="form-group">
+				        	<input class="form-control" id="edit_tag_name" name="edit_tag_name" type="text" placeholder="Tag Name">
+				    	</div>
+	      			</div>
+		          	<div class="modal-footer ">
+		        		<button type="submit" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Update</button>
+		      		</div>
+	       	 	</div>
+	  		</div>
+	  	</div>
+  	</form>
+
+  	{{ form_open_multipart('dsbaitap/delete_tag')}}
+  	<input type="hidden" id="delete_tag_id" name="delete_tag_id"/>
+ 	<div class="modal fade" id="delete-tag" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+  		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    				<h4 class="modal-title custom_align" id="Heading">Delete Tag</h4>
+  				</div>
+      			<div class="modal-body">
+   
+   					<div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to delete this Tag?</div>
+   
+  				</div>
+    			<div class="modal-footer ">
+    				<button type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
+    				<button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
+  				</div>
+    		</div>
+		</div>
+	</div>
+	</form>
 </body>
 </html>

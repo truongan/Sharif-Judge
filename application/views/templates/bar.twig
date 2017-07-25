@@ -1,73 +1,157 @@
-{#
- # Sharif Judge
- # file: base.twig
- # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
- #}
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{% block head_title %}{% endblock %} - WeCode Challenge</title>
 	<meta content="text/html" charset="UTF-8">
-	<link rel="icon" href="{{ base_url('assets/images/favicon.ico') }}"/>
-	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery-1.10.2.min.js') }}"></script>
-	<!-- You can use google's cdn for loading jquery: -->
-	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery-ui-1.10.3.custom.min.js') }}"></script>
-	<link rel="stylesheet" href="{{ base_url('assets/styles/flick/jquery-ui-1.10.3.custom.min.css') }}"/>
-	<script type="text/javascript" src="{{ base_url('assets/js/moment.min.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery.hoverIntent.minified.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery.cookie.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/js/jquery.ba-resize.min.js') }}"></script>
+	<link rel="stylesheet" href="{{ base_url('assets/css/navbar_profile.css') }}">
 
-	<script type="text/javascript" src="{{ base_url('assets/noty/jquery.noty.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/noty/layouts/center.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/noty/layouts/bottomRight.js') }}"></script>
-	<script type="text/javascript" src="{{ base_url('assets/noty/themes/default.js') }}"></script>
-
-	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/nano_scroller/nanoscroller.css') }}'/>
-	<script type='text/javascript' src="{{ base_url('assets/nano_scroller/jquery.nanoscroller.min.js') }}"></script>
-
-	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/font/font-awesome/css/font-awesome.min.css') }}'/>
-
+    <script type="text/javascript" src="{{ base_url('assets/js/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ base_url('assets/js/jquery.cookie.js') }}"></script>
+    <script>
+        shj={};
+        shj.site_url = '{{ rtrim(site_url(),'/')|e('js') }}/';
+        shj.base_url = '{{ rtrim(base_url(),'/')|e('js') }}/';
+        shj.csrf_token = $.cookie('shjcsrftoken');
+        shj.offset = moment('{{ shj_now_str() }}').diff(moment());
+        shj.time = moment();
+        shj.finish_time = moment("{{ user.selected_assignment.finish_time|raw }}");
+        // notifications
+        shj.check_for_notifications = false;
+        shj.notif_check_delay = 30;
+        shj.check_for_competition = false;
+        shj.com_check_delay = 1;
+        shj.color_scheme = 'github';
+    </script>
+    <script type="text/javascript" src="{{ base_url('assets/js/thien_bar.js') }}"></script>
 </head>
-<script>
-shj={};
-shj.site_url = '{{ rtrim(site_url(),'/')|e('js') }}/';
-shj.base_url = '{{ rtrim(base_url(),'/')|e('js') }}/';
-shj.csrf_token = $.cookie('shjcsrftoken');
-shj.offset = moment('{{ shj_now_str() }}').diff(moment());
-shj.time = moment();
-shj.finish_time = moment("{{ user.selected_assignment.finish_time|raw }}");
-shj.extra_time = moment.duration({{ user.selected_assignment.extra_time|raw }}, 'seconds');
-// notifications
-shj.check_for_notifications = false;
-shj.notif_check_delay = 30;
-shj.color_scheme = 'github';
-</script>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container"> 
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span> 
+                </button>
+                <a href="{{ site_url('main') }}" class="navbar-brand">Home</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ site_url('dashboard') }}">Dashboard</a></li>
+                    {%  if user.level >= 2 %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ site_url('settings') }}">Settings</a></li>
+                            <li><a href="{{ site_url('Users') }}">Users</a></li>
+                            <li><a href="{{ site_url('notifications/add') }}">Add Notification</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tool
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ site_url('rejudge') }}">Rejudge</a></li>
+                            <li><a href="{{ site_url('queue') }}">Submission Queue</a></li>
+                        </ul>
+                    </li> 
+                    {% endif %}            
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span> 
+                            <strong>{{ user.display_name }}</strong>
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="navbar-login">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <p class="text-center">
+                                                <span class="glyphicon glyphicon-user icon-size"></span>
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <p class="text-left"><strong>{{ user.username }}</strong></p>
+                                            <p class="text-left small">{{ user.email }}</p>
+                                            <p class="text-left">
+                                                <a class="btn btn-primary btn-block btn-sm profile_edit" data-title="Edit" data-toggle="modal" data-target="#edit-profile">Profile</a> 
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <div class="navbar-login navbar-login-session">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <p>
+                                                <a href="{{ site_url('logout') }}" class="btn btn-danger btn-block"> Sign Out</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {{ form_open_multipart('login/edit_profile') }}
+    <div class="modal fade" id="edit-profile" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                    <h4 class="modal-title custom_align" id="Heading"> PROFILE</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input id="username" readonly type="text" name="username" placeholder="Username" value="{{ user.username }}" class="form-control input-md"/>
+                    </div>
+                    <div class="form-group">
+                        <input id="display_name" type="text" name="display_name" placeholder="Display Name" value="{{ user.display_name }}" class="form-control input-md"/>
+                    </div>
+                    <div class="form-group">
+                        <input id="email" type="text" name="email" placeholder="Email" value="{{ user.email }}" class="form-control input-md"/>
+                    </div>
+                    <div class="form-group">
+                        <input id="class" type="text" name="class" placeholder="Class" value="{{ user.class }}" class="form-control input-md"/>
+                    </div>
+                </div>
+                <div class="modal-footer ">
+                    <button type="submit" class="btn btn-success btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> SAVE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <!-- Message competiton -->
 
-<script type="text/javascript" src="{{ base_url('assets/js/shj_functions.js') }}"></script>
-
-{% block other_assets %}{% endblock %}
-
-<body id="body">
-{% include 'templates/top_bar.twig' %}
-{# {% include 'templates/side_bar.twig' %}
-<div id="main_container" class="scroll-wrapper">
-	<div class="scroll-content">
-
-		<div id="page_title">
-			<i class="fa {% block icon %}{% endblock %}"></i>
-			<span dir="auto">{% block title %}{% endblock %}</span>
-			{% block title_menu %}{% endblock %}
-		</div>
-
-		<div id="main_content">
-			{% block main_content %}
-			{% endblock %}
-		</div>
-	</div>
-</div> #}
-{% block body_end %}{% endblock %}
+    <div class="modal fade" id="message_competiton" tabindex="-1" role="dialog" aria-labelledby="fight" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                    <h4 class="modal-title custom_align" id="Heading">MESSAGE</h4>
+                </div>
+                <div class="modal-body">
+   
+                    <div class="alert alert-warning" id="message"></div>
+   
+                </div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> CLose</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </body>
 </html>

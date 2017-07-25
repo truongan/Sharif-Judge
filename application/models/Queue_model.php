@@ -63,7 +63,6 @@ class Queue_model extends CI_Model
 		$submit_info['status'] = 'PENDING';
 
 		$this->db->insert('submissions', $submit_info);
-
 		$this->db->insert('queue', array(
 			'submit_id' => $submit_info['submit_id'],
 			'username' => $submit_info['username'],
@@ -71,6 +70,9 @@ class Queue_model extends CI_Model
 			'problem' => $submit_info['problem'],
 			'type' => 'judge'
 		));
+		// var_dump($this->db->last_query());
+		// die;
+
 	}
 
 
@@ -213,10 +215,6 @@ class Queue_model extends CI_Model
 			'assignment' => $submission['assignment'],
 			'problem' => $submission['problem']
 		))->update('submissions', $arr);
-
-		// update scoreboard:
-		$this->load->model('scoreboard_model');
-		$this->scoreboard_model->update_scoreboard($submission['assignment']);
 	}
 
 }

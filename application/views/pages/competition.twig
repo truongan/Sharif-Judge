@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html" charset="UTF-8">
+
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/dataTables.bootstrap.min.css') }}">
+
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/thien_function.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.dataTables.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/dataTables.bootstrap.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+
+</head>
+<body>
+
+	{% include 'templates/bar.twig' %}
+	
+	<script>shj.check_for_competition = true;</script>
+
+	<div class="container">
+		<div class="col-md-10 col-md-offset-1 padding_competition">
+			<div class="featured-icon layout">
+				<div class="">
+					<img src="../assets/images/competition.svg" width="200" height="200">
+				</div>
+			</div>
+			<div class="bot-img-br">
+				<p class="font-random">Fight Your Friends</p>
+				<p class="font-random-text">Fight a user of your friend and improve your skills! Click the button on the right to find an opponent.</p>
+				{{ form_open_multipart('fight',"id='validate_user'") }}
+					<div class="col-md-3 col-md-offset-9 competition_input_search">
+				     	<input type="text" name="name_user" id="name_user" class="form-control" placeholder="Search for...">
+					</div>
+				</form>
+			</div>
+			<div class="task-competition align-center">
+				<div class="col-md-2 col-md-offset-1 competition-info">
+					<div class="task-value">{{ won }}</div>
+					<div class="task-label">WON</div>
+				</div>
+				<div class="col-md-2 competition-info">
+					<div class="task-value">{{ lost }}</div>
+					<div class="task-label">LOST</div>
+				</div>
+				<div class="col-md-2 competition-info">
+					<div class="task-value">{{ drawn }}</div>
+					<div class="task-label">DRAWN</div>
+				</div>
+				<div class="col-md-2 competition-info">
+					<div class="task-value">{{ total }}</div>
+					<div class="task-label">TOTAL</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+    <div class="container">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">	
+		    	<h2>History</h2>
+		 		<table id="mytable" class="table table-hover table-striped">
+					<thead>
+			            <tr>
+			                <th>#</th>
+			                <th>Opponent</th>
+			                <th>Status</th>
+			                <th>XP</th>
+			            </tr>
+	  				</thead>
+			      	<tbody>
+			            {% for com in coms %}
+							<tr>
+								<td>{{ loop.index }}</td>
+								<td>{{ com.opponent }}</td>
+								<td>
+									{% if com.status == 'WON' %}
+										<div class="btn btn-success" style="width: 100px;">WON</div>
+									{% elseif com.status == 'LOST' %}
+										<div class="btn btn-danger" style="width: 100px;">LOST</div>
+									{% elseif com.status == 'DRAWN' %}
+										<div class="btn btn-success" style="width: 100px;">DRAWN</div>
+									{% elseif com.status == 'Fighting' %}
+										<div class="btn btn-default" style="width: 100px;">FIGHTING</div>
+									{% endif %}
+								</td>
+								<td><div class="btn btn-info text-center" style="width: 100px;">{{ com.xp }}</div></td>
+							</tr>
+						{% endfor %}
+			        </tbody>
+		  		</table>
+		  	</div>
+	  	</div>
+	</div>
+	
+	<!-- User online -->
+
+  	{{ form_open_multipart('fight',"id='insert_database'")}}
+  	<input type="hidden" id="fight_username" name="fight_username"/>
+ 	<div class="modal fade" id="fight" tabindex="-1" role="dialog" aria-labelledby="fight" aria-hidden="true">
+  		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    				<h4 class="modal-title custom_align" id="Heading">FIGHT</h4>
+  				</div>
+      			<div class="modal-body">
+   
+   					<div class="alert alert-info"><span class="glyphicon glyphicon-send"></span>  Do you want to fight with this user?</div>
+   
+  				</div>
+    			<div class="modal-footer ">
+    				<button type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
+    				<button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
+  				</div>
+    		</div>
+		</div>
+	</div>
+	</form>
+	{{ form_open_multipart('answer_yes', 'id="insert_answer_yes"') }}
+    <input type="hidden" id="username_fight_yes_no" name="username_fight_yes_no"/>
+    <div class="modal fade" id="fight_yes_no" tabindex="-1" role="dialog" aria-labelledby="fight" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                    <h4 class="modal-title custom_align" id="Heading">MESSAGE</h4>
+                </div>
+                <div class="modal-body">
+   
+                    <div class="alert alert-warning" id="message_fight"></div>
+   
+                </div>
+                <div class="modal-footer ">
+                    <button type="submit" onclick="check_ket_qua_com()" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+	<script type="text/javascript">
+	</script>
+</body>
+</html>

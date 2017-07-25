@@ -165,6 +165,7 @@ class Submit_model extends CI_Model {
 		$submit_info['status'] = 'Uploaded';
 
 		$this->db->insert('submissions', $submit_info);
+		var_dump($this->db->last_query());die;
 
 	}
 

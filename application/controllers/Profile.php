@@ -22,6 +22,10 @@ class Profile extends CI_Controller
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
 		$this->form_status = '';
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);	
 	}
 
 

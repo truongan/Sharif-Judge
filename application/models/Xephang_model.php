@@ -19,13 +19,12 @@ class Xephang_model extends CI_Model {
 	{
 		$prob = array();
 		$sum = 0;
-
+		$dtd = 0;
 		$username = $this->user_model->user_id_to_username($id);
 		//add score in array $prob
 		foreach ($submission as $sub) {
 			if($sub['username']==$username)
 			{
-				$problem = $this->assignment_model->problem_info($sub['assignment'], $sub['problem']);
 				$score = $sub['pre_score'];
 				if(array_key_exists($id."|".$sub['assignment']."|".$sub['problem'], $prob) == true)
 				{
@@ -40,12 +39,31 @@ class Xephang_model extends CI_Model {
 		foreach ($prob as $value) {
 			$sum+=$value;
 		}
+		$competition = $this->db->select('*')->get('competition')->result_array();
+		foreach ($competition as $com) {
+			if($com['id_hero_a'] == $id)
+			{
+				$dtd+= $com['xp_hero_a'];
+			}
+			if($com['id_hero_b'] == $id)
+			{
+				$dtd+= $com['xp_hero_b'];
+			}
+		}
 		//insert database;
 		$arr = array(
 			'user_id' => $id,
-			'diembaitap' => $sum
+			'diembaitap' => $sum,
+			'diemthidau' => $dtd,
+			'tongdiem'   => $sum + $dtd
 		);
-		$this->db->insert('xephang', $arr);
+		if(!$this->db->insert('xephang', $arr))
+		{
+			$this->db->where('user_id', $id);
+			$this->db->update('xephang', $arr);
+		}
+		else
+			$this->db->insert('xephang', $arr);
 	}
 
 	//tinh diem 1 problem
@@ -71,10 +89,11 @@ class Xephang_model extends CI_Model {
             $sum = $score['0']['diembaitap'] + $newscore - $old_score;
         }
         else $sum = $score['0']['diembaitap'] + $newscore;
-        var_dump($sum);
 		$arr = array(
 				'user_id'    => $id,
-				'diembaitap' => $sum
+				'diembaitap' => $sum,
+				'diemthidau' => '0',
+				'tongdiem'   => $sum + 0
 			);
 		$this->db->where('user_id', $id);
 		$this->db->update('xephang', $arr);

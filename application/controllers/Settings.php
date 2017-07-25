@@ -25,6 +25,10 @@ class Settings extends CI_Controller
 			show_404();
 		$this->form_status = '';
 		$this->errors = array();
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);	
 	}
 
 

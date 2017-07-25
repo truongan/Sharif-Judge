@@ -36,7 +36,10 @@ class Submissions extends CI_Controller
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
 		if (array_key_exists('page', $input) && $input['page'])
 			$this->page_number = is_numeric($input['page'])?$input['page']:1;
-
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$this->load->model('user_model');
+		$this->user_model->update_login_time($user['username']);	
 	}
 
 
@@ -50,6 +53,7 @@ class Submissions extends CI_Controller
 	 */
 	private function _download_excel($view)
 	{
+
 		if ( ! in_array($view, array('all', 'final')))
 			exit;
 
@@ -215,12 +219,14 @@ class Submissions extends CI_Controller
 		$ext = 'xlsx';
 		if ( ! class_exists('ZipArchive') ) // If class ZipArchive does not exist, export to excel5 instead of excel 2007
 			$ext = 'xls';
-
+			// var_dump($ext);
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment;filename="'.$output_filename.'.'.$ext.'"');
 		header('Cache-Control: max-age=0');
+		// var_dump($output_filename);
 		$objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, ($ext==='xlsx'?'Excel2007':'Excel5'));
-		$objWriter->save('php://output');
+		var_dump($objWriter);
+		// $objWriter->save('php://output');
 	}
 
 
@@ -280,7 +286,6 @@ class Submissions extends CI_Controller
 		foreach ($submissions as &$item)
 		{
 			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = ($item['pre_score']);
 			$item['pre_score'] = ceil($item['pre_score']);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
 			$item['language'] = filetype_to_language($item['file_type']);
@@ -343,7 +348,6 @@ class Submissions extends CI_Controller
 		foreach ($submissions as &$item)
 		{
 			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = $item['pre_score'];
 			$item['pre_score'] = ceil($item['pre_score']);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
 			$item['language'] = filetype_to_language($item['file_type']);
@@ -363,7 +367,7 @@ class Submissions extends CI_Controller
 			'filter_problem' => $this->filter_problem,
 			'pagination' => $this->shj_pagination->create_links(),
 		);
-
+// var_dump($data);die;
 		$this->twig->display('pages/submissions.twig', $data);
 	}
 
@@ -475,13 +479,13 @@ class Submissions extends CI_Controller
 
 			if ($type === 'result')
 				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/p{$submission['problem']}/{$submission['username']}/result-{$submission['submit_id']}.html";
+					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/result-{$submission['submit_id']}.html";
 			elseif ($type === 'code')
 				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
+					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
 			elseif ($type === 'log')
 				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/p{$submission['problem']}/{$submission['username']}/log-{$submission['submit_id']}";
+					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/log-{$submission['submit_id']}";
 			else
 				$file_path = '/nowhere'; // This line is never reached!
 
@@ -531,7 +535,7 @@ class Submissions extends CI_Controller
 			exit('Don\'t try to see submitted codes :)');
 
 		$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-		"/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
+		"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
 
 		$this->load->helper('download');
 		force_download(
@@ -555,7 +559,6 @@ class Submissions extends CI_Controller
 					$this->input->post('problem'),
 					$this->input->post('submit_id')
 			);
-		$submission['fullmark'] = $submission['pre_score'];
 		$submission['pre_score'] = ceil($submission['pre_score']);
 		if ($submission['coefficient'] === 'error')
 			$submission['final_score'] = 0;

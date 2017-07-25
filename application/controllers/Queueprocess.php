@@ -58,8 +58,8 @@ class Queueprocess extends CI_Controller
 
 			$submit_id = $queue_item['submit_id'];
 			$username = $queue_item['username'];
-			// $assignment = $queue_item['assignment'];
-			// $assignment_info = $this->assignment_model->assignment_info($assignment);
+			$assignment = $queue_item['assignment'];
+			$assignment_info = $this->assignment_model->assignment_info($assignment);
 			$this->db->select('*');
 	        $this->db->from('problems'); 
 			$this->db->where('id', $queue_item['problem']);       
@@ -71,16 +71,16 @@ class Queueprocess extends CI_Controller
 	        $this->db->from('submissions'); 
 			$this->db->where('submit_id', $submit_id);       
 	        $submission = $this->db->get()->row_array();
+
 			$file_type = $submission['file_type'];
+			// var_dump($file_type);
 			$file_extension = filetype_to_extension($file_type);
 			$raw_filename = $submission['file_name'];
 			$main_filename = $submission['main_file_name'];
 
 			$assignments_dir = rtrim($this->settings_model->get_setting('assignments_root'), '/');
-
 			$tester_path = rtrim($this->settings_model->get_setting('tester_path'), '/');
-			$problemdir = $assignments_dir."/p".$problem['id'];
-		
+			$problemdir = $assignments_dir."/assignment_$assignment/p".$problem['id'];
 			$userdir = "$problemdir/$username";
 			//$the_file = "$userdir/$raw_filename.$file_extension";
 
@@ -97,10 +97,12 @@ class Queueprocess extends CI_Controller
 			elseif ($file_type === 'py3')
 				$op4 = $this->settings_model->get_setting('enable_py3_shield');
 			$op5 = $this->settings_model->get_setting('enable_java_policy');
-			// $op6 = $assignment_info['javaexceptions'];
+			$op6 = $assignment_info['javaexceptions'];
 
 			if ($file_type === 'c' OR $file_type === 'cpp')
+			{
 				$time_limit = $problem['c_time_limit']/1000;
+			}
 			elseif ($file_type === 'java')
 				$time_limit = $problem['java_time_limit']/1000;
 			elseif ($file_extension === 'py')
@@ -113,21 +115,22 @@ class Queueprocess extends CI_Controller
 			$diff_arg = $problem['diff_arg'];
 			$output_size_limit = $this->settings_model->get_setting('output_size_limit') * 1024;
 
-			$cmd = "cd $tester_path;\n./tester.sh $problemdir ".escapeshellarg($username).' '.escapeshellarg($main_filename).' '.escapeshellarg($raw_filename)." $file_type $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 $op2 $op3 $op4 $op5";
- // $op6
+			$cmd = "cd $tester_path;\n./tester.sh $problemdir ".escapeshellarg($username).' '.escapeshellarg($main_filename).' '.escapeshellarg($raw_filename)." $file_type $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 $op2 $op3 $op4 $op5 $op6";
+var_dump($cmd);
 			file_put_contents($userdir.'/log', $cmd);
-
+// var_dump(file_put_contents($userdir.'/log', $cmd));
 			///////////////////////////////////////
 			// Running tester (judging the code) //
 			///////////////////////////////////////
 			putenv('LANG=en_US.UTF-8');
 			putenv('PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games');
 			$output = trim(shell_exec($cmd));
-
+// echo "output";
+var_dump($output);
 
 			// Deleting the jail folder, if still exists
-			shell_exec("cd $tester_path; rm -rf jail*");
-
+			shell_exec("cd $tester_path;rm -rf jail*");
+// ; rm -rf jail*
 			// echo $output*$problem['score']/10000;
 
 			// Saving judge result
@@ -136,7 +139,6 @@ class Queueprocess extends CI_Controller
 				shell_exec("mv $userdir/result.html $userdir/result-{$submit_id}.html");
 				shell_exec("mv $userdir/log $userdir/log-{$submit_id}");
 			}
-
 			if (is_numeric($output)) {
 				$submission['pre_score'] = $output*$problem['score']/10000;
 				$submission['status'] = 'SCORE';
@@ -153,7 +155,7 @@ class Queueprocess extends CI_Controller
 
 			// Save the result
 			$this->queue_model->save_judge_result_in_db($submission, $type, $problem);
-
+// var_dump($submission);
 			// Remove the judged item from queue
 			$this->queue_model->remove_item($username, $assignment, $problem['id'], $submit_id);	
 

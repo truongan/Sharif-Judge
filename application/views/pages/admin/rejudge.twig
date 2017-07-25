@@ -1,34 +1,45 @@
-{#
- # Sharif Judge
- # file: rejudge.twig
- # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
- #}
-{% set selected = 'assignments' %}
-{% extends 'templates/base.twig' %}
-{% block icon %}fa-refresh{% endblock %}
-{% block title %}Rejudge{% endblock %}
-{% block head_title %}Rejudge{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html" charset="UTF-8">
 
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/bootstrap-theme.min.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
 
-{% block main_content %}
-<p>
-	Selected Assignment: <span dir="auto">{{ user.selected_assignment.name }}</span>
-</p>
-<p>
-	By clicking on rejudge, all submissions of selected problem will change to <code>PENDING</code> state. Then
-	Sharif Judge rejudges them one by one.
-</p>
-<p>
-	If you want to rejudge a single submission, you can click on rejudge button in <a href="{{ site_url('submissions/all') }}">All Submissions</a> or <a href="{{ site_url('submissions/final') }}">Final Submissions</a> page.
-</p>
-{% for problem in problems %}
-	{{ form_open('rejudge') }}
-		<input type="hidden" name="problem_id" value="{{ problem.id }}"/>
-		<input type="submit" class="sharif_input" value="Rejudge Problem {{ problem.id }} ({{ problem.name }})"/>
-	</form>
-{% endfor %}
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ base_url('assets/js/bootstrap.min.js') }}"></script>
+</head>
+<body>
+	{% include 'templates/bar.twig' %}
+	<div class="container padding-nav">
+		<div class="row">
+			<div class="col-md-9">
+				<p>
+					Selected Assignment: <span dir="auto">{{ user.selected_assignment.name }}</span>
+				</p>
+				<p>
+					By clicking on rejudge, all submissions of selected problem will change to <code>PENDING</code> state. Then
+					Sharif Judge rejudges them one by one.
+				</p>
+				<p>
+					If you want to rejudge a single submission, you can click on rejudge button in <a href="{{ site_url('submissions/all') }}">All Submissions</a> or <a href="{{ site_url('submissions/final') }}">Final Submissions</a> page.
+				</p>
+				{% for problem in problems %}
+					{{ form_open('rejudge') }}
+						<div class="col-md-offset-4" style="padding-bottom: 5px;">
+							<input type="hidden" name="problem_id" value="{{ problem.id }}"/>
+							<input class="btn btn-warning" type="submit" value="Rejudge Problem {{ problem.id }} ({{ problem.name }})"/>
+						</div>
+					</form>
+				{% endfor %}
 
-{% for message in msg %}
-	<p class="shj_ok">{{ message }}</p>
-{% endfor %}
-{% endblock %}  {# main_content #}
+				{% for message in msg %}
+					<p class="shj_ok">{{ message }}</p>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</body>
+</html>

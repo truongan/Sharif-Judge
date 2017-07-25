@@ -12,6 +12,7 @@ class Login extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('user_model');
 	}
 
 
@@ -60,6 +61,8 @@ class Login extends CI_Controller
 				);
 				$this->session->set_userdata($login_data);
 				$this->user_model->update_login_time($username);
+				$status = '1';
+				$this->user_model->status($username,$status);
 				redirect('/');
 			}
 			else
@@ -76,10 +79,11 @@ class Login extends CI_Controller
 
 	public function register()
 	{
+		$this->load->library('password_hash', array(8, FALSE));
 		if ($this->session->userdata('logged_in')) // if logged in
 			redirect('dashboard');
-		if ( ! $this->settings_model->get_setting('enable_registration'))
-			show_error('Registration is closed.');
+		// if ( ! $this->settings_model->get_setting('enable_registration'))
+		// 	show_error('Registration is closed.');
 		$this->form_validation->set_rules('registration_code', 'registration code', 'callback__registration_code', array('_registration_code' => 'Invalid %s'));
 		$this->form_validation->set_rules('username', 'username', 'required|min_length[3]|max_length[20]|alpha_numeric|lowercase|is_unique[users.username]', array('is_unique' => 'This %s already exists.'));
 		$this->form_validation->set_rules('email', 'email address', 'required|max_length[40]|valid_email|lowercase|is_unique[users.email]', array('is_unique' => 'This %s already exists.'));
@@ -89,17 +93,31 @@ class Login extends CI_Controller
 			'registration_code_required' => $this->settings_model->get_setting('registration_code')=='0'?FALSE:TRUE
 		);
 		if ($this->form_validation->run()){
-			$this->user_model->add_user(
-				$this->input->post('username'),
-				$this->input->post('email'),
-				$this->input->post('password'),
-				'student'
+			$user = array(
+				'username' => $this->input->post('username'),
+				'display_name' => $this->input->post('display_name'),
+				'class' => $this->input->post('class'),
+				'password' => $this->password_hash->HashPassword($this->input->post('password')),
+				'email' =>$this->input->post('email'),
+				'role' =>'student'
 			);
-			$this->twig->display('pages/authentication/register_success.twig');
+			$this->user_model->add_user($user);
+			echo $user['display_name'];
+			return true;
 		}
-		else
-			$this->twig->display('pages/authentication/register.twig', $data);
-
+		return true;
+	}
+	
+	public function edit_profile()
+	{
+		$data=array(
+			'username' => $this->input->post('username'),
+			'class' => $this->input->post('class'),
+			'display_name' => $this->input->post('display_name'),
+			'email' =>$this->input->post('email'),
+		);
+		$this->user_model->edit_profile($data);
+		redirect('main');
 	}
 
 
@@ -111,6 +129,10 @@ class Login extends CI_Controller
 	 */
 	public function logout()
 	{
+		$this->load->library('session');
+		$user = $this->session->all_userdata();
+		$status = '0';
+		$this->user_model->status($user['username'],$status);
 		$this->session->sess_destroy();
 		redirect('login');
 	}
