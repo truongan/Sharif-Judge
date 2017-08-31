@@ -155,11 +155,12 @@ if ! mkdir $JAIL; then
 	shj_finish "Judge Error"
 fi
 cd $JAIL
-cp ../timeout ./timeout
-chmod +x timeout
-
-cp ../runcode.sh ./runcode.sh
-chmod +x runcode.sh
+# An: 2017-09-01 we will copy this everytime we run 1 test case
+# cp ../timeout ./timeout
+# chmod +x timeout
+#
+# cp ../runcode.sh ./runcode.sh
+# chmod +x runcode.sh
 
 shj_log "$(date)"
 shj_log "Language: $EXT"
@@ -232,6 +233,14 @@ for((i=1;i<=TST;i++)); do
 	echo "<span class=\"shj_b\">Test $i</span>" >>$PROBLEMPATH/$UN/result.html
 
 	touch err
+
+	# Copy file from original path to the jail.
+	# Since we share jail with docker container, user may overwrite those file before hand
+	cp $tester_dir/timeout ./timeout
+	chmod +x timeout
+	cp $tester_dir/runcode.sh ./runcode.sh
+	chmod +x runcode.sh
+	cp $PROBLEMPATH/in/input$i.txt ./input.txt
 
 	if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]|| [ "$EXT" = "py2" ]|| [ "$EXT" = "py3" ] || [ "$EXT" = "java" ]; then
 		$command = ""
