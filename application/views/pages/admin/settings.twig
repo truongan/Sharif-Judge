@@ -157,7 +157,7 @@ $(document).ready(function(){
 		</span>
 	</h2>
 
-	<p class="input_p">
+{# 	<p class="input_p">
 		<input id="form_easysandbox" type="checkbox" name="enable_easysandbox" value="1" {{ enable_easysandbox ? 'checked' }}/>
 		<label for="form_easysandbox">EasySandbox</label>
 	</p>
@@ -166,7 +166,7 @@ $(document).ready(function(){
 		{% if not sandbox_built %}
 			<span style="color: red;">You have not built EasySandbox yet.</span>
 		{% endif %}
-	</p>
+	</p> #}
 
 	<p class="input_p">
 		<input id="form_java_policy" type="checkbox" name="enable_java_policy" value="1" {{ enable_java_policy ? 'checked' }}/>

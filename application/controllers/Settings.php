@@ -37,7 +37,7 @@ class Settings extends CI_Controller
 		$data = array_merge($settings,
 			array(
 				'all_assignments' => $this->assignment_model->all_assignments(),
-				'sandbox_built' => file_exists(rtrim($settings['tester_path'], '/').'/easysandbox/EasySandbox.so'),
+				// 'sandbox_built' => file_exists(rtrim($settings['tester_path'], '/').'/easysandbox/EasySandbox.so'),
 				'form_status' => $this->form_status,
 				'errors' => $this->errors
 			)
@@ -99,7 +99,7 @@ class Settings extends CI_Controller
 					'file_size_limit' => $this->input->post('file_size_limit'),
 					'output_size_limit' => $this->input->post('output_size_limit'),
 					'default_late_rule' => $this->input->post('default_late_rule'),
-					'enable_easysandbox' => $this->input->post('enable_easysandbox')===NULL?0:1,
+					// 'enable_easysandbox' => $this->input->post('enable_easysandbox')===NULL?0:1,
 					'enable_c_shield' => $this->input->post('enable_c_shield')===NULL?0:1,
 					'enable_cpp_shield' => $this->input->post('enable_cpp_shield')===NULL?0:1,
 					'enable_py2_shield' => $this->input->post('enable_py2_shield')===NULL?0:1,

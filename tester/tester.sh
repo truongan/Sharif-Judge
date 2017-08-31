@@ -191,95 +191,13 @@ fi
 
 COMPILE_BEGIN_TIME=$(($(date +%s%N)/1000000));
 
-
-
-########################################################################################################
-############################################ COMPILING JAVA ############################################
-########################################################################################################
-
 if [ "$EXT" = "java" ]; then
-	cp ../java.policy java.policy
-	cp $PROBLEMPATH/$UN/$FILENAME.java $MAINFILENAME.java
-	shj_log "Compiling as Java"
-	javac $MAINFILENAME.java >/dev/null 2>cerr
-	EXITCODE=$?
-	COMPILE_END_TIME=$(($(date +%s%N)/1000000));
-	shj_log "Compiled. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIME-COMPILE_BEGIN_TIME)) ms"
-	if [ $EXITCODE -ne 0 ]; then
-		shj_log "Compile Error"
-		shj_log "$(cat cerr|head -10)"
-		echo '<span class="shj_b">Compile Error</span>' >$PROBLEMPATH/$UN/result.html
-		echo '<span class="shj_r">' >> $PROBLEMPATH/$UN/result.html
-		#filepath="$(echo "${JAIL}/${FILENAME}.${EXT}" | sed 's/\//\\\//g')" #replacing / with \/
-		(cat cerr | head -10 | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
-		#(cat $JAIL/cerr) >> $PROBLEMPATH/$UN/result.html
-		echo "</span>" >> $PROBLEMPATH/$UN/result.html
-		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
-		shj_finish "Compilation Error"
-	fi
+	source compile_java.sh
 fi
 
 
-
-########################################################################################################
-########################################## COMPILING PYTHON 2 ##########################################
-########################################################################################################
-
-if [ "$EXT" = "py2" ]; then
-	cp $PROBLEMPATH/$UN/$FILENAME.py $FILENAME.py
-	shj_log "Checking Python Syntax"
-	python2 -O -m py_compile $FILENAME.py >/dev/null 2>cerr
-	EXITCODE=$?
-	COMPILE_END_TIME=$(($(date +%s%N)/1000000));
-	shj_log "Syntax checked. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIME-COMPILE_BEGIN_TIME)) ms"
-	if [ $EXITCODE -ne 0 ]; then
-		shj_log "Syntax Error"
-		shj_log "$(cat cerr | head -10)"
-		echo '<span class="shj_b">Syntax Error</span>' >$PROBLEMPATH/$UN/result.html
-		echo '<span class="shj_r">' >> $PROBLEMPATH/$UN/result.html
-		(cat cerr | head -10 | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
-		echo "</span>" >> $PROBLEMPATH/$UN/result.html
-		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
-		shj_finish "Syntax Error"
-	fi
-	if $PY_SHIELD_ON; then
-		shj_log "Enabling Shield For Python 2"
-		# adding shield to beginning of code:
-		cat ../shield/shield_py2.py | cat - $FILENAME.py > thetemp && mv thetemp $FILENAME.py
-	fi
-fi
-
-
-
-########################################################################################################
-########################################## COMPILING PYTHON 3 ##########################################
-########################################################################################################
-
-if [ "$EXT" = "py3" ]; then
-	cp $PROBLEMPATH/$UN/$FILENAME.py $FILENAME.py
-	shj_log "Checking Python Syntax"
-	python3 -O -m py_compile $FILENAME.py >/dev/null 2>cerr
-	EXITCODE=$?
-	COMPILE_END_TIME=$(($(date +%s%N)/1000000));
-	shj_log "Syntax checked. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIME-COMPILE_BEGIN_TIME)) ms"
-	if [ $EXITCODE -ne 0 ]; then
-		shj_log "Syntax Error"
-		shj_log "$(cat cerr | head -10)"
-		echo '<span class="shj_b">Syntax Error</span>' >$PROBLEMPATH/$UN/result.html
-		echo '<span class="shj_r">' >> $PROBLEMPATH/$UN/result.html
-		(cat cerr | head -10 | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
-		echo "</span>" >> $PROBLEMPATH/$UN/result.html
-		cd ..
-		rm -r $JAIL >/dev/null 2>/dev/null
-		shj_finish "Syntax Error"
-	fi
-	if $PY_SHIELD_ON; then
-		shj_log "Enabling Shield For Python 3"
-		# adding shield to beginning of code:
-		cat ../shield/shield_py3.py | cat - $FILENAME.py > thetemp && mv thetemp $FILENAME.py
-	fi
+if [ "$EXT" = "py3"  ] || [ "$EXT" = "py2" ]; then
+	source compile_python.sh
 fi
 
 
