@@ -89,31 +89,31 @@ else
 	LOG_ON=false
 fi
 # enable/disable easysandbox
-if [ ${13} = "1" ]; then
-	SANDBOX_ON=true
-else
-	SANDBOX_ON=false
-fi
+# if [ ${13} = "1" ]; then
+# 	SANDBOX_ON=true
+# else
+# 	SANDBOX_ON=false
+# fi
 # enable/disable C/C++ shield
-if [ ${14} = "1" ]; then
+if [ ${13} = "1" ]; then
 	C_SHIELD_ON=true
 else
 	C_SHIELD_ON=false
 fi
 # enable/disable Python shield
-if [ ${15} = "1" ]; then
+if [ ${14} = "1" ]; then
 	PY_SHIELD_ON=true
 else
 	PY_SHIELD_ON=false
 fi
 # enable/disable java security manager
-if [ ${16} = "1" ]; then
+if [ ${15} = "1" ]; then
 	JAVA_POLICY="-Djava.security.manager -Djava.security.policy=java.policy"
 else
 	JAVA_POLICY=""
 fi
 # enable/disable displaying java exception to students
-if [ ${17} = "1" ]; then
+if [ ${16} = "1" ]; then
 	DISPLAY_JAVA_EXCEPTION_ON=true
 else
 	DISPLAY_JAVA_EXCEPTION_ON=false
@@ -179,7 +179,6 @@ shj_log "Time Limit: $TIMELIMIT s"
 shj_log "Memory Limit: $MEMLIMIT kB"
 shj_log "Output size limit: $OUTLIMIT bytes"
 if [[ $EXT = "c" || $EXT = "cpp" ]]; then
-	shj_log "EasySandbox: $SANDBOX_ON"
 	shj_log "C/C++ Shield: $C_SHIELD_ON"
 elif [[ $EXT = "py2" || $EXT = "py3" ]]; then
 	shj_log "Python Shield: $PY_SHIELD_ON"
@@ -322,15 +321,6 @@ if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 	fi
 
 	shj_log "Compiling as $EXT"
-	if $SANDBOX_ON; then
-		shj_log "Enabling EasySandbox"
-		if cp ../easysandbox/EasySandbox.so EasySandbox.so; then
-			chmod +x EasySandbox.so
-		else
-			shj_log 'EasySandbox is not built. Disabling EasySandbox...'
-			SANDBOX_ON=false
-		fi
-	fi
 
 	if [ $NEEDCOMPILE -eq 0 ]; then
 		EXITCODE=110
@@ -471,17 +461,6 @@ for((i=1;i<=TST;i++)); do
 		fi
 	elif [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 		#$TIMEOUT ./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
-		if $SANDBOX_ON; then
-			#LD_PRELOAD=./EasySandbox.so ./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
-			if $PERL_EXISTS; then
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill --sandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
-			else
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "LD_PRELOAD=./EasySandbox.so ./$EXEFILE"
-			fi
-			EXITCODE=$?
-			# remove <<entering SECCOMP mode>> from beginning of output:
-			tail -n +2 out >thetemp && mv thetemp out
-		else
 			#./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
 			if $PERL_EXISTS; then
 				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
@@ -491,8 +470,6 @@ for((i=1;i<=TST;i++)); do
 			fi
 			EXITCODE=$?
 			shj_log "./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt ./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
-		fi
-
 	elif [ "$EXT" = "py2" ]; then
 		if $PERL_EXISTS; then
 			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT python2 -O $FILENAME.py"

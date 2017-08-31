@@ -77,7 +77,7 @@ class Queueprocess extends CI_Controller
 			//$the_file = "$userdir/$raw_filename.$file_extension";
 
 			$op1 = $this->settings_model->get_setting('enable_log');
-			$op2 = $this->settings_model->get_setting('enable_easysandbox');
+			// $op2 = $this->settings_model->get_setting('enable_easysandbox');
 			$op3 = 0;
 			if ($file_type === 'c')
 				$op3 = $this->settings_model->get_setting('enable_c_shield');
@@ -105,7 +105,7 @@ class Queueprocess extends CI_Controller
 			$diff_arg = $problem['diff_arg'];
 			$output_size_limit = $this->settings_model->get_setting('output_size_limit') * 1024;
 
-			$cmd = "cd $tester_path;\n./tester.sh $problemdir ".escapeshellarg($username).' '.escapeshellarg($main_filename).' '.escapeshellarg($raw_filename)." $file_type $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 $op2 $op3 $op4 $op5 $op6";
+			$cmd = "cd $tester_path;\n./tester.sh $problemdir ".escapeshellarg($username).' '.escapeshellarg($main_filename).' '.escapeshellarg($raw_filename)." $file_type $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 $op3 $op4 $op5 $op6";
 
 			file_put_contents($userdir.'/log', $cmd);
 
