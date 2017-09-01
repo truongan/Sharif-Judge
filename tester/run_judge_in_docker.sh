@@ -5,16 +5,24 @@
 # This script check if the sharing folder is the subfolder of ${HOME}
 # It's to ensure user cannot abuse the scritp to escalate their privilege and share the whole system to the containter
 
+# Usage: run_judge_in_docker share_directory docker_image command
+
 share_directory=${1}
+docker_image=${2}
+shift 2
+command=$XARGS
+owner=`namei -o Code/ | cut -d" " -f3`
 
-echo $SUDO_USER
-echo $USER 
-echo ${HOME}
-
-result=$(find "${HOME}" -type d -name "$share_directory")
-if [[ -n $result ]]
-then 
-	
+if [[ "$owner" = "$USER" ] || [ "$owner" = "$SUDO_USER" ] ]
+then
+	docker run --rm \
+		-v $share_directory:/work:rw \
+		--name='docker' \
+		--network none \
+		$docker_image \
+		cd /work; $command
+	EC=$
+	exit $EC
 else
 	echo "Share directory '$share_directory' does not belongs in your home directory '${HOME}'"
 fi

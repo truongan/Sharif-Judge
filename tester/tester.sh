@@ -236,25 +236,20 @@ for((i=1;i<=TST;i++)); do
 	chmod +x runcode.sh
 	cp $PROBLEMPATH/in/input$i.txt ./input.txt
 
-	command=""
-	case $EXT in
-		"c") command="./$EXEFILE"
-		;;
-		"cpp") command="./$EXEFILE"
-		;;
-		"py2") command="python2 -O $FILENAME.py"
-		;;
-		"py3") command="python3 -O $FILENAME.py"
-		;;
-		"java") command="java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFILENAME"
-	esac
+	declare -A languages_to_comm
+	languages_to_comm["c"]="./$EXEFILE"
+	languages_to_comm["cpp"]="./$EXEFILE"
+	languages_to_comm["py2"]="python2 -O $FILENAME.py"
+	languages_to_comm["py3"]="python3 -O $FILENAME.py"
+	languages_to_comm["java"]="java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFIL"
 
-	if [ "$command" = "" ]; then
+	if [ ${languages_to_comm[$EXT]+_} ]; then
 		shj_log "File Format Not Supported"
 		cd ..
 		rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "File Format Not Supported"
 	fi
+	command=${languages_to_comm[$EXT]}
 
 	runcode=""
 	if $PERL_EXISTS; then
@@ -263,7 +258,15 @@ for((i=1;i<=TST;i++)); do
 		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt $command"
 	fi
 
-	$runcode
+	#$runcode
+	declare -A languages_to_docker
+	languages_to_docker["c"]="ubuntu:16.04"
+	languages_to_docker["cpp"]="ubuntu:16.04"
+	languages_to_docker["py2"]="python:2-slim"
+	languages_to_docker["py3"]="python:3-slim"
+	languages_to_docker["java"]="openjdk:8-slim"
+
+	sudo run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} $runcode
 
 	EXITCODE=$?
 
@@ -292,18 +295,20 @@ for((i=1;i<=TST;i++)); do
 	fi
 
 	declare -A errors
-	errors=( ["SHJ_TIME"]="Time Limit Exceeded" ["SHJ_MEM"]="Memory Limit Exceeded" ["SHJ_HANGUP"]="Process hanged up" ["SHJ_SIGNAL"]="Killed by a signal" ["SHJ_OUTSIZE"]="Output Size Limit Exceeded")
+	errors["SHJ_TIME"]="Time Limit Exceeded"
+	errors["SHJ_MEM"]="Memory Limit Exceeded"
+	errors["SHJ_HANGUP"]="Process hanged up"
+	errors["SHJ_SIGNAL"]="Killed by a signal"
+	errors["SHJ_OUTSIZE"]="Output Size Limit Exceeded"
 
 	shj_log "Exit Code = $EXITCODE"
 	shj_log "err file:`cat err`"
 	if ! grep -q "FINISHED" err; then
 		found_error=0
-		for K in "${errors[@]}"
+		for K in "${!errors[@]}"
 		do
 			if grep -q "$K" err; then
-				# t=`grep "SHJ_TIME" err|cut -d" " -f3`
-				# shj_log "Time Limit Exceeded ($t s)"
-				shj_log $errors[$K]
+				shj_log ${errors[$K]}
 				echo "<span class=\"shj_o\">${$errors[$K]}</span>" >>$PROBLEMPATH/$UN/result.html
 				found_error=1
 				break
@@ -322,7 +327,6 @@ for((i=1;i<=TST;i++)); do
 		echo "<span class=\"shj_o\">Killed</span>" >>$PROBLEMPATH/$UN/result.html
 		continue
 	fi
-
 
 	if [ $EXITCODE -ne 0 ]; then
 		shj_log "Runtime Error"
