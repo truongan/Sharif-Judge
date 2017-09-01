@@ -263,7 +263,7 @@ for((i=1;i<=TST;i++)); do
 		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt $command"
 	fi
 
-	
+	$runcode
 
 	EXITCODE=$?
 
@@ -291,29 +291,25 @@ for((i=1;i<=TST;i++)); do
 		fi
 	fi
 
+	declare -A errors
+	errors=( ["SHJ_TIME"]="Time Limit Exceeded" ["SHJ_MEM"]="Memory Limit Exceeded" ["SHJ_HANGUP"]="Process hanged up" ["SHJ_SIGNAL"]="Killed by a signal" ["SHJ_OUTSIZE"]="Output Size Limit Exceeded")
+
 	shj_log "Exit Code = $EXITCODE"
 	shj_log "err file:`cat err`"
 	if ! grep -q "FINISHED" err; then
-		if grep -q "SHJ_TIME" err; then
-			t=`grep "SHJ_TIME" err|cut -d" " -f3`
-			shj_log "Time Limit Exceeded ($t s)"
-			echo "<span class=\"shj_o\">Time Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
-			continue
-		elif grep -q "SHJ_MEM" err; then
-			shj_log "Memory Limit Exceeded"
-			echo "<span class=\"shj_o\">Memory Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
-			continue
-		elif grep -q "SHJ_HANGUP" err; then
-			shj_log "Hang Up"
-			echo "<span class=\"shj_o\">Process hanged up</span>" >>$PROBLEMPATH/$UN/result.html
-			continue
-		elif grep -q "SHJ_SIGNAL" err; then
-			shj_log "Killed by a signal"
-			echo "<span class=\"shj_o\">Killed by a signal</span>" >>$PROBLEMPATH/$UN/result.html
-			continue
-		elif grep -q "SHJ_OUTSIZE" err; then
-			shj_log "Output Size Limit Exceeded"
-			echo "<span class=\"shj_o\">Output Size Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
+		found_error=0
+		for K in "${errors[@]}"
+		do
+			if grep -q "$K" err; then
+				# t=`grep "SHJ_TIME" err|cut -d" " -f3`
+				# shj_log "Time Limit Exceeded ($t s)"
+				shj_log $errors[$K]
+				echo "<span class=\"shj_o\">${$errors[$K]}</span>" >>$PROBLEMPATH/$UN/result.html
+				found_error=1
+				break
+			fi
+		done
+		if [ $found_error = "1"]; then
 			continue
 		fi
 	else
