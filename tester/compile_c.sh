@@ -19,14 +19,12 @@ if [ "$EXT" = "cpp" ]; then
 fi
 EXEFILE="s_$(echo $FILENAME | sed 's/[^a-zA-Z0-9]//g')" # Name of executable file
 
+NEEDCOMPILE=1
 if [ -f "$PROBLEMPATH/template.cpp" ]; then
     t="$PROBLEMPATH/template.cpp"
     f=$PROBLEMPATH/$UN/$FILENAME.$EXT
     banned=`sed -n -e '/\/\*###Begin banned keyword/,/###End banned keyword/p' $t | sed -e '1d' -e '$d'`
     code=`sed -e '1,/###End banned keyword/d' $t`
-
-    #echo "$banned"
-    #echo "$code"
     while read -r line
     do
         if [[ "$line" == "" ]]; then

@@ -47,7 +47,6 @@ START=$(($(date +%s%N)/1000000));
 ################### Getting Arguments ###################
 # Tester directory
 tester_dir="$(pwd)"
-
 # problem directory
 PROBLEMPATH=${1}
 # username
@@ -155,12 +154,6 @@ if ! mkdir $JAIL; then
 	shj_finish "Judge Error"
 fi
 cd $JAIL
-# An: 2017-09-01 we will copy this everytime we run 1 test case
-# cp ../timeout ./timeout
-# chmod +x timeout
-#
-# cp ../runcode.sh ./runcode.sh
-# chmod +x runcode.sh
 
 shj_log "$(date)"
 shj_log "Language: $EXT"
@@ -225,8 +218,9 @@ fi
 
 
 PASSEDTESTS=0
-
-######################## CODE RUNNING ########################################S
+###################################################################
+######################## CODE RUNNING #############################
+###################################################################
 
 for((i=1;i<=TST;i++)); do
 	shj_log "\n=== TEST $i ==="
@@ -242,51 +236,55 @@ for((i=1;i<=TST;i++)); do
 	chmod +x runcode.sh
 	cp $PROBLEMPATH/in/input$i.txt ./input.txt
 
-	if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]|| [ "$EXT" = "py2" ]|| [ "$EXT" = "py3" ] || [ "$EXT" = "java" ]; then
-		$command = ""
-		case $EXT in
-			"c") command = "./$EXEFILE"
-			;;
-			"cpp") command = "./$EXEFILE"
-			;;
-			"py2") command = "python2 -O $FILENAME.py"
-			;;
-			"py3") command = "python3 -O $FILENAME.py"
-			;;
-			"java") command = "java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFILENAME"
-		esac
+	command=""
+	case $EXT in
+		"c") command="./$EXEFILE"
+		;;
+		"cpp") command="./$EXEFILE"
+		;;
+		"py2") command="python2 -O $FILENAME.py"
+		;;
+		"py3") command="python3 -O $FILENAME.py"
+		;;
+		"java") command="java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFILENAME"
+	esac
 
-		if $PERL_EXISTS; then
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT $command"
-		else
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "$command"
-		fi
-		EXITCODE=$?
-
-		if [ "$EXT" = "java" ]; then
-			if grep -iq -m 1 "Too small initial heap" out || grep -q -m 1 "java.lang.OutOfMemoryError" err; then
-				shj_log "Memory Limit Exceeded"
-				echo "<span class=\"shj_o\">Memory Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
-				continue
-			fi
-			if grep -q -m 1 "Exception in" err; then # show Exception
-				javaexceptionname=`grep -m 1 "Exception in" err | grep -m 1 -oE 'java\.[a-zA-Z\.]*' | head -1 | head -c 80`
-				javaexceptionplace=`grep -m 1 "$MAINFILENAME.java" err | head -1 | head -c 80`
-				shj_log "Exception: $javaexceptionname\nMaybe at:$javaexceptionplace"
-				# if DISPLAY_JAVA_EXCEPTION_ON is true and the exception is in the trusted list, we show the exception name
-				if $DISPLAY_JAVA_EXCEPTION_ON && grep -q -m 1 "^$javaexceptionname\$" ../java_exceptions_list; then
-					echo "<span class=\"shj_o\">Runtime Error ($javaexceptionname)</span>" >>$PROBLEMPATH/$UN/result.html
-				else
-					echo "<span class=\"shj_o\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
-				fi
-				continue
-			fi
-		fi
-	else
+	if [ "$command" = "" ]; then
 		shj_log "File Format Not Supported"
 		cd ..
 		rm -r $JAIL >/dev/null 2>/dev/null
 		shj_finish "File Format Not Supported"
+	fi
+
+	if $PERL_EXISTS; then
+		./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT $command"
+	else
+		./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "$command"
+	fi
+	EXITCODE=$?
+
+##################################################################
+############## Process error code and error log ##################
+##################################################################
+
+	if [ "$EXT" = "java" ]; then
+		if grep -iq -m 1 "Too small initial heap" out || grep -q -m 1 "java.lang.OutOfMemoryError" err; then
+			shj_log "Memory Limit Exceeded"
+			echo "<span class=\"shj_o\">Memory Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
+			continue
+		fi
+		if grep -q -m 1 "Exception in" err; then # show Exception
+			javaexceptionname=`grep -m 1 "Exception in" err | grep -m 1 -oE 'java\.[a-zA-Z\.]*' | head -1 | head -c 80`
+			javaexceptionplace=`grep -m 1 "$MAINFILENAME.java" err | head -1 | head -c 80`
+			shj_log "Exception: $javaexceptionname\nMaybe at:$javaexceptionplace"
+			# if DISPLAY_JAVA_EXCEPTION_ON is true and the exception is in the trusted list, we show the exception name
+			if $DISPLAY_JAVA_EXCEPTION_ON && grep -q -m 1 "^$javaexceptionname\$" ../java_exceptions_list; then
+				echo "<span class=\"shj_o\">Runtime Error ($javaexceptionname)</span>" >>$PROBLEMPATH/$UN/result.html
+			else
+				echo "<span class=\"shj_o\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
+			fi
+			continue
+		fi
 	fi
 
 	shj_log "Exit Code = $EXITCODE"
@@ -320,8 +318,6 @@ for((i=1;i<=TST;i++)); do
 	fi
 
 	if [ $EXITCODE -eq 137 ]; then
-		#shj_log "Time Limit Exceeded (Exit code=$EXITCODE)"
-		#echo "<span style='color: orange;'>Time Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
 		shj_log "Killed"
 		echo "<span class=\"shj_o\">Killed</span>" >>$PROBLEMPATH/$UN/result.html
 		continue
@@ -333,8 +329,9 @@ for((i=1;i<=TST;i++)); do
 		echo "<span class=\"shj_o\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
 		continue
 	fi
-
-#######################################	# checking correctness of output
+############################################################################
+#################	# checking correctness of output #######################
+############################################################################
 
 
 	ACCEPTED=false
