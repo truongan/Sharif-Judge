@@ -10,18 +10,18 @@
 share_directory=${1}
 docker_image=${2}
 shift 2
-command=$XARGS
-owner=`namei -o Code/ | cut -d" " -f3`
-
-if [[ "$owner" = "$USER" ] || [ "$owner" = "$SUDO_USER" ] ]
+command=$@
+owner=`stat -c '%U' $share_directory`
+if  [ "$owner" = "$USER" ] || [ "$owner" = "$SUDO_USER" ]
 then
+	# echo "	docker run --rm -v $share_directory:/work:rw --name='docker' --network none $docker_image cd /work; $command"
 	docker run --rm \
 		-v $share_directory:/work:rw \
 		--name='docker' \
 		--network none \
 		$docker_image \
 		cd /work; $command
-	EC=$
+	EC=$?
 	exit $EC
 else
 	echo "Share directory '$share_directory' does not belongs in your home directory '${HOME}'"

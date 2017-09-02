@@ -138,7 +138,7 @@ function shj_finish
 #################### Initialization #####################
 
 shj_log "Starting tester..."
-
+shj_log $@
 # detecting existence of perl
 PERL_EXISTS=true
 hash perl 2>/dev/null || PERL_EXISTS=false
@@ -243,7 +243,7 @@ for((i=1;i<=TST;i++)); do
 	languages_to_comm["py3"]="python3 -O $FILENAME.py"
 	languages_to_comm["java"]="java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFIL"
 
-	if [ ${languages_to_comm[$EXT]+_} ]; then
+	if [ ! ${languages_to_comm[$EXT]+_} ]; then
 		shj_log "File Format Not Supported"
 		cd ..
 		rm -r $JAIL >/dev/null 2>/dev/null
@@ -266,10 +266,11 @@ for((i=1;i<=TST;i++)); do
 	languages_to_docker["py3"]="python:3-slim"
 	languages_to_docker["java"]="openjdk:8-slim"
 
+	shj_log "sudo run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $runcode"
 	sudo run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} $runcode
 
 	EXITCODE=$?
-
+	shj_log "exit code $EXITCODE"
 ##################################################################
 ############## Process error code and error log ##################
 ##################################################################
@@ -314,7 +315,7 @@ for((i=1;i<=TST;i++)); do
 				break
 			fi
 		done
-		if [ $found_error = "1"]; then
+		if [ $found_error = "1" ]; then
 			continue
 		fi
 	else
