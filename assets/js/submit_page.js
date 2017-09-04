@@ -108,13 +108,17 @@ $(document).ready(function(){
     });
 
     $("select[name=language]").change(function(){
+        var lang_to_mode = {"C++":"c_cpp"
+            , "Java":"java"
+            , "C":"c_pp"
+            , "Python 2":"python"
+            , "Python 3":"python"
+        };
 
-    	var lang_to_mode = {"C++":"c_cpp"
-    		, Java:"java"
-    		, "Python 2":"python"
-    		, "Python 3":"python"
-    	};
-    	all_ace_s.map(function(editor){editor.session.setMode("ace/mode/" + lang_to_mode[$(this).val()]);});
+        mode = "ace/mode/" + lang_to_mode[$(this).val()];
+    	all_ace_s.map(function(editor){
+            editor.session.setMode(mode);
+        });
     });
 
     $("#theme").change(function(){
