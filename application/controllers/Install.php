@@ -113,7 +113,7 @@ class Install extends CI_Controller
 				show_error("Error creating database table ".$this->db->dbprefix('assignments') . print_r($this->db->error(), true));
 
 			}
-
+;
 
 			// create table 'notifications'
 			$fields = array(
@@ -136,11 +136,6 @@ class Install extends CI_Controller
 				'name'              => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
 				'score'             => array('type' => 'INT', 'constraint' => 11),
 				'is_upload_only'    => array('type' => 'TINYINT', 'constraint' => 1, 'default' => '0'),
-				'c_time_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
-				'python_time_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 1500),
-				'java_time_limit'   => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 2000),
-				'memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
-				'allowed_languages' => array('type' => 'TEXT'),
 				'diff_cmd'          => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => 'diff'),
 				'diff_arg'          => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => '-bB'),
 			);
@@ -149,6 +144,46 @@ class Install extends CI_Controller
 			if ( ! $this->dbforge->create_table('problems', TRUE))
 				show_error("Error creating database table ".$this->db->dbprefix('problems'));
 
+			// create table 'languages'
+			$fields = array(
+				'id'            => array('type' => 'INT', 'constraint' => 4, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				'name'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
+				'system_name'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
+				'file_extension'          => array('type' => 'VARCHAR', 'constraint' => 5, 'default' => ''),
+				'docker_image_name' => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => ""),
+				'default_time_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
+				'default_memory_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
+			if ( ! $this->dbforge->create_table('languages', TRUE)){
+				var_dump($this->db->last_query());
+				show_error("Error creating database table ".$this->db->dbprefix('languages') . print_r($this->db->error(), true));
+
+			}
+			$result = $this->db->insert_batch('settings', array(
+				array('name' => 'Ansi C', 'system_name' => 'c', 'file_extension' => 'c', 'docker_image_name' => 'ubuntu:16.04', 'default_time_limit' => 500, 'default_memory_limit' => 50000),
+				array('name' => 'C++', 'system_name' => 'cpp', 'file_extension' => 'cpp', 'docker_image_name' => 'ubuntu:16.04', 'default_time_limit' => 500, 'default_memory_limit' => 50000),
+				array('name' => 'Python 2', 'system_name' => 'py2', 'file_extension' => 'py', 'docker_image_name' => 'python:2-slim', 'default_time_limit' => 1500, 'default_memory_limit' => 50000),
+				array('name' => 'Python 3', 'system_name' => 'py3', 'file_extension' => 'py', 'docker_image_name' => 'python:3-slim', 'default_time_limit' => 1500, 'default_memory_limit' => 50000),
+				array('name' => 'Java', 'system_name' => 'java', 'file_extension' => 'java', 'docker_image_name' => 'openjdk:8-slim', 'default_time_limit' => 1500, 'default_memory_limit' => 50000),
+				array('name' => 'C#', 'system_name' => 'cs', 'file_extension' => 'cs', 'docker_image_name' => 'mono:5.2-slim', 'default_time_limit' => 1500, 'default_memory_limit' => 50000),
+			))
+
+			//create table language_problem (tabele name is concat alphabetically)
+			$fields = array(
+				'language_id' => array('type' => 'INT', 'constraint' => 4, 'unsigned' => TRUE),
+				'problem_id' => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
+				'time_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
+				'memory_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
+			)
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
+			if ( ! $this->dbforge->create_table('language_problem', TRUE)){
+				var_dump($this->db->last_query());
+				show_error("Error creating database table ".$this->db->dbprefix('language_problem') . print_r($this->db->error(), true));
+
+			}
 
 
 			// create table 'queue'
