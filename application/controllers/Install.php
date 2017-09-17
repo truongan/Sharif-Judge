@@ -147,9 +147,9 @@ class Install extends CI_Controller
 			// create table 'languages'
 			$fields = array(
 				'id'            => array('type' => 'INT', 'constraint' => 4, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-				'name'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
-				'system_name'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
-				'file_extension'          => array('type' => 'VARCHAR', 'constraint' => 5, 'default' => ''),
+				'name'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => '', 'unique' => true),
+				'system_name'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => '', 'unique' => true),
+				'file_extension'          => array('type' => 'VARCHAR', 'constraint' => 5, 'default' => '', 'unique' => true),
 				'docker_image_name' => array('type' => 'VARCHAR', 'constraint' => 100, 'default' => ""),
 				'enabled' => array('type' => 'TINYINT', 'constraint' => 1, 'default' => "0"),
 				'default_time_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),

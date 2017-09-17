@@ -732,8 +732,11 @@ select.sharif_time {
 	text-align: center;
 	border-radius: 5px;
 	border: 1px solid #a9a9a9;
+	/*border-collapse: collapse;*/
 }
-
+#problems_table  tr{
+	vertical-align: top;
+}
 #ui-datepicker-div {
 	font-size: 11px !important;
 }

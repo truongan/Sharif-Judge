@@ -23,9 +23,8 @@ shj.row ='<tr><td>SPID</td>'
 	$(document).ready(function(){
 		$("#add").click(function(){
 			$('#problems_table>tbody').append(shj.row
-							.replace(/SPID/g, (shj.num_of_problems+1)) 
+							.replace(/SPID/g, (shj.num_of_problems+1))
 							.replace(/PID/g, (shj.num_of_problems))
-
 				);
 			$("select").select2();
 			shj.num_of_problems++;
@@ -52,36 +51,27 @@ shj.row ='<tr><td>SPID</td>'
 			timeFormat: 'HH:mm:ss'
 		});
 	});
-
-
 /*
 	Wecode judge
 	author: truongan
 	date: 20160330
 */
-
 $(document).ready(function(){
-	var nop = $("[name='number_of_problems']").val();
-
-	for (var i = 0; i < nop; i++) {
-		//console.log($("#allowed_lang" + i));
-		var allow_langs = $("#allowed_lang" + i).val().split(",")
-		
-		$("#lang" + i).val(allow_langs);
-		//console.log( $("#lang" + i).val() );
-	}
-
-	$("form").submit(function(event){
-		var nop = $("[name='number_of_problems']").val();
-
-		for (var i = 0; i < nop; i++) {
-			//console.log($("#lang" + i).val());
-			$("#submit_lang" + i).val($("#lang" + i).val().join());
-			$("#lang" + i).val(allow_langs);
-		}
-		//event.preventDefault();
-		//return false;
-
-	});
+	// var nop = $("[name='number_of_problems']").val();
+	//
+	// for (var i = 0; i < nop; i++) {
+	// 	var allow_langs = $("#allowed_lang" + i).val().split(",")
+	//
+	// 	$("#lang" + i).val(allow_langs);
+	// }
+	//
+	// $("form").submit(function(event){
+	// 	var nop = $("[name='number_of_problems']").val();
+	//
+	// 	for (var i = 0; i < nop; i++) {
+	// 		$("#submit_lang" + i).val($("#lang" + i).val().join());
+	// 		$("#lang" + i).val(allow_langs);
+	// 	}
+	// });
 	$("select").select2();
 });

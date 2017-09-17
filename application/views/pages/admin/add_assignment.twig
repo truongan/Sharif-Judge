@@ -135,47 +135,55 @@
 <table id="problems_table">
 	<thead>
 	<tr>
-		<th rowspan="2"></th>
-		<th rowspan="2">Name</th>
-		<th rowspan="2">Score</th>
-		<th colspan="3" style="border-bottom: 1px solid #BDBDBD">Time Limit (ms)</th>
-		<th rowspan="2">Memory<br>Limit (kB)</th>
-		<th rowspan="2">Allowed<br>Languages (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#allowed-languages">?</a>)</th>
-		<th rowspan="2">Diff<br>Command (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#diff-command">?</a>)</th>
-		<th rowspan="2">Diff<br>Argument (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#diff-arguments">?</a>)</th>
-		<th rowspan="2">Upload<br>Only (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#upload-only">?</a>)</th>
-		<th rowspan="2"></th>
+		<th>No.</th>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Score</th>
+		<th>Add language</spam></th>
+		<th>Languages (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#allowed-languages">?</a>)</th>
+		<th>Diff<br>Command (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#diff-command">?</a>)</th>
+		<th>Diff<br>Argument (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#diff-arguments">?</a>)</th>
+		<th>Upload<br>Only (<a target="_blank" href="https://github.com/mjnaderi/Sharif-Judge/blob/docs/v1.4/add_assignment.md#upload-only">?</a>)</th>
+		<th></th>
 	</tr>
-	<tr>
-		<th>C/C++</th><th>Python</th><th>Java</th>
-	</tr>
+
 	</thead>
 	<tbody>
 
 	{% set i = 0 %}
 	{% for problem in problems %}
 		<tr>
-			<td>{{ problem.id }}</td>
+			<td>{{ i }}</td>
+			<td>{{ i }}</td>
 			<td><input type="text" name="name[]" class="sharif_input short" value="{{ problem.name }}"/></td>
-			<td><input type="text" name="score[]" class="sharif_input tiny2" value="{{ problem.score }}"/></td>
-			<td><input type="text" name="c_time_limit[]" class="sharif_input tiny2" value="{{ problem.c_time_limit }}"/></td>
-			<td><input type="text" name="python_time_limit[]" class="sharif_input tiny2" value="{{ problem.python_time_limit }}"/></td>
-			<td><input type="text" name="java_time_limit[]" class="sharif_input tiny2" value="{{ problem.java_time_limit }}"/></td>
-			<td><input type="text" name="memory_limit[]" class="sharif_input tiny" value="{{ problem.memory_limit }}"/></td>
-			<input id="allowed_lang{{i}}" type="hidden" name="allowed_languages[{{i}}]" class="sharif_input short2" value="{{ problem.allowed_languages }}"/>
-			<input id="submit_lang{{i}}" type="hidden" name="languages[{{i}}]" class="sharif_input short2"/>
+			<td><input type="number" name="score[]" class="sharif_input tiny2" value="{{ problem.score }}"/></td>
 			<td>
-				<select id="lang{{i}}" name="select_languages[{{i}}][]" class="medium" multiple>
+
+				<select id="lang{{i}}" name="select_languages[{{i}}][]" class="tiny">
 					<option value="C">C</option>
 					<option value="C++">C++</option>
 					<option value="Python 2">Python 2</option>
 					<option value="Python 3">Python 3</option>
 					<option value="Java">Java</option>
 				</select>
+				<span class="fa fa-plus-circle fa-md color11" id="add">
+			</td>
+			<td>
+				<table class="language_table">
+					{% for x in 0..3 %}
+				<tr>
+					<td><input type="text" class="sharif_input tiny2" name="lang[{{i}}][]" value="C++"></input></td>
+					<td><input type="number" class="sharif_input tiny2" name="timelimit[{{i}}][]" value="500"></input></td>
+					<td><input type="number" class="sharif_input tiny2" name="memelimit[{{i}}][]" value="500"></input></td>
+					<td><td><i class="fa fa-times-circle fa-md color1 delete_language pointer"></i></td>
+				</tr>
+					{% endfor %}
+				</table>
+
 			</td>
 			<td><input type="text" name="diff_cmd[]" class="sharif_input tiny" value="{{ problem.diff_cmd }}"/></td>
 			<td><input type="text" name="diff_arg[]" class="sharif_input tiny" value="{{ problem.diff_arg }}"/></td>
-			<td><input type="checkbox" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/></td>
+			<td><input type="checkbox" name="is_upload_only[]" class="check" value="{{ i }}" {{ problem.is_upload_only ? 'checked' }}/></td>
 			<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer"></i></td>
 		</tr>
 		{% set i = i + 1 %}

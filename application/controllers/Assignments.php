@@ -277,8 +277,8 @@ class Assignments extends CI_Controller
 
 		$this->load->library('upload');
 
-		if ( ! empty($_POST) )
-			//echo("<pre>"); print_r($_POST); echo("</pre>"); die();
+		if ( ! empty($_POST) ){
+			echo("<pre>"); print_r($_POST); echo("</pre>"); die();
 			if ($this->_add()) // add/edit assignment
 			{
 				//if ( ! $this->edit) // if adding assignment (not editing)
@@ -288,6 +288,7 @@ class Assignments extends CI_Controller
 					return;
 				//}
 			}
+		}
 
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
@@ -309,7 +310,20 @@ class Assignments extends CI_Controller
 			if ($names === NULL)
 				$data['problems'] = array(
 					array(
-						'id' => 1,
+
+						'name' => 'Problem ',
+						'score' => 100,
+						'c_time_limit' => 500,
+						'python_time_limit' => 1500,
+						'java_time_limit' => 2000,
+						'memory_limit' => 50000,
+						'allowed_languages' => 'C++',
+						'diff_cmd' => 'diff',
+						'diff_arg' => '-bB',
+						'is_upload_only' => 0
+					),
+					array(
+
 						'name' => 'Problem ',
 						'score' => 100,
 						'c_time_limit' => 500,
