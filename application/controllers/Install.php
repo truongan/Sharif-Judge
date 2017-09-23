@@ -175,7 +175,7 @@ class Install extends CI_Controller
 			// create table 'scoreboard'
 			$fields = array(
 				'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-				'scoreboard'        => array('type' => 'TEXT'),
+				'scoreboard'        => array('type' => 'LONGTEXT'),
 			);
 			$this->dbforge->add_field($fields);
 			$this->dbforge->add_key('assignment');
