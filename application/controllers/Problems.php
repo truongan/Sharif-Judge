@@ -21,6 +21,7 @@ class Problems extends CI_Controller
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
 
+		$this->load->model("problem_model");
 		$this->all_assignments = $this->assignment_model->all_assignments();
 	}
 
@@ -31,24 +32,17 @@ class Problems extends CI_Controller
 	/**
 	* Download problem's template
 	**/
-	public function template($assignment_id = NULL, $problem_id = 1){
-		// Find pdf file
-		if ($assignment_id === NULL)
-			$assignment_id = $this->user->selected_assignment['id'];
-
-		if ($assignment_id == 0){
-			show_error("Pleas select an assignment first");
-		}
+	public function template($problem_id = 1){
 		if ($problem_id === NULL)
 			show_error("File not found");
 
 		$pattern1 = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-					."/assignment_{$assignment_id}/p{$problem_id}/template.public.cpp";
+					."/p{$problem_id}/template.public.cpp";
 
 		$pdf_files = glob($pattern1);
 		if ( ! $pdf_files ){
 			$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-						."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
+						."/p{$problem_id}/template.cpp";
 
 			$pdf_files = glob($pattern);
 			if(!$pdf_files)
@@ -63,12 +57,22 @@ class Problems extends CI_Controller
 	}
 
 	/**
+	* Display list of problems
+	*/
+	public function index(){
+		//only head_instructor and above can view list of all problem
+		if ( $this->user->level <= 1) // permission denied
+			show_404();
+
+		$list = $this->problem_model->get_all();
+	}
+	/**
 	 * Displays detail description of given problem
 	 *
 	 * @param int $assignment_id
 	 * @param int $problem_id
 	 */
-	public function index($assignment_id = NULL, $problem_id = 1)
+	public function view($assignment_id = NULL, $problem_id = 1)
 	{
 		// If no assignment is given, use selected assignment
 		if ($assignment_id === NULL)

@@ -14,4 +14,7 @@ class Problem_model extends CI_Model
 		parent::__construct();
 	}
 
+	public function get_all($problem_id){
+		return $this->db->get(problems)->result();
+	}
 }
