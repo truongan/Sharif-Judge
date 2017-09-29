@@ -310,13 +310,15 @@ for((i=1;i<=TST;i++)); do
 		do
 			if grep -q "$K" err; then
 				shj_log ${errors[$K]}
-				echo "<span class=\"shj_o\">${$errors[$K]}</span>" >>$PROBLEMPATH/$UN/result.html
+				echo "<span class=\"shj_o\">${errors[$K]}</span>" >>$PROBLEMPATH/$UN/result.html
 				found_error=1
 				break
 			fi
 		done
 		if [ $found_error = "1" ]; then
 			continue
+			shj_log "found error"
+
 		fi
 	else
 		t=`grep "FINISHED" err|cut -d" " -f3`
