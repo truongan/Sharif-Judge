@@ -15,6 +15,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		$('.code-column').selectText();
 	});
+
 	//$(".btn").click(function () {
 	$("td").on('click', '.btn', function () {
 		var button = $(this);
@@ -123,12 +124,14 @@ $(document).ready(function () {
 	);
 
 	setTimeout(update_status, update_status_interval);
+
+	// $(".sharif_table").DataTable();
 });
 
 
 update_status_interval = 6000;
 function update_status(){
-	
+
 	$('tr').each(function(){
 		var status = $(this).children('.status');
 		if (status.children('div').hasClass('pending')){
@@ -163,7 +166,7 @@ function update_status(){
 						break;
 
 						default:
-							element = ('<div class="btn shj-blue" data-code="0" data-type="result">' 
+							element = ('<div class="btn shj-blue" data-code="0" data-type="result">'
 															+ response.status + '</div>');
 					}
 					status.html(element);
