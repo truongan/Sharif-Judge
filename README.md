@@ -1,6 +1,6 @@
 #Wecode
 
-Wecode judge, originally forked from[Sharif Judge](https://github.com/mjnaderi/Sharif-Judge), is a free and open source online judge for programming courses.
+Wecode judge, originally forked from[Sharif Judge](https://github.com/truongan/wecode-judge), is a free and open source online judge for programming courses.
 
 Wecode judge employ *docker* to contain and execute the user submitted code. The web interface is written in PHP (CodeIgniter framework) and the main backend is written in BASH.
 

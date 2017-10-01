@@ -23,7 +23,7 @@
 
 # Some lines are added by Mohammad Javad Naderi <mjnaderi@gmail.com> 
 # (indicated by "# added by mjnaderi") to enable using EasySandbox 
-# in Sharif Judge online judge (https://github.com/mjnaderi/Sharif-Judge)
+# in Sharif Judge online judge (https://github.com/truongan/wecode-judge)
 # July, 29, 2013
 # Enable EasySandbox:  "--sandbox"
 # Disable EasySandbox: "-nosandbox"

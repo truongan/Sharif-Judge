@@ -442,8 +442,11 @@ div#side_bar {
 	box-shadow: #a9a9a9 0 0 4px;
 	-moz-box-shadow: #a9a9a9 0 0 4px;
 	-webkit-box-shadow: #a9a9a9 0 0 4px;
-}
 
+}
+div#sidebar_top{
+	margin-bottom: 88px;
+}
 div#side_bar ul {
 	padding: 0;
 	margin: 0;
