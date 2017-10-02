@@ -442,16 +442,40 @@ div#side_bar {
 	box-shadow: #a9a9a9 0 0 4px;
 	-moz-box-shadow: #a9a9a9 0 0 4px;
 	-webkit-box-shadow: #a9a9a9 0 0 4px;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
 
 }
 div#sidebar_top{
-	margin-bottom: 88px;
+	/*margin-bottom: 88px;*/
+	flex: 1;
+	display: flex;
+	flex-flow: column;
+
+	position: relative;
+	/*margin: auto;*/
 }
+
+
+div#sidebar_bottom {
+	bottom: 0;
+	z-index: 2;
+	width: 100%;
+	padding: 0;
+	/*position: absolute;*/
+	flex-basis: auto;
+	/*margin: auto;*/
+}
+
 div#side_bar ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
 	font-size: 12px;
+
+	display: flex;
+	flex-flow: column;
 }
 
 div#side_bar ul li:hover i {
@@ -494,13 +518,6 @@ div#side_bar ul li {
 	border-left:5px solid black;
 }
 
-div#sidebar_bottom {
-	bottom: 0;
-	z-index: 2;
-	width: 100%;
-	padding: 0;
-	position: absolute;
-}
 
 div#sidebar_bottom p {
 	font-size: 10px;

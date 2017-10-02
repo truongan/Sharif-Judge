@@ -368,7 +368,7 @@ $(document).ready(function () {
 				success: function (response) {
 					if (response.done)
 					{
-						/* 
+						/*
 							truongan: if we are at assignment list and chaging seleced assignments
 							update countdown and select assigment list is not enough
 							reload page is safer.
