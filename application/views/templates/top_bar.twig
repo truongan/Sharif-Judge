@@ -45,48 +45,57 @@
 
 				</div>
 			</li>
+
+
 		</ul>
 
-		<div class="top_object top_left shj-spinner" style="display: none;">
-			<i class="fa fa-refresh fa-spin fa-lg"></i>
-		</div>
 
-		<div class="top_object countdown" id="countdown">
-			<div class="time_block">
-				<span id="time_days" class="countdown_num"></span><br>
-				<span class="time_label" id="days_label"></span>
-			</div>
-			<div class="time_block">
-				<span id="time_hours" class="countdown_num"></span><br>
-				<span class="time_label" id="hours_label"></span>
-			</div>
-			<div class="time_block">
-				<span id="time_minutes" class="countdown_num"></span><br>
-				<span class="time_label" id="minutes_label"></span>
-			</div>
-			<div class="time_block">
-				<span id="time_seconds" class="countdown_num"></span><br>
-				<span class="time_label" id="seconds_label"></span>
+
+		<div class="navbar-nav">
+			<div class="top_object top_left shj-spinner" style="display: none;">
+				<i class="fa fa-refresh fa-spin fa-lg"></i>
 			</div>
 		</div>
-		<div class="top_object countdown" id="extra_time">
-			<i class="fa fa-plus-square fa-2x"></i>
-			<div class="time_block">
-				<span>Extra</span><br><span>Time</span>
+		<div class="navbar-nav">
+			<div class="top_object countdown" id="countdown">
+				<div class="time_block">
+					<span id="time_days" class="countdown_num"></span><br>
+					<span class="time_label" id="days_label"></span>
+				</div>
+				<div class="time_block">
+					<span id="time_hours" class="countdown_num"></span><br>
+					<span class="time_label" id="hours_label"></span>
+				</div>
+				<div class="time_block">
+					<span id="time_minutes" class="countdown_num"></span><br>
+					<span class="time_label" id="minutes_label"></span>
+				</div>
+				<div class="time_block">
+					<span id="time_seconds" class="countdown_num"></span><br>
+					<span class="time_label" id="seconds_label"></span>
+				</div>
+			</div>
+			<div class="top_object countdown" id="extra_time">
+				<i class="fa fa-plus-square fa-2x"></i>
+				<div class="time_block">
+					<span>Extra</span><br><span>Time</span>
+				</div>
 			</div>
 		</div>
 
 		<!-- <div class="top_object shj_menu" id="user_top"> -->
-		<li class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-user"></i></a>
-			<div class="top_menu user-menu">
-				<div class="gravatar"><img src="https://www.gravatar.com/avatar/{{ md5(user.email) }}?s=70&d=identicon" /></div>
-				<div class="name"><i class="fa fa-user"></i> {{ user.username }}</div>
-				<div class="menu-controls">
-					<a href="{{ site_url('logout') }}" class="logout-btn"><i class="fa fa-sign-out"></i> Sign Out</a>
-					<a href="{{ site_url('profile') }}" class="profile-btn"><i class="fa fa-wrench"></i> Profile</a>
+		<div class="navbar-nav  shj_menu">
+			<div class="nav-item dropdown">
+				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-user"></i></a>
+				<div class="top_menu user-menu dropdown-menu dropdown-menu-right">
+					<div class="gravatar"><img src="https://www.gravatar.com/avatar/{{ md5(user.email) }}?s=70&d=identicon" /></div>
+					<div class="name"><i class="fa fa-user"></i> {{ user.username }}</div>
+					<div class="menu-controls">
+						<a href="{{ site_url('logout') }}" class="logout-btn"><i class="fa fa-sign-out"></i> Sign Out</a>
+						<a href="{{ site_url('profile') }}" class="profile-btn"><i class="fa fa-wrench"></i> Profile</a>
+					</div>
 				</div>
 			</div>
-		</li>
+		</div>
 	</div>
 </nav>

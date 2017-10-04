@@ -160,14 +160,10 @@ div#top_bar {
 	border-bottom:5px solid #000;
 	background-color: #333;
 }
-
-div#top_bar a {
-	text-decoration: none;
+.time_block{
+	color: #f0f0f0;
 }
 
-div#top_bar>div>a {
-	color: white;
-}
 
 div#shj_logo {
 	height: 100%;
@@ -177,40 +173,14 @@ div#shj_logo {
 	display: inline-block;
 }
 
-div#shj_logo a {
-	display: block;
-	height: 100%;
-	padding:8px 0;
-}
-
-div#shj_logo img {
-	float:left;
-	height: 40px;
-	width: auto;
-	margin:0 0px;
-}
-
-div#shj_logo h1.shjlogo-text {
-	color:#A5A5A5;
-	display:inline-block;
-	margin:0px 0 0 0;
-	font-size: 1.4em;
-}
-
-div#shj_logo h1.shjlogo-text span {
-	color:#EBEBEB;
-	display:inline-block;
-	margin:0;
-	font-weight:normal;
-}
 
 div.top_object {
-	float: right;
-	height: 50px;
-	position: relative;
+	/*float: right;*/
+	/*height: 50px;*/
+	/*position: relative;*/
 	display: inline-block;
 	padding: 0 25px;
-	line-height: 50px;
+	/*line-height: 50px;*/
 }
 
 div.top_object.top_left, div.top_left {
