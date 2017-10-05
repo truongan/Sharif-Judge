@@ -35,7 +35,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 					{% for assignment_item in all_assignments|reverse[:5] %}
-						<a class="dropdown-item">
+						<a class="dropdown-item select_assignment">
 							<i class="fa fa-lg {{ assignment_item.id == user.selected_assignment.id ? 'fa-check-square-o color6' : 'fa-square-o' }}" data-id="{{ assignment_item.id }}"></i>
 							{{ assignment_item.name }}
 						</a>

@@ -152,9 +152,9 @@
 					{% if submission.status|lower == 'pending' %}
 						{% set submission_class = 'btn pending' %}
 					{% elseif submission.status|lower == 'score' %}
-						{% set submission_class = (submission.fullmark ? 'btn shj-green' : 'btn shj-red') %}
+						{% set submission_class = (submission.fullmark ? 'btn btn-success' : 'btn btn-danger') %}
 					{% else %}
-						{% set submission_class = 'btn shj-blue' %}
+						{% set submission_class = 'btn btn-primary' %}
 					{% endif %}
 					<div class="{{ submission_class }}" data-type="result" >
 						{% if submission.status == 'SCORE' %}
@@ -167,9 +167,9 @@
 			</td>
 			<td>
 				{% if submission.file_type == 'zip' or submission.file_type == 'pdf' %}
-					<div class="btn shj-orange" data-type="download">Download</div>
+					<div class="btn btn-warning" data-type="download">Download</div>
 				{% else %}
-					<div class="btn shj-orange" data-type="code" >Code</div>
+					<div class="btn btn-warning" data-type="code" >Code</div>
 				{% endif %}
 			</td>
 			{% if user.level > 0 %}
@@ -177,7 +177,7 @@
 				{% if submission.status == 'Uploaded' %}
 					---
 				{% else %}
-					<div class="btn" data-type="log" >Log</div>
+					<div class="btn btn-secondary" data-type="log" >Log</div>
 				{% endif %}
 			</td>
 			{% endif %}

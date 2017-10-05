@@ -105,7 +105,7 @@ shj.update_clock = function(){
 	var minutes = countdown%60; countdown=(countdown-minutes)/60;
 	var hours = countdown%24; countdown=(countdown-hours)/24;
 	var days = countdown;
-	
+
 	$("#time_days").html( days + "☀️" + hours + ":" + minutes + ":" + seconds);
 	// $("#time_hours").html(hours);
 	// $("#time_minutes").html(minutes);
@@ -246,7 +246,7 @@ $(document).ready(function () {
 				speed: 300
 			},
 			buttons: [
-				{addClass: 'btn shj-red', text: 'Yes, Delete', onClick: function ($noty) {
+				{addClass: 'btn btn-danger', text: 'Yes, Delete', onClick: function ($noty) {
 					$noty.close();
 					$.ajax({
 						type: 'POST',
@@ -271,7 +271,7 @@ $(document).ready(function () {
 					});
 				}
 				},
-				{addClass: 'btn shj-blue', text: 'No, Don\'t Delete', onClick: function ($noty) {
+				{addClass: 'btn btn-primary', text: 'No, Don\'t Delete', onClick: function ($noty) {
 					$noty.close();
 				}}
 			]
@@ -416,7 +416,7 @@ $(document).ready(function(){
 				speed: 300
 			},
 			buttons: [
-				{addClass: 'btn shj-red', text: 'Yes, Delete', onClick: function($noty) {
+				{addClass: 'btn btn-danger', text: 'Yes, Delete', onClick: function($noty) {
 					$noty.close();
 					$.ajax({
 						type: 'POST',
@@ -440,7 +440,7 @@ $(document).ready(function(){
 					});
 				}
 				},
-				{addClass: 'btn shj-blue', text: 'No, Don\'t Delete', onClick: function($noty){$noty.close();}}
+				{addClass: 'btn btn-primary', text: 'No, Don\'t Delete', onClick: function($noty){$noty.close();}}
 			]
 		});
 	});
@@ -459,7 +459,7 @@ $(document).ready(function(){
 				speed: 300
 			},
 			buttons: [
-				{addClass: 'btn shj-red', text: 'Yes, Delete', onClick: function($noty) {
+				{addClass: 'btn btn-danger', text: 'Yes, Delete', onClick: function($noty) {
 					$noty.close();
 					$.ajax({
 						type: 'POST',
@@ -480,7 +480,7 @@ $(document).ready(function(){
 					});
 				}
 				},
-				{addClass: 'btn shj-blue', text: 'No, Don\'t Delete', onClick: function($noty){$noty.close();}}
+				{addClass: 'btn btn-primary', text: 'No, Don\'t Delete', onClick: function($noty){$noty.close();}}
 			]
 		});
 	});

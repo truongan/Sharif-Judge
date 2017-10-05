@@ -30,15 +30,17 @@ function get_template(problem_id){
             problem: problem_id
         },
         success : function(data){
+            console.log(data);
             if (data.banned != ""){
                 var ban_span = "";
                 data.banned.split("\n").map(function(str){
                     if (str != "")
-                    ban_span += "<button class='btn btn-danger banned_btn'>"+ str +"</button>";
+
+                    ban_span += "<button type='button' class='btn btn-danger banned_btn'>"+ str +"</button>";
                 });
-                $("#banned").html('<h5>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)<br/>'
+                $("#banned").html('<h6>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)<br/>'
                                 + ban_span
-                                + '</h5>');
+                                + '</h6>');
                 $("#banned").show();
             } else {
                 $("#banned").hide();

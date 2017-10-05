@@ -53,6 +53,10 @@ div.inp_grp{
     margin-top: 10px;
 }
 
+.inp_grp{
+    margin-bottom: 5px;
+}
+
 .banned_btn{
     margin-right: 5px;
 }
