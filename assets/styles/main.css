@@ -54,8 +54,8 @@ body {
 	padding: 0;
 	color: #2d2d2d;
 	margin: 0 0 20px 0;
-	font-size: 12px;
-	font-family: 'Open Sans', 'Droid-Naskh', Sans-serif;
+	/*font-size: 12px;*/
+	font-family:  Sans-serif, 'Open Sans', 'Droid-Naskh';
 }
 
 ::selection {
@@ -116,7 +116,7 @@ pre code {
 }
 
 textarea {
-	font-size: 12px;
+	/*font-size: 12px;*/
 }
 
 blockquote {
@@ -205,7 +205,7 @@ span.time_label {
 	color: #FFF;
 	cursor: auto;
 	display: none;
-	font-size: 12px;
+	/*font-size: 12px;*/
 	position: absolute;
 	background-color: #373737;
 	-webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,0.4);
@@ -422,7 +422,7 @@ div#side_bar ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
-	font-size: 12px;
+	font-size: 14px;
 
 	display: flex;
 	flex-flow: column;
@@ -588,7 +588,7 @@ input.sharif_input:disabled {
 }
 
 .medium {
-	width: 225px !important;
+	width: 250px !important;
 }
 
 .short {
@@ -824,7 +824,8 @@ select.sharif_time {
 
 textarea.add_text {
 	display: inline-block;
-	font-size: 10px;
+	font-size: 12px;
+	font-family: monospace;
 	width: 410px;
 }
 
@@ -1039,7 +1040,7 @@ div.notif_text.latest {
 div#right_sidebar {
 	position: absolute;
 	right: 20px;
-	width: 220px;
+	width: 250px;
 }
 
 div.problems_widget {
