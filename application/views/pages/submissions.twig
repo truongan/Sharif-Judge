@@ -150,7 +150,7 @@
 					Uploaded
 				{% else %}
 					{% if submission.status|lower == 'pending' %}
-						{% set submission_class = 'btn pending' %}
+						{% set submission_class = 'btn btn-secondary pending' %}
 					{% elseif submission.status|lower == 'score' %}
 						{% set submission_class = (submission.fullmark ? 'btn btn-success' : 'btn btn-danger') %}
 					{% else %}

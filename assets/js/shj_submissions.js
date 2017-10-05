@@ -84,7 +84,7 @@ $(document).ready(function () {
 			error: shj.loading_error,
 			success: function (response) {
 				if (response.done) {
-					row.children('.status').html('<div class="btn btn-secondary" data-code="0">PENDING</div>');
+					row.children('.status').html('<div class="btn btn-secondary pending" data-code="0">PENDING</div>');
 					noty({text: 'Rejudge in progress', layout: 'bottomRight', type: 'success', timeout: 2500});
 					setTimeout(update_status, update_status_interval);
 				}
@@ -155,7 +155,7 @@ function update_status(){
 					var element;
 					switch (response.status.toLowerCase() ){
 						case 'pending':
-							element = ('<div class="btn btn-secondary" data-type="result" data-code="0">PENDING</div>');
+							element = ('<div class="btn btn-secondary pending" data-type="result" data-code="0">PENDING</div>');
 					 		noty({text: 'Still judging', layout: 'bottomRight', type: 'success', timeout: 2000});
 						break;
 
