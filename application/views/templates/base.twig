@@ -13,6 +13,7 @@
 	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/bootstrap4/css/bootstrap.css') }}"/>
 
 	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
+	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/flick/jquery-ui-1.12.1-custom.min.css') }}"/>
 	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/nano_scroller/nanoscroller.css') }}'/>
 	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/font/font-awesome/css/font-awesome.min.css') }}'/>
 
@@ -56,21 +57,25 @@ shj.color_scheme = 'github';
 
 <body id="body">
 {% include 'templates/top_bar.twig' %}
-{% include 'templates/side_bar.twig' %}
-<div id="main_container" class="scroll-wrapper">
-	<div class="scroll-content">
-		<div id="page_title">
-			<i class="fa {% block icon %}{% endblock %}"></i>
-			<span dir="auto">{% block title %}{% endblock %}</span>
-			{% block title_menu %}{% endblock %}
-		</div>
 
-		<div id="main_content">
-			{% block main_content %}
-			{% endblock %}
+<div class="container-fluid"><div class="row">
+	{% include 'templates/side_bar.twig' %}
+	<div id="main_container" class="scroll-wrapper">
+		<div class="scroll-content">
+			<div id="page_title">
+				<i class="fa {% block icon %}{% endblock %}"></i>
+				<span dir="auto">{% block title %}{% endblock %}</span>
+				{% block title_menu %}{% endblock %}
+			</div>
+
+			<div id="main_content">
+				{% block main_content %}
+				{% endblock %}
+			</div>
 		</div>
 	</div>
-</div>
+
+</div></div>
 {% block body_end %}{% endblock %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>

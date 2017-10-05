@@ -383,7 +383,7 @@ div#side_bar {
 	color:#595959;
 	position: fixed;
 	left: 0;
-	top: 55px;
+	top: 65px;
 	width: 160px;
 	bottom: 0;
 	z-index: 1;
@@ -497,7 +497,7 @@ div#main_container {
 	z-index: 0;
 	color: #595959;
 	position: absolute;
-	top: 55px;
+	top: 65px;
 	left: 160px;
 	background-color: #f6f6f4;
 }
