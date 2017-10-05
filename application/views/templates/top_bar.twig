@@ -7,7 +7,7 @@
 <nav id="top_bar" class="navbar navbar-expand-md navbar-dark fixed-top color-{{ selected }} bg-dark">
 	<!-- <div id="shj_logo" class="top_left"> -->
 	<a  class="navbar-brand" href="{{ site_url('/') }}">
-		<img src="{{ base_url('assets/images/logo.png') }}" height="40px" />
+		<img src="{{ base_url('assets/images/logo.png') }}" height="30px" />
 		{{ user.site_name }}
 	</a>
 	<!-- </div> -->
@@ -59,20 +59,21 @@
 		<div class="navbar-nav">
 			<div class="top_object countdown" id="countdown">
 				<div class="time_block">
-					<span id="time_days" class="countdown_num"></span><br>
-					<span class="time_label" id="days_label"></span>
+					<span id="time_days" class="countdown_num"></span>
+☀️<br>
+					<!-- <span class="time_label" id="days_label"></span> -->
 				</div>
 				<div class="time_block">
-					<span id="time_hours" class="countdown_num"></span><br>
-					<span class="time_label" id="hours_label"></span>
+					<span id="time_hours" class="countdown_num"></span>:<br>
+					<!-- <span class="time_label" id="hours_label"></span> -->
 				</div>
 				<div class="time_block">
-					<span id="time_minutes" class="countdown_num"></span><br>
-					<span class="time_label" id="minutes_label"></span>
+					<span id="time_minutes" class="countdown_num"></span>:<br>
+					<!-- <span class="time_label" id="minutes_label"></span> -->
 				</div>
 				<div class="time_block">
 					<span id="time_seconds" class="countdown_num"></span><br>
-					<span class="time_label" id="seconds_label"></span>
+					<!-- <span class="time_label" id="seconds_label"></span> -->
 				</div>
 			</div>
 			<div class="top_object countdown" id="extra_time">
