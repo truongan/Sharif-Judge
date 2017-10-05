@@ -105,26 +105,27 @@ shj.update_clock = function(){
 	var minutes = countdown%60; countdown=(countdown-minutes)/60;
 	var hours = countdown%24; countdown=(countdown-hours)/24;
 	var days = countdown;
-	$("#time_days").html(days);
-	$("#time_hours").html(hours);
-	$("#time_minutes").html(minutes);
-	$("#time_seconds").html(seconds);
-	if(days==1)
-		$("#days_label").html(shj.time_words[0]);
-	else
-		$("#days_label").html(shj.time_words[1]);
-	if(hours==1)
-		$("#hours_label").html(shj.time_words[2]);
-	else
-		$("#hours_label").html(shj.time_words[3])
-	if(minutes==1)
-		$("#minutes_label").html(shj.time_words[4]);
-	else
-		$("#minutes_label").html(shj.time_words[5]);
-	if(seconds==1)
-		$("#seconds_label").html(shj.time_words[6]);
-	else
-		$("#seconds_label").html(shj.time_words[7]);
+	
+	$("#time_days").html( days + "☀️" + hours + ":" + minutes + ":" + seconds);
+	// $("#time_hours").html(hours);
+	// $("#time_minutes").html(minutes);
+	// $("#time_seconds").html(seconds);
+	// if(days==1)
+	// 	$("#days_label").html(shj.time_words[0]);
+	// else
+	// 	$("#days_label").html(shj.time_words[1]);
+	// if(hours==1)
+	// 	$("#hours_label").html(shj.time_words[2]);
+	// else
+	// 	$("#hours_label").html(shj.time_words[3])
+	// if(minutes==1)
+	// 	$("#minutes_label").html(shj.time_words[4]);
+	// else
+	// 	$("#minutes_label").html(shj.time_words[5]);
+	// if(seconds==1)
+	// 	$("#seconds_label").html(shj.time_words[6]);
+	// else
+	// 	$("#seconds_label").html(shj.time_words[7]);
 }
 
 shj.sidebar_open = function(time){

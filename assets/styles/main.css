@@ -150,6 +150,7 @@ blockquote {
 
 #top_bar{
 	border-bottom:5px solid #000;
+	padding: 0rem 1rem;
 }
 
 div.top_object {
@@ -383,7 +384,7 @@ div#side_bar {
 	color:#595959;
 	position: fixed;
 	left: 0;
-	top: 65px;
+	top: 45px;
 	width: 160px;
 	bottom: 0;
 	z-index: 1;
@@ -497,7 +498,7 @@ div#main_container {
 	z-index: 0;
 	color: #595959;
 	position: absolute;
-	top: 65px;
+	top: 45px;
 	left: 160px;
 	background-color: #f6f6f4;
 }
