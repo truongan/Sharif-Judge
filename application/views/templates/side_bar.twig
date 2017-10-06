@@ -2,69 +2,69 @@
 <div id="side_bar" class="sidebar_open">
 	<div id="sidebar_top" class="scroll-wrapper"> <div  class="scroll-content">
 	<!-- <div id="sidebar_top" class="">		<div  class=""> -->
-		<ul>
-			<li class="color-dashboard{{ selected=='dashboard' ? ' selected' }}">
-				<a href="{{ site_url('dashboard') }}">
-					<i class="fa fa-dashboard fa-lg"></i>
-					<span class="sidebar_text">Dashboard</span>
-				</a>
+		<ul class="container">
+			<a href="{{ site_url('dashboard') }}">
+			<li  class="row align-items-center no-gutters color-dashboard{{ selected=='dashboard' ? ' selected' }}">
+					<i class="col-auto fa fa-dashboard fa-lg"></i>
+					<span class="col-auto sidebar_text">Dashboard</span>
 			</li>
+		</a>
 			{% if user.level == 3 %}
-			<li class="color-settings{{ selected=='settings' ? ' selected' }}">
-				<a href="{{ site_url('settings') }}">
+			<a href="{{ site_url('settings') }}">
+			 <li  class="row align-items-center no-gutters color-settings{{ selected=='settings' ? ' selected' }}">
 					<i class="fa fa-gear fa-lg"></i>
 					<span class="sidebar_text">Settings</span>
-				</a>
 			</li>
-			<li class="color-users{{ selected=='users' ? ' selected' }}">
-				<a href="{{ site_url('users') }}">
+		</a>
+		<a href="{{ site_url('users') }}">
+			 <li  class="row align-items-center no-gutters color-users{{ selected=='users' ? ' selected' }}">
 					<i class="fa fa-users fa-lg"></i>
 					<span class="sidebar_text">Users</span>
-				</a>
 			</li>
+		</a>
 			{% endif %}
-			<li class="color-notifications{{ selected=='notifications' ? ' selected' }}">
-				<a href="{{ site_url('notifications') }}">
+			<a href="{{ site_url('notifications') }}">
+			 <li  class="row align-items-center no-gutters color-notifications{{ selected=='notifications' ? ' selected' }}">
 					<i class="fa fa-bell fa-lg"></i>
 					<span class="sidebar_text">Notifications</span>
-				</a>
 			</li>
-			<li class="color-assignments{{ selected=='assignments' ? ' selected' }}">
-				<a href="{{ site_url('assignments') }}">
+		</a>
+		<a href="{{ site_url('assignments') }}">
+			 <li  class="row align-items-center no-gutters color-assignments{{ selected=='assignments' ? ' selected' }}">
 					<i class="fa fa-folder-open fa-lg"></i>
 					<span class="sidebar_text">Assignments</span>
-				</a>
 			</li>
-			<li class="color-problems{{ selected=='problems' ? ' selected' }}">
-				<a href="{{ site_url('problems') }}">
+		</a>
+		<a href="{{ site_url('problems') }}">
+			 <li  class="row align-items-center no-gutters color-problems{{ selected=='problems' ? ' selected' }}">
 					<i class="fa fa-puzzle-piece fa-lg"></i>
 					<span class="sidebar_text">Problems</span>
-				</a>
 			</li>
-			<li class="color-submit{{ selected=='submit' ? ' selected' }}">
-				<a href="{{ site_url('submit') }}">
-					<i class="fa fa-location-arrow fa-lg"></i>
-					<span class="sidebar_text">Code Editor</span>
-				</a>
+		</a>
+		<a href="{{ site_url('submit') }}">
+			 <li  class="row align-items-center no-gutters color-submit{{ selected=='submit' ? ' selected' }}">
+					<i class="col-auto fa fa-location-arrow fa-lg"></i>
+					<span class="col sidebar_text">Code Editor</span>
 			</li>
-			<li class="color-final_submissions{{ selected=='final_submissions' ? ' selected' }}">
-				<a href="{{ site_url('submissions/final') }}">
-					<i class="fa fa-map-marker fa-lg"></i>
-					<span class="sidebar_text">Final Submissions</span>
-				</a>
+		</a>
+		<a href="{{ site_url('submissions/final') }}">
+			 <li  class="row align-items-center no-gutters color-final_submissions{{ selected=='final_submissions' ? ' selected' }}">
+					<i class="col-auto fa fa-map-marker fa-lg"></i>
+					<span class="col sidebar_text">Final Submissions</span>
 			</li>
-			<li class="color-all_submissions{{ selected=='all_submissions' ? ' selected' }}">
-				<a href="{{ site_url('submissions/all') }}">
+		</a>
+		<a href="{{ site_url('submissions/all') }}">
+			 <li  class="row align-items-center no-gutters color-all_submissions{{ selected=='all_submissions' ? ' selected' }}">
 					<i class="fa fa-bars fa-lg"></i>
 					<span class="sidebar_text">All Submissions</span>
-				</a>
 			</li>
-			<li class="color-scoreboard{{ selected=='scoreboard' ? ' selected' }}">
-				<a href="{{ site_url('scoreboard') }}">
+		</a>
+		<a href="{{ site_url('scoreboard') }}">
+			 <li  class="row align-items-center no-gutters color-scoreboard{{ selected=='scoreboard' ? ' selected' }}">
 					<i class="fa fa-star fa-lg"></i>
 					<span class="sidebar_text">Scoreboard</span>
-				</a>
 			</li>
+		</a>
 		</ul>
 	</div>
 	</div>
