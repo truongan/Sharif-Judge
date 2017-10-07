@@ -397,8 +397,6 @@ div#side_bar {
 	flex-direction: column;
 
 }
-
-
 div#sidebar_top{
 	/*margin-bottom: 88px;*/
 	flex: 1;
@@ -424,7 +422,7 @@ div#side_bar ul {
 	padding: 0;
 	margin: 0;
 	list-style: none;
-	/*font-size: 14px;*/
+	font-size: 14px;
 
 	display: flex;
 	flex-flow: column;
@@ -443,11 +441,10 @@ div#side_bar ul li.selected i {
 }
 
 .sidebar_text {
-	/*width: 124px;*/
-	/*position: absolute;*/
-	margin-left:8px;
+	width: 124px;
+	position: absolute;
+	padding-left:8px;
 	border-bottom:1px solid #EAEADE;
-	word-wrap: break-word;
 }
 
 div#side_bar ul li a {
