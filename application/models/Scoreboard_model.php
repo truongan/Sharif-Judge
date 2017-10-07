@@ -143,7 +143,10 @@ class Scoreboard_model extends CI_Model
 
 		// If scoreboard in not enabled, do nothing
 		$scoreboard_enabled = $this->db->select('scoreboard')->get_where('assignments', array('id'=>$assignment_id))->row()->scoreboard;
-		if ($assignment_id == 0 OR  ! $scoreboard_enabled )
+		if ($assignment_id == 0
+			//OR  ! $scoreboard_enabled  /* An: 2017-10-07: Always update scoreboard, enable scoreboard option only hide it
+			
+		)
 			return;
 
 		// Generate the scoreboard
