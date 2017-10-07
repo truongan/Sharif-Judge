@@ -107,25 +107,6 @@ shj.update_clock = function(){
 	var days = countdown;
 
 	$("#time_days").html( days + "☀️" + hours + ":" + minutes + ":" + seconds);
-	// $("#time_hours").html(hours);
-	// $("#time_minutes").html(minutes);
-	// $("#time_seconds").html(seconds);
-	// if(days==1)
-	// 	$("#days_label").html(shj.time_words[0]);
-	// else
-	// 	$("#days_label").html(shj.time_words[1]);
-	// if(hours==1)
-	// 	$("#hours_label").html(shj.time_words[2]);
-	// else
-	// 	$("#hours_label").html(shj.time_words[3])
-	// if(minutes==1)
-	// 	$("#minutes_label").html(shj.time_words[4]);
-	// else
-	// 	$("#minutes_label").html(shj.time_words[5]);
-	// if(seconds==1)
-	// 	$("#seconds_label").html(shj.time_words[6]);
-	// else
-	// 	$("#seconds_label").html(shj.time_words[7]);
 }
 
 shj.sidebar_open = function(time){
@@ -322,10 +303,11 @@ $(document).ready(function () {
 		else
 			$.cookie('shj_sidebar', 'open', {path: '/', expires: 365});
 	}
-	if (shj.sidebar == "open")
-		shj.sidebar_open(0);
-	else
-		shj.sidebar_close(0);
+
+	// if (shj.sidebar == "open")
+	// 	shj.sidebar_open(0);
+	// else
+	// 	shj.sidebar_close(0);
 
 	$("#shj_collapse").click(shj.toggle_collapse);
 
@@ -392,10 +374,6 @@ $(document).ready(function () {
 		}
 	);
 });
-
-
-
-
 
 /**
  * "Users" page

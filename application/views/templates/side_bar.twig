@@ -12,33 +12,33 @@
 			{% if user.level == 3 %}
 			<a href="{{ site_url('settings') }}">
 			 <li  class="row align-items-center no-gutters color-settings{{ selected=='settings' ? ' selected' }}">
-					<i class="fa fa-gear fa-lg"></i>
-					<span class="sidebar_text">Settings</span>
+					<i class="col-auto fa fa-gear fa-lg"></i>
+					<span class="col sidebar_text">Settings</span>
 			</li>
 		</a>
 		<a href="{{ site_url('users') }}">
 			 <li  class="row align-items-center no-gutters color-users{{ selected=='users' ? ' selected' }}">
-					<i class="fa fa-users fa-lg"></i>
-					<span class="sidebar_text">Users</span>
+					<i class="col-auto fa fa-users fa-lg"></i>
+					<span class="col sidebar_text">Users</span>
 			</li>
 		</a>
 			{% endif %}
 			<a href="{{ site_url('notifications') }}">
 			 <li  class="row align-items-center no-gutters color-notifications{{ selected=='notifications' ? ' selected' }}">
-					<i class="fa fa-bell fa-lg"></i>
-					<span class="sidebar_text">Notifications</span>
+					<i class="col-auto fa fa-bell fa-lg"></i>
+					<span class="col sidebar_text">Notifications</span>
 			</li>
 		</a>
 		<a href="{{ site_url('assignments') }}">
 			 <li  class="row align-items-center no-gutters color-assignments{{ selected=='assignments' ? ' selected' }}">
-					<i class="fa fa-folder-open fa-lg"></i>
-					<span class="sidebar_text">Assignments</span>
+					<i class="col-auto fa fa-folder-open fa-lg"></i>
+					<span class="col sidebar_text">Assignments</span>
 			</li>
 		</a>
 		<a href="{{ site_url('problems') }}">
 			 <li  class="row align-items-center no-gutters color-problems{{ selected=='problems' ? ' selected' }}">
-					<i class="fa fa-puzzle-piece fa-lg"></i>
-					<span class="sidebar_text">Problems</span>
+					<i class="col-auto fa fa-puzzle-piece fa-lg"></i>
+					<span class="col sidebar_text">Problems</span>
 			</li>
 		</a>
 		<a href="{{ site_url('submit') }}">
@@ -48,21 +48,21 @@
 			</li>
 		</a>
 		<a href="{{ site_url('submissions/final') }}">
-			 <li  class="row align-items-center no-gutters color-final_submissions{{ selected=='final_submissions' ? ' selected' }}">
+			 <li  class="row equal align-items-center no-gutters color-final_submissions{{ selected=='final_submissions' ? ' selected' }}">
 					<i class="col-auto fa fa-map-marker fa-lg"></i>
 					<span class="col sidebar_text">Final Submissions</span>
 			</li>
 		</a>
 		<a href="{{ site_url('submissions/all') }}">
 			 <li  class="row align-items-center no-gutters color-all_submissions{{ selected=='all_submissions' ? ' selected' }}">
-					<i class="fa fa-bars fa-lg"></i>
-					<span class="sidebar_text">All Submissions</span>
+					<i class="col-auto fa fa-bars fa-lg"></i>
+					<span class="col sidebar_text">All Submissions</span>
 			</li>
 		</a>
 		<a href="{{ site_url('scoreboard') }}">
 			 <li  class="row align-items-center no-gutters color-scoreboard{{ selected=='scoreboard' ? ' selected' }}">
-					<i class="fa fa-star fa-lg"></i>
-					<span class="sidebar_text">Scoreboard</span>
+					<i class="col-auto fa fa-star fa-lg"></i>
+					<span class="col sidebar_text">Scoreboard</span>
 			</li>
 		</a>
 		</ul>
@@ -75,7 +75,7 @@
 		</p>
 		<p class="timer"></p>
 		<div id="shj_collapse" class="pointer">
-			<i id="collapse" class="fa fa-caret-square-o-left fa-lg"></i><span class="sidebar_text">Collapse Menu</span>
+			<i id="collapse" class="fa fa-caret-square-o-left fa-lg"></i><span class="col sidebar_text">Collapse Menu</span>
 		</div>
 	</div>
 </div>
