@@ -81,7 +81,7 @@ $(document).ready(function(){
             return;
         for (var i=0;i<shj.p[v].length;i++)
             $('<option value="'+shj.p[v][i]+'">'+shj.p[v][i]+'</option>').appendTo('select#languages');
-        $("#problem_link").attr('href', "/problems/"+shj.selected_assignment+"/" + $(this).val());
+        $("#problem_link").attr('href', shj.site_url + "problems/"+shj.selected_assignment+"/" + $(this).val());
 
         get_template($(this).val());
     });

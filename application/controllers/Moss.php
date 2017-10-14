@@ -27,13 +27,18 @@ class Moss extends CI_Controller
 	{
 		if ($assignment_id === FALSE)
 			show_404();
+
 		$this->form_validation->set_rules('detect', 'detect', 'required');
+
 		if ($this->form_validation->run())
 		{
-			if ($this->input->post('detect') !== 'detect')
-				exit;
-			$this->_detect($assignment_id);
+			if ($this->input->post('abc') !== null){
+				if ($this->input->post('detect') !== 'detect')
+					exit;
+				$this->_detect($assignment_id);
+			}
 		}
+
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'moss_userid' => $this->settings_model->get_setting('moss_userid'),
@@ -69,8 +74,10 @@ class Moss extends CI_Controller
 		$moss_original = trim( file_get_contents(rtrim($this->settings_model->get_setting('tester_path'), '/').'/moss_original') );
 		$moss_path = rtrim($this->settings_model->get_setting('tester_path'), '/').'/moss';
 		file_put_contents($moss_path, str_replace('MOSS_USER_ID', $userid, $moss_original));
-		shell_exec("chmod +x {$moss_path}");
+		echo(shell_exec("chmod +x {$moss_path}"));
+
 		$this->index($assignment_id);
+
 	}
 
 

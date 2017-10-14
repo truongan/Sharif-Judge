@@ -115,7 +115,7 @@
 	<p class="input_p">
 		<input id="form_a_scoreboard" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
 		<label for="form_a_scoreboard" class="default">Scoreboard</label>
-		<span class="form_comment space-left">Check this to enable scoreboard</span>
+		<span class="form_comment space-left">Check this to publish scoreboard to student</span>
 		{{ form_error('scoreboard', '<div class="shj_error">', '</div>') }}
 	</p>
 	<p class="input_p">
