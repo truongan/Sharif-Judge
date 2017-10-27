@@ -374,7 +374,8 @@ $(document).ready(function () {
 							update countdown and select assigment list is not enough
 							reload page is safer.
 						*/
-						window.location.href = window.location.href;
+						//window.location.href = window.location.href;
+						location.reload();
 						/*
 						var checkboxes = $(".select_assignment").children('i').addBack('i');
 						checkboxes.removeClass('fa-check-square-o color6').addClass('fa-square-o');
@@ -393,10 +394,6 @@ $(document).ready(function () {
 	);
 });
 
-
-
-
-
 /**
  * "Users" page
  */
@@ -405,84 +402,63 @@ $(document).ready(function(){
 		var row = $(this).parents('tr');
 		var user_id = row.data('id');
 		var username = row.children('#un').html();
-		noty({
-			text: 'Are you sure you want to delete this user?<br>User ID: '+user_id+'<br>Username: '+username+'<br><i class="splashy-warning_triangle"></i> All submissions of this user will be deleted.',
-			layout: 'center',
-			type: 'confirm',
-			animation: {
-				open: {height: 'toggle'},
-				close: {height: 'toggle'},
-				easing: 'swing',
-				speed: 300
-			},
-			buttons: [
-				{addClass: 'btn btn-danger', text: 'Yes, Delete', onClick: function($noty) {
-					$noty.close();
-					$.ajax({
-						type: 'POST',
-						url: shj.site_url+'users/delete',
-						data: {
-							user_id: user_id,
-							wcj_csrf_name: shj.csrf_token
-						},
-						beforeSend: shj.loading_start,
-						complete: shj.loading_finish,
-						error: shj.loading_error,
-						success: function(response){
-							if (response.done)
-							{
-								row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
-								noty({text: 'User '+username+' deleted.', layout:'bottomRight', type: 'success', timeout: 5000});
-							}
-							else
-								shj.loading_failed(response.message);
-						}
-					});
-				}
+
+		$(".modal-title").html("Are you sure you want to delete this user?")
+		$(".modal-body").html('User ID: '+user_id+'<br>Username: '+username+'<br><i class="splashy-warning_triangle"></i> All submissions of this user will be deleted.');
+		$(".confirm-user-delete").off();
+		$(".confirm-user-delete").click(function(){
+			$.ajax({
+				type: 'POST',
+				url: shj.site_url+'users/delete',
+				data: {
+					user_id: user_id,
+					wcj_csrf_name: shj.csrf_token
 				},
-				{addClass: 'btn btn-primary', text: 'No, Don\'t Delete', onClick: function($noty){$noty.close();}}
-			]
+				beforeSend: shj.loading_start,
+				complete: shj.loading_finish,
+				error: shj.loading_error,
+				success: function(response){
+					if (response.done)
+					{
+						row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
+						//noty({text: 'User '+username+' deleted.', layout:'bottomRight', type: 'success', timeout: 5000});
+						$("#user_delete").modal("hide");
+					}
+					else
+						shj.loading_failed(response.message);
+				}
+			});
 		});
+		$("#user_delete").modal("show");
 	});
 	$('.delete_submissions').click(function(){
 		var row = $(this).parents('tr');
 		var user_id = row.data('id');
 		var username = row.children('#un').html();
-		noty({
-			text: 'Are you sure you want to delete this user\'s submissions?<br>User ID: '+user_id+'<br>Username: '+username,
-			layout: 'center',
-			type: 'confirm',
-			animation: {
-				open: {height: 'toggle'},
-				close: {height: 'toggle'},
-				easing: 'swing',
-				speed: 300
-			},
-			buttons: [
-				{addClass: 'btn btn-danger', text: 'Yes, Delete', onClick: function($noty) {
-					$noty.close();
-					$.ajax({
-						type: 'POST',
-						url: shj.site_url+'users/delete_submissions',
-						data: {
-							user_id: user_id,
-							wcj_csrf_name: shj.csrf_token
-						},
-						beforeSend: shj.loading_start,
-						complete: shj.loading_finish,
-						error: shj.loading_error,
-						success: function(response){
-							if (response.done)
-								noty({text: 'Submissions of user '+username+' deleted successfully.', layout:'bottomRight', type: 'success', timeout: 5000});
-							else
-								shj.loading_failed(response.message);
-						}
-					});
-				}
+
+		$(".modal-title").html("Are you sure you want to delete this user's SUBMISSIONS?")
+		$(".modal-body").html('User ID: '+user_id+'<br>Username: '+username+'<br><i class="splashy-warning_triangle"></i> All submissions of this user will be deleted.');
+		$(".confirm-user-delete").off();
+		$(".confirm-user-delete").click(function(){
+			$.ajax({
+				type: 'POST',
+				url: shj.site_url+'users/delete_submissions',
+				data: {
+					user_id: user_id,
+					wcj_csrf_name: shj.csrf_token
 				},
-				{addClass: 'btn btn-primary', text: 'No, Don\'t Delete', onClick: function($noty){$noty.close();}}
-			]
+				beforeSend: shj.loading_start,
+				complete: shj.loading_finish,
+				error: shj.loading_error,
+				success: function(response){
+					if (response.done)
+						//noty({text: 'Submissions of user '+username+' deleted successfully.', layout:'bottomRight', type: 'success', timeout: 5000});
+					else
+						shj.loading_failed(response.message);
+				}
+			});
 		});
+		$("#user_delete").modal("show");
 	});
 });
 
