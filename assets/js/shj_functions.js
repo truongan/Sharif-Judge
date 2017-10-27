@@ -4,9 +4,6 @@
  * @author Mohammad Javad Naderi <mjnaderi@gmail.com>
  */
 
-// These words are used in countdown timer
-shj.time_words = ['day', 'days', 'hour', 'hours', 'minute', 'minutes', 'second' , 'seconds'];
-
 // selectText is used for "Select All" when viewing a submitted code
 jQuery.fn.selectText = function(){
 	var doc = document
@@ -107,25 +104,6 @@ shj.update_clock = function(){
 	var days = countdown;
 
 	$("#time_days").html( days + "☀️" + hours + ":" + minutes + ":" + seconds);
-	// $("#time_hours").html(hours);
-	// $("#time_minutes").html(minutes);
-	// $("#time_seconds").html(seconds);
-	// if(days==1)
-	// 	$("#days_label").html(shj.time_words[0]);
-	// else
-	// 	$("#days_label").html(shj.time_words[1]);
-	// if(hours==1)
-	// 	$("#hours_label").html(shj.time_words[2]);
-	// else
-	// 	$("#hours_label").html(shj.time_words[3])
-	// if(minutes==1)
-	// 	$("#minutes_label").html(shj.time_words[4]);
-	// else
-	// 	$("#minutes_label").html(shj.time_words[5]);
-	// if(seconds==1)
-	// 	$("#seconds_label").html(shj.time_words[6]);
-	// else
-	// 	$("#seconds_label").html(shj.time_words[7]);
 }
 
 shj.sidebar_open = function(time){
@@ -235,47 +213,32 @@ $(document).ready(function () {
 	$('.del_n').click(function () {
 		var notif = $(this).parents('.notif');
 		var id = $(notif).data('id');
-		noty({
-			text: 'Are you sure you want to delete this notification?',
-			layout: 'center',
-			type: 'confirm',
-			animation: {
-				open: {height: 'toggle'},
-				close: {height: 'toggle'},
-				easing: 'swing',
-				speed: 300
-			},
-			buttons: [
-				{addClass: 'btn btn-danger', text: 'Yes, Delete', onClick: function ($noty) {
-					$noty.close();
-					$.ajax({
-						type: 'POST',
-						url: shj.site_url + 'notifications/delete',
-						data: {
-							id: id,
-							wcj_csrf_name: shj.csrf_token
-						},
-						beforeSend: shj.loading_start,
-						complete: shj.loading_finish,
-						error: shj.loading_error,
-						success: function (response) {
-							if (response.done) {
-								notif.animate({backgroundColor: '#FF7676'}, 1000, function () {
-									notif.remove();
-								});
-								noty({text: 'Notification deleted', layout: 'bottomRight', type: 'success', timeout: 5000});
-							}
-							else
-								shj.loading_failed(response.message);
-						}
-					});
-				}
+
+		$(".confirm-notifycation-delete").off();
+		$(".confirm-notifycation-delete").click(function(){
+			$.ajax({
+				type: 'POST',
+				url: shj.site_url + 'notifications/delete',
+				data: {
+					id: id,
+					wcj_csrf_name: shj.csrf_token
 				},
-				{addClass: 'btn btn-primary', text: 'No, Don\'t Delete', onClick: function ($noty) {
-					$noty.close();
-				}}
-			]
+				beforeSend: shj.loading_start,
+				complete: shj.loading_finish,
+				error: shj.loading_error,
+				success: function (response) {
+					if (response.done) {
+						notif.animate({backgroundColor: '#FF7676'}, 1000, function () {
+							notif.remove();
+						});
+						noty({text: 'Notification deleted', layout: 'bottomRight', type: 'success', timeout: 5000});
+					}
+					else
+						shj.loading_failed(response.message);
+				}
+			});
 		});
+		$("#notification_delete").modal("show");
 	});
 
 	if ( shj.check_for_notifications )
@@ -398,18 +361,23 @@ $(document).ready(function () {
  * "Users" page
  */
 $(document).ready(function(){
-	$('.delete_user').click(function(){
+	$('.delete-btn').click(function(){
 		var row = $(this).parents('tr');
 		var user_id = row.data('id');
 		var username = row.children('#un').html();
 
-		$(".modal-title").html("Are you sure you want to delete this user?")
+		var del_submssion = $(this).hasClass('delete_submissions');
+
+		if (del_submssion) $(".modal-title").html("Are you sure you want to delete this user's SUBMISSIONS?");
+		else $(".modal-title").html("Are you sure you want to delete this user?");
+
 		$(".modal-body").html('User ID: '+user_id+'<br>Username: '+username+'<br><i class="splashy-warning_triangle"></i> All submissions of this user will be deleted.');
 		$(".confirm-user-delete").off();
 		$(".confirm-user-delete").click(function(){
+			console.log(del_submssion);
 			$.ajax({
 				type: 'POST',
-				url: shj.site_url+'users/delete',
+				url: (del_submssion ? shj.site_url+'users/delete_submissions' : shj.site_url+'users/delete'),
 				data: {
 					user_id: user_id,
 					wcj_csrf_name: shj.csrf_token
@@ -420,39 +388,10 @@ $(document).ready(function(){
 				success: function(response){
 					if (response.done)
 					{
-						row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
+						if (!del_submssion) row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
 						//noty({text: 'User '+username+' deleted.', layout:'bottomRight', type: 'success', timeout: 5000});
 						$("#user_delete").modal("hide");
 					}
-					else
-						shj.loading_failed(response.message);
-				}
-			});
-		});
-		$("#user_delete").modal("show");
-	});
-	$('.delete_submissions').click(function(){
-		var row = $(this).parents('tr');
-		var user_id = row.data('id');
-		var username = row.children('#un').html();
-
-		$(".modal-title").html("Are you sure you want to delete this user's SUBMISSIONS?")
-		$(".modal-body").html('User ID: '+user_id+'<br>Username: '+username+'<br><i class="splashy-warning_triangle"></i> All submissions of this user will be deleted.');
-		$(".confirm-user-delete").off();
-		$(".confirm-user-delete").click(function(){
-			$.ajax({
-				type: 'POST',
-				url: shj.site_url+'users/delete_submissions',
-				data: {
-					user_id: user_id,
-					wcj_csrf_name: shj.csrf_token
-				},
-				beforeSend: shj.loading_start,
-				complete: shj.loading_finish,
-				error: shj.loading_error,
-				success: function(response){
-					if (response.done)
-						//noty({text: 'Submissions of user '+username+' deleted successfully.', layout:'bottomRight', type: 'success', timeout: 5000});
 					else
 						shj.loading_failed(response.message);
 				}
