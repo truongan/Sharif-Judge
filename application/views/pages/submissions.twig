@@ -16,8 +16,6 @@
 	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
 	<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
 
-	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/reveal/reveal.css") }}'/>
-	<script type='text/javascript' src="{{ base_url("assets/reveal/jquery.reveal.js") }}"></script>
 	<script type='text/javascript' src="{{ base_url("assets/js/shj_submissions.js") }}"></script>
 
 
@@ -199,10 +197,21 @@
 
 
 {% block body_end %}
-<div id="shj_modal" class="reveal-modal xlarge">
-	<div class="modal_inside">
-		<div style="text-align: center;">Loading<br><img src="{{ base_url('assets/images/loading.gif') }}"/></div>
-	</div>
-	<a class="close-reveal-modal">&#215;</a>
+<div class="modal fade" id="submission_modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLongTitle">Modal title</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center;">Loading<br><img src="{{ base_url('assets/images/loading.gif') }}"/></div>
+      </div>
+
+    </div>
+  </div>
 </div>
+
 {% endblock %}

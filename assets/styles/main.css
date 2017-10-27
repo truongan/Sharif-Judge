@@ -829,20 +829,6 @@ textarea.add_text {
 	width: 410px;
 }
 
-pre, .shj_code {
-	background-color: white;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-	box-shadow: 0 0 10px -2px #AAA;
-	-moz-box-shadow: 0 0 10px -2px #AAA;
-	-webkit-box-shadow: 0 0 10px -2px #AAA;
-	margin: 10px 0;
-	padding: 7px;
-	max-height: 500px;
-	overflow: auto;
-}
-
 .shj_o {
 	color: #ff5f00;
 }

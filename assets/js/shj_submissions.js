@@ -40,8 +40,8 @@ $(document).ready(function () {
 			success: function (data) {
 				if (type == 'code')
 					 data.text = shj.html_encode(data.text);
-				$('.modal_inside').html('<pre class="code-column">'+data.text+'</pre>');
-				$('.modal_inside').prepend('<p><code>'+data.file_name+' | Submit ID: '+row.data('s')+' | Username: '+row.data('u')+' | Problem: '+row.data('p')+'</code></p>');
+				$('.modal-body').html('<pre class="code-column">'+data.text+'</pre>');
+				$('.modal-title').html('<code>'+data.file_name+' | Submit ID: '+row.data('s')+' | Username: '+row.data('u')+' | Problem: '+row.data('p')+'</code>');
 				if (type == 'code'){
 					$('pre.code-column').snippet(data.lang, {style: shj.color_scheme});
 				}
@@ -51,18 +51,15 @@ $(document).ready(function () {
 		});
 		if (!shj.modal_open) {
 			shj.modal_open = true;
-			$('#shj_modal').reveal(
-				{
-					animationspeed: 300,
-					on_close_modal: function () {
-						view_code_request.abort();
-					},
-					on_finish_modal: function () {
-						$(".modal_inside").html('<div style="text-align: center;">Loading<br><img src="'+shj.base_url+'assets/images/loading.gif"/></div>');
-						shj.modal_open = false;
-					}
-				}
-			);
+			$("#submission_modal").modal('show');
+			$("#submission_modal").on("hidden.bs.modal", function(){
+				$(".modal-body").html('<div style="text-align: center;">Loading<br><img src="'+shj.base_url+'assets/images/loading.gif"/></div>');
+				shj.modal_open = false;
+			});
+			$("#submission_modal").on("hide.bs.modal", function(){
+				view_code_request.abort();
+			});
+
 		}
 
 	});
