@@ -389,7 +389,7 @@ $(document).ready(function(){
 					if (response.done)
 					{
 						if (!del_submssion) row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
-						//noty({text: 'User '+username+' deleted.', layout:'bottomRight', type: 'success', timeout: 5000});
+						$.notify('User '+username+' deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
 						$("#user_delete").modal("hide");
 					}
 					else
