@@ -47,22 +47,14 @@ shj.loading_finish = function()
 
 shj.loading_error = function()
 {
-	noty({
-		text: 'An error encountered while processing your request. Check your network connection.',
-		layout: 'bottomRight',
-		type: 'error',
-		timeout: 3500
-	});
+	$.notify('An error encountered while processing your request. Check your network connection.'
+		, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
 }
 
 shj.loading_failed = function(message)
 {
-	noty({
-		text: 'Request failed. Server says: ' + message,
-		layout: 'bottomRight',
-		type: 'error',
-		timeout: 3500
-	});
+	$.notify('Request failed. Server says: ' + message
+		, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
 }
 
 shj.sync_server_time = function () {
@@ -176,18 +168,7 @@ shj.check_notifs = function () {
 		},
 		success: function (data) {
 			if (data == "new_notification") {
-				noty({
-					text: 'New Notification',
-					layout: 'bottomRight',
-					type: 'information',
-					closeWith: ['click', 'button'],
-					animation: {
-						open: {height: 'toggle'},
-						close: {height: 'toggle'},
-						easing: 'swing',
-						speed: 300
-					}
-				});
+				$.notify('New Notification', {position: 'bottom right', className: 'error', autoHideDelay: 300});
 				alert("New Notification");
 			}
 		}
@@ -231,7 +212,7 @@ $(document).ready(function () {
 						notif.animate({backgroundColor: '#FF7676'}, 1000, function () {
 							notif.remove();
 						});
-						noty({text: 'Notification deleted', layout: 'bottomRight', type: 'success', timeout: 5000});
+						$.notify('Notification deleted'	, {position: 'bottom right', className: 'success', autoHideDelay: 5900});
 					}
 					else
 						shj.loading_failed(response.message);
@@ -388,8 +369,12 @@ $(document).ready(function(){
 				success: function(response){
 					if (response.done)
 					{
-						if (!del_submssion) row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
-						$.notify('User '+username+' deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
+						if (!del_submssion){
+							row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
+							$.notify('User '+username+' deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
+						} else {
+							$.notify('All of User '+username+'\'s submissions deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
+						}
 						$("#user_delete").modal("hide");
 					}
 					else
