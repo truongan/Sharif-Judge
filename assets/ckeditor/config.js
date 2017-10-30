@@ -26,6 +26,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about', groups: [ 'about' ] }
 	];
 	config.extraPlugins = 'sourcedialog';
+	config.extraPlugins = 'justify,sourcedialog';
 	config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML';
 
 	// Set the most common block elements.

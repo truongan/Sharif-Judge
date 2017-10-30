@@ -35,7 +35,7 @@
 {% endif %}
 
 {% if user.level >= 2 %}
-	<span class="title_menu_item float-right"><h3><a href="#" class="btn btn-primary save-button"><i class="fa fa-floppy-o color10"></i> Save</a></h3></span>
+	<span class="title_menu_item float-right"><h3><a href="#" class="btn btn-secondary save-button"><i class="fa fa-floppy-o "></i> Save</a></h3></span>
 {% endif %}
 
 {% endblock %}
@@ -43,22 +43,28 @@
 {% block body_end %}
 <script src="{{ base_url('assets/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
 <script type="text/javascript">
-$('.save-button').click(function(){
-	$.ajax({
-		type: 'POST',
-		url: "{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}",
-		data: {
-			wcj_csrf_name: shj.csrf_token,
-			text : CKEDITOR.instances.editor.getData()
-		},
-		success: function (response) {
-			console.log("saved");
-			//$.notify()
-		},
-		error: function(response){
-			console.log(response);
-			alert('There was problem saving change. You can backup by pressing "Source" button and copy the content out');
-		}
+$(document).ready(function(){
+	$('.save-button').click(function(){
+		$.ajax({
+			type: 'POST',
+			url: "{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}",
+			data: {
+				wcj_csrf_name: shj.csrf_token,
+				text : CKEDITOR.instances.problem_description.getData()
+			},
+			success: function (response) {
+				console.log("saved");
+				$('.save-button').removeClass('btn-primary').addClass('btn-secondary');
+				//$.notify()
+			},
+			error: function(response){
+				console.log(response);
+				alert('There was problem saving change. You can backup by pressing "Source" button and copy the content out');
+			}
+		});
+	});
+	CKEDITOR.inline('problem_description').on('change', function(){
+		$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
 	});
 });
 </script>
@@ -69,7 +75,7 @@ $('.save-button').click(function(){
 <p> {{error}} </p>
 {% else %}
 
-	<div class="problem_description" {% if user.level >= 2 %} contenteditable="true" {% endif %} >
+	<div class="problem_description" id="problem_description" {% if user.level >= 2 %} contenteditable="true" {% endif %} >
 		{{ problem.description|raw }}
 	</div>
 
