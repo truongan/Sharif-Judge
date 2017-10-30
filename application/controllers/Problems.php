@@ -153,6 +153,7 @@ class Problems extends CI_Controller
 		if ($this->user->level <= 1)
 			show_404();
 
+
 		switch($type)
 		{
 			case 'html':
@@ -162,6 +163,14 @@ class Problems extends CI_Controller
 			case 'plain':
 				$ext = 'html'; break;
 		}
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('text', 'text' ,'required'); /* todo: xss clean */
+		if ($this->form_validation->run())
+		{
+			$this->assignment_model->save_problem_description($assignment_id, $problem_id, $this->input->post('text'), $ext);
+			redirect('problems/'.$assignment_id.'/'.$problem_id);
+		}
+
 
 		if ($assignment_id === NULL)
 			$assignment_id = $this->user->selected_assignment['id'];
@@ -175,15 +184,6 @@ class Problems extends CI_Controller
 
 		if ( ! is_numeric($problem_id) || $problem_id < 1 || $problem_id > $data['description_assignment']['problems'])
 			show_404();
-
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('text', 'text' ,'required'); /* todo: xss clean */
-		if ($this->form_validation->run())
-		{
-
-			$this->assignment_model->save_problem_description($assignment_id, $problem_id, $this->input->post('text'), $ext);
-			redirect('problems/'.$assignment_id.'/'.$problem_id);
-		}
 
 		$data['problem'] = array(
 			'id' => $problem_id,
