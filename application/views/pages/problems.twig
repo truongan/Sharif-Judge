@@ -41,6 +41,14 @@
 {% endblock %}
 
 {% block body_end %}
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 <script src="{{ base_url('assets/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -63,8 +71,10 @@ $(document).ready(function(){
 			}
 		});
 	});
-	CKEDITOR.instances.problem_description.on('change', function(){
-		$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
+	CKEDITOR.on('instanceReady', function(){
+		CKEDITOR.instances.problem_description.on('change', function(){
+			$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
+		});
 	});
 });
 </script>
