@@ -9,10 +9,12 @@
 {% block title %}Submit{% endblock %}
 {% block head_title %}Submit{% endblock %}
 
-
-
 {% block other_assets %}
+    <link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/submit_page.css') }}"/>
+{% endblock %}
 
+
+{% block body_end %}
 <script src="{{ base_url('assets/js/src-min-noconflict/ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script  type="text/javascript" src="{{ base_url('assets/js/submit_page.js')   }}" charset="utf-8"></script>
 <script>
@@ -31,10 +33,6 @@
 	});
 </script>
 
-<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/submit_page.css') }}"/>
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-
 {% endblock %}
 
 
@@ -50,11 +48,13 @@
 			<select id="problems" name ="problem" class="sharif_input">
 				<!--option value="0" selected="selected">-- Select Problem --</option-->
 				{% for problem in problems %}
-					<option dir="auto" value="{{ problem.id }}">#{{problem.id}}--{{ problem.name }}</option>
+					<option dir="auto" value="{{ problem.id }}">#{{problem.id}}--{{ problem.name }}
+					</option>
 				{% endfor %}
 			</select>
 			<br/>
-			<span class="medium"><a id="problem_link" href="#" target="_blank">Problem statement</a></label>
+			<span class="medium"><a id="problem_link" href="#" target="_blank">Problem statement</a>
+			</span>
 			{{ form_error('problem','<div class="shj_error">','</div>') }}
 		</div>
 		<div class="input_p">
@@ -128,7 +128,7 @@
 	<p class="input_p">
 		<input type="submit" value="Submit" class="sharif_input"/>
 	</p>
-	<textarea style="display:none;" rows="4" cols="80" name="code" class="sharif_input add_text">
+	<textarea style="display:none;" rows="4" cols="80" name="code" class="sharif_input add_text" >
 	</form>
 
 {% endif %}
