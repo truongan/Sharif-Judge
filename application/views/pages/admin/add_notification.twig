@@ -9,21 +9,11 @@
 {% block title %}{{ notif_edit ? 'Edit' : 'New' }} Notification{% endblock %}
 {% block head_title %}{{ notif_edit ? 'Edit' : 'New' }} Notification{% endblock %}
 
-{% block other_assets %}
-<script type='text/javascript' src="{{ base_url('assets/tinymce/tinymce.min.js') }}"></script>
+{% block body_end %}
+<script src="{{ base_url('assets/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
 <script>
 $(document).ready(function(){
-	tinymce.init({
-		selector: 'textarea#notif_text',
-		toolbar_items_size: 'small',
-		relative_urls: false,
-		width: 700,
-		height: 300,
-		resize: false,
-		plugins: 'directionality emoticons textcolor link code',
-		toolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | ltr rtl",
-		toolbar2: "forecolor backcolor | emoticons | link unlink anchor image media code | removeformat"
-	});
+	CKEDITOR.replace("notif_text");
 });
 </script>
 {% endblock %}
