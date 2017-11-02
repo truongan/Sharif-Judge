@@ -9,48 +9,23 @@
 {% block title %}{{ all_problems[problem.id].name }}{% endblock %}
 {% block head_title %}Problem {{ problem.id }}{% endblock %}
 
-
-
 {% block other_assets %}
-<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
-<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
 <style media="screen">
 .sharif_table td{
 	text-align: left;
 }
 </style>
-<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
-<script>
-$(document).ready(function(){
-	// Syntax highlighting increases the page's height, and we need to update the scroll-bar
-	$('.problem_description').resize(function(){
-		$('.scroll-wrapper').nanoScroller();
-	});
-	// Fix text directions for rtl text
-	$.each($('.problem_description [dir="auto"]'), function(i, element){
-		if (getComputedStyle(element).direction == 'rtl')
-		{
-			$(element).css('direction', 'rtl');
-			$(element).parent('ul, ol').css('direction', 'rtl');
-		}
-	});
-	// Syntax highlighting
-	$('pre code.language-c').parent().snippet('c', {style: shj.color_scheme});
-	$('pre code.language-cpp').parent().snippet('cpp', {style: shj.color_scheme});
-	$('pre code.language-python').parent().snippet('python', {style: shj.color_scheme});
-	$('pre code.language-java').parent().snippet('java', {style: shj.color_scheme});
-});
-</script>
 {% endblock %}
 
-
-
 {% block title_menu %}
-{% if user.level >= 2 %}
+
+
+{# {% if user.level >= 2 %}
 	<span class="title_menu_item"><a href="{{ site_url("problems/edit/md/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil color2"></i> Edit Markdown</a></span>
 	<span class="title_menu_item"><a href="{{ site_url("problems/edit/html/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil color10"></i> Edit HTML</a></span>
 	<span class="title_menu_item"><a href="{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-pencil color8"></i> Edit Plain HTML</a></span>
 {% endif %}
+#}
 
 {% if problem.has_pdf %}
 	<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
@@ -59,7 +34,40 @@ $(document).ready(function(){
 	<span class="title_menu_item"><a href="{{ site_url("problems/template/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
 {% endif %}
 
+{% if user.level >= 2 %}
+	<span class="title_menu_item float-right"><h3><a href="#" class="btn btn-secondary save-button"><i class="fa fa-floppy-o "></i> Save</a></h3></span>
+{% endif %}
 
+{% endblock %}
+
+{% block body_end %}
+<script src="{{ base_url('assets/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.save-button').click(function(){
+		$.ajax({
+			type: 'POST',
+			url: "{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}",
+			data: {
+				wcj_csrf_name: shj.csrf_token,
+				text : CKEDITOR.instances.problem_description.getData()
+			},
+			success: function (response) {
+				console.log("saved");
+				$('.save-button').removeClass('btn-primary').addClass('btn-secondary');
+				//$.notify()
+			},
+			error: function(response){
+				console.log(response);
+				alert('There was problem saving change. You can backup by pressing "Source" button and copy the content out');
+			}
+		});
+	});
+	CKEDITOR.inline('problem_description').on('change', function(){
+		$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
+	});
+});
+</script>
 {% endblock %}
 
 {% block main_content %}
@@ -67,7 +75,7 @@ $(document).ready(function(){
 <p> {{error}} </p>
 {% else %}
 
-	<div class="problem_description">
+	<div class="problem_description" id="problem_description" {% if user.level >= 2 %} contenteditable="true" {% endif %} >
 		{{ problem.description|raw }}
 	</div>
 
