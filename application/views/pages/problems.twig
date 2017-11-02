@@ -63,7 +63,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-	CKEDITOR.inline('problem_description').on('change', function(){
+	CKEDITOR.instances.problem_description.on('change', function(){
 		$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
 	});
 });

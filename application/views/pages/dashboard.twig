@@ -13,8 +13,11 @@
 
 {% block other_assets %}
 <link rel='stylesheet' type='text/css' href='{{ base_url('assets/fullcalendar/fullcalendar.css') }}'/>
-<script type='text/javascript' src="{{ base_url('assets/fullcalendar/fullcalendar.min.js') }}"></script>
 <link rel='stylesheet' type='text/css' href='{{ base_url('assets/gridster/jquery.gridster.css') }}'/>
+{% endblock %}
+
+{% block body_end %}
+<script type='text/javascript' src="{{ base_url('assets/fullcalendar/fullcalendar.min.js') }}"></script>
 <script type='text/javascript' src="{{ base_url('assets/gridster/jquery.gridster.min.js') }}"></script>
 <script type='text/javascript' src="{{ base_url('assets/js/jquery.autoellipsis-1.0.10.min.js') }}"></script>
 <script>

@@ -12,10 +12,10 @@
 
 
 {% block other_assets %}
-<!--link rel="stylesheet" type="text/css" href="{{ base_url('assets/chosen/chosen.min.css') }}">
-<script type="text/javascript" src = {{ base_url('assets/chosen/chosen.jquery.min.js') }}></script-->
-
 <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}">
+{% endblock %}
+
+{% block body_end %}
 <script type="text/javascript" src = {{ base_url('assets/select2/select2.min.js') }}></script>
 
 
