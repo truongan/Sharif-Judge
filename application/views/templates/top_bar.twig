@@ -4,7 +4,7 @@
  # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
  #}
 <!-- <div id="top_bar" class="color-{{ selected }}"> -->
-<nav id="top_bar" class="navbar navbar-expand-lg navbar-dark fixed-top color-{{ selected }} bg-dark">
+<nav id="mainNav" class="mainNav navbar navbar-expand-lg navbar-dark fixed-top color-{{ selected }} bg-dark">
 	<!-- <div id="shj_logo" class="top_left"> -->
 	<a  class="navbar-brand" href="{{ site_url('/') }}">
 		<img src="{{ base_url('assets/images/logo.png') }}" height="30px" />
@@ -16,59 +16,70 @@
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarCollapse">
-			  <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-			<a class="nav-link" href="index.html">
-				<i class="fa fa-fw fa-dashboard"></i>
-				<span class="nav-link-text">Dashboard</span>
-			</a>
-		</li>
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-		  <a class="nav-link" href="charts.html">
-			<i class="fa fa-fw fa-area-chart"></i>
-			<span class="nav-link-text">Charts</span>
-		  </a>
-		</li>
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-		  <a class="nav-link" href="tables.html">
-			<i class="fa fa-fw fa-table"></i>
-			<span class="nav-link-text">Tables</span>
-		  </a>
-		</li>
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-		  <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
-			<i class="fa fa-fw fa-wrench"></i>
-			<span class="nav-link-text">Components</span>
-		  </a>
-		  <ul class="sidenav-second-level collapse" id="collapseComponents">
-			<li>
-			  <a href="navbar.html">Navbar</a>
-			</li>
-			<li>
-			  <a href="cards.html">Cards</a>
-			</li>
-		  </ul>
-		</li>
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
-		  <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
-			<i class="fa fa-fw fa-file"></i>
-			<span class="nav-link-text">Example Pages</span>
-		  </a>
-		  <ul class="sidenav-second-level collapse" id="collapseExamplePages">
-			<li>
-			  <a href="login.html">Login Page</a>
-			</li>
-			<li>
-			  <a href="register.html">Registration Page</a>
-			</li>
-			<li>
-			  <a href="forgot-password.html">Forgot Password Page</a>
-			</li>
-			<li>
-			  <a href="blank.html">Blank Page</a>
-			</li>
-		  </ul>
-		</li>
+	  <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+		  <li class="nav-item color-dashboard{{ selected=='dashboard' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('dashboard') }}">
+		          <i class="fa fa-dashboard fa-lg"></i>
+		          <span class="nav-link-text">Dashboard</span>
+		      </a>
+		  </li>
+		  {% if user.level == 3 %}
+		  <li class="nav-item color-settings{{ selected=='settings' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('settings') }}">
+		          <i class="fa fa-gear fa-lg"></i>
+		          <span class="nav-link-text">Settings</span>
+		      </a>
+		  </li>
+		  <li class="nav-item color-users{{ selected=='users' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('users') }}">
+		          <i class="fa fa-users fa-lg"></i>
+		          <span class="nav-link-text">Users</span>
+		      </a>
+		  </li>
+		  {% endif %}
+		  <li class="nav-item color-notifications{{ selected=='notifications' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('notifications') }}">
+		          <i class="fa fa-bell fa-lg"></i>
+		          <span class="nav-link-text">Notifications</span>
+		      </a>
+		  </li>
+		  <li class="nav-item color-assignments{{ selected=='assignments' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('assignments') }}">
+		          <i class="fa fa-folder-open fa-lg"></i>
+		          <span class="nav-link-text">Assignments</span>
+		      </a>
+		  </li>
+		  <li class="nav-item color-problems{{ selected=='problems' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('problems') }}">
+		          <i class="fa fa-puzzle-piece fa-lg"></i>
+		          <span class="nav-link-text">Problems</span>
+		      </a>
+		  </li>
+		  <li class="nav-item color-submit{{ selected=='submit' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('submit') }}">
+		          <i class="fa fa-location-arrow fa-lg"></i>
+		          <span class="nav-link-text">Code Editor</span>
+		      </a>
+		  </li>
+		  <li class="nav-item color-final_submissions{{ selected=='final_submissions' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('submissions/final') }}">
+		          <i class="fa fa-map-marker fa-lg"></i>
+		          <span class="nav-link-text">Final Submissions</span>
+		      </a>
+		  </li>
+		  <li class="nav-item color-all_submissions{{ selected=='all_submissions' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('submissions/all') }}">
+		          <i class="fa fa-bars fa-lg"></i>
+		          <span class="nav-link-text">All Submissions</span>
+		      </a>
+		  </li>
+		  <li class="nav-item color-scoreboard{{ selected=='scoreboard' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		      <a class="nav-link" href="{{ site_url('scoreboard') }}">
+		          <i class="fa fa-star fa-lg"></i>
+		          <span class="nav-link-text">Scoreboard</span>
+		      </a>
+		  </li>
+		<!--
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
 		  <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
 			<i class="fa fa-fw fa-sitemap"></i>
@@ -100,12 +111,7 @@
 			</li>
 		  </ul>
 		</li>
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
-		  <a class="nav-link" href="#">
-			<i class="fa fa-fw fa-link"></i>
-			<span class="nav-link-text">Link</span>
-		  </a>
-		</li>
+		 -->
 	  </ul>
 	  <ul class="navbar-nav sidenav-toggler">
 		<li class="nav-item">
@@ -115,7 +121,7 @@
 		</li>
 	  </ul>
 
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav mr-auto">
 			{%  if user.level >= 2 %}
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

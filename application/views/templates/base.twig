@@ -22,27 +22,24 @@
 </head>
 
 
-<body id="body">
+<body id="body" class="fixed-nav">
 {% include 'templates/top_bar.twig' %}
 
-<div class="container-fluid"><div class="row">
+<div class="content-wrapper"><div class="container-fluid">
 	{# {% include 'templates/side_bar.twig' %} #}
-	<div id="main_container" class="scroll-wrapper">
-		<div class="scroll-content">
-			<div id="page_title">
-				<i class="fa {% block icon %}{% endblock %}"></i>
-				<span dir="auto">{% block title %}{% endblock %}</span>
-				{% block title_menu %}{% endblock %}
-			</div>
 
-			<div id="main_content">
-				{% block main_content %}
-				{% endblock %}
-			</div>
-		</div>
+	<div id="page_title" class="row">
+		<i class="fa {% block icon %}{% endblock %}"></i>
+		<span dir="auto">{% block title %}{% endblock %}</span>
+		{% block title_menu %}{% endblock %}
 	</div>
-</div>
-</div>
+
+	<div id="main_content" class="row">
+		{% block main_content %}
+		{% endblock %}
+	</div>
+
+</div></div>
 
 
 
