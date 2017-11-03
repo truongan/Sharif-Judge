@@ -30,7 +30,6 @@ function get_template(problem_id){
             problem: problem_id
         },
         success : function(data){
-            console.log(data);
             if (data.banned != ""){
                 var ban_span = "";
                 data.banned.split("\n").map(function(str){

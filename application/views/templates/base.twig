@@ -12,6 +12,8 @@
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 
+	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/sbadmin/css/sb-admin.min.css') }}"/>
+
 	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/main.css') }}"/>
 	<link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/flick/jquery-ui-1.12.1-custom.min.css') }}"/>
 	<link rel='stylesheet' type='text/css' href='{{ base_url('assets/nano_scroller/nanoscroller.css') }}'/>
@@ -24,7 +26,7 @@
 {% include 'templates/top_bar.twig' %}
 
 <div class="container-fluid"><div class="row">
-	{% include 'templates/side_bar.twig' %}
+	{# {% include 'templates/side_bar.twig' %} #}
 	<div id="main_container" class="scroll-wrapper">
 		<div class="scroll-content">
 			<div id="page_title">
@@ -54,7 +56,7 @@
 <script type="text/javascript" src="{{ base_url('assets/js/jquery.hoverIntent.minified.js') }}"></script>
 <script type="text/javascript" src="{{ base_url('assets/js/jquery.cookie.js') }}"></script>
 <script type='text/javascript' src="{{ base_url('assets/nano_scroller/jquery.nanoscroller.min.js') }}"></script>
-
+<script type='text/javascript' src="{{ base_url('assets/sbadmin/js/sb-admin.min.js') }}"></script>
 
 <script	src="{{ base_url('assets/js/notify.min.js') }}"></script>
 

@@ -46,7 +46,7 @@
 		<div class="input_p">
 			<label for="problems" class="">Problem:</label>
 			<select id="problems" name ="problem" class="sharif_input">
-				<!--option value="0" selected="selected">-- Select Problem --</option-->
+				
 				{% for problem in problems %}
 					<option dir="auto" value="{{ problem.id }}">#{{problem.id}}--{{ problem.name }}
 					</option>
@@ -60,7 +60,7 @@
 		<div class="input_p">
 			<label for="languages" class="">Language:</label>
 			<select id="languages" name="language" class="sharif_input">
-				<!--option value="0" selected="selected">-- Select Language --</option-->
+				
 			</select>
 			{{ form_error('language','<div class="shj_error">','</div>') }}
 		</div>
@@ -129,6 +129,7 @@
 		<input type="submit" value="Submit" class="sharif_input"/>
 	</p>
 	<textarea style="display:none;" rows="4" cols="80" name="code" class="sharif_input add_text" >
+	</textarea>
 	</form>
 
 {% endif %}
