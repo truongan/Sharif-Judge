@@ -334,119 +334,53 @@ div#extra_time i {
 .color-all_submissions {border-color: #543680!important;}
 .color-scoreboard {border-color: #991B4A!important;}
 
-.color-dashboard.selected i {background-color: #C52E26!important;border-color: #C52E26!important;}
-.color-settings.selected i {background-color: #EE3A23!important;border-color: #EE3A23!important;}
-.color-users.selected i {background-color: #FAA31B!important;border-color: #FAA31B!important;}
-.color-notifications.selected i {background-color: #FAE80B!important;border-color: #FAE80B!important;}
-.color-assignments.selected i {background-color: #CCDB29!important;border-color: #CCDB29!important;}
-.color-problems.selected i {background-color: #0DB297!important;border-color: #0DB297!important;}
-.color-submit.selected i {background-color: #35C0CB!important;border-color: #35C0CB!important;}
-.color-final_submissions.selected i {background-color: #22478A!important;border-color: #22478A!important;}
-.color-all_submissions.selected i {background-color: #543680!important;border-color: #543680!important;}
-.color-scoreboard.selected i {background-color: #991B4A!important;border-color: #991B4A!important;}
+.color-dashboard.selected  {background-color: #C52E26!important;border-color: #C52E26!important;}
+.color-settings.selected  {background-color: #EE3A23!important;border-color: #EE3A23!important;}
+.color-users.selected  {background-color: #FAA31B!important;border-color: #FAA31B!important;}
+.color-notifications.selected  {background-color: #FAE80B!important;border-color: #FAE80B!important;}
+.color-assignments.selected  {background-color: #CCDB29!important;border-color: #CCDB29!important;}
+.color-problems.selected  {background-color: #0DB297!important;border-color: #0DB297!important;}
+.color-submit.selected  {background-color: #35C0CB!important;border-color: #35C0CB!important;}
+.color-final_submissions.selected  {background-color: #22478A!important;border-color: #22478A!important;}
+.color-all_submissions.selected  {background-color: #543680!important;border-color: #543680!important;}
+.color-scoreboard.selected  {background-color: #991B4A!important;border-color: #991B4A!important;}
 
-.navbar-sidenav{
+@media (min-width: 992px) {
+	#mainNav{
+		border-bottom: 5px solid #ffffff;
+	}
 
-	background-color:#F2F2EA!important;
-	box-shadow: #a9a9a9 0 0 4px;
-}
+	.navbar-sidenav{
+		background-color:#F2F2EA!important;
+		box-shadow: #a9a9a9 4px 4px 4px;
+		border-top: 5px solid #ffffff;
+	}
+	.navbar-sidenav > li.selected > .nav-link {
+		font-weight: bold;
+		color: #FFF!important;
+	}
 
-.navbar-sidenav  .nav-link{
-	color: #595959 !important;
-}
-div#sidebar_top{
-	/*margin-bottom: 88px;*/
-	flex: 1;
-	display: flex;
-	flex-flow: column;
+	.navbar-sidenav  .nav-link{
+		color: #595959 !important;
+	}
+	.navbar-sidenav li{
+		border-left: 5px solid #000;
+	}
 
-	position: relative;
-	/*margin: auto;*/
-}
-
-
-div#sidebar_bottom {
-	bottom: 0;
-	z-index: 2;
-	width: 100%;
-	padding: 0;
-	/*position: absolute;*/
-	flex-basis: auto;
-	/*margin: auto;*/
-}
-
-div#side_bar ul {
-	padding: 0;
-	margin: 0;
-	list-style: none;
-	font-size: 14px;
-
-	display: flex;
-	flex-flow: column;
-}
-
-div#side_bar ul li:hover i {
-	background-color: #FAFAFA;
-}
-
-div#side_bar ul li.selected {
-	font-weight: bold;
-}
-
-div#side_bar ul li.selected i {
-	color: #FFF;
-}
-
-.sidebar_text {
-	width: 124px;
-	position: absolute;
-	padding-left:8px;
-	border-bottom:1px solid #EAEADE;
-}
-
-div#side_bar ul li a {
-	width: 100%;
-	text-decoration: none;
-	display: block;
-	line-height: 40px;
-	color:#595959!important;
-}
-
-div#side_bar i {
-	vertical-align: 0;
-	text-align: center;
-	width: 43px;
-	line-height: 40px;
-	border-right:1px solid #EAEADE;
-	border-bottom:1px solid #EAEADE;
-}
-
-div#side_bar ul li {
-	border-left:5px solid black;
-}
+	.sidenav-toggler {
+		
+		background-color:#696966!important;
+		box-shadow: #a9a9a9 4px 4px 4px;
+	}
 
 
-div#sidebar_bottom p {
-	font-size: 10px;
-	margin: 0 0 7px 5px;
-	width: 156px;
-}
+	.sidenav-toggled .sidenav-bottom{
+		display: none;
+	}
+	.sidenav-bottom{
 
-div#shj_collapse {
-	border-top:1px solid #EAEADE;
-	/*background-color: rgba(0, 0, 0, 0.1);
-	box-shadow: rgba(0, 0, 0, 0.7) -1px 0 5px;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.7) -1px 0 5px;
-	-moz-box-shadow: rgba(0, 0, 0, 0.7) -1px 0 5px;*/
-	/*padding: 7px 0 7px 9px;*/
-}
-
-div#shj_collapse i#collapse {
-	width:48px;
-}
-
-div#shj_collapse span {
-	line-height: 41px;
+		font-size: 0.75em;
+	}
 }
 
 /*********************************************/

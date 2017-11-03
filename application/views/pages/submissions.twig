@@ -18,10 +18,28 @@
 {% endblock %}
 
 {% block body_end %}
+<div class="modal fade" id="submission_modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLongTitle">Modal title</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center;">Loading<br><img src="{{ base_url('assets/images/loading.gif') }}"/></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 	<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
 	<script type='text/javascript' src="{{ base_url("assets/js/shj_submissions.js") }}"></script>
 	<script type='text/javascript' src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 	<script type='text/javascript' src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
 {% endblock %}
 
 
@@ -192,25 +210,3 @@
 </p>
 
 {% endblock %}  {# main_content #}
-
-
-
-{% block body_end %}
-<div class="modal fade" id="submission_modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLongTitle">Modal title</h6>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div style="text-align: center;">Loading<br><img src="{{ base_url('assets/images/loading.gif') }}"/></div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-{% endblock %}
