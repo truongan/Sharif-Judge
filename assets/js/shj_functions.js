@@ -227,29 +227,6 @@ $(document).ready(function () {
 
 });
 
-
-
-
-/**
- * Scrollbars
- */
-$(document).ready(function(){
-	$('.scroll-wrapper').nanoScroller({
-		contentClass: 'scroll-content'
-	});
-	$('#main_content').resize(function(){
-		// update the scrollbar
-		$('.scroll-wrapper').nanoScroller();
-	});
-	$('.widget_contents_container').resize(function(){
-		// update the scrollbar
-		$('.scroll-wrapper').nanoScroller();
-	});
-});
-
-
-
-
 /**
  * Sidebar
  */

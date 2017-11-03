@@ -19,70 +19,70 @@
 	  <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
 		  <li class="nav-item color-dashboard{{ selected=='dashboard' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('dashboard') }}">
-		          <i class="fa fa-dashboard fa-lg"></i>
+		          <i class="fa fa-fw fa-dashboard fa-lg"></i>
 		          <span class="nav-link-text">Dashboard</span>
 		      </a>
 		  </li>
 		  {% if user.level == 3 %}
 		  <li class="nav-item color-settings{{ selected=='settings' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('settings') }}">
-		          <i class="fa fa-gear fa-lg"></i>
+		          <i class="fa fa-fw fa-gear fa-lg"></i>
 		          <span class="nav-link-text">Settings</span>
 		      </a>
 		  </li>
 		  <li class="nav-item color-users{{ selected=='users' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('users') }}">
-		          <i class="fa fa-users fa-lg"></i>
+		          <i class="fa fa-fw fa-users fa-lg"></i>
 		          <span class="nav-link-text">Users</span>
 		      </a>
 		  </li>
 		  {% endif %}
 		  <li class="nav-item color-notifications{{ selected=='notifications' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('notifications') }}">
-		          <i class="fa fa-bell fa-lg"></i>
+		          <i class="fa fa-fw fa-bell fa-lg"></i>
 		          <span class="nav-link-text">Notifications</span>
 		      </a>
 		  </li>
 		  <li class="nav-item color-assignments{{ selected=='assignments' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('assignments') }}">
-		          <i class="fa fa-folder-open fa-lg"></i>
+		          <i class="fa fa-fw fa-folder-open fa-lg"></i>
 		          <span class="nav-link-text">Assignments</span>
 		      </a>
 		  </li>
 		  <li class="nav-item color-problems{{ selected=='problems' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('problems') }}">
-		          <i class="fa fa-puzzle-piece fa-lg"></i>
+		          <i class="fa fa-fw fa-puzzle-piece fa-lg"></i>
 		          <span class="nav-link-text">Problems</span>
 		      </a>
 		  </li>
 		  <li class="nav-item color-submit{{ selected=='submit' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('submit') }}">
-		          <i class="fa fa-location-arrow fa-lg"></i>
+		          <i class="fa fa-fw fa-location-arrow fa-lg"></i>
 		          <span class="nav-link-text">Code Editor</span>
 		      </a>
 		  </li>
 		  <li class="nav-item color-final_submissions{{ selected=='final_submissions' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('submissions/final') }}">
-		          <i class="fa fa-map-marker fa-lg"></i>
+		          <i class="fa fa-fw fa-map-marker fa-lg"></i>
 		          <span class="nav-link-text">Final Submissions</span>
 		      </a>
 		  </li>
 		  <li class="nav-item color-all_submissions{{ selected=='all_submissions' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('submissions/all') }}">
-		          <i class="fa fa-bars fa-lg"></i>
+		          <i class="fa fa-fw fa-bars fa-lg"></i>
 		          <span class="nav-link-text">All Submissions</span>
 		      </a>
 		  </li>
 		  <li class="nav-item color-scoreboard{{ selected=='scoreboard' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
 		      <a class="nav-link" href="{{ site_url('scoreboard') }}">
-		          <i class="fa fa-star fa-lg"></i>
+		          <i class="fa fa-fw fa-star fa-lg"></i>
 		          <span class="nav-link-text">Scoreboard</span>
 		      </a>
 		  </li>
 		<!--
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
 		  <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
-			<i class="fa fa-fw fa-sitemap"></i>
+			<i class="fa fa-fw fa-fw fa-sitemap"></i>
 			<span class="nav-link-text">Menu Levels</span>
 		  </a>
 		  <ul class="sidenav-second-level collapse" id="collapseMulti">
@@ -116,7 +116,7 @@
 	  <ul class="navbar-nav sidenav-toggler">
 		<li class="nav-item">
 		  <a class="nav-link text-center" id="sidenavToggler">
-			<i class="fa fa-fw fa-angle-left"></i>
+			<i class="fa fa-fw fa-fw fa-angle-left"></i>
 		  </a>
 		</li>
 	  </ul>
@@ -142,7 +142,7 @@
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 					{% for assignment_item in all_assignments|reverse[:5] %}
 						<a class="dropdown-item select_assignment">
-							<i class="fa fa-lg {{ assignment_item.id == user.selected_assignment.id ? 'fa-check-square-o color6' : 'fa-square-o' }}" data-id="{{ assignment_item.id }}"></i>
+							<i class="fa fa-fw fa-lg {{ assignment_item.id == user.selected_assignment.id ? 'fa-check-square-o color6' : 'fa-square-o' }}" data-id="{{ assignment_item.id }}"></i>
 							{{ assignment_item.name }}
 						</a>
 					{% endfor %}
@@ -159,7 +159,7 @@
 
 		<div class="navbar-nav">
 			<div class="top_object top_left shj-spinner" style="display: none;">
-				<i class="fa fa-refresh fa-spin fa-lg"></i>
+				<i class="fa fa-fw fa-refresh fa-spin fa-lg"></i>
 			</div>
 		</div>
 		<div class="navbar-nav">
@@ -169,7 +169,7 @@
 				</div>
 			</div>
 			<div class="top_object countdown" id="extra_time">
-				<i class="fa fa-plus-square fa-2x"></i>
+				<i class="fa fa-fw fa-plus-square fa-2x"></i>
 				<div class="time_block">
 					<span>Extra</span><br><span>Time</span>
 				</div>
@@ -178,13 +178,13 @@
 
 		<div class="navbar-nav  shj_menu">
 			<div class="nav-item dropdown">
-				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-user"></i></a>
+				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-fw fa-user"></i></a>
 				<div class="top_menu user-menu dropdown-menu dropdown-menu-right">
 					<div class="gravatar"><img src="https://www.gravatar.com/avatar/{{ md5(user.email) }}?s=70&d=identicon" /></div>
-					<div class="name"><i class="fa fa-user"></i> {{ user.username }}</div>
+					<div class="name"><i class="fa fa-fw fa-user"></i> {{ user.username }}</div>
 					<div class="menu-controls">
-						<a href="{{ site_url('logout') }}" class="logout-btn"><i class="fa fa-sign-out"></i> Sign Out</a>
-						<a href="{{ site_url('profile') }}" class="profile-btn"><i class="fa fa-wrench"></i> Profile</a>
+						<a href="{{ site_url('logout') }}" class="logout-btn"><i class="fa fa-fw fa-sign-out"></i> Sign Out</a>
+						<a href="{{ site_url('profile') }}" class="profile-btn"><i class="fa fa-fw fa-wrench"></i> Profile</a>
 					</div>
 				</div>
 			</div>

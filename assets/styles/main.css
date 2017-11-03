@@ -58,37 +58,6 @@ body {
 	font-family:  Sans-serif, 'Open Sans', 'Droid-Naskh';
 }
 
-::selection {
-	background-color: #b2cce6;
-}
-::-moz-selection {
-	background-color: #b2cce6;
-}
-
-::-webkit-scrollbar {
-	width: 6px;
-	height: 6px;
-}
-::-webkit-scrollbar-button {
-	width: 0;
-	height: 0;
-}
-::-webkit-scrollbar-track {
-	background-color: transparent;
-	-webkit-transition: all ease 0.5s;
-}
-::-webkit-scrollbar-track:hover, ::-webkit-scrollbar-track:active {
-	box-shadow: inset #bbb 0 0 6px;
-}
-::-webkit-scrollbar-thumb {
-	/*background-color: #888;*/
-	background-color: white;
-	box-shadow: inset #109100 0 0 20px -2px;
-	position: relative;
-	margin: 0;
-	border-radius: 5px;
-}
-
 input, select {
 	font-family: 'Open Sans', 'Droid-Naskh', Sans-serif;
 }
@@ -113,10 +82,6 @@ pre code {
 	border: none;
 	padding: 0;
 	background-color: rgba(0,0,0,0);
-}
-
-textarea {
-	/*font-size: 12px;*/
 }
 
 blockquote {
@@ -380,22 +345,14 @@ div#extra_time i {
 .color-all_submissions.selected i {background-color: #543680!important;border-color: #543680!important;}
 .color-scoreboard.selected i {background-color: #991B4A!important;border-color: #991B4A!important;}
 
-div#side_bar {
-	color:#595959;
-	position: fixed;
-	left: 0;
-	top: 45px;
-	width: 160px;
-	bottom: 0;
-	z-index: 1;
-	background-color:#F2F2EA;
-	box-shadow: #a9a9a9 0 0 4px;
-	-moz-box-shadow: #a9a9a9 0 0 4px;
-	-webkit-box-shadow: #a9a9a9 0 0 4px;
-	display: flex;
-	flex: 1;
-	flex-direction: column;
+.navbar-sidenav{
 
+	background-color:#F2F2EA!important;
+	box-shadow: #a9a9a9 0 0 4px;
+}
+
+.navbar-sidenav  .nav-link{
+	color: #595959 !important;
 }
 div#sidebar_top{
 	/*margin-bottom: 88px;*/
@@ -494,12 +451,9 @@ div#shj_collapse span {
 
 /*********************************************/
 
-div#main_container {
+div.content-wrapper {
 	z-index: 0;
 	color: #595959;
-	position: absolute;
-	top: 45px;
-	left: 160px;
 	background-color: #f6f6f4;
 }
 
@@ -550,7 +504,7 @@ div#page_title img {
 	margin-right: 5px;
 }
 
-div#main_container div#main_content {
+div.content-wrapper div#main_content {
 	padding: 7px 20px 20px 20px;
 	overflow-x: auto;
 }
@@ -1007,7 +961,7 @@ div.problems_widget table td{
 	height: 30px;
 }
 
-div#main_container .problem_description {
+div.content-wrapper .problem_description {
 	position: absolute;
 	right: 265px;
 	left: 20px;
@@ -1019,29 +973,4 @@ div#main_container .problem_description {
 .problem_description pre {
 	font-size: 12px;
 	line-height: normal;
-}
-
-div#md_div {
-	margin-right: 235px;
-}
-
-div#md_div textarea {
-	width: 100%;
-}
-
-div.md_cheatsheet {
-	width: 220px;
-	font-size : 75%;
-}
-
-div .md_cheatsheet h2, div .md_cheatsheet h3 {
-	margin: 15px 0 0 0;
-}
-
-div.md_cheatsheet pre{
-	padding: 5px;
-}
-
-div.md_cheatsheet p{
-	margin: 0;
 }
