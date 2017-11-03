@@ -17,75 +17,75 @@
 
 	<div class="collapse navbar-collapse" id="navbarCollapse">
 	  <ul class="navbar-nav navbar-sidenav color-{{ selected }}" id="exampleAccordion">
-		  <li class="nav-item color-dashboard{{ selected=='dashboard' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-dashboard{{ selected=='dashboard' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('dashboard') }}">
 		          <i class="fa fa-fw fa-dashboard fa-lg"></i>
 		          <span class="nav-link-text">Dashboard</span>
 		      </a>
 		  </li>
 		  {% if user.level == 3 %}
-		  <li class="nav-item color-settings{{ selected=='settings' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-settings{{ selected=='settings' ? ' selected' }}" >
 		      <a class="nav-link" href="{{ site_url('settings') }}">
 		          <i class="fa fa-fw fa-gear fa-lg"></i>
 		          <span class="nav-link-text">Settings</span>
 		      </a>
 		  </li>
-		  <li class="nav-item color-users{{ selected=='users' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-users{{ selected=='users' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('users') }}">
 		          <i class="fa fa-fw fa-users fa-lg"></i>
 		          <span class="nav-link-text">Users</span>
 		      </a>
 		  </li>
 		  {% endif %}
-		  <li class="nav-item color-notifications{{ selected=='notifications' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-notifications{{ selected=='notifications' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('notifications') }}">
 		          <i class="fa fa-fw fa-bell fa-lg"></i>
 		          <span class="nav-link-text">Notifications</span>
 		      </a>
 		  </li>
-		  <li class="nav-item color-assignments{{ selected=='assignments' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-assignments{{ selected=='assignments' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('assignments') }}">
 		          <i class="fa fa-fw fa-folder-open fa-lg"></i>
 		          <span class="nav-link-text">Assignments</span>
 		      </a>
 		  </li>
-		  <li class="nav-item color-problems{{ selected=='problems' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-problems{{ selected=='problems' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('problems') }}">
 		          <i class="fa fa-fw fa-puzzle-piece fa-lg"></i>
 		          <span class="nav-link-text">Problems</span>
 		      </a>
 		  </li>
-		  <li class="nav-item color-submit{{ selected=='submit' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-submit{{ selected=='submit' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('submit') }}">
 		          <i class="fa fa-fw fa-location-arrow fa-lg"></i>
 		          <span class="nav-link-text">Code Editor</span>
 		      </a>
 		  </li>
-		  <li class="nav-item color-final_submissions{{ selected=='final_submissions' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-final_submissions{{ selected=='final_submissions' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('submissions/final') }}">
 		          <i class="fa fa-fw fa-map-marker fa-lg"></i>
 		          <span class="nav-link-text">Final Submissions</span>
 		      </a>
 		  </li>
-		  <li class="nav-item color-all_submissions{{ selected=='all_submissions' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-all_submissions{{ selected=='all_submissions' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('submissions/all') }}">
 		          <i class="fa fa-fw fa-bars fa-lg"></i>
 		          <span class="nav-link-text">All Submissions</span>
 		      </a>
 		  </li>
-		  <li class="nav-item color-scoreboard{{ selected=='scoreboard' ? ' selected' }}" data-toggle="tooltip" data-placement="right" title="Dashboard">
+		  <li class="nav-item color-scoreboard{{ selected=='scoreboard' ? ' selected' }}">
 		      <a class="nav-link" href="{{ site_url('scoreboard') }}">
 		          <i class="fa fa-fw fa-star fa-lg"></i>
 		          <span class="nav-link-text">Scoreboard</span>
 		      </a>
 		  </li>
 
-		  <div class="sidenav-bottom nav-item mt-auto">
-			  <p>
+		  <div class="p-1 sidenav-bottom nav-item mt-auto">
+			  <span>
 				  <a href="https://github.com/truongan/wecode-judge" target="_blank">&copy; Wecode Judge {{ SHJ_VERSION }}</a>
 				  <a href="https://github.com/truongan/wecode-judge/tree/docs" target="_blank">Docs</a>
-			  </p>
-			  <p class="timer"></p>
+			  </span><br/>
+			  <span class="timer"></span>
 		  <div>
 		<!--
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">

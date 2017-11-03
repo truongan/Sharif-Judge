@@ -323,29 +323,29 @@ div#extra_time i {
 .color11 {color: #439427 !important;}
 .color12 {color: #3f78ba !important;}
 
-.color-dashboard {border-color: #C52E26!important;}
-.color-settings {border-color: #EE3A23!important;}
-.color-users {border-color: #FAA31B!important;}
-.color-notifications {border-color: #FAE80B!important;}
-.color-assignments {border-color: #CCDB29!important;}
-.color-problems {border-color: #0DB297!important;}
-.color-submit {border-color: #35C0CB!important;}
-.color-final_submissions {border-color: #22478A!important;}
-.color-all_submissions {border-color: #543680!important;}
-.color-scoreboard {border-color: #991B4A!important;}
-
-.color-dashboard.selected  {background-color: #C52E26!important;border-color: #C52E26!important;}
-.color-settings.selected  {background-color: #EE3A23!important;border-color: #EE3A23!important;}
-.color-users.selected  {background-color: #FAA31B!important;border-color: #FAA31B!important;}
-.color-notifications.selected  {background-color: #FAE80B!important;border-color: #FAE80B!important;}
-.color-assignments.selected  {background-color: #CCDB29!important;border-color: #CCDB29!important;}
-.color-problems.selected  {background-color: #0DB297!important;border-color: #0DB297!important;}
-.color-submit.selected  {background-color: #35C0CB!important;border-color: #35C0CB!important;}
-.color-final_submissions.selected  {background-color: #22478A!important;border-color: #22478A!important;}
-.color-all_submissions.selected  {background-color: #543680!important;border-color: #543680!important;}
-.color-scoreboard.selected  {background-color: #991B4A!important;border-color: #991B4A!important;}
-
 @media (min-width: 992px) {
+	.color-dashboard {border-color: #C52E26!important;}
+	.color-settings {border-color: #EE3A23!important;}
+	.color-users {border-color: #FAA31B!important;}
+	.color-notifications {border-color: #FAE80B!important;}
+	.color-assignments {border-color: #CCDB29!important;}
+	.color-problems {border-color: #0DB297!important;}
+	.color-submit {border-color: #35C0CB!important;}
+	.color-final_submissions {border-color: #22478A!important;}
+	.color-all_submissions {border-color: #543680!important;}
+	.color-scoreboard {border-color: #991B4A!important;}
+
+	.color-dashboard.selected  {background-color: #C52E26!important;border-color: #C52E26!important;}
+	.color-settings.selected  {background-color: #EE3A23!important;border-color: #EE3A23!important;}
+	.color-users.selected  {background-color: #FAA31B!important;border-color: #FAA31B!important;}
+	.color-notifications.selected  {background-color: #FAE80B!important;border-color: #FAE80B!important;}
+	.color-assignments.selected  {background-color: #CCDB29!important;border-color: #CCDB29!important;}
+	.color-problems.selected  {background-color: #0DB297!important;border-color: #0DB297!important;}
+	.color-submit.selected  {background-color: #35C0CB!important;border-color: #35C0CB!important;}
+	.color-final_submissions.selected  {background-color: #22478A!important;border-color: #22478A!important;}
+	.color-all_submissions.selected  {background-color: #543680!important;border-color: #543680!important;}
+	.color-scoreboard.selected  {background-color: #991B4A!important;border-color: #991B4A!important;}
+
 	#mainNav{
 		border-bottom: 5px solid #ffffff;
 	}
@@ -363,24 +363,32 @@ div#extra_time i {
 	.navbar-sidenav  .nav-link{
 		color: #595959 !important;
 	}
+
 	.navbar-sidenav li{
 		border-left: 5px solid #000;
+		border-bottom: 1px solid #EAEADE!important;
+	}
+	.navbar-sidenav li:hover{
+		background-color: #FAFAFA
 	}
 
 	.sidenav-toggler {
-		
 		background-color:#696966!important;
 		box-shadow: #a9a9a9 4px 4px 4px;
 	}
 
 
 	.sidenav-toggled .sidenav-bottom{
-		display: none;
+		display: none!important;
 	}
-	.sidenav-bottom{
-
+	.navbar-sidenav .sidenav-bottom{
+		display:block;
 		font-size: 0.75em;
 	}
+}
+
+.sidenav-bottom{
+	display: none;
 }
 
 /*********************************************/

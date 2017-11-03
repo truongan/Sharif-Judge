@@ -133,7 +133,7 @@ body.fixed-nav {
             width: 189px; }
             #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-second-level > li > a,
             #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-third-level > li > a {
-              padding: 1em; }
+              padding: 0.65em; }
         #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-second-level > li > a {
           padding-left: 2.75em; }
         #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-third-level > li > a {
