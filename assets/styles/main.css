@@ -775,17 +775,20 @@ ul.shj_pagination li>a, ul.shj_pagination li>span {
 /******* Dashboard *******/
 
 .shj_widget {
-	width: 350px;
-	height: 350px;
-	margin: 5px;
+	height: auto;
 	background-color: white;
 	border: 1px solid #e3e3e3;
 	border-radius: 3px;
 	box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px -2px;
-	-moz-box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px -2px;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px -2px;
 }
 
+#calendar h2{
+	font-size: 1.35em;
+}
+#calendar{
+	height: 100%;
+	padding: 10px;
+}
 
 .widget_title {
 	cursor: default;
@@ -795,11 +798,6 @@ ul.shj_pagination li>a, ul.shj_pagination li>span {
 	border-top-right-radius: 3px;
 	border-top-left-radius: 3px;
 	background: #fbfbfb;
-	background: -moz-linear-gradient(top, #fbfbfb 0%, #f1f1f1 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fbfbfb), color-stop(100%, #f1f1f1));
-	background: -webkit-linear-gradient(top, #fbfbfb 0%, #f1f1f1 100%);
-	background: -o-linear-gradient(top, #fbfbfb 0%, #f1f1f1 100%);
-	background: -ms-linear-gradient(top, #fbfbfb 0%, #f1f1f1 100%);
 	background: linear-gradient(top, #fbfbfb 0%, #f1f1f1 100%);
 }
 
@@ -807,24 +805,6 @@ ul.shj_pagination li>a, ul.shj_pagination li>span {
 	vertical-align: 0;
 	margin-right: 4px;
 }
-
-.gridster>ul>li {
-	list-style: none;
-	text-align: inherit;
-}
-
-#calendar {
-	width: 350px;
-	padding: 10px;
-}
-
-
-div.widget_scrollable {
-	position: absolute;
-	top: 30px;
-	padding:0 4px;
-}
-
 
 /******* notifications ************/
 
