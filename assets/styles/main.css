@@ -878,12 +878,6 @@ div.notif_text.latest {
 
 /*  problems page */
 
-div#right_sidebar {
-	position: absolute;
-	right: 20px;
-	width: 250px;
-}
-
 div.problems_widget {
 	background-color: #FCFCFC;
 	border: 2px dashed #DDD;
@@ -901,15 +895,6 @@ div.problems_widget p{
 
 div.problems_widget table td{
 	height: 30px;
-}
-
-div.content-wrapper .problem_description {
-	position: absolute;
-	right: 265px;
-	left: 20px;
-	text-align: justify;
-	font-size: 13px;
-	line-height: 1.5;
 }
 
 .problem_description pre {

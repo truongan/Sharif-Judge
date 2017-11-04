@@ -98,62 +98,6 @@ shj.update_clock = function(){
 	$("#time_days").html( days + "☀️" + hours + ":" + minutes + ":" + seconds);
 }
 
-shj.sidebar_open = function(time){
-	if (time==0){
-		$(".sidebar_text").css('display', 'inline-block');
-		$("#sidebar_bottom p").css('display', 'block');
-		$("#side_bar").css('width', '173px');
-		$("#main_container").css('left', '173px');
-	}
-	else{
-		$("#side_bar").animate({width: '173px'}, time, function(){
-			$(".sidebar_text").css('display', 'inline-block');
-			$("#sidebar_bottom p").css('display', 'block');
-		});
-		$("#main_container").animate({'left':'173px'}, time*1.7);
-	}
-	$("i#collapse").removeClass("fa-caret-square-o-right");
-	$("i#collapse").addClass("fa-caret-square-o-left");
-}
-
-shj.sidebar_close = function(time){
-	if (time==0){
-		$(".sidebar_text").css('display', 'none');
-		$("#sidebar_bottom p").css('display', 'none');
-		$("#side_bar").css('width', '48px');
-		$("#main_container").css('left', '48px');
-	}
-	else{
-		$(".sidebar_text").css('display', 'none');
-		$("#sidebar_bottom p").css('display', 'none');
-		$("#side_bar").animate({width: '48px'}, time);
-		$("#main_container").animate({'left': '48px'}, time*1.7);
-	}
-	$("i#collapse").removeClass("fa-caret-square-o-left");
-	$("i#collapse").addClass("fa-caret-square-o-right");
-}
-
-shj.toggle_collapse = function(){
-	if (shj.sidebar == "open"){
-		shj.sidebar = "close";
-		shj.sidebar_close(200);
-		if (shj.supports_local_storage())
-			localStorage.shj_sidebar = 'close';
-		else
-			$.cookie('shj_sidebar','close',{path:'/', expires: 365});
-	}
-	else if (shj.sidebar == "close"){
-		shj.sidebar = "open";
-		shj.sidebar_open(200);
-		if (shj.supports_local_storage())
-			localStorage.shj_sidebar = 'open';
-		else
-			$.cookie('shj_sidebar','open',{path:'/', expires: 365});
-	}
-}
-
-
-
 // Notifications
 shj.notif_check_time = null;
 shj.check_notifs = function () {
@@ -231,25 +175,6 @@ $(document).ready(function () {
  * Sidebar
  */
 $(document).ready(function () {
-	if (shj.supports_local_storage())
-		shj.sidebar = localStorage.shj_sidebar;
-	else
-		shj.sidebar = $.cookie('shj_sidebar');
-
-	if (shj.sidebar != 'open' && shj.sidebar != 'close') {
-		shj.sidebar = 'open';
-		if (shj.supports_local_storage())
-			localStorage.shj_sidebar = 'open';
-		else
-			$.cookie('shj_sidebar', 'open', {path: '/', expires: 365});
-	}
-	if (shj.sidebar == "open")
-		shj.sidebar_open(0);
-	else
-		shj.sidebar_close(0);
-
-	$("#shj_collapse").click(shj.toggle_collapse);
-
 	// update the clock and countdown timer every 1 second
 	shj.update_clock();
 	window.setInterval(shj.update_clock, 1000);
@@ -263,17 +188,6 @@ $(document).ready(function () {
  * Top Bar
  */
 $(document).ready(function () {
-	$("#top_bar").hoverIntent({
-		over: function () {
-			$(this).children(".top_menu").show();
-			$(this).addClass('shj_white');
-		},
-		out: function () {
-			$(this).children(".top_menu").hide();
-			$(this).removeClass('shj_white');
-		},
-		selector: '.top_object.shj_menu'
-	});
 	$(".select_assignment").click(
 		function () {
 			var id = $(this).children('i').addBack('i').data('id');
