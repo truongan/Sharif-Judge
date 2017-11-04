@@ -440,7 +440,7 @@ span.title_menu_item {
 	margin-left: 10px;
 	font-weight: normal;
 	vertical-align: middle;
-	
+
 }
 
 div#page_title img {
@@ -454,7 +454,10 @@ div.content-wrapper div#main_content {
 }
 
 /***********************************************/
-
+#main_content  form {
+	width: 100%;
+}
+/*
 .sharif_input {
 	outline: none;
 	padding: 5px;
@@ -536,9 +539,7 @@ p.input_p label.default {
 	margin: 0;
 }
 
-p.input_p textarea {
-	/*display: block;*/
-}
+
 
 .shj_error {
 	color: red;
@@ -558,7 +559,7 @@ select.sharif_time {
 	width: 300px;
 	font-size: 16px;
 }
-
+*/
 #select_assignment_menu i {
 	vertical-align: top;
 	color:#FFF;

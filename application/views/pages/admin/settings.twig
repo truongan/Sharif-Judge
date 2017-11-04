@@ -31,7 +31,7 @@ $(document).ready(function(){
 
 
 {% block main_content %}
-<p class="input_p">
+
 {% if form_status == 'ok' %}
 	<div class="shj_ok">Settings updated successfully.</div>
 {% elseif form_status == 'error' %}
@@ -45,22 +45,27 @@ $(document).ready(function(){
 {% endif %}
 </p>
 {{ form_open('settings/update') }}
-	<p class="input_p">
-		<label for="form_site_name">
-			Site name
-		</label>
-		<input id="form_site_name" type="text" name="site_name" class="sharif_input medium" value="{{ site_name }}"/>
-	</p>
+	<div class="form-row">
+		<fieldset class="form-group col-md-6">
+			<label for="form_site_name">Site name</label>
+			<input id="form_site_name" type="text" name="site_name" class="form-control" value="{{ site_name }}"/>
+		  <small class="form-text text-muted">Website's name to be display on Top Bar and HTML title.</small>
+	  </fieldset>
 
-	<p class="input_p">
-		<label for="form_timezone">
-			Timezone<br>
-			<a target="_blank" href="http://www.php.net/manual/en/timezones.php">list of timezones</a>
-		</label>
-		<span class="form_comment timer"></span><br>
-		<input id="form_timezone" type="text" name="timezone" class="sharif_input medium" value="{{ timezone }}"/>
-		{{ form_error('timezone', '<div class="shj_error">', '</div>') }}
-	</p>
+	  <fieldset class="form-group col-md-6">
+		  <label for="form_timezone">Timezone </label>
+	  <input id="form_timezone" type="text" name="timezone" class="form-control" value="{{ timezone }}"/>
+	  {{ form_error('timezone', '<div class="shj_error">', '</div>') }}
+		<small class="form-text ">
+		 <a target="_blank" href="http://www.php.net/manual/en/timezones.php">list of timezones</a>
+		 <span class="form-text text-muted timer"></span>
+	 </small>
+
+	  </fieldset>
+
+	</div>
+
+
 	<p class="input_p">
 		<label for="form_week">Week Start Day</label>
 		<select id="form_week" name="week_start" class="sharif_input">
