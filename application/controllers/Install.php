@@ -247,7 +247,6 @@ class Install extends CI_Controller
 				'first_login_time'    => array('type' => $DATETIME, 'null' => TRUE),
 				'last_login_time'     => array('type' => $DATETIME, 'null' => TRUE),
 				'selected_assignment' => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE, 'default' => 0),
-				'dashboard_widget_positions'   => array('type' => 'VARCHAR', 'constraint' => 500, 'default' => ''),
 			);
 			$this->dbforge->add_field($fields);
 			$this->dbforge->add_key('id', TRUE); // PRIMARY KEY

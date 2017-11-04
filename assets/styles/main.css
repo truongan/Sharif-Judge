@@ -436,9 +436,10 @@ div#page_title > i + span {
 }
 
 span.title_menu_item {
-	font-size: 12px;
+	font-size: 0.65em;
 	margin-left: 10px;
 	font-weight: normal;
+	vertical-align: middle;
 }
 
 div#page_title img {
@@ -447,7 +448,7 @@ div#page_title img {
 }
 
 div.content-wrapper div#main_content {
-	padding: 7px 20px 20px 20px;
+	padding: 18px 15px 0px 15px;
 	overflow-x: auto;
 }
 
@@ -776,6 +777,7 @@ ul.shj_pagination li>a, ul.shj_pagination li>span {
 .shj_widget {
 	width: 350px;
 	height: 350px;
+	margin: 5px;
 	background-color: white;
 	border: 1px solid #e3e3e3;
 	border-radius: 3px;
