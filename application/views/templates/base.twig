@@ -26,8 +26,8 @@
 <div class="content-wrapper"><div class="container-fluid">
 	{# {% include 'templates/side_bar.twig' %} #}
 
-	<div id="page_title" class="row">
-		<i class="fa {% block icon %}{% endblock %}"></i>
+	<div id="page_title" >
+		<i class="fa {% block icon %}{% endblock %} fa-fw fa-lg"></i>
 		<span dir="auto">{% block title %}{% endblock %}</span>
 		{% block title_menu %}{% endblock %}
 	</div>

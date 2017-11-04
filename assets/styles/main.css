@@ -398,8 +398,10 @@ div.content-wrapper {
 }
 
 div#page_title {
+	margin-left: -15px;
+	margin-right: -15px;
 	padding: 10px 20px;
-	font-size: 20px;
+	font-size: 1.25em;
 	position: relative;
 	background-color: #faf9f5;
 	border-bottom: 1px solid #DDDAD0;
@@ -429,15 +431,16 @@ div#page_title:before {
 	margin-left: -11px;
 }
 
-div#page_title > i + span {
+/*div#page_title > i + span {
 	margin-left: 8px;
-}
+}*/
 
 span.title_menu_item {
 	font-size: 0.65em;
 	margin-left: 10px;
 	font-weight: normal;
 	vertical-align: middle;
+	
 }
 
 div#page_title img {
