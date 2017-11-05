@@ -76,7 +76,7 @@ shj.update_clock = function(){
 		shj.sync_server_time();
 	}
 	shj.time = moment();
-	var now = moment().add('milliseconds', shj.offset);
+	var now = moment().add(shj.offset, 'milliseconds');
 	$('.timer').html('Server Time: '+now.format('MMM DD - HH:mm:ss'));
 	var countdown = shj.finish_time.diff(now);
 	if (countdown<=0 && countdown + shj.extra_time.asMilliseconds()>=0){
@@ -102,7 +102,7 @@ shj.update_clock = function(){
 shj.notif_check_time = null;
 shj.check_notifs = function () {
 	if (shj.notif_check_time == null)
-		shj.notif_check_time = moment().add('milliseconds', shj.offset - (shj.notif_check_delay * 1000));
+		shj.notif_check_time = moment().add(shj.offset - (shj.notif_check_delay * 1000), 'milliseconds');
 	$.ajax({
 		type: 'POST',
 		url: shj.site_url+'notifications/check',
@@ -117,7 +117,7 @@ shj.check_notifs = function () {
 			}
 		}
 	});
-	shj.notif_check_time = moment().add('milliseconds', shj.offset);
+	shj.notif_check_time = moment().add(shj.offset, 'milliseconds');
 }
 
 

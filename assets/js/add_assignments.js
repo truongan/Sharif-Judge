@@ -9,7 +9,7 @@ shj.row +=			'<td><input type="number" name="memory_limit[]" class="form-control
 shj.row +=			'<input id="allowed_lang{{i}}" type="hidden" name="allowed_languages[{{i}}]" class="form-control" />';
 shj.row +=			'<input id="submit_lang{{i}}" type="hidden" name="languages[{{i}}]" class="form-control"/>';
 shj.row +=			'<td>';
-shj.row +=				'<select id="lang{{i}}" name="select_languages[{{i}}][]" class="w-100" multiple>';
+shj.row +=				'<select id="lang{{i}}" name="select_languages[{{i}}][]"  multiple>';
 shj.row +=					'<option value="C">C</option>';
 shj.row +=					'<option value="C++" selected>C++</option>';
 shj.row +=					'<option value="Python 2">Python 2</option>';

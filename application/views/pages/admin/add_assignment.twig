@@ -51,8 +51,8 @@
 	<i class="fa fa-info-circle fa-lg color8"></i> If you don't want to change tests or pdf file, just do not upload its file.
 </p>
 {% endif %}
-
-{{ form_open_multipart(edit ? 'assignments/edit/'~edit_assignment.id : 'assignments/add') }}
+<form class="add-assignment-form" action="{{ site_url('assignment') }} {{ edit ? 'assignments/edit/'~edit_assignment.id : 'assignments/add' }}" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+{# {{ form_open_multipart(edit ? 'assignments/edit/'~edit_assignment.id : 'assignments/add') }} #}
 	<input type="hidden" name="number_of_problems" id="nop" value="{{ edit ? edit_assignment.problems : problems|length }}"/>
 	<div class="row">
 		
@@ -133,7 +133,7 @@
 						</label>
 					</div>
 					<div class="col-sm-7">
-						<input id="form_tests_desc" type="file" name="tests_desc" />
+						<input id="form_tests_desc" type="file" name="tests_desc" class="form-control" />
 					</div>
 				</div>
 			</fieldset>
@@ -220,7 +220,7 @@
 			<input id="allowed_lang{{i}}" type="hidden" name="allowed_languages[{{i}}]" class="form-control" value="{{ problem.allowed_languages }}"/>
 			<input id="submit_lang{{i}}" type="hidden" name="languages[{{i}}]" class="form-control"/>
 			<td>
-				<select id="lang{{i}}" name="select_languages[{{i}}][]" class="w-100" multiple>
+				<select id="lang{{i}}" name="select_languages[{{i}}][]" class="" multiple>
 					<option value="C">C</option>
 					<option value="C++">C++</option>
 					<option value="Python 2">Python 2</option>
