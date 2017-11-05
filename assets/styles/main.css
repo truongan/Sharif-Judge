@@ -456,6 +456,7 @@ div.content-wrapper div#main_content {
 /***********************************************/
 #main_content  form {
 	width: 100%;
+	margin-bottom: 1em;
 }
 /*
 .sharif_input {
@@ -681,10 +682,9 @@ select.sharif_time {
 }
 
 textarea.add_text {
-	display: inline-block;
-	font-size: 12px;
+	font-size: 0.5em;
 	font-family: monospace;
-	width: 410px;
+	
 }
 
 .shj_o {
