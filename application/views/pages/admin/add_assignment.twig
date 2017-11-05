@@ -41,7 +41,7 @@
 
 
 {% block main_content %}
-{% set msgclasses = {'success': 'shj_g', 'notice': 'shj_o', 'error': 'shj_r'} %}
+{% set msgclasses = {'text-success': 'text-success', 'text-info': 'text-warning', 'text-danger': 'text-danger'} %}
 {% for message in messages %}
 	<p class="{{ msgclasses[message.type] }}">{{ message.text }}</p>
 {% endfor %}
@@ -53,85 +53,140 @@
 {% endif %}
 
 {{ form_open_multipart(edit ? 'assignments/edit/'~edit_assignment.id : 'assignments/add') }}
-<div class="panel_left">
 	<input type="hidden" name="number_of_problems" id="nop" value="{{ edit ? edit_assignment.problems : problems|length }}"/>
-	<p class="input_p">
-		<label for="form_a_name">Assignment Name</label>
-		<input id="form_a_name" type="text" name="assignment_name" class="sharif_input medium" value="{{ edit ? edit_assignment.name : set_value('assignment_name') }}"/>
-		{{ form_error('assignment_name', '<div class="shj_error">', '</div>') }}
-	</p>
-	<p class="input_p">
-		<label for="start_time">Start Time</label>
-		<input id="start_time" type="text" name="start_time" class="sharif_input medium" value="{{ edit ? edit_assignment.start_time|date('m/d/Y H:i:s') : set_value('start_time') }}" />
-		{{ form_error('start_time', '<div class="shj_error">', '</div>') }}
-	</p>
-	<p class="input_p">
-		<label for="finish_time">Finish Time
-		<br/>
-		<span class="form_comment">Set finish time before start time will set the deadline to *NEVER*</span>
-		</label>
-		<input id="finish_time" type="text" name="finish_time" class="sharif_input medium" value="{{ edit ? edit_assignment.finish_time|date('m/d/Y H:i:s') : set_value('finish_time') }}" />
-		{{ form_error('finish_time', '<div class="shj_error">', '</div>') }}
-	</p>
-	<p class="input_p clear">
-		<label for="form_extra_time">
-			Extra Time (minutes)<br>
-			<span class="form_comment">Extra time for late submissions.</span>
-		</label>
-		<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="sharif_input medium" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time', 0) }}" />
-		{{ form_error('extra_time', '<div class="shj_error">', '</div>') }}
-	</p>
-	<p class="input_p clear">
-		<label for="form_participants">Participants<br>
-			<span class="form_comment">Enter username of participants here (comma separated).
-				Only these users are able to submit. You can use keyword "ALL".</span>
-		</label>
-		<textarea id="form_participants" name="participants" rows="5" class="sharif_input medium">{{ edit ? edit_assignment.participants : set_value('participants', 'ALL') }}</textarea>
-	</p>
-	<p class="input_p clear">
-		<label for="form_tests_desc">Tests and Descriptions (zip file)<br>
-			<span class="form_comment">
-				<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/tests_structure.md" target="_blank">Use this structure</a>
-			</span>
-		</label>
-		<input id="form_tests_desc" type="file" name="tests_desc" class="sharif_input medium"/>
-	</p>
-	<p class="input_p clear">
-		<label for="form_pdf">PDF File<br>
-			<span class="form_comment">
-				PDF File of Assignment
-			</span>
-		</label>
-		<input id="form_pdf" type="file" name="pdf" class="sharif_input medium"/>
-	</p>
-</div>
-<div class="panel_right">
-	<p class="input_p">
-		<input id="form_a_open" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
-		<label for="form_a_open" class="default">Open</label>
-		<span class="form_comment space-left">Open or close this assignment for submission</span>
-		{{ form_error('open', '<div class="shj_error">', '</div>') }}
-	</p>
-	<p class="input_p">
-		<input id="form_a_scoreboard" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
-		<label for="form_a_scoreboard" class="default">Scoreboard</label>
-		<span class="form_comment space-left">Check this to publish scoreboard to student</span>
-		{{ form_error('scoreboard', '<div class="shj_error">', '</div>') }}
-	</p>
-	<p class="input_p">
-		<input id="form_a_javaexceptions" type="checkbox" name="javaexceptions" value="1" {{ edit ? (edit_assignment.javaexceptions ? 'checked') : set_checkbox('javaexceptions', '1')|raw }} />
-		<label for="form_a_javaexceptions" class="default">Java Exceptions</label>
-		<span class="form_comment space-left">Check this to show Java exceptions to users</span>
-		{{ form_error('javaexceptions', '<div class="shj_error">', '</div>') }}
-	</p>
-	<p class="input_p">
-		<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)</label><br>
-		<span class="form_comment medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</span>
-		<textarea id="form_late_rule" name="late_rule" rows="20" class="sharif_input add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
-		{{ form_error('late_rule', '<div class="shj_error">', '</div>') }}
-	</p>
-</div>
+	<div class="row">
+		
+		<div class="col-sm-6">
+			
+			<fieldset class="form-group">
+				<div class="row">
+					<div class="col-sm-5">
+						<label for="form_a_name">Assignment Name</label>
+					</div>
+					<div class="col-sm-7">
+						<input id="form_a_name" type="text" name="assignment_name" class="form-control col-xs-7" value="{{ edit ? edit_assignment.name : set_value('assignment_name') }}"/>
+						{{ form_error('assignment_name', '<div class="alert alert-danger">', '</div>') }}
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="form-group">
+				<div class="row">
+					<div class="col-sm-5">
+						<label for="start_time">Start Time</label>
+					</div>
+					<div class="col-sm-7">
+						<input id="start_time" type="text" name="start_time" class="form-control" value="{{ edit ? edit_assignment.start_time|date('m/d/Y H:i:s') : set_value('start_time') }}" />
+						{{ form_error('start_time', '<div class="alert alert-danger">', '</div>') }}
+					</div>
+				</div>
+			</fieldset>
+			
+			<fieldset class="form-group">
+				<div class="row">
+					<div class="col-sm-5">
+						<label for="finish_time">Finish Time
+						<small class="form-text text-muted">Set finish time before start time will set the deadline to *NEVER*</small>
+						</label>
+					</div>
+					<div class="col-sm-7">
+						<input id="finish_time" type="text" name="finish_time" class="form-control" value="{{ edit ? edit_assignment.finish_time|date('m/d/Y H:i:s') : set_value('finish_time') }}" />
+						{{ form_error('finish_time', '<div class="alert alert-danger">', '</div>') }}
+					</div>
+				</div>
+			</fieldset>
+			
+			<fieldset class="form-group">
+				<div class="row">
+					<div class="col-sm-5">
+						<label for="form_extra_time">
+						Extra Time (minutes)
+						<small class="form-text text-muted">Extra time for late submissions.</small>
+						</label>
+					</div>
+					<div class="col-sm-7">
+						<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="form-control" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time', 0) }}" />
+						{{ form_error('extra_time', '<div class="alert alert-danger">', '</div>') }}
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="form-group">
+				<div class="row">
+					<div class="col-sm-5">
+						<label for="form_participants">Participants<br>
+							<span class="form-text text-muted">Enter username of participants here (comma separated).
+								Only these users are able to submit. You can use keyword "ALL".</span>
+						</label>
+					</div>
+					<div class="col-sm-7">
+				<textarea id="form_participants" name="participants" rows="5" class="form-control">{{ edit ? edit_assignment.participants : set_value('participants', 'ALL') }}</textarea>
+					</div>
+				</div>
+			</fieldset>
+			
+			<fieldset class="form-group">
+				<div class="row">
+					<div class="col-sm-5">
+						<label for="form_tests_desc">Tests and Descriptions (zip file)<br>
+							<small class="form-text text-muted">
+								<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/tests_structure.md" target="_blank">Use this structure</a>
+							</small>
+						</label>
+					</div>
+					<div class="col-sm-7">
+						<input id="form_tests_desc" type="file" name="tests_desc" />
+					</div>
+				</div>
+			</fieldset>
+
+
+			<fieldset class="form-group">
+				<div class="row">
+					<div class="col-sm-5">
+						<label for="form_pdf">PDF File<br>
+							<small class="form-text text-muted">PDF File of Assignment</small>
+						</label>
+					</div>
+					<div class="col-sm-7">
+						<input id="form_pdf" type="file" name="pdf" class="form-control"/>
+ 					</div>
+				</div>
+			</fieldset>
+		</div>
+
+		<div class="col-sm-6">
+			<fieldset class="form-group">
+				<input id="form_a_open" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
+								
+					<label for="form_a_open" class="default">Open</label>
+				<small class="form-text text-muted space-left">Open or close this assignment for submission</small>
+				{{ form_error('open', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+
+			<fieldset class="form-group">
+				<input id="form_a_scoreboard" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
+								<label for="form_a_scoreboard" class="default">Scoreboard</label>
+				<small class="form-text text-muted space-left">Check this to publish scoreboard to student</small>
+				{{ form_error('scoreboard', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+			<fieldset class="form-group">
+				<input id="form_a_javaexceptions" type="checkbox" name="javaexceptions" value="1" {{ edit ? (edit_assignment.javaexceptions ? 'checked') : set_checkbox('javaexceptions', '1')|raw }} />
+					<label for="form_a_javaexceptions" class="default">Java Exceptions</label>
+				<small class="form-text text-muted space-left">Check this to show Java exceptions to users</small>
+				{{ form_error('javaexceptions', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+			<fieldset class="form-group">
+				<div class="row">
+						<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)
+						<small class="form-text text-muted medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</small>
+						</label>
+				<textarea id="form_late_rule" name="late_rule" rows="15" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
+				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+		</div>
+	</div>
+
 <p class="input_p" id="add_problems">Problems <i class="fa fa-plus-circle fa-lg color11 pointer" id="add"></i>
+
 <table id="problems_table">
 	<thead>
 	<tr>
@@ -149,23 +204,23 @@
 	<tr>
 		<th>C/C++</th><th>Python</th><th>Java</th>
 	</tr>
-	</thead>
+	</thead class="form-inline">
 	<tbody>
 
 	{% set i = 0 %}
 	{% for problem in problems %}
 		<tr>
 			<td>{{ problem.id }}</td>
-			<td><input type="text" name="name[]" class="sharif_input short" value="{{ problem.name }}"/></td>
-			<td><input type="text" name="score[]" class="sharif_input tiny2" value="{{ problem.score }}"/></td>
-			<td><input type="text" name="c_time_limit[]" class="sharif_input tiny2" value="{{ problem.c_time_limit }}"/></td>
-			<td><input type="text" name="python_time_limit[]" class="sharif_input tiny2" value="{{ problem.python_time_limit }}"/></td>
-			<td><input type="text" name="java_time_limit[]" class="sharif_input tiny2" value="{{ problem.java_time_limit }}"/></td>
-			<td><input type="text" name="memory_limit[]" class="sharif_input tiny" value="{{ problem.memory_limit }}"/></td>
-			<input id="allowed_lang{{i}}" type="hidden" name="allowed_languages[{{i}}]" class="sharif_input short2" value="{{ problem.allowed_languages }}"/>
-			<input id="submit_lang{{i}}" type="hidden" name="languages[{{i}}]" class="sharif_input short2"/>
+			<td><input type="text" name="name[]" class="form-control" value="{{ problem.name }}"/></td>
+			<td><input type="number" name="score[]" class="form-control short_text" value="{{ problem.score }}"/></td>
+			<td><input type="number" name="c_time_limit[]" class="form-control short_text" value="{{ problem.c_time_limit }}"/></td>
+			<td><input type="number" name="python_time_limit[]" class="form-control short_text" value="{{ problem.python_time_limit }}"/></td>
+			<td><input type="number" name="java_time_limit[]" class="form-control short_text" value="{{ problem.java_time_limit }}"/></td>
+			<td><input type="number" name="memory_limit[]" class="form-control short_text" value="{{ problem.memory_limit }}"/></td>
+			<input id="allowed_lang{{i}}" type="hidden" name="allowed_languages[{{i}}]" class="form-control" value="{{ problem.allowed_languages }}"/>
+			<input id="submit_lang{{i}}" type="hidden" name="languages[{{i}}]" class="form-control"/>
 			<td>
-				<select id="lang{{i}}" name="select_languages[{{i}}][]" class="medium" multiple>
+				<select id="lang{{i}}" name="select_languages[{{i}}][]" class="w-100" multiple>
 					<option value="C">C</option>
 					<option value="C++">C++</option>
 					<option value="Python 2">Python 2</option>
@@ -173,8 +228,8 @@
 					<option value="Java">Java</option>
 				</select>
 			</td>
-			<td><input type="text" name="diff_cmd[]" class="sharif_input tiny" value="{{ problem.diff_cmd }}"/></td>
-			<td><input type="text" name="diff_arg[]" class="sharif_input tiny" value="{{ problem.diff_arg }}"/></td>
+			<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="{{ problem.diff_cmd }}"/></td>
+			<td><input type="text" name="diff_arg[]" class="form-control short_text" value="{{ problem.diff_arg }}"/></td>
 			<td><input type="checkbox" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/></td>
 			<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer"></i></td>
 		</tr>
@@ -183,17 +238,17 @@
 	</tbody>
 </table>
 </p>
-{{ form_error('name[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('score[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('c_time_limit[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('python_time_limit[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('java_time_limit[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('memory_limit[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('languages[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('diff_cmd[]', '<div class="shj_error">', '</div>') }}
-{{ form_error('diff_arg[]', '<div class="shj_error">', '</div>') }}
-<p class="input_p">
-	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input"/>
+{{ form_error('name[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('score[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('c_time_limit[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('python_time_limit[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('java_time_limit[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('memory_limit[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('languages[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('diff_cmd[]', '<div class="alert alert-danger">', '</div>') }}
+{{ form_error('diff_arg[]', '<div class="alert alert-danger">', '</div>') }}
+<fieldset class="form-group">
+	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary"/>
 </p>
 </form>
 {% endblock %}  {# main_content #}

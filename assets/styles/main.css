@@ -458,109 +458,13 @@ div.content-wrapper div#main_content {
 	width: 100%;
 	margin-bottom: 1em;
 }
-/*
-.sharif_input {
-	outline: none;
-	padding: 5px;
-	background-color: white;
-	border-radius: 2px;
-	border: 1px solid #b7b7b7;
-	transition: box-shadow 200ms ease;
-	-webkit-transition: box-shadow 200ms ease;
-	box-shadow: rgba(0, 0, 0, 0.1) 0 0 2px 1px;
+
+input[type='number'].short_text{
+	width: 80px!important;
 }
-
-.sharif_input:hover {
-	border-color: #8d8d8d;
+.short_text{
+	width: 100px!important;
 }
-
-.sharif_input:focus {
-	border-color: rgba(82, 168, 236, 0.6);
-	box-shadow: rgba(82, 168, 236, 0.6) 0 0 5px;
-	-moz-box-shadow: rgba(82, 168, 236, 0.6) 0 0 5px;
-	-webkit-box-shadow: rgba(82, 168, 236, 0.6) 0 0 5px;
-}
-
-input.sharif_input:disabled {
-	color: #aaa;
-}
-
-.long {
-	width: 350px !important;
-}
-
-.medium {
-	width: 250px !important;
-}
-
-.short {
-	width: 100px !important;
-}
-
-.short2 {
-	width: 170px !important;
-}
-
-.tiny {
-	width: 65px !important;
-}
-
-.tiny2 {
-	width: 55px !important;
-}
-
-.form_comment {
-	display: inline-block;
-	color: #828282;
-	font-size: 11px;
-	padding: 0;
-	margin: 0;
-}
-
-h2.shj_form {
-	width: 500px;
-	margin-top: 30px;
-	border-bottom: 1px solid #c7c7c7;
-}
-
-p.input_p {
-	padding: 0;
-	margin: 10px 6px 0 0;
-}
-
-p.input_p label {
-	margin-top: 8px;
-	width: 180px;
-	float: left;
-}
-
-p.input_p label.default {
-	float: none;
-	width: auto;
-	margin: 0;
-}
-
-
-
-.shj_error {
-	color: red;
-	font-size: 12px;
-}
-
-.shj_ok {
-	color: green;
-	font-size: 12px;
-}
-
-#codeigniter_profiler {
-	z-index: -50;
-}
-
-select.sharif_time {
-	width: 300px;
-	font-size: 16px;
-}
-*/
 #select_assignment_menu i {
 	vertical-align: top;
 	color:#FFF;
@@ -602,6 +506,7 @@ select.sharif_time {
 	text-align: center;
 	border-radius: 5px;
 	border: 1px solid #a9a9a9;
+	width: 100%;
 }
 
 #ui-datepicker-div {
@@ -685,22 +590,6 @@ textarea.add_text {
 	font-size: 0.5em;
 	font-family: monospace;
 	
-}
-
-.shj_o {
-	color: #ff5f00;
-}
-
-.shj_b {
-	color: blue;
-}
-
-.shj_r {
-	color: #b20000;
-}
-
-.shj_g {
-	color: green;
 }
 
 .tiny_text {
