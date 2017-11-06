@@ -79,15 +79,15 @@ $(document).ready(function(){
 <p> {{error}} </p>
 {% else %}
 
-	<div class="col-lg-8 col-xl-9 col-md-12">
+	<div class="col-md-7 col-xl-8 col-sm-12">
 
 		<div class="problem_description" id="problem_description" {% if user.level >= 2 %} contenteditable="true" {% endif %} >
 			{{ problem.description|raw }}
 		</div>
 	</div>
 
-	<div class="col-lg-4 col-xl-3">
-		<div class="problems_widget">
+	<div class="col-md-5 col-xl-4">
+		<div class="problems_widget row">
 			<p dir="auto"><i class="fa fa-file-text fa-lg color9"></i> {{ description_assignment.name }}</p>
 
 			{% if all_problems|length == 0 %}
@@ -97,10 +97,10 @@ $(document).ready(function(){
 			<table class="sharif_table">
 				<thead>
 				<tr>
-					<th rowspan="2">#</th>
-					<th rowspan="2">Problem</th>
-					<th rowspan="2">Score</th>
-					<th rowspan="2">Upload<br>Only</th>
+					<th>#</th>
+					<th>Problem</th>
+					<th>Score</th>
+					<th>Upload<br>Only</th>
 				</tr>
 				</thead>
 				{% for one_problem in all_problems %}
@@ -117,11 +117,12 @@ $(document).ready(function(){
 		</div>
 
 		{% if can_submit %}
-		<div class="problems_widget">
+		<div class="problems_widget ">
+
 			<span><i class="fa fa-upload fa-lg color11"></i> Submit</span>
 			{{ form_open_multipart('submit') }}
 			<input type="hidden" name="problem" value="{{ problem.id }}"/>
-			<fieldset class="form-group">
+			<fieldset class="form-group form-row">
 				<label>
 					Select language
 				</label>
@@ -134,17 +135,20 @@ $(document).ready(function(){
 				</select>
 			</fieldset>
 
-			<fieldset class="form-group">
-				
-				<input type="file" id="file" class="form-control" name="userfile"/>
-			
+			<fieldset class="form-group form-row">
+				<label class="col-12">
+					<input type="file" id="file" class="form-control custom-file-input" name="userfile"/>
+					<span class="custom-file-control form-control"></span>
+				</label>			
 			</fieldset>
 
-			<input type="submit" value="Submit" class="form-control"/>
-
+			<fieldset class="form-group form-row">
+				<input type="submit" value="Submit" class="form-control"/>
+			</fieldset>
 			</form>
+
 		</div>
-		<div class="problems_widget">
+		<div class="problems_widget row">
 			<span class=""><a href="{{ site_url("submit/") }}" target="_blank"><i class="fa fa-pencil-square-o"></i> Code editor</a></span>
 		</div>
 		{% endif %}

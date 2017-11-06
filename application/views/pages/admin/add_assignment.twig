@@ -28,12 +28,13 @@ input[type='number'].short_text{
 .short_text{
 	width: 100px!important;
 }
+
 </style>
 {% endblock %}
 
 {% block body_end %}
 <script type="text/javascript" src = {{ base_url('assets/select2/select2.min.js') }}></script>
-
+<script type="text/javascript" src = {{ base_url('assets/js/jquery.autoellipsis-1.0.10.min.js') }}></script>
 
 <script type="text/javascript" src = {{ base_url('assets/js/add_assignments.js') }}></script>
 <script type='text/javascript' src="{{ base_url('assets/js/taboverride.min.js') }}"></script>
@@ -148,8 +149,8 @@ input[type='number'].short_text{
 						</label>
 					</div>
 					<div class="col-sm-7">
-						<label>
-							<input id="form_tests_desc" type="file" name="tests_desc" class="custom-file-input" />
+						<label class="w-100">
+							<input id="form_tests_desc" type="file" name="tests_desc" class="form-control custom-file-input" />
 							<span class="form-control custom-file-control"></span>
 						</label>
 					</div>
@@ -165,8 +166,8 @@ input[type='number'].short_text{
 						</label>
 					</div>
 					<div class="col-sm-7">
-						<label>
-							<input id="form_pdf" type="file" name="pdf" class="custom-file-input"/>
+						<label class="w-100">
+							<input id="form_pdf" type="file" name="pdf" class="form-control custom-file-input"/>
 							<span class="custom-file-control form-control"></span>
 						</label>
  					</div>

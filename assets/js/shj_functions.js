@@ -285,10 +285,19 @@ $(document).ready(function(){
 $(document).ready(function(){
 	$('input').attr('dir', 'auto');
 	$('.custom-file-input').change(function(){
-		console.log($(this));
-		console.log($(this).siblings("span.custo-file-control"));
-		console.log($(this).prop("files")[0].name);
+		if ($(this).prop("files").length == 0)
+		{
+			$(this).parent().find("span.custom-file-control").html("").removeClass("text-muted");
+		}
 
-		$(this).siblings("span.custom-file-control").html($(this).prop("files")[0].name);
+		var span = $(this).parent().find("span.custom-file-control");
+		var length = span.width() / parseFloat($("body").css("font-size"));
+		
+		//Ellipsis file name
+		var name = $(this).prop("files")[0].name;
+		if(length < 4) name = name.substr(0,3);
+		else if (name.length > length) name = name.substr(0, length - 3) + "...";
+
+		span.html(name).addClass("text-muted");
 	});
 });
