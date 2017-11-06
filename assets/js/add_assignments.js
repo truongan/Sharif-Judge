@@ -6,10 +6,10 @@ shj.row +=			'<td><input type="number" name="c_time_limit[]" class="form-control
 shj.row +=			'<td><input type="number" name="python_time_limit[]" class="form-control short_text"  value="1500"/></td>';
 shj.row +=			'<td><input type="number" name="java_time_limit[]" class="form-control short_text"  value="2000"/></td>';
 shj.row +=			'<td><input type="number" name="memory_limit[]" class="form-control short_text"  value="50000"/></td>';
-shj.row +=			'<input id="allowed_lang{{i}}" type="hidden" name="allowed_languages[{{i}}]" class="form-control" />';
-shj.row +=			'<input id="submit_lang{{i}}" type="hidden" name="languages[{{i}}]" class="form-control"/>';
+shj.row +=			'<input id="allowed_langPID" type="hidden" name="allowed_languages[PID]" class="form-control" />';
+shj.row +=			'<input id="submit_langPID" type="hidden" name="languages[PID]" class="form-control"/>';
 shj.row +=			'<td>';
-shj.row +=				'<select id="lang{{i}}" name="select_languages[{{i}}][]"  multiple>';
+shj.row +=				'<select id="langPID" name="select_languages[PID][]"  multiple>';
 shj.row +=					'<option value="C">C</option>';
 shj.row +=					'<option value="C++" selected>C++</option>';
 shj.row +=					'<option value="Python 2">Python 2</option>';

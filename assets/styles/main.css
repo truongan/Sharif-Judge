@@ -454,38 +454,6 @@ div.content-wrapper div#main_content {
 }
 
 /***********************************************/
-.add-assignment-form {
-	width: 100%;
-	margin-bottom: 1em;
-}
-.add-assignment-form  select{
-	width: 180px;
-}
-
-input[type='number'].short_text{
-	width: 80px!important;
-}
-.short_text{
-	width: 100px!important;
-}
-#select_assignment_menu i {
-	vertical-align: top;
-	color:#FFF;
-	line-height:40px;
-	font-size:20px;
-	margin:0 8px 0 0;
-}
-
-#select_assignment_menu > li:last-child {
-	text-align: center;
-	background-color: #518aa3;
-	line-height: normal;
-}
-
-#select_assignment_menu > li:last-child a {
-	line-height: normal;
-	padding: 5px;
-}
 
 .assignment_block {
 	height: 40px;

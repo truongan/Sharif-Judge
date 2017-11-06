@@ -54,12 +54,13 @@
 			<li>Passwords must be between 6 and 30 characters in length.</li>
 			<li>If you want to send passwords by email, do not add too many users at one time. This may result in mail delivery fail.</li>
 		</ul>
-		<p class="input_p">
-			<input type="checkbox" name="send_mail" id="send_mail" /> Send usernames and passwords by email (Waits <input type="text" name="delay" id="delay" class="sharif_input tiny" value="2"/> second(s) before sending each email, so please be patient).
-		</p>
+		<div class="form-inline form-group">
+			<label for="send_email" class="mr-3"><input type="checkbox" name="send_mail" id="send_mail" />Send usernames and passwords by email</label> 
+			<label for="delay"> (Waits <input type="number" size="5" name="delay" id="delay" class="form-control" style="width:5rem;" value="2"/> second(s) before sending each email, so please be patient).</label>
+		</div>
 	</div>
 
-	<div class="col-12">
+	<div class="form-group col-12">
 		<textarea name="new_users" id="new_users" rows="15" class="form-control add_text">
 # Lines starting with a # sign are comments.
 # Each line (except comments) represents a user.
@@ -72,7 +73,8 @@
 </textarea>
 	</div>
 
-	<div class="col-12">
+	<div class="form-group col-12">
+
 		<input type="submit" class="btn btn-primary" id="add_users_button" value="Add Users"/>
 		<span id="loading" style="display: none;"><img src="{{ base_url('assets/images/loading.gif') }}" /> Adding users... Please wait</span>
 	</div>
