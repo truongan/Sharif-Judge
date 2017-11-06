@@ -15,11 +15,34 @@ class Submissions extends CI_Controller
 	private $filter_problem;
 	private $page_number;
 
+	private $pagination_config;
 	// ------------------------------------------------------------------------
 
 
 	public function __construct()
 	{
+		$this->pagination_config['per_page'] = 2;
+		$this->pagination_config['uri_segment'] = 3;
+		$this->pagination_config['num_links'] = 5;
+		$this->pagination_config['use_page_numbers'] = TRUE;
+		// $this->pagination_config['page_query_string'] = TRUE;
+		// $this->pagination_config['query_string_segment'] = 'page';
+		
+		$this->pagination_config['full_tag_open'] 	= '<nav><ul class="pagination justify-content-center">';
+		$this->pagination_config['full_tag_close'] 	= '</ul></nav>';
+		$this->pagination_config['num_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		$this->pagination_config['num_tag_close'] 	= '</span></li>';
+		$this->pagination_config['cur_tag_open'] 	= '<li class="page-item active"><span class="page-link">';
+		$this->pagination_config['cur_tag_close'] 	= '<span class="sr-only">(current)</span></span></li>';
+		$this->pagination_config['next_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		$this->pagination_config['next_tagl_close'] 	= '<span aria-hidden="true">&raquo;</span></span></li>';
+		$this->pagination_config['prev_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		$this->pagination_config['prev_tagl_close'] 	= '</span></li>';
+		$this->pagination_config['first_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		$this->pagination_config['first_tagl_close'] = '</span></li>';
+		$this->pagination_config['last_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		$this->pagination_config['last_tagl_close'] 	= '</span></li>';
+		
 		parent::__construct();
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
@@ -34,6 +57,8 @@ class Submissions extends CI_Controller
 				$this->filter_user = $this->form_validation->alpha_numeric($input['user'])?$input['user']:NULL;
 		if (array_key_exists('problem', $input) && $input['problem'])
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
+		
+		//var_dump($input); die();
 		if (array_key_exists('page', $input) && $input['page'])
 			$this->page_number = is_numeric($input['page'])?$input['page']:1;
 
@@ -259,18 +284,17 @@ class Submissions extends CI_Controller
 		if ($this->page_number<1)
 			show_404();
 
-		$config = array(
-			'base_url' => site_url('submissions/final'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
-			'cur_page' => $this->page_number,
-			'total_rows' => $this->submit_model->count_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem),
-			'per_page' => $this->settings_model->get_setting('results_per_page_final'),
-			'num_links' => 5,
-			'full_ul_class' => 'shj_pagination',
-			'cur_li_class' => 'current_page'
-		);
-		if ($config['per_page'] == 0)
-			$config['per_page'] = $config['total_rows'];
-		$this->load->library('shj_pagination', $config);
+		
+		$this->pagination_config['base_url'] = site_url('submissions/final'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
+		$this->pagination_config['cur_page'] = $this->page_number;
+		$this->pagination_config['total_rows'] = $this->submit_model->count_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem);
+		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_final');
+
+		
+		if ($this->pagination_config['per_page'] == 0)
+			$this->pagination_config['per_page'] = $config['total_rows'];
+		$this->load->library('pagination');
+		$this->pagination->initialize($this->pagination_config);
 
 		$submissions = $this->submit_model->get_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
 
@@ -298,9 +322,9 @@ class Submissions extends CI_Controller
 			'excel_link' => site_url('submissions/final_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
 			'filter_user' => $this->filter_user,
 			'filter_problem' => $this->filter_problem,
-			'pagination' => $this->shj_pagination->create_links(),
+			'pagination' => $this->pagination->create_links(),
 			'page_number' => $this->page_number,
-			'per_page' => $config['per_page'],
+			'per_page' => $this->pagination_config['per_page'],
 		);
 
 		$this->twig->display('pages/submissions.twig', $data);
@@ -323,18 +347,16 @@ class Submissions extends CI_Controller
 		if ($this->page_number < 1)
 			show_404();
 
-		$config = array(
-			'base_url' => site_url('submissions/all'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
-			'cur_page' => $this->page_number,
-			'total_rows' => $this->submit_model->count_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem),
-			'per_page' => $this->settings_model->get_setting('results_per_page_all'),
-			'num_links' => 5,
-			'full_ul_class' => 'shj_pagination',
-			'cur_li_class' => 'current_page'
-		);
-		if ($config['per_page']==0)
-			$config['per_page'] = $config['total_rows'];
-		$this->load->library('shj_pagination', $config);
+
+		$this->pagination_config['base_url'] = site_url('submissions/all'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
+		$this->pagination_config['cur_page'] = $this->page_number;
+		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem);
+		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_all');
+
+		if ($this->pagination_config['per_page'] == 0)
+			$this->pagination_config['per_page'] = $config['total_rows'];
+		$this->load->library('pagination');
+		$this->pagination->initialize($this->pagination_config);
 
 		$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
 
@@ -361,7 +383,7 @@ class Submissions extends CI_Controller
 			'excel_link' => site_url('submissions/all_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
 			'filter_user' => $this->filter_user,
 			'filter_problem' => $this->filter_problem,
-			'pagination' => $this->shj_pagination->create_links(),
+			'pagination' => $this->pagination->create_links(),
 		);
 
 		$this->twig->display('pages/submissions.twig', $data);

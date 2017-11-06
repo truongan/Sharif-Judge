@@ -3,14 +3,13 @@
  # file: top_bar.twig
  # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
  #}
-<!-- <div id="top_bar" class="color-{{ selected }}"> -->
+
 <nav id="mainNav" class="mainNav navbar navbar-expand-lg navbar-dark fixed-top color-{{ selected }} bg-dark">
-	<!-- <div id="shj_logo" class="top_left"> -->
 	<a  class="navbar-brand" href="{{ site_url('/') }}">
 		<img src="{{ base_url('assets/images/logo.png') }}" height="30px" />
 		{{ user.site_name }}
 	</a>
-	<!-- </div> -->
+	
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 	</button>
@@ -87,8 +86,8 @@
 			  </span><br/>
 			  <span class="timer"></span>
 		  <div>
-		<!--
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
+		
+		{# <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
 		  <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
 			<i class="fa fa-fw fa-fw fa-sitemap"></i>
 			<span class="nav-link-text">Menu Levels</span>
@@ -118,8 +117,8 @@
 			  </ul>
 			</li>
 		  </ul>
-		</li>
-		 -->
+		</li> #}
+		
 	  </ul>
 
 	  <ul class="navbar-nav sidenav-toggler">

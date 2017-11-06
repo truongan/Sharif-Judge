@@ -79,14 +79,14 @@ $(document).ready(function(){
 <p> {{error}} </p>
 {% else %}
 
-	<div class="col-md-7 col-xl-8 col-sm-12">
+	<div class="col-md-7 col-lg-8 col-sm-12">
 
 		<div class="problem_description" id="problem_description" {% if user.level >= 2 %} contenteditable="true" {% endif %} >
 			{{ problem.description|raw }}
 		</div>
 	</div>
 
-	<div class="col-md-5 col-xl-4">
+	<div class="col-md-5 col-lg-4 ">
 		<div class="problems_widget row">
 			<p dir="auto"><i class="fa fa-file-text fa-lg color9"></i> {{ description_assignment.name }}</p>
 
@@ -100,7 +100,7 @@ $(document).ready(function(){
 					<th>#</th>
 					<th>Problem</th>
 					<th>Score</th>
-					<th>Upload<br>Only</th>
+					<th><i class="fa fa-upload fa-fw"></i>Only</th>
 				</tr>
 				</thead>
 				{% for one_problem in all_problems %}

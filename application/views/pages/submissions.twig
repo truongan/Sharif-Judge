@@ -66,7 +66,7 @@
 
 
 {% block main_content %}
-
+<div class="col">
 <p>{{ view|title }} Submissions of <span dir="auto">{{ user.selected_assignment.name }}</span></p>
 {%  if view == 'all' %}
 <p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
@@ -208,5 +208,5 @@
 <p>
 {{ pagination|raw }}
 </p>
-
+</div>
 {% endblock %}  {# main_content #}
