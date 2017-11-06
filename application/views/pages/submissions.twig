@@ -15,6 +15,16 @@
 	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
 	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
 	<link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/dataTables.jqueryui.min.css'/>
+	<style type="text/css">
+.status_button{
+	white-space: normal;
+}
+.wcj_log{
+	font-size: 0.65em;
+}
+	</style>
+}
+}
 {% endblock %}
 
 {% block body_end %}
@@ -94,7 +104,7 @@
 				<th width="6%" rowspan="2">Code</th>
 				<th width="6%" rowspan="2">Log</th>
 				{% if user.level >= 2 %}
-				<th width="1%" rowspan="2">Actions</th>
+				<th width="1%" rowspan="2" ><span class="tiny_text">Rejudge</span></th>
 				{% endif %}
 			</tr>
 			<tr>
@@ -171,7 +181,7 @@
 					{% else %}
 						{% set submission_class = 'btn btn-primary' %}
 					{% endif %}
-					<div class="{{ submission_class }}" data-type="result" >
+					<div class="{{ submission_class }} status_button" data-type="result" >
 						{% if submission.status == 'SCORE' %}
 							{{ submission.final_score }}
 						{% else %}

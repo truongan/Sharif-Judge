@@ -47,6 +47,8 @@ $(document).ready(function () {
 				}
 				else
 					$('pre.code-column').addClass('shj_code');
+				if(type == 'log') $('pre.code-column').addClass('wcj_log');
+
 			}
 		});
 		if (!shj.modal_open) {

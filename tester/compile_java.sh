@@ -9,8 +9,8 @@
 	if [ $EXITCODE -ne 0 ]; then
 		shj_log "Compile Error"
 		shj_log "$(cat cerr|head -10)"
-		echo '<span class="shj_b">Compile Error</span>' >$PROBLEMPATH/$UN/result.html
-		echo '<span class="shj_r">' >> $PROBLEMPATH/$UN/result.html
+		echo '<span class="text-primary">Compile Error</span>' >$PROBLEMPATH/$UN/result.html
+		echo '<span class="text-danger">' >> $PROBLEMPATH/$UN/result.html
 		#filepath="$(echo "${JAIL}/${FILENAME}.${EXT}" | sed 's/\//\\\//g')" #replacing / with \/
 		(cat cerr | head -10 | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
 		#(cat $JAIL/cerr) >> $PROBLEMPATH/$UN/result.html

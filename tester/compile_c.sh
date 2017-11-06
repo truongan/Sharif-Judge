@@ -74,8 +74,8 @@ if [ $EXITCODE -ne 0 ]; then
     shj_log "Compile Error"
     #shj_log "$(cat cerr | head -10)"
     shj_log "$(cat cerr )"
-    echo '<span class="shj_b">Compile Error<br>Error Messages: (line numbers are not correct)</span>' >$PROBLEMPATH/$UN/result.html
-    echo '<span class="shj_r">' >> $PROBLEMPATH/$UN/result.html
+    echo '<span class="text-primary">Compile Error<br>Error Messages: (line numbers are not correct)</span>' >$PROBLEMPATH/$UN/result.html
+    echo '<span class="text-danger">' >> $PROBLEMPATH/$UN/result.html
     SHIELD_ACT=false
     if $C_SHIELD_ON; then
         while read line; do

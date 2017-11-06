@@ -224,7 +224,7 @@ PASSEDTESTS=0
 
 for((i=1;i<=TST;i++)); do
 	shj_log "\n=== TEST $i ==="
-	echo "<span class=\"shj_b\">Test $i</span>" >>$PROBLEMPATH/$UN/result.html
+	echo "<span class=\"text-primary\">Test $i</span>" >>$PROBLEMPATH/$UN/result.html
 
 	touch err
 
@@ -278,7 +278,7 @@ for((i=1;i<=TST;i++)); do
 	if [ "$EXT" = "java" ]; then
 		if grep -iq -m 1 "Too small initial heap" out || grep -q -m 1 "java.lang.OutOfMemoryError" err; then
 			shj_log "Memory Limit Exceeded"
-			echo "<span class=\"shj_o\">Memory Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
+			echo "<span class=\"text-warning\">Memory Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
 			continue
 		fi
 		if grep -q -m 1 "Exception in" err; then # show Exception
@@ -287,9 +287,9 @@ for((i=1;i<=TST;i++)); do
 			shj_log "Exception: $javaexceptionname\nMaybe at:$javaexceptionplace"
 			# if DISPLAY_JAVA_EXCEPTION_ON is true and the exception is in the trusted list, we show the exception name
 			if $DISPLAY_JAVA_EXCEPTION_ON && grep -q -m 1 "^$javaexceptionname\$" ../java_exceptions_list; then
-				echo "<span class=\"shj_o\">Runtime Error ($javaexceptionname)</span>" >>$PROBLEMPATH/$UN/result.html
+				echo "<span class=\"text-warning\">Runtime Error ($javaexceptionname)</span>" >>$PROBLEMPATH/$UN/result.html
 			else
-				echo "<span class=\"shj_o\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
+				echo "<span class=\"text-warning\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
 			fi
 			continue
 		fi
@@ -310,7 +310,7 @@ for((i=1;i<=TST;i++)); do
 		do
 			if grep -q "$K" err; then
 				shj_log ${errors[$K]}
-				echo "<span class=\"shj_o\">${errors[$K]}</span>" >>$PROBLEMPATH/$UN/result.html
+				echo "<span class=\"text-warning\">${errors[$K]}</span>" >>$PROBLEMPATH/$UN/result.html
 				found_error=1
 				break
 			fi
@@ -327,13 +327,13 @@ for((i=1;i<=TST;i++)); do
 
 	if [ $EXITCODE -eq 137 ]; then
 		shj_log "Killed"
-		echo "<span class=\"shj_o\">Killed</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-warning\">Killed</span>" >>$PROBLEMPATH/$UN/result.html
 		continue
 	fi
 
 	if [ $EXITCODE -ne 0 ]; then
 		shj_log "Runtime Error"
-		echo "<span class=\"shj_o\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-warning\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
 		continue
 	fi
 ############################################################################
@@ -372,11 +372,11 @@ for((i=1;i<=TST;i++)); do
 
 	if $ACCEPTED; then
 		shj_log "ACCEPTED"
-		echo "<span class=\"shj_g\">ACCEPT</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-success\">ACCEPT</span>" >>$PROBLEMPATH/$UN/result.html
 		((PASSEDTESTS=PASSEDTESTS+1))
 	else
 		shj_log "WRONG"
-		echo "<span class=\"shj_r\">WRONG</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-danger\">WRONG</span>" >>$PROBLEMPATH/$UN/result.html
 	fi
 done
 
@@ -387,7 +387,7 @@ done
 # show place of exception. So I commented following lines:
 	## Print last java exception (if enabled)
 	#if $DISPLAY_JAVA_EXCEPTION_ON && [ "$javaexceptionname" != "" ]; then
-	#	echo -e "\n<span class=\"shj_b\">Last Java Exception:</span>" >>$PROBLEMPATH/$UN/result.html
+	#	echo -e "\n<span class=\"text-primary\">Last Java Exception:</span>" >>$PROBLEMPATH/$UN/result.html
 	#	echo -e "$javaexceptionname\n$javaexceptionplace" >>$PROBLEMPATH/$UN/result.html
 	#fi
 
