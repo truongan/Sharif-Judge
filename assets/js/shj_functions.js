@@ -284,4 +284,11 @@ $(document).ready(function(){
  */
 $(document).ready(function(){
 	$('input').attr('dir', 'auto');
+	$('.custom-file-input').change(function(){
+		console.log($(this));
+		console.log($(this).siblings("span.custo-file-control"));
+		console.log($(this).prop("files")[0].name);
+
+		$(this).siblings("span.custom-file-control").html($(this).prop("files")[0].name);
+	});
 });

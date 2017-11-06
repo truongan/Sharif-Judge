@@ -20,12 +20,12 @@ shj.row +=			'</td>';
 shj.row +=			'<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="diff" /></td>';
 shj.row +=			'<td><input type="text" name="diff_arg[]" class="form-control short_text" value="-bB"/></td>';
 shj.row +=			'<td><input type="checkbox" name="is_upload_only[]" class="check" value="" }}/></td>';
-shj.row +=			'<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer"></i></td>';
+shj.row +=			'<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer mr-2"></i></td>';
 shj.row +=		'</tr>';
 	$(document).ready(function(){
 		$("#add").click(function(){
 			$('#problems_table>tbody').append(shj.row
-							.replace(/SPID/g, (shj.num_of_problems+1)) 
+							.replace(/SPID/g, (shj.num_of_problems+1))
 							.replace(/PID/g, (shj.num_of_problems))
 
 				);
@@ -68,7 +68,7 @@ $(document).ready(function(){
 	for (var i = 0; i < nop; i++) {
 		//console.log($("#allowed_lang" + i));
 		var allow_langs = $("#allowed_lang" + i).val().split(",")
-		
+
 		$("#lang" + i).val(allow_langs);
 		//console.log( $("#lang" + i).val() );
 	}

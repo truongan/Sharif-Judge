@@ -72,11 +72,9 @@ input[type='number'].short_text{
 
 	<input type="hidden" name="number_of_problems" id="nop" value="{{ edit ? edit_assignment.problems : problems|length }}"/>
 	<div class="row">
-		
 		<div class="col-sm-6">
-			
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 					<div class="col-sm-5">
 						<label for="form_a_name">Assignment Name</label>
 					</div>
@@ -87,7 +85,7 @@ input[type='number'].short_text{
 				</div>
 			</fieldset>
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 					<div class="col-sm-5">
 						<label for="start_time">Start Time</label>
 					</div>
@@ -97,9 +95,9 @@ input[type='number'].short_text{
 					</div>
 				</div>
 			</fieldset>
-			
+
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 					<div class="col-sm-5">
 						<label for="finish_time">Finish Time
 						<small class="form-text text-muted">Set finish time before start time will set the deadline to *NEVER*</small>
@@ -111,9 +109,9 @@ input[type='number'].short_text{
 					</div>
 				</div>
 			</fieldset>
-			
+
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 					<div class="col-sm-5">
 						<label for="form_extra_time">
 						Extra Time (minutes)
@@ -127,7 +125,7 @@ input[type='number'].short_text{
 				</div>
 			</fieldset>
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 					<div class="col-sm-5">
 						<label for="form_participants">Participants<br>
 							<span class="form-text text-muted">Enter username of participants here (comma separated).
@@ -139,9 +137,9 @@ input[type='number'].short_text{
 					</div>
 				</div>
 			</fieldset>
-			
+
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 					<div class="col-sm-5">
 						<label for="form_tests_desc">Tests and Descriptions (zip file)<br>
 							<small class="form-text text-muted">
@@ -150,21 +148,27 @@ input[type='number'].short_text{
 						</label>
 					</div>
 					<div class="col-sm-7">
-						<input id="form_tests_desc" type="file" name="tests_desc" class="form-control" />
+						<label>
+							<input id="form_tests_desc" type="file" name="tests_desc" class="custom-file-input" />
+							<span class="form-control custom-file-control"></span>
+						</label>
 					</div>
 				</div>
 			</fieldset>
 
 
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 					<div class="col-sm-5">
 						<label for="form_pdf">PDF File<br>
 							<small class="form-text text-muted">PDF File of Assignment</small>
 						</label>
 					</div>
 					<div class="col-sm-7">
-						<input id="form_pdf" type="file" name="pdf" class="form-control"/>
+						<label>
+							<input id="form_pdf" type="file" name="pdf" class="custom-file-input"/>
+							<span class="custom-file-control form-control"></span>
+						</label>
  					</div>
 				</div>
 			</fieldset>
@@ -173,7 +177,7 @@ input[type='number'].short_text{
 		<div class="col-sm-6">
 			<fieldset class="form-group">
 				<input id="form_a_open" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
-								
+
 					<label for="form_a_open" class="default">Open</label>
 				<small class="form-text text-muted space-left">Open or close this assignment for submission</small>
 				{{ form_error('open', '<div class="alert alert-danger">', '</div>') }}
@@ -192,7 +196,7 @@ input[type='number'].short_text{
 				{{ form_error('javaexceptions', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 			<fieldset class="form-group">
-				<div class="row">
+				<div class="form-row">
 						<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)
 						<small class="form-text text-muted medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</small>
 						</label>
@@ -248,7 +252,7 @@ input[type='number'].short_text{
 			<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="{{ problem.diff_cmd }}"/></td>
 			<td><input type="text" name="diff_arg[]" class="form-control short_text" value="{{ problem.diff_arg }}"/></td>
 			<td><input type="checkbox" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/></td>
-			<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer"></i></td>
+			<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer mr-2"></i></td>
 		</tr>
 		{% set i = i + 1 %}
 	{% endfor %}
