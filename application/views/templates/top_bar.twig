@@ -115,14 +115,13 @@
 		
 	  </ul>
 
-	  <ul class="navbar-nav sidenav-toggler">
-
-		<li class="nav-item">
-		  <a class="nav-link text-center" id="sidenavToggler">
-			<i class="fa fa-fw fa-fw fa-angle-left"></i>
-		  </a>
-		</li>
-	  </ul>
+		<ul class="navbar-nav sidenav-toggler">
+			<li class="nav-item">
+				<a class="nav-link text-center" id="sidenavToggler">
+				<i class="fa fa-fw fa-fw fa-angle-left"></i>
+				</a>
+			</li>
+		</ul>
 
 		<ul class="navbar-nav ml-auto">
 			{%  if user.level >= 2 %}
@@ -177,7 +176,24 @@
 			</div>
 		</div>
 
-		<div class="navbar-nav  shj_menu">
+		<ul class="nav navbar-nav navbar-right">
+			<li class="nav-item dropdown">
+				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-fw fa-user"></i></a>
+				<class
+				<div class="row dropdown-menu dropdown-menu-right logout-menu">
+					<div class="col-4 order-1">
+						<div class="gravatar"><img src="https://www.gravatar.com/avatar/{{ md5(user.email) }}?s=70&d=identicon" /></div>
+					</div>
+					<div class="col-8 order-2">
+						<div class="name"><i class="fa fa-fw fa-user"></i> {{ user.username }}</div>
+
+						<a href="{{ site_url('logout') }}" class="btn btn-danger"><i class="fa fa-fw fa-sign-out"></i> Sign Out</a>
+						<a href="{{ site_url('profile') }}" class="btn btn-info"><i class="fa fa-fw fa-wrench"></i> Profile</a>
+					</div>
+				</div>
+			</li>
+		</ul>
+{# 		<div class="navbar-nav  shj_menu">
 			<div class="nav-item dropdown">
 				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-fw fa-user"></i></a>
 				<div class="top_menu user-menu dropdown-menu dropdown-menu-right">
@@ -190,5 +206,5 @@
 				</div>
 			</div>
 		</div>
-	</div>
+ #}	</div>
 </nav>

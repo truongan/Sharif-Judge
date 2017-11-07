@@ -128,29 +128,6 @@ span.time_label {
 	font-size: 70%;
 }
 
-.top_menu {
-	top: 100%;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	color: #FFF;
-	cursor: auto;
-	display: none;
-	position: absolute;
-	background-color: #373737;
-	-webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,0.4);
-	box-shadow: 0 0 10px 0 rgba(0,0,0,0.4);
-}
-
-
-
-.top_menu a {
-	color:#FFF;
-	line-height: 40px;
-	padding:0 10px;
-	display: block;
-}
-
 div.top_object.top_left .top_menu{
 	left: 0;
 }
@@ -175,67 +152,10 @@ div#extra_time i {
 	margin-right: 6px;
 }
 
-.user-menu {
-	right: 0;
-	width:300px;
-	max-height:90px!important;
+.logout-menu{
+	min-width: 350px;
 }
 
-.user-menu > div {
-	display:inline-block!important;
-	height:42px!important;
-	line-height:30px!important;
-	border:none!important;
-}
-
-.user-menu > div:hover {
-	background-color: transparent!important;
-}
-
-.user-menu > .gravatar {
-	display:inline-block;
-	float:right;
-	width:70px;
-	margin:10px 10px 10px 0;
-	height:70px!important;
-	background-color: #EEE;
-	background-image: url('../images/default-avatar.png');
-}
-
-.user-menu > .name {
-	display:inline-block;
-	width:205px;
-	padding:0 10px;
-	text-align: left;
-	font-size:1.1em;
-	height:30px!important;
-	line-height:30px!important;
-	margin:5px 0 0 5px!important;
-	font-weight:bold;
-}
-
-.user-menu > .gravatar img {
-	display:inline-block;
-	outline:3px solid #DDD!important;
-}
-
-.menu-controls a.profile-btn, .menu-controls a.logout-btn {
-	font-size:0.8em;
-	width:101px;
-	text-align:center;
-	background-color: #27ae60;
-	display:inline-block!important;
-}
-
-.menu-controls a.logout-btn {
-	background-color: #2980b9;
-	margin-left:5px;
-}
-
-.menu-controls {
-	float:left;
-	margin-top:-5px;
-}
 
 
 /*********************************************/
