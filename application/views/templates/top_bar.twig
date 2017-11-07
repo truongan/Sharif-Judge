@@ -158,7 +158,7 @@
 
 
 		<div class="navbar-nav">
-			<div class="top_object top_left shj-spinner" style="display: none;">
+			<div class="top_object shj-spinner" {# style="display: none;" #}>
 				<i class="fa fa-fw fa-refresh fa-spin fa-lg"></i>
 			</div>
 		</div>
@@ -179,16 +179,18 @@
 		<ul class="nav navbar-nav navbar-right">
 			<li class="nav-item dropdown">
 				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-fw fa-user"></i></a>
-				<class
-				<div class="row dropdown-menu dropdown-menu-right logout-menu">
-					<div class="col-4 order-1">
-						<div class="gravatar"><img src="https://www.gravatar.com/avatar/{{ md5(user.email) }}?s=70&d=identicon" /></div>
-					</div>
-					<div class="col-8 order-2">
-						<div class="name"><i class="fa fa-fw fa-user"></i> {{ user.username }}</div>
-
-						<a href="{{ site_url('logout') }}" class="btn btn-danger"><i class="fa fa-fw fa-sign-out"></i> Sign Out</a>
-						<a href="{{ site_url('profile') }}" class="btn btn-info"><i class="fa fa-fw fa-wrench"></i> Profile</a>
+				<div class="dropdown-menu dropdown-menu-right logout-menu">
+					<div class="d-flex pr-3 pl-3">
+						<div class="mr-3">
+							<div class="gravatar"><img src="https://www.gravatar.com/avatar/{{ md5(user.email) }}?s=70&d=identicon" /></div>
+						</div>
+						<div class="">
+							<div class="name h4"><i class="fa fa-fw fa-user"></i> {{ user.username }}</div>
+							<div class="d-inline-flex">
+								<a href="{{ site_url('logout') }}" class="btn btn-danger mr-2"><i class="fa fa-fw fa-sign-out"></i> Sign Out</a>
+								<a href="{{ site_url('profile') }}" class="btn btn-info"><i class="fa fa-fw fa-wrench"></i> Profile</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</li>

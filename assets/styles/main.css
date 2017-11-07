@@ -93,19 +93,6 @@ div.top_object {
 	padding: 0 25px;
 }
 
-div.top_object.top_left, div.top_left {
-	float: left;
-}
-
-div.top_object.shj_menu {
-	cursor: pointer;
-}
-
-div.top_object.shj_white, div.top_object.shj_white>a {
-	background-color: #272727;
-
-}
-
 div.countdown {
 	padding: 0 8px;
 	/*background-color:#27ae60;*/
@@ -150,10 +137,6 @@ div#extra_time i {
 	float: left;
 	line-height: 50px;
 	margin-right: 6px;
-}
-
-.logout-menu{
-	min-width: 350px;
 }
 
 
