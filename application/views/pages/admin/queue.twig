@@ -32,39 +32,41 @@
 
 
 {% block main_content %}
-<p>
-	{% if working %}
-		<i class="fa fa-play fa-lg color6"></i> Queue is working
-	{% else %}
-		<i class="fa fa-pause fa-lg color10"></i> Queue is not working
-	{% endif %}
-	| Total submissions in queue: {{ queue|length }}
-</p>
-<p>
-	<a href="#" class="shj_act" id="pause"><i class="fa fa-pause"></i> Pause</a> |
-	<a href="#" class="shj_act" id="resume"><i class="fa fa-play"></i> Resume</a> |
-	<a href="#" class="shj_act" id="empty_queue"><i class="fa fa-times-circle"></i> Empty Queue</a>
-</p>
-<table class="sharif_table">
-	<thead>
-	<tr>
-		<th>#</th>
-		<th>Submit ID</th>
-		<th>Usename</th>
-		<th>Assignment</th>
-		<th>Problem</th>
-		<th>Type (judge/rejudge)</th>
-	</tr>
-	</thead>
-	{% for item in queue %}
-		<tr>
-			<td>{{ loop.index }}</td>
-			<td>{{ item.submit_id }}</td>
-			<td>{{ item.username }}</td>
-			<td>{{ item.assignment }} (<span dir="auto">{{ all_assignments[item.assignment].name }}</span>)</td>
-			<td>{{ item.problem }}</td>
-			<td>{{ item.type }}</td>
-		</tr>
-	{% endfor %}
-</table>
+	<div class="col-12">
+		<p>
+			{% if working %}
+				<i class="fa fa-play fa-lg color6"></i> Queue is working
+			{% else %}
+				<i class="fa fa-pause fa-lg color10"></i> Queue is not working
+			{% endif %}
+			| Total submissions in queue: {{ queue|length }}
+		</p>
+		<p>
+			<a href="#" class="shj_act" id="pause"><i class="fa fa-pause"></i> Pause</a> |
+			<a href="#" class="shj_act" id="resume"><i class="fa fa-play"></i> Resume</a> |
+			<a href="#" class="shj_act" id="empty_queue"><i class="fa fa-times-circle"></i> Empty Queue</a>
+		</p>
+		<table class="sharif_table">
+			<thead>
+			<tr>
+				<th>#</th>
+				<th>Submit ID</th>
+				<th>Usename</th>
+				<th>Assignment</th>
+				<th>Problem</th>
+				<th>Type (judge/rejudge)</th>
+			</tr>
+			</thead>
+			{% for item in queue %}
+				<tr>
+					<td>{{ loop.index }}</td>
+					<td>{{ item.submit_id }}</td>
+					<td>{{ item.username }}</td>
+					<td>{{ item.assignment }} (<span dir="auto">{{ all_assignments[item.assignment].name }}</span>)</td>
+					<td>{{ item.problem }}</td>
+					<td>{{ item.type }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
 {% endblock %}  {# main_content #}
