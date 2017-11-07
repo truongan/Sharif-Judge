@@ -87,12 +87,6 @@ blockquote {
 
 /********************************************/
 
-div.top_object {
-
-	display: inline-block;
-	padding: 0 25px;
-}
-
 div.countdown {
 	padding: 0 8px;
 	/*background-color:#27ae60;*/
