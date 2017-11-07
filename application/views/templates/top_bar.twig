@@ -123,7 +123,13 @@
 			</li>
 		</ul>
 
-		<ul class="navbar-nav ml-auto">
+		<div class="navbar-nav ml-auto">
+			<div class="top_object shj-spinner" {# style="display: none;" #}>
+				<i class="fa fa-fw fa-refresh fa-spin fa-lg"></i>
+			</div>
+		</div>
+
+		<ul class="navbar-nav">
 			{%  if user.level >= 2 %}
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -156,12 +162,6 @@
 		</ul>
 
 
-
-		<div class="navbar-nav">
-			<div class="top_object shj-spinner" {# style="display: none;" #}>
-				<i class="fa fa-fw fa-refresh fa-spin fa-lg"></i>
-			</div>
-		</div>
 		<div class="navbar-nav">
 			<div class="top_object countdown" id="countdown">
 				<div class="time_block">
