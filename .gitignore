@@ -3,6 +3,7 @@ application/config/config.php
 application/cache
 application/session/*
 assignments/*
+tester/moss
 
 !assignments/.htaccess
 !assignments/index.html
