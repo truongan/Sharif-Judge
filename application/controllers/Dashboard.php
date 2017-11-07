@@ -29,7 +29,6 @@ class Dashboard extends CI_Controller
 		$data = array(
 			'all_assignments'=>$this->assignment_model->all_assignments(),
 			'week_start'=>$this->settings_model->get_setting('week_start'),
-			'wp'=>$this->user->get_widget_positions(),
 			'notifications' => $this->notifications_model->get_latest_notifications()
 		);
 

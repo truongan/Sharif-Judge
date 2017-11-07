@@ -17,8 +17,8 @@ shj_log "Syntax checked. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIM
 if [ $EXITCODE -ne 0 ]; then
 	shj_log "Syntax Error"
 	shj_log "$(cat cerr | head -10)"
-	echo '<span class="shj_b">Syntax Error</span>' >$PROBLEMPATH/$UN/result.html
-	echo '<span class="shj_r">' >> $PROBLEMPATH/$UN/result.html
+	echo '<span class="text-primary">Syntax Error</span>' >$PROBLEMPATH/$UN/result.html
+	echo '<span class="text-danger">' >> $PROBLEMPATH/$UN/result.html
 	(cat cerr | head -10 | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
 	echo "</span>" >> $PROBLEMPATH/$UN/result.html
 	cd ..

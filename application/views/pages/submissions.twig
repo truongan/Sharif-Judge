@@ -14,15 +14,42 @@
 {% block other_assets %}
 	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
 	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
-	<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
-
-	<script type='text/javascript' src="{{ base_url("assets/js/shj_submissions.js") }}"></script>
-
-
-	<!-- <link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css'/> -->
 	<link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/dataTables.jqueryui.min.css'/>
+	<style type="text/css">
+.status_button{
+	white-space: normal;
+}
+.wcj_log{
+	font-size: 0.65em;
+}
+	</style>
+}
+}
+{% endblock %}
+
+{% block body_end %}
+<div class="modal fade" id="submission_modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLongTitle">Modal title</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center;">Loading<br><img src="{{ base_url('assets/images/loading.gif') }}"/></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+	<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
+	<script type='text/javascript' src="{{ base_url("assets/js/shj_submissions.js") }}"></script>
 	<script type='text/javascript' src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 	<script type='text/javascript' src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
 {% endblock %}
 
 
@@ -49,7 +76,7 @@
 
 
 {% block main_content %}
-
+<div class="col">
 <p>{{ view|title }} Submissions of <span dir="auto">{{ user.selected_assignment.name }}</span></p>
 {%  if view == 'all' %}
 <p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
@@ -77,7 +104,7 @@
 				<th width="6%" rowspan="2">Code</th>
 				<th width="6%" rowspan="2">Log</th>
 				{% if user.level >= 2 %}
-				<th width="1%" rowspan="2">Actions</th>
+				<th width="1%" rowspan="2" ><span class="tiny_text">Rejudge</span></th>
 				{% endif %}
 			</tr>
 			<tr>
@@ -154,7 +181,7 @@
 					{% else %}
 						{% set submission_class = 'btn btn-primary' %}
 					{% endif %}
-					<div class="{{ submission_class }}" data-type="result" >
+					<div class="{{ submission_class }} status_button" data-type="result" >
 						{% if submission.status == 'SCORE' %}
 							{{ submission.final_score }}
 						{% else %}
@@ -191,27 +218,5 @@
 <p>
 {{ pagination|raw }}
 </p>
-
-{% endblock %}  {# main_content #}
-
-
-
-{% block body_end %}
-<div class="modal fade" id="submission_modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLongTitle">Modal title</h6>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div style="text-align: center;">Loading<br><img src="{{ base_url('assets/images/loading.gif') }}"/></div>
-      </div>
-
-    </div>
-  </div>
 </div>
-
-{% endblock %}
+{% endblock %}  {# main_content #}

@@ -47,22 +47,14 @@ shj.loading_finish = function()
 
 shj.loading_error = function()
 {
-	noty({
-		text: 'An error encountered while processing your request. Check your network connection.',
-		layout: 'bottomRight',
-		type: 'error',
-		timeout: 3500
-	});
+	$.notify('An error encountered while processing your request. Check your network connection.'
+		, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
 }
 
 shj.loading_failed = function(message)
 {
-	noty({
-		text: 'Request failed. Server says: ' + message,
-		layout: 'bottomRight',
-		type: 'error',
-		timeout: 3500
-	});
+	$.notify('Request failed. Server says: ' + message
+		, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
 }
 
 shj.sync_server_time = function () {
@@ -84,7 +76,7 @@ shj.update_clock = function(){
 		shj.sync_server_time();
 	}
 	shj.time = moment();
-	var now = moment().add('milliseconds', shj.offset);
+	var now = moment().add(shj.offset, 'milliseconds');
 	$('.timer').html('Server Time: '+now.format('MMM DD - HH:mm:ss'));
 	var countdown = shj.finish_time.diff(now);
 	if (countdown<=0 && countdown + shj.extra_time.asMilliseconds()>=0){
@@ -106,67 +98,11 @@ shj.update_clock = function(){
 	$("#time_days").html( days + "☀️" + hours + ":" + minutes + ":" + seconds);
 }
 
-shj.sidebar_open = function(time){
-	if (time==0){
-		$(".sidebar_text").css('display', 'inline-block');
-		$("#sidebar_bottom p").css('display', 'block');
-		$("#side_bar").css('width', '173px');
-		$("#main_container").css('left', '173px');
-	}
-	else{
-		$("#side_bar").animate({width: '173px'}, time, function(){
-			$(".sidebar_text").css('display', 'inline-block');
-			$("#sidebar_bottom p").css('display', 'block');
-		});
-		$("#main_container").animate({'left':'173px'}, time*1.7);
-	}
-	$("i#collapse").removeClass("fa-caret-square-o-right");
-	$("i#collapse").addClass("fa-caret-square-o-left");
-}
-
-shj.sidebar_close = function(time){
-	if (time==0){
-		$(".sidebar_text").css('display', 'none');
-		$("#sidebar_bottom p").css('display', 'none');
-		$("#side_bar").css('width', '48px');
-		$("#main_container").css('left', '48px');
-	}
-	else{
-		$(".sidebar_text").css('display', 'none');
-		$("#sidebar_bottom p").css('display', 'none');
-		$("#side_bar").animate({width: '48px'}, time);
-		$("#main_container").animate({'left': '48px'}, time*1.7);
-	}
-	$("i#collapse").removeClass("fa-caret-square-o-left");
-	$("i#collapse").addClass("fa-caret-square-o-right");
-}
-
-shj.toggle_collapse = function(){
-	if (shj.sidebar == "open"){
-		shj.sidebar = "close";
-		shj.sidebar_close(200);
-		if (shj.supports_local_storage())
-			localStorage.shj_sidebar = 'close';
-		else
-			$.cookie('shj_sidebar','close',{path:'/', expires: 365});
-	}
-	else if (shj.sidebar == "close"){
-		shj.sidebar = "open";
-		shj.sidebar_open(200);
-		if (shj.supports_local_storage())
-			localStorage.shj_sidebar = 'open';
-		else
-			$.cookie('shj_sidebar','open',{path:'/', expires: 365});
-	}
-}
-
-
-
 // Notifications
 shj.notif_check_time = null;
 shj.check_notifs = function () {
 	if (shj.notif_check_time == null)
-		shj.notif_check_time = moment().add('milliseconds', shj.offset - (shj.notif_check_delay * 1000));
+		shj.notif_check_time = moment().add(shj.offset - (shj.notif_check_delay * 1000), 'milliseconds');
 	$.ajax({
 		type: 'POST',
 		url: shj.site_url+'notifications/check',
@@ -176,23 +112,12 @@ shj.check_notifs = function () {
 		},
 		success: function (data) {
 			if (data == "new_notification") {
-				noty({
-					text: 'New Notification',
-					layout: 'bottomRight',
-					type: 'information',
-					closeWith: ['click', 'button'],
-					animation: {
-						open: {height: 'toggle'},
-						close: {height: 'toggle'},
-						easing: 'swing',
-						speed: 300
-					}
-				});
+				$.notify('New Notification', {position: 'bottom right', className: 'error', autoHideDelay: 300});
 				alert("New Notification");
 			}
 		}
 	});
-	shj.notif_check_time = moment().add('milliseconds', shj.offset);
+	shj.notif_check_time = moment().add(shj.offset, 'milliseconds');
 }
 
 
@@ -231,7 +156,7 @@ $(document).ready(function () {
 						notif.animate({backgroundColor: '#FF7676'}, 1000, function () {
 							notif.remove();
 						});
-						noty({text: 'Notification deleted', layout: 'bottomRight', type: 'success', timeout: 5000});
+						$.notify('Notification deleted'	, {position: 'bottom right', className: 'success', autoHideDelay: 5900});
 					}
 					else
 						shj.loading_failed(response.message);
@@ -246,52 +171,10 @@ $(document).ready(function () {
 
 });
 
-
-
-
-/**
- * Scrollbars
- */
-$(document).ready(function(){
-	$('.scroll-wrapper').nanoScroller({
-		contentClass: 'scroll-content'
-	});
-	$('#main_content').resize(function(){
-		// update the scrollbar
-		$('.scroll-wrapper').nanoScroller();
-	});
-	$('.widget_contents_container').resize(function(){
-		// update the scrollbar
-		$('.scroll-wrapper').nanoScroller();
-	});
-});
-
-
-
-
 /**
  * Sidebar
  */
 $(document).ready(function () {
-	if (shj.supports_local_storage())
-		shj.sidebar = localStorage.shj_sidebar;
-	else
-		shj.sidebar = $.cookie('shj_sidebar');
-
-	if (shj.sidebar != 'open' && shj.sidebar != 'close') {
-		shj.sidebar = 'open';
-		if (shj.supports_local_storage())
-			localStorage.shj_sidebar = 'open';
-		else
-			$.cookie('shj_sidebar', 'open', {path: '/', expires: 365});
-	}
-	if (shj.sidebar == "open")
-		shj.sidebar_open(0);
-	else
-		shj.sidebar_close(0);
-
-	$("#shj_collapse").click(shj.toggle_collapse);
-
 	// update the clock and countdown timer every 1 second
 	shj.update_clock();
 	window.setInterval(shj.update_clock, 1000);
@@ -305,17 +188,6 @@ $(document).ready(function () {
  * Top Bar
  */
 $(document).ready(function () {
-	$("#top_bar").hoverIntent({
-		over: function () {
-			$(this).children(".top_menu").show();
-			$(this).addClass('shj_white');
-		},
-		out: function () {
-			$(this).children(".top_menu").hide();
-			$(this).removeClass('shj_white');
-		},
-		selector: '.top_object.shj_menu'
-	});
 	$(".select_assignment").click(
 		function () {
 			var id = $(this).children('i').addBack('i').data('id');
@@ -388,8 +260,12 @@ $(document).ready(function(){
 				success: function(response){
 					if (response.done)
 					{
-						if (!del_submssion) row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
-						//noty({text: 'User '+username+' deleted.', layout:'bottomRight', type: 'success', timeout: 5000});
+						if (!del_submssion){
+							row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
+							$.notify('User '+username+' deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
+						} else {
+							$.notify('All of User '+username+'\'s submissions deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
+						}
 						$("#user_delete").modal("hide");
 					}
 					else
@@ -408,4 +284,20 @@ $(document).ready(function(){
  */
 $(document).ready(function(){
 	$('input').attr('dir', 'auto');
+	$('.custom-file-input').change(function(){
+		if ($(this).prop("files").length == 0)
+		{
+			$(this).parent().find("span.custom-file-control").html("").removeClass("text-muted");
+		}
+
+		var span = $(this).parent().find("span.custom-file-control");
+		var length = span.width() / parseFloat($("body").css("font-size"));
+		
+		//Ellipsis file name
+		var name = $(this).prop("files")[0].name;
+		if(length < 4) name = name.substr(0,3);
+		else if (name.length > length) name = name.substr(0, length - 3) + "...";
+
+		span.html(name).addClass("text-muted");
+	});
 });

@@ -18,6 +18,14 @@
 {% endblock %}
 
 {% block body_end %}
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 <div class="modal fade" id="notification_delete" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -28,21 +36,12 @@
         </button>
       </div>
 	  <div class="modal-footer">
-        <button type="button" class="btn btn-danger confirm-user-delete">yes, DELETE user</button>
+        <button type="button" class="btn btn-danger confirm-notifycation-delete">yes, DELETE it</button>
 		<button type="button" class="btn btn-primary" data-dismiss="modal">NO, DON'T delete</button>
       </div>
     </div>
   </div>
 </div>
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-});
-</script>
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
 {% endblock %}
 
 {% block main_content %}
@@ -50,19 +49,21 @@ MathJax.Hub.Config({
 <p style="text-align: center;">Nothing yet...</p>
 {% endif %}
 {% for notification in notifications %}
-	<div class="notif" id="number{{ notification.id }}" data-id="{{ notification.id }}">
-		<div class="notif_title" dir="auto">
-			<span class="anchor ttl_n">{{ notification.title }}</span>
-			<div class="notif_meta">
-				{{ notification.time }}
-				{% if user.level >= 2 %}
-					<span class="anchor edt_n">Edit</span>
-					<span class="anchor del_n">Delete</span>
-				{% endif %}
+	<div class="col-md-6 col-xl-4">
+		<div class="notif main_notif" id="number{{ notification.id }}" data-id="{{ notification.id }}">
+			<div class="notif_title" dir="auto">
+				<span class="anchor ttl_n">{{ notification.title }}</span>
+				<div class="notif_meta">
+					{{ notification.time }}
+					{% if user.level >= 2 %}
+						<span class="anchor edt_n">Edit</span>
+						<span class="anchor del_n">Delete</span>
+					{% endif %}
+				</div>
 			</div>
-		</div>
-		<div class="notif_text" dir="auto">
-			{{ notification.text|raw }}
+			<div class="notif_text" dir="auto">
+				{{ notification.text|raw }}
+			</div>
 		</div>
 	</div>
 {% endfor %}

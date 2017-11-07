@@ -95,23 +95,4 @@ class User extends CI_Model
 	// ------------------------------------------------------------------------
 
 
-	/**
-	 * Get Widget Positions
-	 *
-	 * Returns positions of dashboard widgets from database
-	 *
-	 * @param none
-	 * @return mixed
-	 */
-	public function get_widget_positions()
-	{
-		return json_decode(
-			$this->db->select('dashboard_widget_positions')
-			->get_where('users', array('username' => $this->username))
-			->row()
-			->dashboard_widget_positions,
-			TRUE
-		);
-	}
-
 }

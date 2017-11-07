@@ -47,6 +47,8 @@ $(document).ready(function () {
 				}
 				else
 					$('pre.code-column').addClass('shj_code');
+				if(type == 'log') $('pre.code-column').addClass('wcj_log');
+
 			}
 		});
 		if (!shj.modal_open) {
@@ -82,7 +84,7 @@ $(document).ready(function () {
 			success: function (response) {
 				if (response.done) {
 					row.children('.status').html('<div class="btn btn-secondary pending" data-code="0">PENDING</div>');
-					noty({text: 'Rejudge in progress', layout: 'bottomRight', type: 'success', timeout: 2500});
+					$.notify('Rejudge in progress', {position: 'bottom right', className: 'info', autoHideDelay: 2500});
 					setTimeout(update_status, update_status_interval);
 				}
 				else
@@ -153,13 +155,15 @@ function update_status(){
 					switch (response.status.toLowerCase() ){
 						case 'pending':
 							element = ('<div class="btn btn-secondary pending" data-type="result" data-code="0">PENDING</div>');
-					 		noty({text: 'Still judging', layout: 'bottomRight', type: 'success', timeout: 2000});
+							$.notify('Still judging', {position: 'bottom right', className: 'info', autoHideDelay: 2000});
+
 						break;
 
 						case  'score' :
 							element = '<div class="btn ' + (response.fullmark ? 'btn-success' : 'btn-danger');
 							element += '" data-type="result" >' + response.final_score + '</div>';
-							noty({text: 'Submission has been judged', layout: 'bottomRight', type: 'success', timeout: 2000});
+							$.notify('Submission has been judged', {position: 'bottom right', className: 'success', autoHideDelay: 2000});
+
 						break;
 
 						default:
