@@ -121,7 +121,7 @@ div.time_block {
 }
 
 span.countdown_num {
-	font-size:16px;
+	font-size:1.15em;
 }
 
 span.time_label {
@@ -136,7 +136,6 @@ span.time_label {
 	color: #FFF;
 	cursor: auto;
 	display: none;
-	/*font-size: 12px;*/
 	position: absolute;
 	background-color: #373737;
 	-webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,0.4);
@@ -176,11 +175,6 @@ div#extra_time i {
 	margin-right: 6px;
 }
 
-/*#profile_link i {
-	font-size:20px;
-	line-height:52px;
-}*/
-
 .user-menu {
 	right: 0;
 	width:300px;
@@ -213,7 +207,7 @@ div#extra_time i {
 	width:205px;
 	padding:0 10px;
 	text-align: left;
-	font-size:20px;
+	font-size:1.1em;
 	height:30px!important;
 	line-height:30px!important;
 	margin:5px 0 0 5px!important;
@@ -226,7 +220,7 @@ div#extra_time i {
 }
 
 .menu-controls a.profile-btn, .menu-controls a.logout-btn {
-	font-size:13px;
+	font-size:0.8em;
 	width:101px;
 	text-align:center;
 	background-color: #27ae60;
@@ -401,7 +395,7 @@ div.content-wrapper div#main_content {
 }
 
 #ui-datepicker-div {
-	font-size: 11px !important;
+	font-size: 0.75em !important;
 }
 
 /********************************************/
@@ -530,7 +524,7 @@ div#main_content > div.notif > div.notif_title {
 }
 
 div.notif_title {
-	font-size: 12px;
+	font-size: 1em;
 	padding: 0 5px 0 5px;
 	font-weight: bold;
 	margin-bottom: 5px;
@@ -542,7 +536,7 @@ div.notif_title a {
 
 .notif_meta {
 	margin-top: 5px;
-	font-size: 10px;
+	font-size: 0.6em;
 	color: #b4b4b4;
 }
 
