@@ -207,7 +207,7 @@ input[type='number'].short_text{
 		</div>
 	</div>
 
-<p class="input_p" id="add_problems">Problems <i class="fa fa-plus-circle fa-lg color11 pointer" id="add"></i>
+<span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span>
 
 <table id="problems_table">
 	<thead>
@@ -253,13 +253,12 @@ input[type='number'].short_text{
 			<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="{{ problem.diff_cmd }}"/></td>
 			<td><input type="text" name="diff_arg[]" class="form-control short_text" value="{{ problem.diff_arg }}"/></td>
 			<td><input type="checkbox" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/></td>
-			<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer mr-2"></i></td>
+			<td><span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></td>
 		</tr>
 		{% set i = i + 1 %}
 	{% endfor %}
 	</tbody>
 </table>
-</p>
 {{ form_error('name[]', '<div class="alert alert-danger">', '</div>') }}
 {{ form_error('score[]', '<div class="alert alert-danger">', '</div>') }}
 {{ form_error('c_time_limit[]', '<div class="alert alert-danger">', '</div>') }}
@@ -269,7 +268,7 @@ input[type='number'].short_text{
 {{ form_error('languages[]', '<div class="alert alert-danger">', '</div>') }}
 {{ form_error('diff_cmd[]', '<div class="alert alert-danger">', '</div>') }}
 {{ form_error('diff_arg[]', '<div class="alert alert-danger">', '</div>') }}
-<fieldset class="form-group">
+<fieldset class="form-group mt-2">
 	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary"/>
 </p>
 </form>

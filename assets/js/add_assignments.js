@@ -20,7 +20,7 @@ shj.row +=			'</td>';
 shj.row +=			'<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="diff" /></td>';
 shj.row +=			'<td><input type="text" name="diff_arg[]" class="form-control short_text" value="-bB"/></td>';
 shj.row +=			'<td><input type="checkbox" name="is_upload_only[]" class="check" value="" }}/></td>';
-shj.row +=			'<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer mr-2"></i></td>';
+shj.row +=			'<td><span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></td>';
 shj.row +=		'</tr>';
 	$(document).ready(function(){
 		$("#add").click(function(){
@@ -66,24 +66,18 @@ $(document).ready(function(){
 	var nop = $("[name='number_of_problems']").val();
 
 	for (var i = 0; i < nop; i++) {
-		//console.log($("#allowed_lang" + i));
 		var allow_langs = $("#allowed_lang" + i).val().split(",")
 
 		$("#lang" + i).val(allow_langs);
-		//console.log( $("#lang" + i).val() );
 	}
 
 	$("form").submit(function(event){
 		var nop = $("[name='number_of_problems']").val();
 
 		for (var i = 0; i < nop; i++) {
-			//console.log($("#lang" + i).val());
 			$("#submit_lang" + i).val($("#lang" + i).val().join());
 			$("#lang" + i).val(allow_langs);
 		}
-		//event.preventDefault();
-		//return false;
-
 	});
 	$("select").select2();
 });
