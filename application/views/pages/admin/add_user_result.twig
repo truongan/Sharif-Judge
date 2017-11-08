@@ -3,19 +3,31 @@
  # file: add_user_result.twig
  # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
  #}
-{% if ok %}
-<p class="shj_ok">These {{ok|length}} user(s) added successfully:</p>
-<ol>
-	{% for item in ok %}
-	<li>Usename: {{ item[0] }} Email: {{ item[1] }} Password: <code>{{ item[2] }}</code> Role: {{ item[3] }}</li>
-	{% endfor %}
-</ol>
-{% endif %}
-{% if error %}
-<p class="shj_error">Error adding these {{error|length}} user(s):</p>
-<ol>
-	{% for item in error %}
-	<li>Usename: {{ item[0] }} Email: {{ item[1] }} Password: <code>{{ item[2] }}</code> Role: {{ item[3] }} ({{ item[4] }})</li>
-	{% endfor %}
-</ol>
-{% endif %}
+<div class="col-12">
+	{% if ok %}
+		<div class="alert alert-success">These {{ok|length}} user(s) added successfully:</p>
+		<ol>
+			{% for item in ok %}
+			<li>
+				<span class="text-muted">Usename: </span>{{ item[0] }} 
+				<span class="text-muted">Email: </span>{{ item[1] }} 
+				<span class="text-muted">Password: </span><code>{{ item[2] }}</code> 
+				<span class="text-muted">Role:</span> {{ item[3] }}({{ item[4] }})
+			</li>
+			{% endfor %}
+		</ol>
+		{% endif %}
+		{% if error %}
+		<div class="alert alert-danger">Error adding these {{error|length}} user(s):</div>
+		<ol>
+			{% for item in error %}
+				<li>
+					<span class="text-muted">Usename: </span>{{ item[0] }} 
+					<span class="text-muted">Email: </span>{{ item[1] }} 
+					<span class="text-muted">Password: </span><code>{{ item[2] }}</code> 
+					<span class="text-muted">Role:</span> {{ item[3] }}({{ item[4] }})
+				</li>
+			{% endfor %}
+		</ol>
+	{% endif %}
+</div>

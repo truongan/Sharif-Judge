@@ -12,18 +12,20 @@
 
 
 {% block main_content %}
-<p>Are you sure you want to delete this assignment?</p>
-<p>
-	Assignment id: {{ id }}<br>
-	Assignment name: <span dir="auto">{{ name }}</span>
-</p>
-<p>All test cases, submission results and submitted files will be deleted.</p>
-<p>You may want to keep a backup of this assignment before deleting.</p>
-{{ form_open('assignments/delete/'~id) }}
-<input type="hidden" name="delete" value="delete"/>
-<p class="input_p">
-	<input type="submit" class="btn btn-danger" value="Delete this assignment"/>
-	<a href="{{ site_url('assignments') }}" class="btn btn-primary">Do not delete</a>
-</p>
-</form>
+	<div class="col-12">
+		<p>Are you sure you want to delete this assignment?</p>
+		<p>
+			Assignment id: {{ id }}<br>
+			Assignment name: {{ name }}
+		</p>
+		<p>All test cases, submission results and submitted files will be deleted.</p>
+		<p>You may want to keep a backup of this assignment before deleting.</p>
+		{{ form_open('assignments/delete/'~id) }}
+		<input type="hidden" name="delete" value="delete"/>
+		<p class="input_p">
+			<input type="submit" class="btn btn-danger" value="Delete this assignment"/>
+			<a href="{{ site_url('assignments') }}" class="btn btn-primary">Do not delete</a>
+		</p>
+		</form>
+	</div>
 {% endblock %}  {# main_content #}
