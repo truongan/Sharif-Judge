@@ -37,12 +37,12 @@ shj.supports_local_storage = function() {
 
 shj.loading_start = function()
 {
-	$('#top_bar .shj-spinner').css('display', 'block');
+	$('#top_bar .shj-spinner').removeClass("d-none");
 }
 
 shj.loading_finish = function()
 {
-	$('#top_bar .shj-spinner').css('display', 'none');
+	$('#top_bar .shj-spinner').addClass("d-none");
 }
 
 shj.loading_error = function()
