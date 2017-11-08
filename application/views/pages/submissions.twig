@@ -148,7 +148,11 @@
 				<td>{{ submission.submit_id }}</td>
 			{% endif %}
 
-			<td><a href="{{ site_url('submissions/'~view~'/user/'~submission.username~(filter_problem?'/problem/'~filter_problem)) }}">{{ submission.username }}</a></td>
+				<td>
+			<a href="{{ site_url('submissions/'~view~'/user/'~submission.username~(filter_problem?'/problem/'~filter_problem)) }}">
+					{{ submission.username }}
+			</a>
+				</td>
 			<td dir="auto">{{ submission.name }}</td>
 		{% endif %}
 			<td><a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem) }}" title="{{ problems[submission.problem].name }}"><span class="btn btn-info">{{ submission.problem }}</span></a>
