@@ -4,7 +4,6 @@
 
 .snippet-wrap {
 	position: relative;
-	font-size: 12px;
 }
 
 *:first-child + html .snippet-wrap {
