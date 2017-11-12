@@ -33,10 +33,10 @@ input[type='number'].short_text{
 {% endblock %}
 
 {% block body_end %}
-<script type="text/javascript" src = {{ base_url('assets/select2/select2.min.js') }}></script>
-<script type="text/javascript" src = {{ base_url('assets/js/jquery.autoellipsis-1.0.10.min.js') }}></script>
+<script type="text/javascript" src="{{ base_url('assets/select2/select2.min.js') }}"></script>
+<script type="text/javascript" src="{{ base_url('assets/js/jquery.autoellipsis-1.0.10.min.js') }}"></script>
 
-<script type="text/javascript" src = {{ base_url('assets/js/add_assignments.js') }}></script>
+<script type="text/javascript" src="{{ base_url('assets/js/add_assignments.js') }}"></script>
 <script type='text/javascript' src="{{ base_url('assets/js/taboverride.min.js') }}"></script>
 <script>
 	$(document).ready(function(){
@@ -58,6 +58,7 @@ input[type='number'].short_text{
 
 
 {% block main_content %}
+<div class="col">
 {% set msgclasses = {'text-success': 'text-success', 'text-info': 'text-warning', 'text-danger': 'text-danger'} %}
 {% for message in messages %}
 	<p class="{{ msgclasses[message.type] }}">{{ message.text }}</p>
@@ -76,10 +77,10 @@ input[type='number'].short_text{
 		<div class="col-sm-6">
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label for="form_a_name">Assignment Name</label>
 					</div>
-					<div class="col-sm-7">
+					<div class="col-sm-8">
 						<input id="form_a_name" type="text" name="assignment_name" class="form-control col-xs-7" value="{{ edit ? edit_assignment.name : set_value('assignment_name') }}"/>
 						{{ form_error('assignment_name', '<div class="alert alert-danger">', '</div>') }}
 					</div>
@@ -87,11 +88,19 @@ input[type='number'].short_text{
 			</fieldset>
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label for="start_time">Start Time</label>
 					</div>
-					<div class="col-sm-7">
-						<input id="start_time" type="text" name="start_time" class="form-control" value="{{ edit ? edit_assignment.start_time|date('m/d/Y H:i:s') : set_value('start_time') }}" />
+					<div class="col-sm-8">
+						<input id="start_time" type="hidden" name="start_time" class="form-control" value="" />
+						<div class="form-row">
+							<div class="col-lg-7">
+								<input id="start_date" type="date" name="start_date" class="form-control" value="{{ edit ? edit_assignment.start_time|date('Y-m-d') : set_value('start_date') }}" />
+							</div>
+							<div class="col-lg-5">
+								<input id="start__time" type="time" name="start__time" class="form-control" value="{{ edit ? edit_assignment.start_time|date('H:i') : set_value('start__time',0) }}" />
+							</div>
+						</div>
 						{{ form_error('start_time', '<div class="alert alert-danger">', '</div>') }}
 					</div>
 				</div>
@@ -99,13 +108,21 @@ input[type='number'].short_text{
 
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label for="finish_time">Finish Time
-						<small class="form-text text-muted">Set finish time before start time will set the deadline to *NEVER*</small>
+						<small class="form-text text-muted">Set finish time before start time will set the deadline to <strong>NEVER</strong></small>
 						</label>
 					</div>
-					<div class="col-sm-7">
-						<input id="finish_time" type="text" name="finish_time" class="form-control" value="{{ edit ? edit_assignment.finish_time|date('m/d/Y H:i:s') : set_value('finish_time') }}" />
+					<div class="col-sm-8">
+						<input id="finish_time" type="hidden" name="finish_time" class="form-control" value="" />
+						<div class="form-row">
+							<div class="col-lg-7">
+								<input id="finish_date" type="date" name="finish_date" class="form-control" value="{{ edit ? edit_assignment.finish_time|date('Y-m-d') : set_value('finish_date') }}" />
+							</div>
+							<div class="col-lg-5">
+								<input id="finish__time" type="time" name="finish__time" class="form-control" value="{{ edit ? edit_assignment.finish_time|date('H:i') : set_value('finish__time') }}" />
+							</div>
+						</div>
 						{{ form_error('finish_time', '<div class="alert alert-danger">', '</div>') }}
 					</div>
 				</div>
@@ -113,13 +130,13 @@ input[type='number'].short_text{
 
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label for="form_extra_time">
 						Extra Time (minutes)
 						<small class="form-text text-muted">Extra time for late submissions.</small>
 						</label>
 					</div>
-					<div class="col-sm-7">
+					<div class="col-sm-8">
 						<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="form-control" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time', 0) }}" />
 						{{ form_error('extra_time', '<div class="alert alert-danger">', '</div>') }}
 					</div>
@@ -127,13 +144,13 @@ input[type='number'].short_text{
 			</fieldset>
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label for="form_participants">Participants<br>
-							<span class="form-text text-muted">Enter username of participants here (comma separated).
-								Only these users are able to submit. You can use keyword "ALL".</span>
+							<small class="form-text text-muted">Enter username of participants here (comma separated).
+								Only these users are able to submit. You can use keyword <code>ALL</code>.</small>
 						</label>
 					</div>
-					<div class="col-sm-7">
+					<div class="col-sm-8">
 				<textarea id="form_participants" name="participants" rows="5" class="form-control">{{ edit ? edit_assignment.participants : set_value('participants', 'ALL') }}</textarea>
 					</div>
 				</div>
@@ -272,4 +289,5 @@ input[type='number'].short_text{
 	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary"/>
 </p>
 </form>
+</div>
 {% endblock %}  {# main_content #}

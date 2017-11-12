@@ -20,6 +20,7 @@
 
 
 {% block main_content %}
+<div class="col">
 {% set msgclasses = {'success': 'shj_g', 'notice': 'shj_o', 'error': 'shj_r'} %}
 {% for message in messages %}
 	<p class="{{ msgclasses[message.type] }}">{{ message.text }}</p>
@@ -95,4 +96,5 @@
 {% endfor %}
 </table>
 {% endif %}
+</div>
 {% endblock %}  {# main_content #}

@@ -47,12 +47,6 @@ shj.row +=		'</tr>';
 			shj.num_of_problems--;
 			$('#nop').attr('value',shj.num_of_problems);
 		});
-		$('#start_time').datetimepicker({
-			timeFormat: 'HH:mm:ss'
-		});
-		$('#finish_time').datetimepicker({
-			timeFormat: 'HH:mm:ss'
-		});
 	});
 
 
@@ -73,7 +67,8 @@ $(document).ready(function(){
 
 	$("form").submit(function(event){
 		var nop = $("[name='number_of_problems']").val();
-
+		$("#start_time").val($("#start_date").val() + " " + $("#start__time").val());
+		$("#finish_time").val($("#finish_date").val() + " " + $("#finish__time").val());
 		for (var i = 0; i < nop; i++) {
 			$("#submit_lang" + i).val($("#lang" + i).val().join());
 			$("#lang" + i).val(allow_langs);
