@@ -94,10 +94,10 @@ input[type='number'].short_text{
 					<div class="col-sm-8">
 						<input id="start_time" type="hidden" name="start_time" class="form-control" value="" />
 						<div class="form-row">
-							<div class="col-lg-7">
+							<div class="col-xl-7">
 								<input id="start_date" type="date" name="start_date" class="form-control" value="{{ edit ? edit_assignment.start_time|date('Y-m-d') : set_value('start_date') }}" />
 							</div>
-							<div class="col-lg-5">
+							<div class="col-xl-5">
 								<input id="start__time" type="time" name="start__time" class="form-control" value="{{ edit ? edit_assignment.start_time|date('H:i') : set_value('start__time',0) }}" />
 							</div>
 						</div>
@@ -110,16 +110,16 @@ input[type='number'].short_text{
 				<div class="form-row">
 					<div class="col-sm-4">
 						<label for="finish_time">Finish Time
-						<small class="form-text text-muted">Set finish time before start time will set the deadline to <strong>NEVER</strong></small>
+						<small class="form-text text-muted">Set finish time before start time will set the deadline to <strong>FOREVER</strong></small>
 						</label>
 					</div>
 					<div class="col-sm-8">
 						<input id="finish_time" type="hidden" name="finish_time" class="form-control" value="" />
 						<div class="form-row">
-							<div class="col-lg-7">
+							<div class="col-xl-7">
 								<input id="finish_date" type="date" name="finish_date" class="form-control" value="{{ edit ? edit_assignment.finish_time|date('Y-m-d') : set_value('finish_date') }}" />
 							</div>
-							<div class="col-lg-5">
+							<div class="col-xl-5">
 								<input id="finish__time" type="time" name="finish__time" class="form-control" value="{{ edit ? edit_assignment.finish_time|date('H:i') : set_value('finish__time') }}" />
 							</div>
 						</div>
@@ -158,14 +158,14 @@ input[type='number'].short_text{
 
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label for="form_tests_desc">Tests and Descriptions (zip file)<br>
 							<small class="form-text text-muted">
 								<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/tests_structure.md" target="_blank">Use this structure</a>
 							</small>
 						</label>
 					</div>
-					<div class="col-sm-7">
+					<div class="col-sm-8">
 						<label class="w-100">
 							<input id="form_tests_desc" type="file" name="tests_desc" class="form-control custom-file-input" />
 							<span class="form-control custom-file-control"></span>
@@ -177,12 +177,12 @@ input[type='number'].short_text{
 
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						<label for="form_pdf">PDF File<br>
 							<small class="form-text text-muted">PDF File of Assignment</small>
 						</label>
 					</div>
-					<div class="col-sm-7">
+					<div class="col-sm-8">
 						<label class="w-100">
 							<input id="form_pdf" type="file" name="pdf" class="form-control custom-file-input"/>
 							<span class="custom-file-control form-control"></span>

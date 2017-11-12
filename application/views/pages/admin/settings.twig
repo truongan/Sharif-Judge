@@ -74,7 +74,7 @@ $(document).ready(function(){
 				<option value="5" {{ week_start == 5 ? 'selected="selected"' }}>Friday</option>
 				<option value="6" {{ week_start == 6 ? 'selected="selected"' }}>Saturday</option>
 			</select>
-			
+
 		</fieldset>
 	</div>
 
@@ -186,7 +186,7 @@ $(document).ready(function(){
 			</div>
 		</fieldset>
 	</div>
-	
+
 
 
 {# Since we employed docker container already. Primitive sand boxing can be retired #}
@@ -205,7 +205,7 @@ $(document).ready(function(){
 		{% if not sandbox_built %}
 			<span style="color: red;">You have not built EasySandbox yet.</span>
 		{% endif %}
-	</p> 
+	</p>
 
 	<p class="input_p">
 		<input id="form_java_policy" type="checkbox" name="enable_java_policy" value="1" {{ enable_java_policy ? 'checked' }}/>
@@ -216,7 +216,7 @@ $(document).ready(function(){
 	</p>
 #}
 
-	
+
 	<br><h4 >
 		Shield settings <span class="title_menu_item">
 			<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/shield.md" target="_blank"><i class="fa fa-question-circle color11"></i> Help</a>
@@ -256,7 +256,7 @@ $(document).ready(function(){
 				<textarea id="form_shield_py2" name="shield_py2" rows="15" class="form-control add_text clear">{{ shield_py2 }}</textarea>
 			</div>
 		</fieldset>
-		<fieldset class="form-group col-md-6">			
+		<fieldset class="form-group col-md-6">
 			<label for="form_shield_py3">Shield (for Python 3)</label>
 			<label for="form_py3_sh">Python 3 Shield</label><br>
 			<small class="form-text text-muted">Enable <a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/shield.md" target="_blank">Shield</a> for Python 3</small>
@@ -268,12 +268,13 @@ $(document).ready(function(){
 			</div>
 		</fieldset>
 	</div>
-		
-	<div class="row">
+
+	<div class="row mb-2">
 		<div class="offset-sm-8 col-sm-4">
 			<input type="submit" value="Save Changes" class="form-control btn btn-primary"/>
 		</div>
 	</div>
 
 </form>
+
 {% endblock %}  {# main_content #}
