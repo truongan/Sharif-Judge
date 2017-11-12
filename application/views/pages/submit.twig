@@ -15,7 +15,7 @@
 
 
 {% block body_end %}
-<script src="{{ base_url('assets/js/src-min-noconflict/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ base_url('assets/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script  type="text/javascript" src="{{ base_url('assets/js/submit_page.js')   }}" charset="utf-8"></script>
 <script>
 	shj.p={};
@@ -55,13 +55,13 @@
 
 				<small class="form-text text-info"><a id="problem_link" href="#" target="_blank">Problem statement</a>
 				</small>
-				
+
 				{{ form_error('problem','<div class="shj_error">','</div>') }}
 			</div>
 			<div class="form-group mr-3">
 				<label for="languages" class="">Language:</label>
 				<select id="languages" name="language" class="form-control custom-select">
-					
+
 				</select>
 				{{ form_error('language','<div class="shj_error">','</div>') }}
 			</div>
@@ -109,7 +109,7 @@
 	<div class="" id="banned"></div>
 
 	<div class="template-grp" id="before-grp">
-		<label for="">Template's header, <small>these lines will goes before your code</small></label> 
+		<label for="">Template's header, <small>these lines will goes before your code</small></label>
 		<div class="template" id="before" >abc</div>
 	</div>
 
