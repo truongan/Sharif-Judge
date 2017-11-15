@@ -26,7 +26,10 @@ input[type='number'].short_text{
 	width: 80px!important;
 }
 .short_text{
-	width: 100px!important;
+	width: 90px!important;
+}
+.medium_text{
+	min-width: 150px!important;
 }
 
 </style>
@@ -250,7 +253,7 @@ input[type='number'].short_text{
 	{% for problem in problems %}
 		<tr>
 			<td>{{ problem.id }}</td>
-			<td><input type="text" name="name[]" class="form-control" value="{{ problem.name }}"/></td>
+			<td><input type="text" name="name[]" class="form-control medium_text" value="{{ problem.name }}"/></td>
 			<td><input type="number" name="score[]" class="form-control short_text" value="{{ problem.score }}"/></td>
 			<td><input type="number" name="c_time_limit[]" class="form-control short_text" value="{{ problem.c_time_limit }}"/></td>
 			<td><input type="number" name="python_time_limit[]" class="form-control short_text" value="{{ problem.python_time_limit }}"/></td>
