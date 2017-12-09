@@ -1,6 +1,6 @@
 
 shj.row ='<tr><td>SPID</td>';
-shj.row +=			'<td><input type="text" name="name[]" class="form-control" value="Problem SPID "/></td>';
+shj.row +=			'<td><input type="text" name="name[]" class="form-control medium_text" value="Problem SPID "/></td>';
 shj.row +=			'<td><input type="number" name="score[]" class="form-control short_text" value="100" /></td>';
 shj.row +=			'<td><input type="number" name="c_time_limit[]" class="form-control short_text"  value="500" /></td>';
 shj.row +=			'<td><input type="number" name="python_time_limit[]" class="form-control short_text"  value="1500"/></td>';

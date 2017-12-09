@@ -32,11 +32,9 @@ class Moss extends CI_Controller
 
 		if ($this->form_validation->run())
 		{
-			if ($this->input->post('abc') !== null){
-				if ($this->input->post('detect') !== 'detect')
-					exit;
-				$this->_detect($assignment_id);
-			}
+			if ($this->input->post('detect') !== 'detect')
+				exit;
+			$this->_detect($assignment_id);
 		}
 
 		$data = array(
