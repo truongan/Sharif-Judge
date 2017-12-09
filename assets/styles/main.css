@@ -95,12 +95,12 @@ div.countdown {
 
 div.time_block {
 	color: #f0f0f0;
-	line-height: 1;
 	float: left;
-	text-align: center;
-	padding: 11px 2px;
+	padding: 0px 2px;
 }
-
+nav > a.navbar-brand{
+	line-height: 20px;
+}
 span.countdown_num {
 	font-size:1.15em;
 }
@@ -123,13 +123,13 @@ div#extra_time .time_block {
 }
 
 div#extra_time span {
-	line-height: 19px;
+	/*line-height: 19px;*/
 	font-weight: bold;
 }
 
 div#extra_time i {
 	float: left;
-	line-height: 50px;
+	line-height: 40px;
 	margin-right: 6px;
 }
 
