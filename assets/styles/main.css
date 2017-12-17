@@ -133,7 +133,9 @@ div#extra_time i {
 	margin-right: 6px;
 }
 
-
+#mainNav{
+	padding:  0px 0.5em 0px 1em;
+}
 
 /*********************************************/
 
@@ -151,6 +153,7 @@ div#extra_time i {
 .color10 {color: #991B4A!important;}
 .color11 {color: #439427 !important;}
 .color12 {color: #3f78ba !important;}
+
 
 @media (min-width: 992px) {
 	.color-dashboard {border-color: #C52E26!important;}
@@ -456,4 +459,3 @@ div.problems_widget {
 	margin: 15px 0 15px 15px;
 	padding: 10px;
 }
-
