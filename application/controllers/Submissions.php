@@ -23,7 +23,7 @@ class Submissions extends CI_Controller
 	{
 		$this->pagination_config['per_page'] = 2;
 		$this->pagination_config['uri_segment'] = 3;
-		$this->pagination_config['num_links'] = 5;
+		$this->pagination_config['num_links'] = 3;
 		$this->pagination_config['use_page_numbers'] = TRUE;
 		// $this->pagination_config['page_query_string'] = TRUE;
 		// $this->pagination_config['query_string_segment'] = 'page';
