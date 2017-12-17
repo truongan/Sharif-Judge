@@ -28,20 +28,41 @@ class Submissions extends CI_Controller
 		// $this->pagination_config['page_query_string'] = TRUE;
 		// $this->pagination_config['query_string_segment'] = 'page';
 		
+		// $this->pagination_config['full_tag_open'] 	= '<nav><ul class="pagination justify-content-center">';
+		// $this->pagination_config['full_tag_close'] 	= '</ul></nav>';
+		// $this->pagination_config['num_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		// $this->pagination_config['num_tag_close'] 	= '</span></li>';
+		// $this->pagination_config['cur_tag_open'] 	= '<li class="page-item active"><span class="page-link">';
+		// $this->pagination_config['cur_tag_close'] 	= '<span class="sr-only">(current)</span></span></li>';
+		// $this->pagination_config['next_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		// $this->pagination_config['next_tagl_close'] 	= '<span aria-hidden="true">&raquo;</span></span></li>';
+		// $this->pagination_config['prev_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		// $this->pagination_config['prev_tagl_close'] 	= '</span></li>';
+		// $this->pagination_config['first_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		// $this->pagination_config['first_tagl_close'] = '</span></li>';
+		// $this->pagination_config['last_tag_open'] 	= '<li class="page-item"><span class="page-link">';
+		// $this->pagination_config['last_tagl_close'] 	= '</span></li>';
+
 		$this->pagination_config['full_tag_open'] 	= '<nav><ul class="pagination justify-content-center">';
 		$this->pagination_config['full_tag_close'] 	= '</ul></nav>';
-		$this->pagination_config['num_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		$this->pagination_config['num_tag_close'] 	= '</span></li>';
+		
+		$this->pagination_config['num_tag_open'] 	= '<li class="page-item">';
+		$this->pagination_config['num_tag_close'] 	= '</li>';
+		
 		$this->pagination_config['cur_tag_open'] 	= '<li class="page-item active"><span class="page-link">';
 		$this->pagination_config['cur_tag_close'] 	= '<span class="sr-only">(current)</span></span></li>';
-		$this->pagination_config['next_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		$this->pagination_config['next_tagl_close'] 	= '<span aria-hidden="true">&raquo;</span></span></li>';
-		$this->pagination_config['prev_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		$this->pagination_config['prev_tagl_close'] 	= '</span></li>';
-		$this->pagination_config['first_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		$this->pagination_config['first_tagl_close'] = '</span></li>';
-		$this->pagination_config['last_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		$this->pagination_config['last_tagl_close'] 	= '</span></li>';
+
+		$this->pagination_config['next_tag_open'] 	= '<li class="page-item"><a ';
+		$this->pagination_config['next_tagl_close'] 	= '<span aria-hidden="true">&raquo;</span></li>';
+
+		$this->pagination_config['prev_tag_open'] 	= '<li class="page-item">';
+		$this->pagination_config['prev_tagl_close'] 	= '</li>';
+
+		$this->pagination_config['first_tag_open'] 	= '<li class="page-item">';
+		$this->pagination_config['first_tagl_close'] = '</li>';
+
+		$this->pagination_config['last_tag_open'] 	= '<li class="page-item">';
+		$this->pagination_config['last_tagl_close'] 	= '</li>';
 		
 		parent::__construct();
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
