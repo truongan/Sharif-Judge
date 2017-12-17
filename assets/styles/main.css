@@ -96,6 +96,7 @@ div.countdown {
 div.time_block {
 	color: #f0f0f0;
 	float: left;
+	line-height: 40px;
 	padding: 0px 2px;
 }
 nav > a.navbar-brand{
@@ -123,7 +124,6 @@ div#extra_time .time_block {
 }
 
 div#extra_time span {
-	/*line-height: 19px;*/
 	font-weight: bold;
 }
 

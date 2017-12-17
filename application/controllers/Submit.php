@@ -147,7 +147,7 @@ class Submit extends CI_Controller
 
 				$banned = $set_or_empty($matches, 2);
 
-				preg_match("/(###End banned keyword\*\/\n)((.*\n)*)\/\/###INSERT CODE HERE -\n((.*\n)*)/"
+				preg_match("/(###End banned keyword\*\/\n)((.*\n)*)\/\/###INSERT CODE HERE -\n?((.*\n?)*)/"
 					, $template, $matches
 				);
 				//print_r($matches);
@@ -262,6 +262,10 @@ class Submit extends CI_Controller
 
 		$a = $this->input->post('code');
 		if ($a != NULL){
+			if (strlen($a) > $this->settings_model->get_setting('file_size_limit') * 1024 ){
+				//string length larger tan file size limit
+				show_error("Your submission is larger than system limited size");
+			}
 			$this->ext = $this->language_to_ext[$this->filetype];
 
 			$file_name = "solution";
@@ -316,7 +320,7 @@ class Submit extends CI_Controller
 		$config['allowed_types'] = '*';
 		$config['max_size']	= $this->settings_model->get_setting('file_size_limit');
 		$config['file_name'] = $this->file_name."-".($this->user->selected_assignment['total_submits']+1).".".$this->ext;
-		$config['max_file_name'] = 20;
+		$config['max_file_name'] = 200;
 		$config['remove_spaces'] = TRUE;
 		$this->upload->initialize($config);
 
