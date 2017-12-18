@@ -84,7 +84,7 @@
 	<thead>
 		<tr>
 		{% if view == 'all' %}
-			<th width="1%" rowspan="2">Final</th>
+			<th width="1%" rowspan="2"><small>Final</small></th>
 		{% endif %}
 		{% if user.level > 0 %}
 				{% if view == 'all' %}
@@ -107,9 +107,9 @@
 				{% endif %}
 			</tr>
 			<tr>
-				<th width="5%" class="score">Score</th>
-				<th width="5%" class="score">Delay<br>%</th>
-				<th width="5%" class="score">Final Score</th>
+				<th width="1%" class="score"><small>Score</small></th>
+				<th width="1%" class="score"><small>Delay<br>%</small></th>
+				<th width="1%" class="score"><small>Final Score</small></th>
 			</tr>
 		{% else %}
 				<th width="10%" rowspan="2">Problem</th>
@@ -135,7 +135,7 @@
 			{% set j = j+1 %}
 		{% endif %}
 		{% set un = submission.username %}
-		<tr data-u="<small>{{submission.username}}</small>" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="<small>{{submission.submit_id}}</small>" {% if view == 'final' and j is even %}class="hl"{% endif %}>
+		<tr data-u="{{submission.username}}" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="{{submission.submit_id}}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
 		{% if view == 'all' %}
 			<td>
 				<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle-o color11' : 'fa-circle-o' }} fa-2x"></i>
@@ -169,7 +169,7 @@
 					<span title="HH:MM">{{ time_hhmm(submission.delay) }}</span>
 				{% endif %}
 				</span><br>
-				{{ submission.coefficient }}%
+				<small>{{ submission.coefficient }}%</small>
 			</td>
 			<td style="font-weight: bold;">{{ submission.final_score }} </td>
 			<td><small>{{ submission.language }}</small></td>
