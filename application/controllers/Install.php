@@ -228,6 +228,7 @@ class Install extends CI_Controller
 				array('shj_key' => 'results_per_page_all',   'shj_value' => '40'),
 				array('shj_key' => 'results_per_page_final', 'shj_value' => '80'),
 				array('shj_key' => 'week_start',             'shj_value' => '1'),
+				array('shj_key' => 'theme',             'shj_value' => 'default'),
 			));
 			if ( ! $result)
 				show_error("Error adding data to table ".$this->db->dbprefix('settings'));

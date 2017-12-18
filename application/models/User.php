@@ -18,6 +18,7 @@ class User extends CI_Model
 	*  to display username.
 	*/
 	public $site_name;
+	public $theme;
 
 	public function __construct()
 	{
@@ -54,12 +55,15 @@ class User extends CI_Model
 		}
 		$this->load->model('settings_model');
 		$this->site_name = $this->settings_model->get_setting('site_name');
-
+		$this->theme = $this->settings_model->get_setting('theme', 'default');
 	}
 
 
 	// ------------------------------------------------------------------------
 
+	public function update_theme(){
+		$this->theme = $this->settings_model->get_setting('theme', 'default');
+	}
 
 	/**
 	 * Select Assignment
