@@ -14,7 +14,7 @@
 {% block other_assets %}
 	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
 	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
-	<link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/dataTables.jqueryui.min.css'/>
+	{# <link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/dataTables.jqueryui.min.css'/> #}
 	<style type="text/css">
 .status_button{
 	white-space: normal;
@@ -88,12 +88,12 @@
 		{% endif %}
 		{% if user.level > 0 %}
 				{% if view == 'all' %}
-				<th width="3%" rowspan="2">ID</th>
+				<th width="2%" rowspan="2"><small>ID</small></th>
 				{% else %}
-				<th width="2%" rowspan="2">#</th>
-				<th width="3%" rowspan="2">ID</th>
+				<th width="1%" rowspan="2">#</th>
+				<th width="2%" rowspan="2"><small>ID</small></th>
 				{% endif %}
-				<th width="6%" rowspan="2"><small>Username</small></th>
+				<th width="5%" rowspan="2"><small>Username</small></th>
 				<th width="14%" rowspan="2">Name</th>
 				<th width="4%" rowspan="2">Problem</th>
 				<th width="6%" rowspan="2"><small>Submit Time</small></th>
@@ -135,7 +135,7 @@
 			{% set j = j+1 %}
 		{% endif %}
 		{% set un = submission.username %}
-		<tr data-u="{{ submission.username }}" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="{{ submission.submit_id }}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
+		<tr data-u="<small>{{submission.username}}</small>" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="<small>{{submission.submit_id}}</small>" {% if view == 'final' and j is even %}class="hl"{% endif %}>
 		{% if view == 'all' %}
 			<td>
 				<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle-o color11' : 'fa-circle-o' }} fa-2x"></i>
@@ -143,15 +143,15 @@
 		{% endif %}
 		{% if user.level > 0 %}
 			{% if view == 'all' %}
-				<td>{{ submission.submit_id }}</td>
+				<td><small>{{submission.submit_id}}</small></td>
 			{% else %}
 				<td>{{ (page_number-1)*per_page+i }}</td>
-				<td>{{ submission.submit_id }}</td>
+				<td><small>{{submission.submit_id}}</small></td>
 			{% endif %}
 
 				<td>
 			<a href="{{ site_url('submissions/'~view~'/user/'~submission.username~(filter_problem?'/problem/'~filter_problem)) }}">
-					{{ submission.username }}
+					<small>{{submission.username}}</small>
 			</a>
 				</td>
 			<td dir="auto">{{ submission.name }}</td>
