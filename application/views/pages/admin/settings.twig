@@ -47,13 +47,13 @@ $(document).ready(function(){
 {{ form_open('settings/update') }}
 	<h5>Display settings</h5><hr>
 	<div class="form-row">
-		<fieldset class="form-group col-md-5">
+		<fieldset class="form-group col-md-4">
 			<label for="form_site_name">Site name</label>
 			<input id="form_site_name" type="text" name="site_name" class="form-control" value="{{ site_name }}"/>
 			<small class="form-text text-muted">Website's name to be display on Top Bar and HTML title.</small>
 		</fieldset>
 
-		<fieldset class="form-group col-md-5">
+		<fieldset class="form-group col-md-4">
 			<label for="form_timezone">Timezone </label>
 			<input id="form_timezone" type="text" name="timezone" class="form-control" value="{{ timezone }}"/>
 			{{ form_error('timezone', '<div class="alert alert-danger">', '</div>') }}
@@ -74,7 +74,26 @@ $(document).ready(function(){
 				<option value="5" {{ week_start == 5 ? 'selected="selected"' }}>Friday</option>
 				<option value="6" {{ week_start == 6 ? 'selected="selected"' }}>Saturday</option>
 			</select>
+		</fieldset>
 
+		<fieldset class="form-group col-md-2">
+			<label for="theme">Theme</label>
+			<select id="theme" name="theme" class="form-control custom-select">
+
+				<option value="lumen" {{ user.theme == "lumen" ? 'selected="selected"' : '' }} >lumen</option>
+				<option value="litera" {{ user.theme == "litera" ? 'selected="selected"' : '' }} >litera</option>
+				<option value="pulse" {{ user.theme == "pulse" ? 'selected="selected"' : '' }} >pulse</option>
+				<option value="cosmo" {{ user.theme == "cosmo" ? 'selected="selected"' : '' }} >cosmo</option>
+				<option value="journal" {{ user.theme == "journal" ? 'selected="selected"' : '' }} >journal</option>
+				<option value="flatly" {{ user.theme == "flatly" ? 'selected="selected"' : '' }} >flatly</option>
+				<option value="sketchy" {{ user.theme == "sketchy" ? 'selected="selected"' : '' }} >sketchy</option>
+				<option value="cerulean" {{ user.theme == "cerulean" ? 'selected="selected"' : '' }} >cerulean</option>
+				<option value="united" {{ user.theme == "united" ? 'selected="selected"' : '' }} >united</option>
+				<option value="yeti" {{ user.theme == "yeti" ? 'selected="selected"' : '' }} >yeti</option>
+				<option value="sandstone" {{ user.theme == "sandstone" ? 'selected="selected"' : '' }} >sandstone</option>
+				<option value="default" {{ user.theme == "default" ? 'selected="selected"' : '' }} >default</option>
+			</select>
+			<small class="form-text text-muted">This settings only take effect for other user after they (re)login</small>
 		</fieldset>
 	</div>
 

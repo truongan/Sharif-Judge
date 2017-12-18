@@ -180,7 +180,12 @@ div#extra_time i {
 	.color-scoreboard.selected  {background-color: #991B4A!important;border-color: #991B4A!important;}
 
 	#mainNav{
-		border-bottom: 5px solid #ffffff;
+		/*fix some theme add border to navbar*/
+		border-top: none!important;
+		border-left: none!important;
+		border-right: none!important;
+
+		border-bottom: 5px solid ;
 	}
 
 	.navbar-sidenav{
