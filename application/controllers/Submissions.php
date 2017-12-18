@@ -25,30 +25,13 @@ class Submissions extends CI_Controller
 		$this->pagination_config['uri_segment'] = 3;
 		$this->pagination_config['num_links'] = 3;
 		$this->pagination_config['use_page_numbers'] = TRUE;
-		// $this->pagination_config['page_query_string'] = TRUE;
-		// $this->pagination_config['query_string_segment'] = 'page';
-		
-		// $this->pagination_config['full_tag_open'] 	= '<nav><ul class="pagination justify-content-center">';
-		// $this->pagination_config['full_tag_close'] 	= '</ul></nav>';
-		// $this->pagination_config['num_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		// $this->pagination_config['num_tag_close'] 	= '</span></li>';
-		// $this->pagination_config['cur_tag_open'] 	= '<li class="page-item active"><span class="page-link">';
-		// $this->pagination_config['cur_tag_close'] 	= '<span class="sr-only">(current)</span></span></li>';
-		// $this->pagination_config['next_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		// $this->pagination_config['next_tagl_close'] 	= '<span aria-hidden="true">&raquo;</span></span></li>';
-		// $this->pagination_config['prev_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		// $this->pagination_config['prev_tagl_close'] 	= '</span></li>';
-		// $this->pagination_config['first_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		// $this->pagination_config['first_tagl_close'] = '</span></li>';
-		// $this->pagination_config['last_tag_open'] 	= '<li class="page-item"><span class="page-link">';
-		// $this->pagination_config['last_tagl_close'] 	= '</span></li>';
 
 		$this->pagination_config['full_tag_open'] 	= '<nav><ul class="pagination justify-content-center">';
 		$this->pagination_config['full_tag_close'] 	= '</ul></nav>';
-		
+
 		$this->pagination_config['num_tag_open'] 	= '<li class="page-item">';
 		$this->pagination_config['num_tag_close'] 	= '</li>';
-		
+
 		$this->pagination_config['cur_tag_open'] 	= '<li class="page-item active"><span class="page-link">';
 		$this->pagination_config['cur_tag_close'] 	= '<span class="sr-only">(current)</span></span></li>';
 
@@ -63,7 +46,7 @@ class Submissions extends CI_Controller
 
 		$this->pagination_config['last_tag_open'] 	= '<li class="page-item">';
 		$this->pagination_config['last_tagl_close'] 	= '</li>';
-		
+
 		parent::__construct();
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
@@ -78,7 +61,7 @@ class Submissions extends CI_Controller
 				$this->filter_user = $this->form_validation->alpha_numeric($input['user'])?$input['user']:NULL;
 		if (array_key_exists('problem', $input) && $input['problem'])
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
-		
+
 		//var_dump($input); die();
 		if (array_key_exists('page', $input) && $input['page'])
 			$this->page_number = is_numeric($input['page'])?$input['page']:1;
@@ -305,13 +288,13 @@ class Submissions extends CI_Controller
 		if ($this->page_number<1)
 			show_404();
 
-		
+
 		$this->pagination_config['base_url'] = site_url('submissions/final'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
 		$this->pagination_config['cur_page'] = $this->page_number;
 		$this->pagination_config['total_rows'] = $this->submit_model->count_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem);
 		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_final');
 
-		
+
 		if ($this->pagination_config['per_page'] == 0)
 			$this->pagination_config['per_page'] = $config['total_rows'];
 		$this->load->library('pagination');
@@ -604,7 +587,7 @@ class Submissions extends CI_Controller
 			$submission['final_score'] = 0;
 		else
 			$submission['final_score'] = ceil($submission['pre_score']*$submission['coefficient']/100);
-		echo json_encode($submission);		
+		echo json_encode($submission);
 	}
 
 }

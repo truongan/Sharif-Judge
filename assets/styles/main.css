@@ -119,10 +119,6 @@ div#extra_time {
 	background-color: #c0392b;
 }
 
-div#extra_time .time_block {
-	padding:6px 2px;
-}
-
 div#extra_time span {
 	font-weight: bold;
 }
