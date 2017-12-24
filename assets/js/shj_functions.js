@@ -78,8 +78,14 @@ shj.update_clock = function(){
 	shj.time = moment();
 	var now = moment().add(shj.offset, 'milliseconds');
 	$('.timer').html('Server Time: '+now.format('MMM DD - HH:mm:ss'));
+
+
 	var countdown = shj.finish_time.diff(now);
-	if (countdown<=0 && countdown + shj.extra_time.asMilliseconds()>=0){
+
+	if (isNaN(countdown)){
+		countdown = 0;
+	}
+	if (countdown<=0 && countdown + shj.extra_time.asMilliseconds()>0){
 		countdown = countdown + shj.extra_time.asMilliseconds();
 		$("div#extra_time").css("display","block");
 	}
@@ -292,7 +298,7 @@ $(document).ready(function(){
 
 		var span = $(this).parent().find("span.custom-file-control");
 		var length = span.width() / parseFloat($("body").css("font-size"));
-		
+
 		//Ellipsis file name
 		var name = $(this).prop("files")[0].name;
 		if(length < 4) name = name.substr(0,3);
