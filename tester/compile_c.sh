@@ -92,16 +92,16 @@ if [ $EXITCODE -ne 0 ]; then
         echo -e "\n" >> cerr
         echo "" > cerr2
         while read line; do
-            if [ "`echo $line|cut -d: -f1`" = "code.c" ]; then
-                echo ${line#code.c:} >>cerr2
+            # An's note: 2017-30-12
+            # All this shit just to remove the file name from error messgae.
+            if [ "`echo $line|cut -d: -f1`" = "code.$EXT" ]; then
+                echo ${line#code.$EXT:} >>cerr2 
             fi
-            if [ "`echo $line|cut -d: -f1`" = "shield.c" ]; then
-                echo ${line#shield.c:} >>cerr2
-            fi
-            if [ "`echo $line|cut -d: -f1`" = "shield.cpp" ]; then
-                echo ${line#shield.cpp:} >>cerr2
+            if [ "`echo $line|cut -d: -f1`" = "shield.$EXT" ]; then
+                echo ${line#shield.$EXT:} >>cerr2
             fi
         done <cerr
+
         (cat cerr2 | head -10 | sed 's/themainmainfunction/main/g' ) > cerr;
         (cat cerr | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
     fi
