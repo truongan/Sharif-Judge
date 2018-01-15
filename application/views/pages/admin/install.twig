@@ -5,8 +5,7 @@
  #}
 {% set title = 'Installation' %}
 {% include 'templates/simple_header.twig' %}
-<script type="text/javascript" src="{{ base_url('assets/js/jquery-1.10.2.min.js') }}"></script>
-<script type="text/javascript" src="{{ base_url('assets/js/jquery-ui-1.10.3.custom.min.js') }}"></script>
+
 {% if installed %}
 	<div id="install_success">
 		<h2>Sharif Judge Installed</h2>
@@ -70,24 +69,26 @@
 				</p>
 			</div>
 		</form>
-	<script>
-	$("#generae").click(function(){
-		function generatePassword() {
-		    var length = 15,
-		        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-		        retVal = "";
-		    for (var i = 0, n = charset.length; i < length; ++i) {
-		        retVal += charset.charAt(Math.floor(Math.random() * n));
-		    }
-		    return retVal;
-		}
-		var p = generatePassword();
-		$("#form_password_2").val(p);
-		$("#form_password").val(p);
-		$("#form_password_gen").val(p);
-	});
-	</script
 	</div>
 {% endif %}
+
+<script type="text/javascript" src="{{ base_url('assets/js/jquery-3.2.1.min.js') }}"></script>
+<script>
+$("#generae").click(function(){
+	function generatePassword() {
+	    var length = 15,
+	        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+	        retVal = "";
+	    for (var i = 0, n = charset.length; i < length; ++i) {
+	        retVal += charset.charAt(Math.floor(Math.random() * n));
+	    }
+	    return retVal;
+	}
+	var p = generatePassword();
+	$("#form_password_2").val(p);
+	$("#form_password").val(p);
+	$("#form_password_gen").val(p);
+});
+</script>
 </body>
 </html>
