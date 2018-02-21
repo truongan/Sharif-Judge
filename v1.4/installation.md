@@ -15,7 +15,7 @@ For example this command should run correctly:
 ```php
 echo shell_exec("php -v");
 ```
-* Tools for compiling and running submitted codes (`gcc`, `g++`, `javac`, `java`, `python2`, `python3` commands)
+* Docker
 * It is better to have `perl` installed for more precise time and memory limit and imposing size limit on output of submitted code.
 
 Installation
