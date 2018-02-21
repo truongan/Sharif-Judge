@@ -1,0 +1,12 @@
+application/config/database.php
+application/config/config.php
+application/cache
+application/session/*
+assignments/*
+tester/moss
+
+!assignments/.htaccess
+!assignments/index.html
+!application/session/.htaccess
+!application/session/index.html
+
