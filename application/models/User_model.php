@@ -29,6 +29,7 @@ class User_model extends CI_Model
 	public function have_user($username)
 	{
 		$query = $this->db->get_where('users', array('username'=>$username));
+		if ($query == FALSE) return FALSE;
 		if ($query->num_rows() == 0)
 			return FALSE;
 		if ($username === $query->row()->username) // needed (because of utf8_general_ci [ci=case insensitive])
@@ -177,7 +178,7 @@ class User_model extends CI_Model
 			$parts = preg_split('/\s*,\s*/', $line);
 			if (count($parts) != 5)
 				continue; //ignore lines that not contain 5 parts
-//echo $line;
+
 			if (strtolower(substr($parts[2], 0, 6)) == 'random')
 			{
 				// generate random password
@@ -260,7 +261,7 @@ class User_model extends CI_Model
 	 */
 	public function delete_user($user_id)
 	{
-		if ($user_id == 0){
+		if ($user_id == 1){
 			///Cannot delete the fist user (usually the one who installed the Judge)
 			///First user will only be deleted from database
 			return false;

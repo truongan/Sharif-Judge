@@ -27,6 +27,13 @@ class User extends CI_Model
 		if ($this->username === NULL)
 			return;
 
+		$a = $this->db->get_where('users', array('username'=>$this->username));
+
+		if ($a == FALSE || $a->num_rows() == 0 ){
+			$this->username = NULL;
+			return;
+		}
+
 		$user = $this->db
 			->select('selected_assignment, role, email')
 			->get_where('users', array('username' => $this->username))
@@ -60,11 +67,10 @@ class User extends CI_Model
 
 	// ----------------
 	public function logged_in(){
-		if (! $this->user->logged_in()) // if logged in
+		if (! $this->username != NULL) // if logged in
 			return false;
 		else {
-			$username = $this->session->userdata('username');
-			return $this->user_model->have_user($username);
+			return $this->user_model->have_user($this->username);
 		}
 		return false;
 	}
