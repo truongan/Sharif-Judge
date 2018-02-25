@@ -21,7 +21,8 @@ echo shell_exec("php -v");
 Installation
 ------------
 
-* 1. Download the latest release from [download page](https://github.com/mjnaderi/Sharif-Judge/releases) and unpack downloaded file in your public html directory.
+* 1. Grab the latest release from [repository](https://github.com/truongan/wecode-judge).
+* 2. Move `index.php` to your webserver's public serving directory. Then edit `index.php`
 * 2. **[Optional]** Move folders `system` and `application` somewhere outside your public directory, and enter their full path in `index.php` file.
 ```php
 $system_path = '/home/mohammad/secret/system';

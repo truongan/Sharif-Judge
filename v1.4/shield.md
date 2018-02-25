@@ -2,7 +2,7 @@
 
 Shield is an extremely simple mechanism to forbid running of potentially harmful codes.
 
-Shield is not a sandboxing solution. Shield provides only a partial protection against trivial attacks. Real protection against untrusted code comes only by enabling [Sandbox](sandboxing.md).
+Shield is not a sandboxing solution. Shield provides only a partial protection against trivial attacks. Real protection against untrusted code is provided by Docker.
 
 ## Shield for C/C++
 
