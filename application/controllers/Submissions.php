@@ -48,7 +48,7 @@ class Submissions extends CI_Controller
 		$this->pagination_config['last_tagl_close'] 	= '</li>';
 
 		parent::__construct();
-		if ( ! $this->session->userdata('logged_in')) // if not logged in
+		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 		$this->load->model('submit_model');
 		$this->problems = $this->assignment_model->all_problems($this->user->selected_assignment['id']);

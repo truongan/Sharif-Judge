@@ -260,6 +260,14 @@ class User_model extends CI_Model
 	 */
 	public function delete_user($user_id)
 	{
+		if ($user_id == 0){
+			///Cannot delete the fist user (usually the one who installed the Judge)
+			///First user will only be deleted from database
+			return false;
+		} else if ($this->db->count_all("users") < 2){
+			///Cannot delete the only user there is.
+			return false;
+		}
 		$this->db->trans_start();
 
 		$username = $this->user_id_to_username($user_id);

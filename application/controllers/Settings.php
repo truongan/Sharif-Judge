@@ -19,7 +19,7 @@ class Settings extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		if ( ! $this->session->userdata('logged_in')) // if not logged in
+		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 		if ( $this->user->level <= 2) // permission deniedf
 			show_404();

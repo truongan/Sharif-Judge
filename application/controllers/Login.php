@@ -40,7 +40,7 @@ class Login extends CI_Controller
 	 */
 	public function index()
 	{
-		if ($this->session->userdata('logged_in')) // if logged in
+		if ($this->user->logged_in()) // if logged in
 			redirect('dashboard');
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|max_length[20]|alpha_numeric|lowercase');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[200]');
@@ -76,7 +76,7 @@ class Login extends CI_Controller
 
 	public function register()
 	{
-		if ($this->session->userdata('logged_in')) // if logged in
+		if ($this->user->logged_in()) // if logged in
 			redirect('dashboard');
 		if ( ! $this->settings_model->get_setting('enable_registration'))
 			show_error('Registration is closed.');
@@ -121,7 +121,7 @@ class Login extends CI_Controller
 
 	public function lost()
 	{
-		if ($this->session->userdata('logged_in')) // if logged in
+		if ($this->user->logged_in()) // if logged in
 			redirect('dashboard');
 		$this->form_validation->set_rules('email', 'email', 'required|max_length[40]|lowercase|valid_email');
 		$data = array(

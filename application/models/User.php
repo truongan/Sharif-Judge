@@ -58,6 +58,17 @@ class User extends CI_Model
 		$this->theme = $this->settings_model->get_setting('theme', 'default');
 	}
 
+	// ----------------
+	public function logged_in(){
+		if (! $this->user->logged_in()) // if logged in
+			return false;
+		else {
+			$username = $this->session->userdata('username');
+			return $this->user_model->have_user($username);
+		}
+		return false;
+	}
+
 
 	// ------------------------------------------------------------------------
 

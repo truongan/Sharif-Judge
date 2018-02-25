@@ -34,7 +34,7 @@ class Submit extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		if ( ! $this->session->userdata('logged_in')) // if not logged in
+		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 		$this->load->library('upload')->model('queue_model');
 		$this->assignment_root = $this->settings_model->get_setting('assignments_root');

@@ -14,7 +14,7 @@ class Server_time extends CI_Controller
 		parent::__construct();
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
-		if ( ! $this->session->userdata('logged_in')) // if not logged in
+		if ( ! $this->user->logged_in()) // if not logged in
 			exit;
 	}
 
