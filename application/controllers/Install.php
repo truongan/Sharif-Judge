@@ -21,8 +21,6 @@ class Install extends CI_Controller
 
 	public function index()
 	{
-
-
 		if ($this->db->table_exists('sessions'))
 			show_error('Sharif Judge is already installed.');
 
@@ -45,24 +43,44 @@ class Install extends CI_Controller
 				'admin'
 			);
 
-			// Using a random string as encryption key
-			$config_path = rtrim(APPPATH,'/').'/config/config.php';
-			$config_content = file_get_contents($config_path);
-			$random_key = random_string('alnum', 32);
-			$res = @file_put_contents($config_path, str_replace($this->config->item('encryption_key'), $random_key, $config_content));
-			if ($res === FALSE)
-				$data['key_changed'] = FALSE;
-			else
-				$data['key_changed'] = TRUE;
-
-			$data['installed'] = TRUE;
-			$data['enc_key'] = $this->config->item('encryption_key');
-			$data['random_key'] = random_string('alnum', 32);
+			$this->setup_encryption_key();
 		}
 
 		$this->twig->display('pages/admin/install.twig', $data);
 	}
 
+	public function cli_install($username, $email, $password, $random_password = false){
+
+		$this->setup_database();
+
+		if($random_password) $password = random_string('alnum', 50);
+
+		// add admin user
+		$this->user_model->add_user(
+			$username,
+			$email,
+			$password,
+			'admin'
+		);
+
+		$this->setup_encryption_key();
+	}
+
+	private function setup_encryption_key(){
+		// Using a random string as encryption key
+		$config_path = rtrim(APPPATH,'/').'/config/config.php';
+		$config_content = file_get_contents($config_path);
+		$random_key = random_string('alnum', 32);
+		$res = @file_put_contents($config_path, str_replace($this->config->item('encryption_key'), $random_key, $config_content));
+		if ($res === FALSE)
+			$data['key_changed'] = FALSE;
+		else
+			$data['key_changed'] = TRUE;
+
+		$data['installed'] = TRUE;
+		$data['enc_key'] = $this->config->item('encryption_key');
+		$data['random_key'] = random_string('alnum', 32);
+	}
 	private function setup_database(){
 		$DATETIME = 'DATETIME';
 		if ($this->db->dbdriver === 'postgre')

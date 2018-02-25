@@ -90,7 +90,7 @@ EOF
 
 cd $install
 git clone  'https://github.com/truongan/wecode-judge' .
-git checkout working-updateci 
+git checkout working-updateci
 
 
 cd $public
@@ -101,7 +101,7 @@ else
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-	  	rm index.html index.php .htacess 
+	  	rm index.html index.php .htacess
 	  	rm -rf ./assets
 		ln -s $install/index.php $install/assets $install/.htaccess .
 	else
@@ -123,10 +123,10 @@ sed -i "s@base_url'] = ''@base_url'] = '$base_url'@g" config.php
 sed -i "s@index_page'] = 'index.php'@index_page'] = ''@g" config.php
 sed -i "s@sess_save_path'] = NULL@sess_save_path'] = '$install/application/session/'@g" config.php
 
-#UIT Related settings 
+#UIT Related settings
 #sed -i "s@cookie_path']		= '/'@cookie_path']		= '/laptrinh/$lw_site_name/'@g" config.php
 #cp /opt/Login.php $install/application/controllers/Login.php
-#cp /opt/Install.php $install/application/controllers/Install.php
+
 
 
 pwd
@@ -138,3 +138,6 @@ sed -i "s/sharif/$db/g" database.php
 cd $install/application/controllers
 echo sed -i "s@_sitenametobereplace_@$site_name@g" Install.php
 sed -i "s@_sitenametobereplace_@$site_name@g" Install.php
+
+#Add default admin user, very dangerous and should not be enable by default
+#php $install/index.php  abc abc%40def.com random_string false
