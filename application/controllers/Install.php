@@ -51,6 +51,17 @@ class Install extends CI_Controller
 
 	public function cli_install($username, $email, $password, $random_password = false){
 
+		if (!is_cli()) {
+			show_error("This function is meant to be called from cli only");
+			return ;
+		}
+
+		if ($this->db->table_exists('sessions'))
+		{
+			show_error('Sharif Judge is already installed.');
+			return ;
+		}
+
 		$this->setup_database();
 
 		if($random_password) $password = random_string('alnum', 50);
