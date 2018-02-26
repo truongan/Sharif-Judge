@@ -57,7 +57,14 @@ class Users extends CI_Controller
 		}
 	}
 
+	public function cli_add($USERNAME, $EMAIL, $PASSWORD, $ROLE, $DISPLAY_NAME = ""){
+		if (!is_cli()) {
+			show_error("This function is meant to be called from cli only");
+			return ;
+		}
 
+		return $this->user_model->add($USERNAME, $EMAIL, $PASSWORD, $ROLE, $DISPLAY_NAME);
+	}
 
 
 	// ------------------------------------------------------------------------
