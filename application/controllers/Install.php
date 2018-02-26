@@ -43,7 +43,7 @@ class Install extends CI_Controller
 				'admin'
 			);
 
-			$this->setup_encryption_key();
+			$data = $this->setup_encryption_key();
 		}
 
 		$this->twig->display('pages/admin/install.twig', $data);
@@ -80,6 +80,8 @@ class Install extends CI_Controller
 		$data['installed'] = TRUE;
 		$data['enc_key'] = $this->config->item('encryption_key');
 		$data['random_key'] = random_string('alnum', 32);
+
+		return $data;
 	}
 	private function setup_database(){
 		$DATETIME = 'DATETIME';
