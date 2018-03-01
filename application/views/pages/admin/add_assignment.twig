@@ -37,8 +37,6 @@ input[type='number'].short_text{
 
 {% block body_end %}
 <script type="text/javascript" src="{{ base_url('assets/select2/select2.min.js') }}"></script>
-<script type="text/javascript" src="{{ base_url('assets/js/jquery.autoellipsis-1.0.10.min.js') }}"></script>
-
 <script type="text/javascript" src="{{ base_url('assets/js/add_assignments.js') }}"></script>
 <script type='text/javascript' src="{{ base_url('assets/js/taboverride.min.js') }}"></script>
 <script>
@@ -46,10 +44,8 @@ input[type='number'].short_text{
 		tabOverride.set(document.getElementsByTagName('textarea'));
 	});
 </script>
-<script type="text/javascript" src="{{ base_url('assets/js/jquery-ui-timepicker-addon.js') }}"></script>
 <script type="text/javascript">shj.num_of_problems={{ problems|length }};</script>
 {% endblock %}
-
 
 
 {% block title_menu %}
@@ -169,10 +165,10 @@ input[type='number'].short_text{
 						</label>
 					</div>
 					<div class="col-sm-8">
-						<label class="w-100">
-							<input id="form_tests_desc" type="file" name="tests_desc" class="form-control custom-file-input" />
-							<span class="form-control custom-file-control"></span>
-						</label>
+						<div class="custom-file">
+							<input id="form_tests_desc" type="file" name="tests_desc" class="custom-file-input" />
+							<label class="custom-file-label"></label>
+						</div>
 					</div>
 				</div>
 			</fieldset>
@@ -186,10 +182,10 @@ input[type='number'].short_text{
 						</label>
 					</div>
 					<div class="col-sm-8">
-						<label class="w-100">
-							<input id="form_pdf" type="file" name="pdf" class="form-control custom-file-input"/>
-							<span class="custom-file-control form-control"></span>
-						</label>
+						<div class="custom-file">
+							<input id="form_pdf" type="file" name="pdf" class="custom-file-input"/>
+							<label class="custom-file-label">Choose .pdf</label>
+						</div>
  					</div>
 				</div>
 			</fieldset>

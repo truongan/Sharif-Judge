@@ -14,6 +14,7 @@
 .sharif_table td{
 	text-align: left;
 }
+
 </style>
 {% endblock %}
 
@@ -70,6 +71,7 @@ $(document).ready(function(){
 			$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
 		});
 	});
+
 });
 </script>
 {% endblock %}
@@ -136,10 +138,10 @@ $(document).ready(function(){
 			</fieldset>
 
 			<fieldset class="form-group form-row">
-				<label class="col-12">
-					<input type="file" id="file" class="form-control custom-file-input" name="userfile"/>
-					<span class="custom-file-control form-control"></span>
-				</label>			
+				<div class="col-12 custom-file">
+					<input type="file" id="file" class=" custom-file-input" name="userfile"/>
+					<label class="custom-file-label">upload source code</label>
+				</div>
 			</fieldset>
 
 			<fieldset class="form-group form-row">

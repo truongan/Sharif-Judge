@@ -293,17 +293,17 @@ $(document).ready(function(){
 	$('.custom-file-input').change(function(){
 		if ($(this).prop("files").length == 0)
 		{
-			$(this).parent().find("span.custom-file-control").html("").removeClass("text-muted");
+			$(this).parent().find("label.custom-file-label").html("").removeClass("text-muted");
 		}
 
-		var span = $(this).parent().find("span.custom-file-control");
+		var span = $(this).parent().find("label.custom-file-label");
 		var length = span.width() / parseFloat($("body").css("font-size"));
-
+		console.log(span);
 		//Ellipsis file name
 		var name = $(this).prop("files")[0].name;
 		if(length < 4) name = name.substr(0,3);
 		else if (name.length > length) name = name.substr(0, length - 3) + "...";
-
+		console.log(name);
 		span.html(name).addClass("text-muted");
 	});
 });
