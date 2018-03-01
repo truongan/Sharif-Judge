@@ -50,13 +50,13 @@ MathJax.Hub.Config({
 {% endif %}
 {% for notification in notifications %}
 	<div class="col-md-6 col-xl-4">
-		<div class="notif main_notif" id="number{{ notification.id }}" data-id="{{ notification.id }}">
+		<div class="notif" id="number{{ notification.id }}" data-id="{{ notification.id }}">
 			<div class="notif_title" dir="auto">
-				<span class="anchor ttl_n">{{ notification.title }}</span>
+				<a href="notifications#number{{ notification.id }}">{{ notification.title }}</a>
 				<div class="notif_meta">
 					{{ notification.time }}
 					{% if user.level >= 2 %}
-						<span class="anchor edt_n">Edit</span>
+						<a href="notifications/edit/{{ notification.id }}">Edit</a>
 						<span class="anchor del_n">Delete</span>
 					{% endif %}
 				</div>

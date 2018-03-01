@@ -133,14 +133,6 @@ shj.check_notifs = function () {
  * Notifications
  */
 $(document).ready(function () {
-	$('.ttl_n').click(function(){
-		var id = $(this).parents('.notif').data('id');
-		window.location = shj.site_url+'notifications#number'+id;
-	});
-	$('.edt_n').click(function () {
-		var id = $(this).parents('.notif').data('id');
-		window.location = shj.site_url+'notifications/edit/'+id;
-	});
 	$('.del_n').click(function () {
 		var notif = $(this).parents('.notif');
 		var id = $(notif).data('id');
