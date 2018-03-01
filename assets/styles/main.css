@@ -50,19 +50,18 @@ img {
 }
 
 body {
-	background-color: #F6F6F4;
+	/* background-color: #F6F6F4; */
 	padding: 0;
-	color: #2d2d2d;
+	/* color: #2d2d2d; */
 	font-family:  Sans-serif, 'Open Sans', 'Droid-Naskh';
 }
-
+/*
 a {
 	color: #2d2d2d;
-}
+} */
 
 span.anchor {
 	cursor: pointer;
-	color: #2d2d2d;
 }
 
 code {
@@ -229,42 +228,16 @@ div#extra_time i {
 
 div.content-wrapper {
 	z-index: 0;
-	color: #595959;
-	background-color: #f6f6f4;
+	/* color: #595959; */
+	/* background-color: #f6f6f4; */
 }
 
 div#page_title {
-	margin-left: -15px;
-	margin-right: -15px;
-	padding: 10px 20px;
-	font-size: 1.25em;
-	position: relative;
-	background-color: #faf9f5;
-	border-bottom: 1px solid #DDDAD0;
-}
-
-div#page_title:after, div#page_title:before {
-	top: 100%;
-	left: 30px;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-}
-
-div#page_title:after {
-	border-color: rgba(136, 183, 213, 0);
-	border-top-color: #faf9f5;
-	border-width: 10px;
-	margin-left: -10px;
-}
-div#page_title:before {
-	border-color: rgba(221, 218, 208, 0);
-	border-top-color: #DDDAD0;
-	border-width: 11px;
-	margin-left: -11px;
+   margin-left: -15px;
+   margin-right: -15px;
+   padding: 10px 20px;
+   font-size: 1.25em;
+   position: relative;
 }
 
 
@@ -301,60 +274,16 @@ div.content-wrapper div#main_content {
 }
 
 /********************************************/
+ .wecode_table{
+	 width: 100%;
+ }
 
-.sharif_table {
-	border-spacing: 0;
-	width: 100%;
-	border: solid #ccc 1px;
-	border-radius: 6px;
-	box-shadow: 0 1px 1px #ccc;
-}
+ .wecode_table td, .wecode_table th {
 
-.sharif_table tr.hl {
-	background-color: #E0E0E0;
-}
-
-.sharif_table tr {
-	background-color: #fcfcfc;
-}
-
-.sharif_table tr:hover {
-	background-color: #f0f0f0;
-}
-
-.sharif_table td, .sharif_table th {
-	border-left: 1px solid #AFAFAF;
-	border-top: 1px solid #AFAFAF;
-	padding: 3px 5px;
-	text-align: center;
-}
-
-.sharif_table td {
-	height: 42px;
-}
-
-.rank td, .rank th {
-	padding: 2px;
-}
-
-.sharif_table th {
-	background-color: #dce9f9;
-
-	box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
-	border-top: none;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
-}
-
-.sharif_table th.score {
-	border-radius: 0;
-	border-top: 1px solid #AFAFAF;
-	border-left: 1px solid #AFAFAF;
-}
-
+ 	text-align: center;
+ }
 
 /*****************************************************************/
-
-
 
 textarea.add_text {
 	font-size: 0.75em;
@@ -375,7 +304,7 @@ textarea.add_text {
 
 .shj_widget {
 	height: auto;
-	background-color: white;
+	/* background-color: white; */
 	border: 1px solid #e3e3e3;
 	border-radius: 3px;
 	box-shadow: rgba(0, 0, 0, 0.3) 0 0 6px -2px;
@@ -395,7 +324,7 @@ textarea.add_text {
 	border-bottom: 1px solid #e3e3e3;
 	border-top-right-radius: 3px;
 	border-top-left-radius: 3px;
-	background: #fbfbfb;
+	/* background: #fbfbfb; */
 	background: linear-gradient(top, #fbfbfb 0%, #f1f1f1 100%);
 }
 
@@ -455,7 +384,7 @@ div.notif_text {
 /*  problems page */
 
 div.problems_widget {
-	background-color: #FCFCFC;
+	/* background-color: #FCFCFC; */
 	border: 2px dashed #DDD;
 	box-shadow: 0 0 6px -2px #AAA;
 	margin: 15px 0 15px 15px;
