@@ -328,7 +328,7 @@ body.sidenav-toggled .navbar-sidenav .nav-item {
 body.sidenav-toggled .navbar-sidenav-tooltip.show {
   display: flex;
 }
-
+/* 
 #mainNav.navbar-dark .navbar-collapse .navbar-sidenav .nav-link-collapse:after {
   color: #868e96;
 }
@@ -353,8 +353,8 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 }
 
 #mainNav.navbar-dark .navbar-collapse .navbar-nav > .nav-item.dropdown > .nav-link:after {
-  color: #adb5bd;
-}
+    color: #adb5bd;
+} */
 
 @media (min-width: 992px) {
   #mainNav.navbar-dark .navbar-collapse .navbar-sidenav {

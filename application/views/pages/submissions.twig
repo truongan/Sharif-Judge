@@ -80,7 +80,7 @@
 {%  if view == 'all' %}
 <p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
 {% endif %}
-<table class="wecode_table table table-bordered">
+<table class="wecode_table table table-bordered {% if view == 'all' %}table-striped{% endif %}">
 	<thead class="thead-dark">
 		<tr>
 		{% if view == 'all' %}
@@ -135,7 +135,7 @@
 			{% set j = j+1 %}
 		{% endif %}
 		{% set un = submission.username %}
-		<tr data-u="{{submission.username}}" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="{{submission.submit_id}}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
+		<tr data-u="{{submission.username}}" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="{{submission.submit_id}}" {% if view == 'final' and j is even %}class="table-active"{% endif %}>
 		{% if view == 'all' %}
 			<td>
 				<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle-o color11' : 'fa-circle-o' }} fa-2x"></i>

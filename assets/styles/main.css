@@ -69,7 +69,9 @@ pre code {
 	padding: 0;
 	background-color: rgba(0,0,0,0);
 }
-
+pre {
+	color: inherit !important;
+}
 blockquote {
 	border-left: 4px solid #DDD;
 	padding: 0 15px;
@@ -120,10 +122,12 @@ div#extra_time i {
 	margin-right: 6px;
 }
 
+
 #mainNav{
-	background-color: #343a40!important;
 	padding:  0px 0.5em 0px 1em;
 }
+
+
 
 /*********************************************/
 
@@ -174,32 +178,40 @@ div#extra_time i {
 
 		border-bottom: 5px solid ;
 	}
-
+	.navbar-brand, .nav-link{
+		/* to fix some theme adding padding */
+		padding-top: 0rem!important;
+		padding-bottom: 0rem!important;
+	}
 	.navbar-sidenav{
-		background-color:#F2F2EA!important;
-		box-shadow: #a9a9a9 4px 4px 4px;
+		/* background-color:#F2F2EA!important; */
+		/* box-shadow: #a9a9a9 4px 4px 4px; */
 		border-top: 5px solid #ffffff;
 	}
 	.navbar-sidenav > li.selected > .nav-link {
 		font-weight: bold;
 		color: #FFF!important;
 	}
+	.nav-item{
+		margin-right: 0!important; /* to counter-act wierd lux theme */
+	}
 
-	.navbar-sidenav  .nav-link{
-		color: #595959 !important;
+	.navbar-sidenav  .nav-link, .sidenav-toggler .nav-link{
+		/* color: #595959 !important; */
+		padding: 0.75rem!important;
 	}
 
 	.navbar-sidenav li{
 		border-left: 5px solid #000;
-		border-bottom: 1px solid #EAEADE!important;
+		border-bottom: 1px solid rgba(0,0,0,0.2) !important ;
 	}
 	.navbar-sidenav li:hover{
-		background-color: #FAFAFA
+		/* background-color: #FAFAFA */
 	}
 
-	.sidenav-toggler {
-		background-color:#696966!important;
-		box-shadow: #a9a9a9 4px 4px 4px;
+	.navbar-sidenav, .sidenav-toggler {
+		/* background-color:#696966!important; */
+		box-shadow: #a9a9a9 2px 2px 2px;
 	}
 
 
