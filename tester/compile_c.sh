@@ -13,9 +13,9 @@ C_OPTIONS="-fno-asm -Dasm=error -lm -O2"
 # Read more: http://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html
 C_WARNING_OPTION="-w"
 
-COMPILER="gcc -std=c99"
+COMPILER="gcc -std=c11"
 if [ "$EXT" = "cpp" ]; then
-    COMPILER="g++ -std=c++98"
+    COMPILER="g++ -std=c++11"
 fi
 EXEFILE="s_$(echo $FILENAME | sed 's/[^a-zA-Z0-9]//g')" # Name of executable file
 

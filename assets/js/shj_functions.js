@@ -77,7 +77,7 @@ shj.update_clock = function(){
 	}
 	shj.time = moment();
 	var now = moment().add(shj.offset, 'milliseconds');
-	$('.timer').html('Server Time: '+now.format('MMM DD - HH:mm:ss'));
+	$('.timer').html('Server time: '+now.format('DD/MM - HH:mm:ss'));
 
 
 	var countdown = shj.finish_time.diff(now);
