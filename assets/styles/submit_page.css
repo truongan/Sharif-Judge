@@ -11,7 +11,10 @@
     flex-grow: 1;
 }
 form{
-    height: 100%;
+    /* Don't know why but remove the height 100% is necessar for the flex thing to wrok */
+    
+    /* height: 100%; */
+
     display: flex;
     flex-direction: column;
     width: 100%;
