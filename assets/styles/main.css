@@ -237,8 +237,6 @@ div.content-wrapper {
 }
 
 div#page_title {
-   margin-left: -15px;
-   margin-right: -15px;
    padding: 10px 20px;
    font-size: 1.25em;
    position: relative;
