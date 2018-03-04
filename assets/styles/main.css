@@ -70,7 +70,7 @@ pre code {
 	background-color: rgba(0,0,0,0);
 }
 pre {
-	color: inherit !important;
+	color: inherit;
 }
 blockquote {
 	border-left: 4px solid #DDD;
