@@ -33,7 +33,7 @@ if [ -f "$PROBLEMPATH/template.cpp" ]; then
         line=`echo $line | tr -d '\r'`
         #echo grep -q "$line" $f
         if grep -q "$line" $f ;then
-            echo "code.c: forbidden phase: \"$line\" is banned" >> cerr
+            echo "code.$EXT: forbidden phrase: \"$line\" is banned" >> cerr
             NEEDCOMPILE=0
         fi
     done <<< "$banned"
@@ -95,7 +95,7 @@ if [ $EXITCODE -ne 0 ]; then
             # An's note: 2017-30-12
             # All this shit just to remove the file name from error messgae.
             if [ "`echo $line|cut -d: -f1`" = "code.$EXT" ]; then
-                echo ${line#code.$EXT:} >>cerr2 
+                echo ${line#code.$EXT:} >>cerr2
             fi
             if [ "`echo $line|cut -d: -f1`" = "shield.$EXT" ]; then
                 echo ${line#shield.$EXT:} >>cerr2
@@ -103,8 +103,8 @@ if [ $EXITCODE -ne 0 ]; then
         done <cerr
 
         (cat cerr2 | head -10 | sed 's/themainmainfunction/main/g' ) > cerr;
-        (cat cerr | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
     fi
+    (cat cerr | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $PROBLEMPATH/$UN/result.html
     echo "</span>" >> $PROBLEMPATH/$UN/result.html
     cd ..
     rm -r $JAIL >/dev/null 2>/dev/null
