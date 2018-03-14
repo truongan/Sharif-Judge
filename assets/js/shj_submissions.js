@@ -155,7 +155,7 @@ function update_status(){
 					switch (response.status.toLowerCase() ){
 						case 'pending':
 							element = ('<div class="btn btn-secondary pending" data-type="result" data-code="0">PENDING</div>');
-							$.notify('Still judging', {position: 'bottom right', className: 'info', autoHideDelay: 2000});
+							$.notify('Still pending', {position: 'bottom right', className: 'info', autoHideDelay: 2000});
 
 						break;
 
