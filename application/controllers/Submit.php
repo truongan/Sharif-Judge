@@ -313,9 +313,9 @@ class Submit extends CI_Controller
 		$this->file_name = basename($_FILES['userfile']['name'], ".{$this->ext}"); // uploaded file name without extension
 		if ( ! $this->_match($this->filetype, $this->ext) )
 			show_error('This file type does not match your selected language.');
-		if ( ! preg_match('/^[a-zA-Z0-9_\-()]+$/', $this->file_name) )
-			show_error('Invalid characters in file name.');
-
+									  
+		$this->file_name = preg_replace('/[^a-zA-Z0-9_\-()]+/', '', $this->file_name);
+		
 		$config['upload_path'] = $user_dir;
 		$config['allowed_types'] = '*';
 		$config['max_size']	= $this->settings_model->get_setting('file_size_limit');

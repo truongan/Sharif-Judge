@@ -146,7 +146,7 @@ if ! $PERL_EXISTS; then
 	shj_log "Warning: perl not found. We continue without perl..."
 fi
 
-TST="$(ls $PROBLEMPATH/in | wc -l)"  # Number of Test Cases
+TST="$(ls $PROBLEMPATH/in/input*.txt | wc -l)"  # Number of Test Cases
 
 JAIL=jail-$RANDOM
 if ! mkdir $JAIL; then

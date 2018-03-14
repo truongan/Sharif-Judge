@@ -19,50 +19,7 @@ function getCookie(cname) {
     return "";
 }
 
-function get_template(problem_id){
-    $.ajax({
-        cache: true,
-        type: 'POST',
-        url: shj.site_url + 'submit/template',
-        data: {
-            wcj_csrf_name: shj.csrf_token,
-            assignment: shj.selected_assignment ,
-            problem: problem_id
-        },
-        success : function(data){
-            if (data.banned != ""){
-                var ban_span = "";
-                data.banned.split("\n").map(function(str){
-                    if (str != "")
 
-                    ban_span += "<button type='button' class='btn btn-danger banned_btn'>"+ str +"</button>";
-                });
-                $("#banned").html('<h6>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)<br/>'
-                                + ban_span
-                                + '</h6>');
-                $("#banned").show();
-            } else {
-                $("#banned").hide();
-            }
-
-            if (data.before != ""){
-                ace.edit("before").setValue(data.before);
-                $("#before-grp").show();
-            }
-            else {
-                $("#before-grp").hide();
-            }
-
-            if (data.after != ""){
-                ace.edit("after").setValue(data.after);
-                $("#after-grp").show();
-            }
-            else {
-                $("#after-grp").hide();
-            }
-        }
-    });
-}
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -72,6 +29,65 @@ function setCookie(cname, cvalue, exdays) {
 
 
 $(document).ready(function(){
+    var theme = getCookie("code_theme");
+    if (theme == "") theme = "dawn";
+
+    var before = ace.edit("before");
+    var after = ace.edit("after");
+    var editor = ace.edit("editor");
+    var all_ace_s = [before, editor, after];
+
+
+    function get_template(problem_id){
+        $.ajax({
+            cache: true,
+            type: 'POST',
+            url: shj.site_url + 'submit/template',
+            data: {
+                wcj_csrf_name: shj.csrf_token,
+                assignment: shj.selected_assignment ,
+                problem: problem_id
+            },
+            success : function(data){
+                if (data.banned != ""){
+                    var ban_span = "";
+                    data.banned.split("\n").map(function(str){
+                        if (str != "")
+    
+                        ban_span += "<button type='button' class='btn btn-danger banned_btn'>"+ str +"</button>";
+                    });
+                    $("#banned").html('<h6>The following keyword(s) are banned. They must not appear anywhere in your submission (not even in comment)<br/>'
+                                    + ban_span
+                                    + '</h6>');
+                    $("#banned").show();
+                } else {
+                    $("#banned").hide();
+                }
+    
+                if (data.before != ""){
+                    ace.edit("before").setValue(data.before);
+                    $("#before-grp").show();
+                }
+                else {
+                    $("#before-grp").hide();
+                }
+    
+                if (data.after != ""){
+                    ace.edit("after").setValue(data.after);
+                    $("#after-grp").show();
+                }
+                else {
+                    $("#after-grp").hide();
+                }
+    
+                all_ace_s.map(function(editor){
+                    //console.log(editor)
+                    editor.resize();
+                });
+            }
+        });
+    }
+
     $("select#problems").change(function(){
         var v = $(this).val();
         $('select#languages').empty();
@@ -85,13 +101,6 @@ $(document).ready(function(){
         get_template($(this).val());
     });
 
-    var theme = getCookie("code_theme");
-    if (theme == "") theme = "dawn";
-
-    var before = ace.edit("before");
-    var after = ace.edit("after");
-    var editor = ace.edit("editor");
-    var all_ace_s = [before, editor, after];
 
     before.setReadOnly(true);
     after.setReadOnly(true);
