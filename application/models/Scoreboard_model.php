@@ -100,8 +100,10 @@ class Scoreboard_model extends CI_Model
 		array_multisort(
 			$scoreboard['solved'], SORT_NUMERIC, SORT_DESC,
 			$scoreboard['score'], SORT_NUMERIC, SORT_DESC,
+			$scoreboard['accepted_score'], SORT_NUMERIC, SORT_DESC,
 			$scoreboard['submit_penalty'], SORT_NUMERIC, SORT_ASC,
 			$scoreboard['username']
+			,$scoreboard['tried_to_solve']
 		);
 		return array($scores, $scoreboard);
 	}
