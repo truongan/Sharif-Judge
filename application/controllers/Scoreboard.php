@@ -39,7 +39,7 @@ class Scoreboard extends CI_Controller
 
 		//Remove excess info
 		$a = preg_replace('/[0-9]+:[0-9]+(\*\*)?/', '', $a);
-		$a = preg_replace('/-/', '', $a);
+		$a = preg_replace('/\B-\B/', '', $a);
 		$a = preg_replace('/[0-9]+\*/', '0', $a);
 		$a = preg_replace('/\n+/', "\n", $a);
 
