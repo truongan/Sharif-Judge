@@ -197,7 +197,7 @@ if [ -f "$PROBLEMPATH/tester.cpp" ] && [ ! -f "$PROBLEMPATH/tester.executable" ]
 	TST_COMPILE_BEGIN_TIME=$(($(date +%s%N)/1000000));
 	# An: 20160321 change
 	# no optimization when compile tester code
-	g++ $PROBLEMPATH/tester.cpp -o $PROBLEMPATH/tester.executable
+	g++ -std=c++11 $PROBLEMPATH/tester.cpp -o $PROBLEMPATH/tester.executable
 	EC=$?
 	TST_COMPILE_END_TIME=$(($(date +%s%N)/1000000));
 	if [ $EC -ne 0 ]; then
