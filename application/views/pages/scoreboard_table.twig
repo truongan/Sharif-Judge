@@ -5,7 +5,7 @@
  #}
 {% spaceless %}
 
-<table class="wecode_table table table-striped table-bordered">
+<table class="wecode_table table table-striped table-bordered table-sm">
 <thead class="thead-dark">
 	<tr>
 		<th>#</th>
@@ -54,12 +54,12 @@
 	</td>
 	{% endfor %}
 	<td>
-	<span><strong>{{ scoreboard['score'][loop.index0] }}</strong></span>
+	<span>{{ scoreboard['score'][loop.index0] }}</span>
 	<br>
 	<span class="tiny_text" title="Total Time + Submit Penalty">{{ time_hhmm(scoreboard['submit_penalty'][loop.index0]) }}</span>
 	</td>
-	<td>
-	<span><strong>{{ scoreboard['accepted_score'][loop.index0] }}</strong></span>
+	<td {#class="bg-success text-light" #}>
+	<span class="lead"><strong>{{ scoreboard['accepted_score'][loop.index0] }}</strong></span>
 	<br>
 	<span class="tiny_text" title="Solved : Attack ratio">{{ scoreboard['solved'][loop.index0]}}:{{ scoreboard['tried_to_solve'][loop.index0]}}</span>
 	</td>
