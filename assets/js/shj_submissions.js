@@ -124,7 +124,7 @@ $(document).ready(function () {
 
 	setTimeout(update_status, update_status_interval);
 
-	// $(".sharif_table").DataTable();
+	$(".wecode_table").DataTable();
 });
 
 
