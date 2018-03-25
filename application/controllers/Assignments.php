@@ -260,6 +260,24 @@ class Assignments extends CI_Controller
 		$this->twig->display('pages/admin/delete_assignment.twig', $data);
 
 	}
+	public function reload_scoreboard($assignment_id = FALSE)
+	{
+		if ($assignment_id === FALSE)
+			show_404();
+		if ($this->user->level <= 1) // permission denied
+			show_404();
+		
+		$this->load->model('scoreboard_model');
+		if ($this->scoreboard_model->update_scoreboard($assignment_id)){
+			$this->messages[] = array(
+				'type' => 'success',
+				'text' => "Successfully reload scoreboard for assignment "  . $assignment_id
+			);			
+
+			$this->index();
+		}
+			//echo("Success");
+	}
 
 
 

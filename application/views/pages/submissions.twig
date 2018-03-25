@@ -162,7 +162,7 @@
 			<td><small>{{ submission.time }}</small></td>
 			<td>{{ submission.pre_score }}</td>
 			<td>
-				<span class="tiny_text" {{ submission.delay > 0 ? 'style="color:red;"' }}'>
+				<span class="small" {{ submission.delay > 0 ? 'style="color:red;"' }}'>
 				{% if submission.delay <= 0 %}
 					No Delay
 				{% else %}

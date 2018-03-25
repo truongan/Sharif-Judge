@@ -158,7 +158,7 @@ class Scoreboard_model extends CI_Model
 		if ($assignment_id == 0
 			//OR  ! $scoreboard_enabled  /* An: 2017-10-07: Always update scoreboard, enable scoreboard option only hide it
 		)
-			return;
+			return false;
 
 		// Generate the scoreboard
 		list ($scores, $scoreboard) = $this->_generate_scoreboard($assignment_id);
@@ -189,6 +189,8 @@ class Scoreboard_model extends CI_Model
 			$this->db->insert('scoreboard', array('assignment'=>$assignment_id, 'scoreboard'=>$scoreboard_table));
 		else
 			$this->db->where('assignment', $assignment_id)->update('scoreboard', array('scoreboard'=>$scoreboard_table));
+		
+		return true;
 	}
 
 
