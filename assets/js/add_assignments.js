@@ -19,7 +19,7 @@ shj.row +=				'</select>';
 shj.row +=			'</td>';
 shj.row +=			'<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="diff" /></td>';
 shj.row +=			'<td><input type="text" name="diff_arg[]" class="form-control short_text" value="-bB"/></td>';
-shj.row +=			'<td><input type="checkbox" name="is_upload_only[]" class="check" value="" }}/></td>';
+shj.row +=			'<td><label class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" class="custom-control-input" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? "checked" }}/><span class="custom-control-label"></span></label></td>';
 shj.row +=			'<td><span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></td>';
 shj.row +=		'</tr>';
 	$(document).ready(function(){

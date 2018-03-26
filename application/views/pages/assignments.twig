@@ -21,7 +21,7 @@
 
 {% block main_content %}
 <div class="col">
-{% set msgclasses = {'success': 'shj_g', 'notice': 'shj_o', 'error': 'shj_r'} %}
+{% set msgclasses = {'success': 'text-success', 'notice': 'text-info', 'error': 'text-danger'} %}
 {% for message in messages %}
 	<p class="{{ msgclasses[message.type] }}">{{ message.text }}</p>
 {% endfor %}
@@ -83,6 +83,9 @@
 		{% endif %}
 		{% if user.level >= 2 %}
 			<a href="{{ site_url('moss/'~item.id) }}"><i title="Detect Similar Codes" class="fa fa-shield fa-lg color7"></i></a>
+		{% endif %}
+		{% if user.level >= 2 %}
+			<a href="{{ site_url('assignments/reload_scoreboard/'~item.id) }}"><i title="Force reload scoreboard" class="fa fa-retweet fa-lg color11"></i></a>
 		{% endif %}
 		{% if user.level >= 2 %}
 			<a href="{{ site_url('assignments/edit/'~item.id) }}"><i title="Edit" class="fa fa-pencil fa-lg color3"></i></a>

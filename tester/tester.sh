@@ -146,7 +146,7 @@ if ! $PERL_EXISTS; then
 	shj_log "Warning: perl not found. We continue without perl..."
 fi
 
-TST="$(ls $PROBLEMPATH/in | wc -l)"  # Number of Test Cases
+TST="$(ls $PROBLEMPATH/in/input*.txt | wc -l)"  # Number of Test Cases
 
 JAIL=jail-$RANDOM
 if ! mkdir $JAIL; then
@@ -197,7 +197,7 @@ if [ -f "$PROBLEMPATH/tester.cpp" ] && [ ! -f "$PROBLEMPATH/tester.executable" ]
 	TST_COMPILE_BEGIN_TIME=$(($(date +%s%N)/1000000));
 	# An: 20160321 change
 	# no optimization when compile tester code
-	g++ $PROBLEMPATH/tester.cpp -o $PROBLEMPATH/tester.executable
+	g++ -std=c++11 $PROBLEMPATH/tester.cpp -o $PROBLEMPATH/tester.executable
 	EC=$?
 	TST_COMPILE_END_TIME=$(($(date +%s%N)/1000000));
 	if [ $EC -ne 0 ]; then

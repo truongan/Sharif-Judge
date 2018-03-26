@@ -193,22 +193,27 @@ input[type='number'].short_text{
 
 		<div class="col-sm-6">
 			<fieldset class="form-group">
-				<input id="form_a_open" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
-
-					<label for="form_a_open" class="default">Open</label>
+				<div class="custom-control custom-checkbox">
+					<input id="form_a_open" class="custom-control-input" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
+					<label for="form_a_open" class="custom-control-label">Open</label>
+				</div>
 				<small class="form-text text-muted ">Open or close this assignment for submission</small>
 				{{ form_error('open', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 
 			<fieldset class="form-group">
-				<input id="form_a_scoreboard" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
-								<label for="form_a_scoreboard" class="default">Scoreboard</label>
+				<label class="custom-control custom-checkbox">
+					<input id="form_a_scoreboard" class="custom-control-input" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
+					<span {#for="form_a_scoreboard"#} class="custom-control-label">Scoreboard</span>
+				</label>
 				<small class="form-text text-muted ">Check this to publish scoreboard to student</small>
 				{{ form_error('scoreboard', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 			<fieldset class="form-group">
-				<input id="form_a_javaexceptions" type="checkbox" name="javaexceptions" value="1" {{ edit ? (edit_assignment.javaexceptions ? 'checked') : set_checkbox('javaexceptions', '1')|raw }} />
-					<label for="form_a_javaexceptions" class="default">Java Exceptions</label>
+				<div class="custom-control custom-checkbox">
+					<input id="form_a_javaexceptions" class="custom-control-input" type="checkbox" name="javaexceptions" value="1" {{ edit ? (edit_assignment.javaexceptions ? 'checked') : set_checkbox('javaexceptions', '1')|raw }} />
+					<label for="form_a_javaexceptions" class="custom-control-label">Java Exceptions</label>
+				</div>
 				<small class="form-text text-muted ">Check this to show Java exceptions to users</small>
 				{{ form_error('javaexceptions', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
@@ -268,7 +273,7 @@ input[type='number'].short_text{
 			</td>
 			<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="{{ problem.diff_cmd }}"/></td>
 			<td><input type="text" name="diff_arg[]" class="form-control short_text" value="{{ problem.diff_arg }}"/></td>
-			<td><input type="checkbox" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/></td>
+			<td><label class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" class="custom-control-input" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/><span class="custom-control-label"></span></label></td>
 			<td><span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></td>
 		</tr>
 		{% set i = i + 1 %}

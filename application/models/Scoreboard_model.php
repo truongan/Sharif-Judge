@@ -29,7 +29,9 @@ class Scoreboard_model extends CI_Model
 		$assignment = $this->assignment_model->assignment_info($assignment_id);
 		$submissions = $this->db->get_where('submissions', array('is_final' => 1 , 'assignment' => $assignment_id))->result_array();
 		$total_score = array();
+		$total_accepted_score = array();
 		$solved = array();
+		$tried_to_solve = array();
 		$penalty = array();
 		$users = array();
 		$start = strtotime($assignment['start_time']);
@@ -55,15 +57,19 @@ class Scoreboard_model extends CI_Model
 
 			if ( ! isset($total_score[$submission['username']])){
 				$total_score[$submission['username']] = 0;
+				$total_accepted_score[$submission['username']] = 0;
 			}
 			if ( !isset($solved[$submission['username']])){
 				$solved[$submission['username']] = 0;
+				$tried_to_solve[$submission['username']] = 0;
 			}
 			if ( ! isset($penalty[$submission['username']]))
 				$penalty[$submission['username']] = 0;
 
 			$solved[$submission['username']] += $fullmark;
+			$tried_to_solve[$submission['username']] += 1;
 			$total_score[$submission['username']] += $final_score;
+			if ($fullmark) $total_accepted_score[$submission['username']] += $final_score;
 
 			$number_of_submissions = $this->db->where(array(
 				'assignment' => $submission['assignment'],
@@ -77,21 +83,27 @@ class Scoreboard_model extends CI_Model
 		$scoreboard = array(
 			'username' => array(),
 			'score' => array(),
+			'accepted_score' => array(),
 			'submit_penalty' => array()
 			,'solved' => array()
+			,'tried_to_solve' => array()
 		);
 		$users = array_unique($users);
 		foreach($users as $username){
 			array_push($scoreboard['username'], $username);
 			array_push($scoreboard['score'], $total_score[$username]);
+			array_push($scoreboard['accepted_score'], $total_accepted_score[$username]);
 			array_push($scoreboard['submit_penalty'], $penalty[$username]);
 			array_push($scoreboard['solved'], $solved[$username]);
+			array_push($scoreboard['tried_to_solve'], $tried_to_solve[$username]);
 		}
 		array_multisort(
 			$scoreboard['solved'], SORT_NUMERIC, SORT_DESC,
+			$scoreboard['accepted_score'], SORT_NUMERIC, SORT_DESC,
 			$scoreboard['score'], SORT_NUMERIC, SORT_DESC,
 			$scoreboard['submit_penalty'], SORT_NUMERIC, SORT_ASC,
 			$scoreboard['username']
+			,$scoreboard['tried_to_solve']
 		);
 		return array($scores, $scoreboard);
 	}
@@ -142,12 +154,11 @@ class Scoreboard_model extends CI_Model
 	{
 
 		// If scoreboard in not enabled, do nothing
-		$scoreboard_enabled = $this->db->select('scoreboard')->get_where('assignments', array('id'=>$assignment_id))->row()->scoreboard;
+		//$scoreboard_enabled = $this->db->select('scoreboard')->get_where('assignments', array('id'=>$assignment_id))->row()->scoreboard;
 		if ($assignment_id == 0
 			//OR  ! $scoreboard_enabled  /* An: 2017-10-07: Always update scoreboard, enable scoreboard option only hide it
-			
 		)
-			return;
+			return false;
 
 		// Generate the scoreboard
 		list ($scores, $scoreboard) = $this->_generate_scoreboard($assignment_id);
@@ -178,6 +189,8 @@ class Scoreboard_model extends CI_Model
 			$this->db->insert('scoreboard', array('assignment'=>$assignment_id, 'scoreboard'=>$scoreboard_table));
 		else
 			$this->db->where('assignment', $assignment_id)->update('scoreboard', array('scoreboard'=>$scoreboard_table));
+		
+		return true;
 	}
 
 

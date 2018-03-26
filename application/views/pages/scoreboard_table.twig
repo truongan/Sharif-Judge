@@ -5,7 +5,7 @@
  #}
 {% spaceless %}
 
-<table class="wecode_table table table-striped table-bordered">
+<table class="wecode_table table table-striped table-bordered table-sm">
 <thead class="thead-dark">
 	<tr>
 		<th>#</th>
@@ -14,12 +14,15 @@
 		{% for problem in problems %}
 			<th>
 				<a dir="auto" href="{{ site_url("problems/#{assignment_id}/#{problem.id}") }}">{{ problem.name }}</a><br>
-				<span class="tiny_text_b">{{ problem.score }}</span>
+				<small class="font-weight-bold"><a class="text-light" href="{{ site_url("submissions/final/problem/#{problem.id}") }}">{{ problem.score }}</a></small>
 			</th>
 		{% endfor %}
 		<th>
 			Total<br>
-			<span class="tiny_text_b">{{ total_score }}</span>
+			<small>{{ total_score }}</smal>
+		</th>
+		<th>
+			Total<br>accepted
 		</th>
 	</tr>
 </thead>
@@ -28,22 +31,23 @@
 	<tr>
 	<td>{{ loop.index }}</td>
 	<td>{{ sc_username }}</td>
-	<td dir="auto">{{ names[sc_username] }}</td>
+	<td dir="auto"><a class="text-muted" href="{{ site_url("submissions/all/user/#{sc_username}/") }}" >{{ names[sc_username] }}</a></td>
 	{% for problem in problems %}
 	<td>
 		{% if scores[sc_username][problem.id].score is defined %}
+			<a href="{{ site_url("submissions/all/user/#{sc_username}/problem/#{problem.id}") }}"
 			{% if scores[sc_username][problem.id].fullmark == true %}
-				<span style="color:green">
+				class="text-success" >
 					{{ scores[sc_username][problem.id].score }}
 			{% else %}
-				<span style="color:red">
+				class="text-danger">
 					{{ scores[sc_username][problem.id].score }}*
 			{% endif %}
-				</span></br>
+				</a></br>
 			{% if scores[sc_username][problem.id].late > 0 %}
-				<span class="tiny_text text-warning" title="Delay time" >{{ time_hhmm(scores[sc_username][problem.id].late) }}**</span>
+				<span class="small text-warning" title="Delay time" >{{ time_hhmm(scores[sc_username][problem.id].late) }}**</span>
 			{% else %}
-				<span class="tiny_text" title="Time">{{ time_hhmm(scores[sc_username][problem.id].time) }}</span>
+				<span class="small" title="Time">{{ time_hhmm(scores[sc_username][problem.id].time) }}</span>
 			{% endif %}
 		{% else %}
 			-
@@ -51,9 +55,16 @@
 	</td>
 	{% endfor %}
 	<td>
-	<span style="font-weight: bold;">{{ scoreboard['score'][loop.index0] }}</span>
+		<a class="text-muted" href="{{ site_url("submissions/final/user/#{sc_username}/") }}" >
+			<span>{{ scoreboard['score'][loop.index0] }}</span>
+			<br>
+			<span class="small" title="Total Time + Submit Penalty">{{ time_hhmm(scoreboard['submit_penalty'][loop.index0]) }}</span>
+		</a>
+	</td>
+	<td class="bg-success text-light" >
+	<span class="lead"><strong>{{ scoreboard['accepted_score'][loop.index0] }}</strong></span>
 	<br>
-	<span class="tiny_text" title="Total Time + Submit Penalty">{{ time_hhmm(scoreboard['submit_penalty'][loop.index0]) }}</span>
+	<span class="small" title="Solved : Attack ratio">{{ scoreboard['solved'][loop.index0]}}:{{ scoreboard['tried_to_solve'][loop.index0]}}</span>
 	</td>
 	</tr>
 {% endfor %}
