@@ -86,7 +86,7 @@ $(document).ready(function(){
 {% block main_content %}
 	<div class="col-12  d-flex flex-column">
 			{% for error in errors %}
-				<p class="shj_error">{{ error|raw }}</p>
+				<p class="text-danger">{{ error|raw }}</p>
 			{% endfor %}
 		<div class="header clearfix">
 			<input type="file" style="display: none;" id="opendialog">

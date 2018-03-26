@@ -84,46 +84,47 @@
 	<thead class="thead-dark">
 		<tr>
 		{% if view == 'all' %}
-			<th width="1%" rowspan="2"><small>Final</small></th>
+			<th width="1%" rowspan="1"><small>Final</small></th>
 		{% endif %}
 		{% if user.level > 0 %}
-				{% if view == 'all' %}
-				<th width="2%" rowspan="2"><small>ID</small></th>
-				{% else %}
-				<th width="1%" rowspan="2">#</th>
-				<th width="2%" rowspan="2"><small>ID</small></th>
-				{% endif %}
-				<th width="5%" rowspan="2"><small>Username</small></th>
-				<th width="20%" rowspan="2">Name</th>
-				<th width="4%" rowspan="2"><small>Problem</small></th>
-				<th width="6%" rowspan="2"><small>Submit Time</small></th>
-				<th colspan="3">Score</th>
-				<th width="1%" rowspan="2"><small>Lang</small></th>
-				<th width="6%" rowspan="2">Status</th>
-				<th width="6%" rowspan="2">Code</th>
-				<th width="6%" rowspan="2">Log</th>
-				{% if user.level >= 2 %}
-				<th width="1%" rowspan="2" ><small>Re-judge</small></th>
-				{% endif %}
-			</tr>
-			<tr>
-				<th width="1%" class="score"><small>Score</small></th>
-				<th width="1%" class="score"><small>Delay<br>%</small></th>
-				<th width="1%" class="score"><small>Final Score</small></th>
-			</tr>
+			{% if view == 'all' %}
+			<th width="2%" rowspan="1"><small>ID</small></th>
+			{% else %}
+			<th width="1%" rowspan="1">#</th>
+			<th width="2%" rowspan="1"><small>ID</small></th>
+			{% endif %}
+			<th width="5%" rowspan="1"><small>Username</small></th>
+			<th width="20%" rowspan="1">Name</th>
+			<th width="4%" rowspan="1"><small>Problem</small></th>
+			<th width="6%" rowspan="1"><small>Submit Time</small></th>
+			{# <th colspan="3">Score</th> #}
+			<th width="1%" class="score"><small>Score</small></th>
+			<th width="1%" class="score"><small>Delay<br>%</small></th>
+			{# <th width="1%" class="score"><small>Final Score</small></th> #}
+			
+			<th width="1%" rowspan="1"><small>Lang</small></th>
+			<th width="6%" rowspan="1">Status</th>
+			<th width="6%" rowspan="1">Code</th>
+			<th width="6%" rowspan="1">Log</th>
+			{% if user.level >= 2 %}
+			<th width="1%" rowspan="1" ><small>Re-judge</small></th>
+			{% endif %}
+		</tr>
+		{# <tr>
+		</tr> #}
 		{% else %}
-				<th width="10%" rowspan="2">Problem</th>
-				<th width="30%" rowspan="2">Submit Time</th>
-				<th width="7%" colspan="3">Score</th>
-				<th width="1%" rowspan="2">Language</th>
-				<th width="30%" rowspan="2">Status</th>
-				<th width="15%" rowspan="2">Code</th>
-			</tr>
-			<tr>
-				<th width="7%" class="score">Score</th>
-				<th width="7%" class="score">Delay<br>%</th>
-				<th width="7%" class="score">Final Score</th>
-			</tr>
+			<th width="10%" rowspan="1">Problem</th>
+			<th width="30%" rowspan="1">Submit Time</th>
+			
+			<th width="7%" class="score">Score</th>
+			<th width="7%" class="score">Delay<br>%</th>
+			{# <th width="7%" class="score">Final Score</th> #}
+			
+			<th width="1%" rowspan="1">Language</th>
+			<th width="30%" rowspan="1">Status</th>
+			<th width="15%" rowspan="1">Code</th>
+		</tr>
+		
 		{% endif %}
 	</thead>
 	{% set i=0 %}
@@ -171,7 +172,7 @@
 				</span><br>
 				<small>{{ submission.coefficient }}%</small>
 			</td>
-			<td style="font-weight: bold;">{{ submission.final_score }} </td>
+			{# <td style="font-weight: bold;">{{ submission.final_score }} </td> #}
 			<td><small>{{ submission.language }}</small></td>
 			<td class="status">
 				{% if submission.status == 'Uploaded' %}

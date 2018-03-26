@@ -44,7 +44,7 @@ $(document).ready(function () {
 
 {% block main_content %}
 {% for error in errors %}
-	<p class="shj_error">{{ error|raw }}</p>
+	<p class="text-danger">{{ error|raw }}</p>
 {% endfor %}
 	<div class="col-md-6">
 		<div class="shj_widget">
