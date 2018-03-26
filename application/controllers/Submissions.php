@@ -363,8 +363,8 @@ class Submissions extends CI_Controller
 		$this->load->library('pagination');
 		$this->pagination->initialize($this->pagination_config);
 
-		//$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
-		$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, null, $this->filter_user, $this->filter_problem);
+		$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
+		//$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, null, $this->filter_user, $this->filter_problem);
 
 		$names = $this->user_model->get_names();
 

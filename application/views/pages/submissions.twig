@@ -80,7 +80,7 @@
 {%  if view == 'all' %}
 <p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
 {% endif %}
-<table class="wecode_table table table-bordered {% if view == 'all' %}table-striped{% endif %}">
+<table class="wecode_table table table-bordered {% if view == 'all' %}table-striped{% else %}data-table{% endif %}">
 	<thead class="thead-dark">
 		<tr>
 		{% if view == 'all' %}
@@ -220,7 +220,9 @@
 </table>
 
 <p>
-{# {{ pagination|raw }} #}
+{%  if view == 'all' %}
+{{ pagination|raw }}
+{% endif %}
 </p>
 </div>
 {% endblock %}  {# main_content #}

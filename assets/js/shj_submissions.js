@@ -124,7 +124,7 @@ $(document).ready(function () {
 
 	setTimeout(update_status, update_status_interval);
 
-	$(".wecode_table").DataTable();
+	$(".data-table").DataTable();
 });
 
 
