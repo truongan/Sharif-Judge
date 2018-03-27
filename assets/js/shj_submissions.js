@@ -124,7 +124,10 @@ $(document).ready(function () {
 
 	setTimeout(update_status, update_status_interval);
 
-	$(".data-table").DataTable();
+	$(".data-table").DataTable({
+		"pageLength": 50,
+		"lengthMenu": [ [20, 50, 100, 200, -1], [20, 50, 100, 200, "All"] ]
+	});
 });
 
 
