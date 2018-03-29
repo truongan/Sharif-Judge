@@ -12,14 +12,15 @@
 		<th><small>Username</small></th>
 		<th>Name</th>
 		{% for problem in problems %}
-			<th>
-				<a class="small" href="{{ site_url("problems/#{assignment_id}/#{problem.id}") }}">{{ problem.name }}</a><br>
-				<small class="font-weight-bold"><a class="text-light" href="{{ site_url("submissions/final/problem/#{problem.id}") }}">{{ problem.score }}</a></small>
-			</th>
+		<th>
+			<a class="small" href="{{ site_url("problems/#{assignment_id}/#{problem.id}") }}">{{ problem.name }}</a>
+			<br>
+			<a class="text-light" href="{{ site_url("submissions/final/problem/#{problem.id}") }}">{{ problem.score }}</a>
+		</th>
 		{% endfor %}
 		<th>
 			Total<br>
-			<small>{{ total_score }}</smal>
+			<small>{{ total_score }}</small>
 		</th>
 		<th>
 			Total<br>accepted
@@ -31,7 +32,7 @@
 	<tr>
 	<td>{{ loop.index }}</td>
 	<td>{{ sc_username }}</td>
-	<td dir="auto"><a class="text-muted small" href="{{ site_url("submissions/all/user/#{sc_username}/") }}" >{{ names[sc_username] }}</a></td>
+	<td><a class="text-muted small" href="{{ site_url("submissions/all/user/#{sc_username}/") }}" >{{ names[sc_username] }}</a></td>
 	{% for problem in problems %}
 	<td>
 		{% if scores[sc_username][problem.id].score is defined %}
@@ -43,7 +44,7 @@
 				class="text-danger">
 					{{ scores[sc_username][problem.id].score }}*
 			{% endif %}
-				</a></br>
+				</a><br/>
 			{% if scores[sc_username][problem.id].late > 0 %}
 				<span class="small text-warning" title="Delay time" >{{ time_hhmm(scores[sc_username][problem.id].late) }}**</span>
 			{% else %}

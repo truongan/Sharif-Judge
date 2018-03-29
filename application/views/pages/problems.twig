@@ -90,7 +90,7 @@ $(document).ready(function(){
 
 	<div class="col-md-5 col-lg-4 ">
 		<div class="problems_widget row">
-			<p dir="auto"><i class="fa fa-file-text fa-lg color9"></i> {{ description_assignment.name }}</p>
+			<p><i class="fa fa-file-text fa-lg color9"></i> {{ description_assignment.name }}</p>
 
 			{% if all_problems|length == 0 %}
 				<p style="text-align: center;">Nothing to show...</p>
@@ -109,7 +109,7 @@ $(document).ready(function(){
 					<tr{{ problem.id == one_problem.id ? ' class="table-active"' }}>
 						<td>{{ one_problem.id }}</td>
 						<td>
-							<a dir="auto" href="{{ site_url("problems/#{description_assignment.id}/#{one_problem.id}") }}">{{ one_problem.name }}</a>
+							<a href="{{ site_url("problems/#{description_assignment.id}/#{one_problem.id}") }}">{{ one_problem.name }}</a>
 						</td>
 						<td>{{ one_problem.score }}</td>
 						<td>{{ one_problem.is_upload_only ? 'Yes' : 'No' }}</td>

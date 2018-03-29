@@ -60,11 +60,11 @@
 
 		<br>
 
-		<h3>Detect similar submissions of assignment "<span dir="auto">{{ moss_assignment.name }}</span>":</h3>
+		<h3>Detect similar submissions of assignment "<span>{{ moss_assignment.name }}</span>":</h3>
 		<p>
 		{{ form_open('moss/'~moss_assignment.id) }}
 		<input type="hidden" name="detect" value="detect" />
-		You can send final submissions of assignment "<span dir="auto">{{ moss_assignment.name }}</span>" to Moss
+		You can send final submissions of assignment "<span>{{ moss_assignment.name }}</span>" to Moss
 		by clicking on this button.<br>
 		Zip and PDF files will not be sent.<br>
 		It may take a minute. Please be patient.<br>
@@ -74,7 +74,7 @@
 
 		<br>
 
-		<h3>Moss results for assignment "<span dir="auto">{{ moss_assignment.name }}</span>":</h3>
+		<h3>Moss results for assignment "<span>{{ moss_assignment.name }}</span>":</h3>
 		<p>
 			Links will expire after some time. (last update: {{ update_time }}) <br>
 			<ul>

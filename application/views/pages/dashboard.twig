@@ -69,7 +69,7 @@ $(document).ready(function () {
 				{% endif %}
 				{% for notification in notifications %}
 					<div class="notif" id="number{{ notification.id }}" data-id="{{ notification.id }}">
-						<div class="notif_title" dir="auto">
+						<div class="notif_title">
 							<span class="anchor ttl_n">{{ notification.title }}</span>
 							<span class="notif_meta" dir="ltr">
 							{{ notification.time }}
@@ -79,7 +79,7 @@ $(document).ready(function () {
 								{% endif %}
 							</span>
 						</div>
-						<div class="notif_text latest" dir="auto">{{ notification.text }}</div>
+						<div class="notif_text latest">{{ notification.text }}</div>
 					</div>
 				{% endfor %}
 			</div>
