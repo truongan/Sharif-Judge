@@ -643,7 +643,7 @@ class Parsedown
 					{
 						if (isset($block['interrupted']))
 						{
-							$markup .= "\n".'<p dir="auto">'.$text.'</p>'."\n"; // dir="auto" added by mjnaderi
+							$markup .= "\n".'<p>'.$text.'</p>'."\n"; // added by mjnaderi
 						}
 						else
 						{
@@ -657,7 +657,7 @@ class Parsedown
 					}
 					else
 					{
-						$markup .= '<p dir="auto">'.$text.'</p>'."\n"; // dir="auto" added by mjnaderi
+						$markup .= '<p>'.$text.'</p>'."\n"; // added by mjnaderi
 					}
 
 					break;
@@ -666,7 +666,7 @@ class Parsedown
 
 					$text = $this->parse_block_elements($block['lines']);
 
-					$markup .= '<blockquote dir="auto">'."\n".$text.'</blockquote>'."\n"; // dir="auto" added by mjnaderi
+					$markup .= '<blockquote>'."\n".$text.'</blockquote>'."\n"; // added by mjnaderi
 
 					break;
 
@@ -697,7 +697,7 @@ class Parsedown
 
 					$text = $this->parse_span_elements($block['text']);
 
-					$markup .= '<h'.$block['level'].' dir="auto">'.$text.'</h'.$block['level'].'>'."\n"; // dir="auto" added by mjnaderi
+					$markup .= '<h'.$block['level'].'>'.$text.'</h'.$block['level'].'>'."\n"; // added by mjnaderi
 
 					break;
 
@@ -713,7 +713,7 @@ class Parsedown
 					{
 						$type = isset($block['ordered']) ? 'ol' : 'ul';
 
-						$markup .= '<'.$type.' dir="auto">'."\n"; // dir="auto" added by mjnaderi
+						$markup .= '<'.$type.'>'."\n"; // added by mjnaderi
 					}
 
 					if (isset($block['interrupted']) and ! isset($block['last']))
@@ -723,7 +723,7 @@ class Parsedown
 
 					$text = $this->parse_block_elements($block['lines'], 'li');
 
-					$markup .= '<li dir="auto">'.$text.'</li>'."\n"; // dir="auto" added by mjnaderi
+					$markup .= '<li>'.$text.'</li>'."\n"; // added by mjnaderi
 
 					if (isset($block['last']))
 					{

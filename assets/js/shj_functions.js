@@ -278,7 +278,7 @@ $(document).ready(function(){
 
 
 /**
- * Set dir="auto" for all input elements
+ * Set for all input elements
  */
 $(document).ready(function(){
 	$('input').attr('dir', 'auto');

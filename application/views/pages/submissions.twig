@@ -76,7 +76,7 @@
 
 {% block main_content %}
 <div class="col">
-<p>{{ view|title }} Submissions of <span dir="auto">{{ user.selected_assignment.name }}</span></p>
+<p>{{ view|title }} Submissions of <span>{{ user.selected_assignment.name }}</span></p>
 {%  if view == 'all' %}
 <p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
 {% endif %}
@@ -155,7 +155,7 @@
 					<small>{{submission.username}}</small>
 			</a>
 				</td>
-			<td dir="auto">{{ submission.name }}</td>
+			<td>{{ submission.name }}</td>
 		{% endif %}
 			<td><a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem) }}" title="{{ problems[submission.problem].name }}"><span class="btn btn-info">{{ submission.problem }}</span></a>
 				<a href="{{ site_url('problems/' ~ submission.assignment ~ '/'~ submission.problem ) }}" title="View problem {{submission.problem}}'s statements"><span class="badge badge-pill badge-secondary">&larr;</span></a>

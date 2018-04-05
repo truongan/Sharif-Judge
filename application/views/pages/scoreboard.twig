@@ -28,7 +28,7 @@
 {% elseif not user.selected_assignment.scoreboard and user.level < 2%}
 <p>Scoreboard is disabled.</p>
 {% else %}
-	<p>Scoreboard of <span dir="auto">{{ user.selected_assignment.name }}</span></p>
+	<p>Scoreboard of <span>{{ user.selected_assignment.name }}</span></p>
 	{{ scoreboard|raw }}
 {% endif %}
 </div>
