@@ -29,7 +29,7 @@
 		$("#add_users_button").click(function(){
 			$("#loading").css('display','inline');
 			$.post(
-					'{{ site_url('users/add') }}',
+					'{{ site_url("users/add") }}',
 			{
 				send_mail: ($("#send_mail").is(":checked")?1:0),
 				delay: $("#delay").val(),

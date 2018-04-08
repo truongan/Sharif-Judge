@@ -4,7 +4,7 @@
  # author: Kelvin Ng <kelvin9302104@gmail.com>
  #}
 {% set selected = 'problems' %}
-{% extends 'templates/base.twig' %}
+{% extends 'templates/base.twig' %}noti
 {% block icon %}fa-puzzle-piece{% endblock %}
 {% block title %}{{ all_problems[problem.id].name }}{% endblock %}
 {% block head_title %}Problem {{ problem.id }}{% endblock %}
@@ -48,7 +48,7 @@ $(document).ready(function(){
 	$('.save-button').click(function(){
 		$.ajax({
 			type: 'POST',
-			url: "{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}",
+			url: '{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}',
 			data: {
 				wcj_csrf_name: shj.csrf_token,
 				text : CKEDITOR.instances.problem_description.getData()

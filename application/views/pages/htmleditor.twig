@@ -32,7 +32,6 @@
 	
 	flex-grow: 1;
 	min-height: 400px;
-	/*padding-bottom:20rem;*/
 	overflow: auto;
 }
 </style>
@@ -50,31 +49,59 @@ function b64EncodeUnicode(str) {
 $(document).ready(function(){
 	var file_name ="";
 
+	
 	$("#opendialog").bind("change",function(e){
-		// console.log($("#opendialog").val());
 		console.log(this.files);
 
 		file_name = this.files[0].name
-
+		
 		if (this.files && this.files[0]){
 			var reader = new FileReader();
 
 			reader.onload = function (e) {
 				$('#editor').html(e.target.result);
 			}
-
+			
 			reader.readAsText(this.files[0]);
 		}
 	});
-
+	
 	$("#open").click(function(){
 		$("#opendialog").click();
 	});
-
+	
 	$("#save").mouseover(function(){
 		$("#save > a").attr("href", "data:text/html;base64," + b64EncodeUnicode( CKEDITOR.instances.editor.getData() )) ;
 		$("#save > a").attr("download", file_name) ;
 		console.log($("#save > a"));
+	});
+
+	$('.save-button').click(function(){
+		$.ajax({
+			type: 'POST',
+			url: '{{ site_url("htmleditor/autosave") }}',
+			data: {
+				wcj_csrf_name: shj.csrf_token,
+				content : CKEDITOR.instances.editor.getData()
+			},
+			success: function (response) {
+				if (response == "success"){
+					$.notify('Change sucessfully saved'
+						, {position: 'bottom right', className: 'success', autoHideDelay: 3500});
+					$('.save-button').removeClass('btn-info').addClass('btn-secondary');
+				}
+			},
+			error: function(response){
+				$.notify('Error while saving'
+					, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
+				//alert('There was problem saving change. You should download the content right now');
+			}
+		});
+	});
+	CKEDITOR.on('instanceReady', function(){
+		CKEDITOR.instances.editor.on('change', function(){
+			$('.save-button').removeClass('btn-secondary').addClass('btn-info');
+		});
 	});
 
 });
@@ -88,20 +115,30 @@ $(document).ready(function(){
 			{% for error in errors %}
 				<p class="text-danger">{{ error|raw }}</p>
 			{% endfor %}
-		<div class="row">
+		<div class="row justify-content-center">
 			<input type="file" style="display: none;" id="opendialog">
 
-			<a class="btn btn-primary" href="#" id="open"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</a>
-
-			<a class="btn btn-primary ml-auto"  download href="#"><i class="fa fa-download" aria-hidden="true"></i></i> Download </a>
-
+			<div class="col-auto">
+				<a class="btn btn-primary" href="#" id="open"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</a>
+			</div>
+			
+			<div class="col-auto mr-auto ml-auto">		
+				<a class="btn btn-secondary save-button">
+					Save draft (will autosave every 3 minutes)
+				</a>
+			</div>
+			
+			<div class="col-auto">
+				<a class="btn btn-primary"  download href="#"><i class="fa fa-download" aria-hidden="true"></i>Download </a>
+			</div>
 		</div>
+
 		<div class="row">
 			<div class="edit_wrapper" id="editor" contenteditable="true">
 				{{ content | raw }}
 			</div>
 		</div>
-</div>
 	</div>
+</div>
 <!-- </div> -->
 {% endblock %}  {# main_content #}
