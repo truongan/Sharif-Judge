@@ -42,14 +42,14 @@ class Htmleditor extends CI_Controller
 			$content = $this->input->post("content");
 			$a =file_put_contents($this->autosave, $content); 
 			if ($a){
-				var_dump($a);
-				return "success";
+				
+				echo "success";
+				return;
 			}
 		}
-		var_dump($a);
-		//show_error("error", 403);
+
 		echo "shit";
-		return "fail";
+		show_error("saving fail", 403);
 	}
 }
 

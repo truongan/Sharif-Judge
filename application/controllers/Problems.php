@@ -157,21 +157,17 @@ class Problems extends CI_Controller
 			show_404();
 
 
-		switch($type)
-		{
-			case 'html':
-				$ext = 'html'; break;
-			case 'md':
-				$ext = 'md'; break;
-			case 'plain':
-				$ext = 'html'; break;
-		}
+		$ext = 'html';
+
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('text', 'text' ,'required'); /* todo: xss clean */
 		if ($this->form_validation->run())
 		{
-			$this->assignment_model->save_problem_description($assignment_id, $problem_id, $this->input->post('text'), $ext);
-			redirect('problems/'.$assignment_id.'/'.$problem_id);
+			if ($this->assignment_model->save_problem_description($assignment_id, $problem_id, $this->input->post('text'), $ext)){
+				echo "success";
+				return ;
+			}
+			else show_error("Error saving", 501);
 		}
 
 

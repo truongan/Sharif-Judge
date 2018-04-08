@@ -428,21 +428,10 @@ class Assignment_model extends CI_Model
 
 		if ($type === 'html')
 		{
-			// Remove the markdown code
-			unlink("$assignments_root/assignment_{$assignment_id}/p{$problem_id}/desc.md");
-			// Save the html code
-			file_put_contents("$assignments_root/assignment_{$assignment_id}/p{$problem_id}/desc.html", $text);
+			if (file_put_contents("$assignments_root/assignment_{$assignment_id}/p{$problem_id}/desc.html", $text) ) {
+				return true;
+			} else return false;
 		}
-		elseif ($type === 'md')
-		{
-			// We parse markdown using Parsedown library
-			$this->load->library('parsedown');
-			// Save the markdown code
-			file_put_contents("$assignments_root/assignment_{$assignment_id}/p{$problem_id}/desc.md", $text);
-			// Convert markdown to html and save the html
-			file_put_contents("$assignments_root/assignment_{$assignment_id}/p{$problem_id}/desc.html", $this->parsedown->parse($text));
-		}
-
 	}
 
 
