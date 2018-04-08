@@ -179,9 +179,6 @@ $(document).ready(function () {
 });
 
 
-
-
-
 /**
  * Top Bar
  */
@@ -209,15 +206,6 @@ $(document).ready(function () {
 						*/
 						//window.location.href = window.location.href;
 						location.reload();
-						/*
-						var checkboxes = $(".select_assignment").children('i').addBack('i');
-						checkboxes.removeClass('fa-check-square-o color6').addClass('fa-square-o');
-						checkboxes.filter("[data-id='" + id + "']").removeClass('fa-square-o').addClass('fa-check-square-o color6');
-						$(".assignment_name").html($('.top_object [data-id="' + id + '"]').parents('.assignment_block').children('.assignment_item').html());
-						shj.finish_time = moment(response.finish_time);
-						shj.extra_time  = moment.duration(parseInt(response.extra_time, 10), 'seconds');
-						shj.update_clock();
-						*/
 					}
 					else
 						shj.loading_failed(response.message);
@@ -226,55 +214,6 @@ $(document).ready(function () {
 		}
 	);
 });
-
-/**
- * "Users" page
- */
-$(document).ready(function(){
-	$('.delete-btn').click(function(){
-		var row = $(this).parents('tr');
-		var user_id = row.data('id');
-		var username = row.children('#un').html();
-
-		var del_submssion = $(this).hasClass('delete_submissions');
-
-		if (del_submssion) $(".modal-title").html("Are you sure you want to delete this user's SUBMISSIONS?");
-		else $(".modal-title").html("Are you sure you want to delete this user?");
-
-		$(".modal-body").html('User ID: '+user_id+'<br>Username: '+username+'<br><i class="splashy-warning_triangle"></i> All submissions of this user will be deleted.');
-		$(".confirm-user-delete").off();
-		$(".confirm-user-delete").click(function(){
-			console.log(del_submssion);
-			$.ajax({
-				type: 'POST',
-				url: (del_submssion ? shj.site_url+'users/delete_submissions' : shj.site_url+'users/delete'),
-				data: {
-					user_id: user_id,
-					wcj_csrf_name: shj.csrf_token
-				},
-				beforeSend: shj.loading_start,
-				complete: shj.loading_finish,
-				error: shj.loading_error,
-				success: function(response){
-					if (response.done)
-					{
-						if (!del_submssion){
-							row.animate({backgroundColor: '#FF7676'},1000, function(){row.remove();});
-							$.notify('User '+username+' deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
-						} else {
-							$.notify('All of User '+username+'\'s submissions deleted.', {position: 'bottom right', className: 'success', autoHideDelay: 5000});
-						}
-						$("#user_delete").modal("hide");
-					}
-					else
-						shj.loading_failed(response.message);
-				}
-			});
-		});
-		$("#user_delete").modal("show");
-	});
-});
-
 
 
 /**
