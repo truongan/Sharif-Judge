@@ -1,49 +1,10 @@
 /**
  * Sharif Judge
  * @file shj_functions.js
+ * @author TruongAn PhamNguyen <hostmaster@truongan.name.vn>
  * @author Mohammad Javad Naderi <mjnaderi@gmail.com>
  */
 
-// selectText is used for "Select All" when viewing a submitted code
-jQuery.fn.selectText = function(){
-	var doc = document
-		, element = this[0]
-		, range, selection
-		;
-	if (doc.body.createTextRange) {
-		range = document.body.createTextRange();
-		range.moveToElementText(element);
-		range.select();
-	} else if (window.getSelection) {
-		selection = window.getSelection();
-		range = document.createRange();
-		range.selectNodeContents(element);
-		selection.removeAllRanges();
-		selection.addRange(range);
-	}
-};
-
-shj.html_encode = function(value) {
-	return $('<div/>').text(value).html();
-}
-
-shj.supports_local_storage = function() {
-	try {
-		return 'localStorage' in window && window['localStorage'] !== null;
-	} catch(e){
-		return false;
-	}
-}
-
-shj.loading_start = function()
-{
-	$('#top_bar .shj-spinner').removeClass("d-none");
-}
-
-shj.loading_finish = function()
-{
-	$('#top_bar .shj-spinner').addClass("d-none");
-}
 
 shj.loading_error = function()
 {
@@ -79,7 +40,6 @@ shj.update_clock = function(){
 	var now = moment().add(shj.offset, 'milliseconds');
 	$('.timer').html('Server time: '+now.format('DD/MM - HH:mm:ss'));
 
-
 	var countdown = shj.finish_time.diff(now);
 
 	if (isNaN(countdown)){
@@ -103,71 +63,6 @@ shj.update_clock = function(){
 
 	$("#time_days").html( days + "☀️" + hours + ":" + minutes + ":" + seconds);
 }
-
-// Notifications
-shj.notif_check_time = null;
-shj.check_notifs = function () {
-	if (shj.notif_check_time == null)
-		shj.notif_check_time = moment().add(shj.offset - (shj.notif_check_delay * 1000), 'milliseconds');
-	$.ajax({
-		type: 'POST',
-		url: shj.site_url+'notifications/check',
-		data: {
-			time: shj.notif_check_time.format('YYYY-MM-DD HH:mm:ss'),
-			wcj_csrf_name: shj.csrf_token
-		},
-		success: function (data) {
-			if (data == "new_notification") {
-				$.notify('New Notification', {position: 'bottom right', className: 'error', autoHideDelay: 300});
-				alert("New Notification");
-			}
-		}
-	});
-	shj.notif_check_time = moment().add(shj.offset, 'milliseconds');
-}
-
-
-
-
-/**
- * Notifications
- */
-$(document).ready(function () {
-	$('.del_n').click(function () {
-		var notif = $(this).parents('.notif');
-		var id = $(notif).data('id');
-
-		$(".confirm-notifycation-delete").off();
-		$(".confirm-notifycation-delete").click(function(){
-			$.ajax({
-				type: 'POST',
-				url: shj.site_url + 'notifications/delete',
-				data: {
-					id: id,
-					wcj_csrf_name: shj.csrf_token
-				},
-				beforeSend: shj.loading_start,
-				complete: shj.loading_finish,
-				error: shj.loading_error,
-				success: function (response) {
-					if (response.done) {
-						notif.animate({backgroundColor: '#FF7676'}, 1000, function () {
-							notif.remove();
-						});
-						$.notify('Notification deleted'	, {position: 'bottom right', className: 'success', autoHideDelay: 5900});
-					}
-					else
-						shj.loading_failed(response.message);
-				}
-			});
-		});
-		$("#notification_delete").modal("show");
-	});
-
-	if ( shj.check_for_notifications )
-		window.setInterval(shj.check_notifs,(shj.notif_check_delay*1000));
-
-});
 
 /**
  * Sidebar
@@ -193,18 +88,10 @@ $(document).ready(function () {
 					assignment_select: id,
 					wcj_csrf_name : shj.csrf_token
 				},
-				beforeSend: shj.loading_start,
-				complete: shj.loading_finish,
 				error: shj.loading_error,
 				success: function (response) {
 					if (response.done)
 					{
-						/*
-							truongan: if we are at assignment list and chaging seleced assignments
-							update countdown and select assigment list is not enough
-							reload page is safer.
-						*/
-						//window.location.href = window.location.href;
 						location.reload();
 					}
 					else

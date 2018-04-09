@@ -111,8 +111,6 @@ $(document).ready(function(){
 					user_id: user_id,
 					wcj_csrf_name: shj.csrf_token
 				},
-				beforeSend: shj.loading_start,
-				complete: shj.loading_finish,
 				error: shj.loading_error,
 				success: function(response){
 					if (response.done)

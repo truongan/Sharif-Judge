@@ -9,6 +9,28 @@
 shj.modal_open = false;
 
 
+// selectText is used for "Select All" when viewing a submitted code
+jQuery.fn.selectText = function(){
+	var doc = document
+		, element = this[0]
+		, range, selection
+		;
+	if (doc.body.createTextRange) {
+		range = document.body.createTextRange();
+		range.moveToElementText(element);
+		range.select();
+	} else if (window.getSelection) {
+		selection = window.getSelection();
+		range = document.createRange();
+		range.selectNodeContents(element);
+		selection.removeAllRanges();
+		selection.addRange(range);
+	}
+};
+
+shj.html_encode = function(value) {
+	return $('<div/>').text(value).html();
+}
 
 $(document).ready(function () {
 	$(document).on('click', '#select_all', function (e) {
@@ -78,8 +100,6 @@ $(document).ready(function () {
 				submit_id: row.data('s'),
 				wcj_csrf_name: shj.csrf_token
 			},
-			beforeSend: shj.loading_start,
-			complete: shj.loading_finish,
 			error: shj.loading_error,
 			success: function (response) {
 				if (response.done) {
@@ -107,8 +127,6 @@ $(document).ready(function () {
 					username: username,
 					wcj_csrf_name: shj.csrf_token
 				},
-				beforeSend: shj.loading_start,
-				complete: shj.loading_finish,
 				error: shj.loading_error,
 				success: function (response) {
 					if (response.done) {
@@ -147,8 +165,6 @@ function update_status(){
 					submit_id: $(this).data('s'),
 					wcj_csrf_name: shj.csrf_token
 				},
-				beforeSend: shj.loading_start,
-				complete: shj.loading_finish,
 				error: shj.loading_error,
 				success: function (response) {
 					response = JSON.parse(response);
