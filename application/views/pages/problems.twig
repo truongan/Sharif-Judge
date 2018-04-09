@@ -45,7 +45,12 @@ MathJax.Hub.Config({
 <script src="{{ base_url('assets/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('.save-button').click(function(){
+
+	shj.setup_save('.save-button'
+	, '{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}'
+	, CKEDITOR.instances.problem_description);
+	
+	{# $('.save-button').click(function(){
 		$.ajax({
 			type: 'POST',
 			url: '{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}',
@@ -70,7 +75,7 @@ $(document).ready(function(){
 		CKEDITOR.instances.problem_description.on('change', function(){
 			$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
 		});
-	});
+	}); #}
 
 });
 </script>

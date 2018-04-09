@@ -76,7 +76,8 @@ $(document).ready(function(){
 		console.log($("#save > a"));
 	});
 
-	$('.save-button').click(function(){
+	shj.setup_save('.save-button', '{{ site_url("htmleditor/autosave") }}', CKEDITOR.instances.editor);
+	{# $('.save-button').click(function(){
 		$.ajax({
 			type: 'POST',
 			url: '{{ site_url("htmleditor/autosave") }}',
@@ -102,7 +103,7 @@ $(document).ready(function(){
 		CKEDITOR.instances.editor.on('change', function(){
 			$('.save-button').removeClass('btn-secondary').addClass('btn-info');
 		});
-	});
+	}); #}
 
 });
 

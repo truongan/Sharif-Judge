@@ -65,6 +65,50 @@ shj.update_clock = function(){
 }
 
 /**
+ * setup save button and auto save for html editor and problem statemnt page
+ * 
+ */
+
+shj.setup_save = function(save_button, post_url, ckeditor_instance){
+	$(save_button).click(function(){
+		$.ajax({
+			type: 'POST',
+			url: post_url,
+			data: {
+				wcj_csrf_name: shj.csrf_token,
+				content : ckeditor_instance.getData()
+			},
+			success: function (response) {
+				if (response == "success"){
+					$.notify('Change sucessfully saved'
+						, {position: 'bottom right', className: 'success', autoHideDelay: 3500});
+					$(save_button).removeClass('btn-info').addClass('btn-secondary');
+				}
+			},
+			error: function(response){
+				$.notify('Error while saving'
+					, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
+				//alert('There was problem saving change. You should download the content right now');
+			}
+		});
+	});
+	CKEDITOR.on('instanceReady', function(){
+		ckeditor_instance.on('change', function(){
+			$(save_button).removeClass('btn-secondary').addClass('btn-info');
+		});
+	});
+
+	window.setInterval(function(){
+		if($(save_button).hasClass('btn-info')){
+			console.log("saved")
+			$(save_button).click();
+		} else {
+			console.log("no need to save");
+		}
+	}, 180000);
+}
+
+/**
  * Sidebar
  */
 $(document).ready(function () {
