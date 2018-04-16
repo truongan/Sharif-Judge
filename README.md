@@ -42,8 +42,9 @@ For running Wecode judge, a Linux server with following requirements is needed:
   2. Take note the location of `system` and `application`  folders, then record their full path in `index.php` file (edit the `$system_path` and `$application_folder` variables).
   3. Create a MySql or PostgreSql database for Wecode judge.
   4. Copy `application/config/database.php.example` to `application/config/database.php` and edit it to suit database connection settings you create in the previous step.
-  5. Make sure `application/cache/Twig` is writable by php process.
-  6. Open the main page of Wecode judge in a web browser and follow the installation process.
+  5. Copy `application/config/config.php.example` to `application/config/config.php` and edit base_url settings. Wecode judge won't try to guess your site url, you have to set this settings.
+  6. Make sure `application/cache/Twig` is writable by php process.
+  7. Open the main page of Wecode judge in a web browser and follow the installation process.
 
 
 
