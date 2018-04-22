@@ -46,6 +46,13 @@ For running Wecode judge, a Linux server with following requirements is needed:
   6. Make sure `application/cache/Twig` is writable by php process.
   7. Open the main page of Wecode judge in a web browser and follow the installation process.
 
+## Setup the judge
+
+Since wecode-jduge use docker to isolate the submitted code, you have to setup docker and other settings so that judge can call it.
+ 1. Install docker-ce in your server. The instruction for Ubuntu can be found on docker guide: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+ 2. Copy (or more preferably, make a soft link) the file `tester/run_judge_in_docker.sh` to `/usr/bin`. This script make sure you will only expose the tester's jail directory to docker guest OS.
+ 3. Edit your sudoers settings so that the user running wecode-judge can call `sudo run_judge_in_docker.sh` WITHOUT PASSOWRD.
+
 
 
 ## After Installation
