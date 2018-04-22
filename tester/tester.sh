@@ -253,18 +253,18 @@ for((i=1;i<=TST;i++)); do
 
 	runcode=""
 	if $PERL_EXISTS; then
-		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt ./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT $command"
+		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input.txt ./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT $command"
 	else
-		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt $command"
+		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input.txt $command"
 	fi
 
 	#$runcode
 	declare -A languages_to_docker
-	languages_to_docker["c"]="ubuntu:16.04"
-	languages_to_docker["cpp"]="ubuntu:16.04"
-	languages_to_docker["py2"]="python:2-slim"
-	languages_to_docker["py3"]="python:3-slim"
-	languages_to_docker["java"]="openjdk:8-slim"
+	languages_to_docker["c"]="python:3"
+	languages_to_docker["cpp"]="python:3"
+	languages_to_docker["py2"]="python:2"
+	languages_to_docker["py3"]="python:3"
+	languages_to_docker["java"]="openjdk:8"
 
 	shj_log "sudo run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $runcode"
 	
