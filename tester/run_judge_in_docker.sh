@@ -12,16 +12,26 @@ docker_image=${2}
 shift 2
 command=$@
 owner=`stat -c '%U' $share_directory`
+
 if  [ "$owner" = "$USER" ] || [ "$owner" = "$SUDO_USER" ]
 then
-	# echo "	docker run --rm -v $share_directory:/work:rw --name='docker' --network none $docker_image cd /work; $command"
+	# echo "docker run --rm \
+	# 	-v $share_directory:/work:rw \
+	# 	--name='docker' \
+	# 	--network none \
+	# 	-w /work \
+	# 	$docker_image \
+	# 	$command "
 	docker run --rm \
 		-v $share_directory:/work:rw \
 		--name='docker' \
 		--network none \
+		-w /work \
 		$docker_image \
-		cd /work; $command
+		$command
 	EC=$?
+
+
 	exit $EC
 else
 	echo "Share directory '$share_directory' does not belongs in your home directory '${HOME}'"

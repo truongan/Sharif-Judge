@@ -267,9 +267,14 @@ for((i=1;i<=TST;i++)); do
 	languages_to_docker["java"]="openjdk:8-slim"
 
 	shj_log "sudo run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $runcode"
-	sudo run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} $runcode
-
+	
+	sudo run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} > run_judge_error $runcode 2>&1
 	EXITCODE=$?
+
+	shj_log `cat run_judge_error`
+	rm run_judge_error
+
+
 	shj_log "exit code $EXITCODE"
 ##################################################################
 ############## Process error code and error log ##################
