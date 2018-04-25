@@ -13,18 +13,20 @@ shift 2
 command=$@
 owner=`stat -c '%U' $share_directory`
 
+dockername="$SUDO_USER-$(basename $share_directory)"
+
 if  [ "$owner" = "$USER" ] || [ "$owner" = "$SUDO_USER" ]
 then
 	echo "docker run --rm \
 		-v $share_directory:/work:rw \
-		--name='docker' \
+		--name=$dockername \
 		--network none \
 		-w /work \
 		$docker_image \
 		$command "
 	docker run --rm \
 		-v $share_directory:/work:rw \
-		--name='docker' \
+		--name=$dockername \
 		--network none \
 		-w /work \
 		$docker_image \
