@@ -63,7 +63,7 @@ else
         fi
     else
         mv code.c code.$EXT
-        $COMPILER code.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
+        sudo run_judge_in_docker.sh `pwd` gcc:6 $COMPILER code.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
         EXITCODE=$?
     fi
 fi

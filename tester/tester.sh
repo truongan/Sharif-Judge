@@ -260,8 +260,8 @@ for((i=1;i<=TST;i++)); do
 
 	#$runcode
 	declare -A languages_to_docker
-	languages_to_docker["c"]="python:3"
-	languages_to_docker["cpp"]="python:3"
+	languages_to_docker["c"]="gcc:6"
+	languages_to_docker["cpp"]="gcc:6"
 	languages_to_docker["py2"]="python:2"
 	languages_to_docker["py3"]="python:3"
 	languages_to_docker["java"]="openjdk:8"
