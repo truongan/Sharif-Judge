@@ -47,25 +47,10 @@ shj_log "Compiling as $EXT"
 if [ $NEEDCOMPILE -eq 0 ]; then
     EXITCODE=110
 else
-    if $C_SHIELD_ON; then
-        shj_log "Enabling Shield For C/C++"
-        # if code contains any 'undef', raise compile error:
-        if tr -d ' \t\n\r\f' < code.c | grep -q '#undef'; then
-            echo 'code.c:#undef is not allowed' >cerr
-            EXITCODE=110
-        else
-            cp ../shield/shield.$EXT shield.$EXT
-            cp ../shield/def$EXT.h def.h
-            # adding define to beginning of code:
-            echo '#define main themainmainfunction' | cat - code.c > thetemp && mv thetemp code.c
-            $COMPILER shield.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
-            EXITCODE=$?
-        fi
-    else
-        mv code.c code.$EXT
-        sudo run_judge_in_docker.sh `pwd` gcc:6 $COMPILER code.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
-        EXITCODE=$?
-    fi
+    mv code.c code.$EXT
+    sudo run_judge_in_docker.sh `pwd` gcc:6 $COMPILER code.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
+    EXITCODE=$?
+
 fi
 
 COMPILE_END_TIME=$(($(date +%s%N)/1000000));
