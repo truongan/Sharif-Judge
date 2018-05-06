@@ -387,7 +387,6 @@ class Assignments extends CI_Controller
 	{
 
 		// Check permission
-
 		if ($this->user->level <= 1) // permission denied
 			show_404();
 
@@ -408,25 +407,17 @@ class Assignments extends CI_Controller
 		$this->form_validation->set_rules('diff_arg[]', 'diff argument', 'required');
 
 		// Validate input data
-
 		if ( ! $this->form_validation->run())
 			return FALSE;
 
 
 		// Preparing variables
-
 		if ($this->edit)
 			$the_id = $this->edit_assignment;
 		else
 			$the_id = $this->assignment_model->new_assignment_id();
 
-		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
-		$assignment_dir = "$assignments_root/assignment_{$the_id}";
-
-
-
 		// Adding/Editing assignment in database
-
 		if ( ! $this->assignment_model->add_assignment($the_id, $this->edit))
 		{
 			$this->messages[] = array(
@@ -441,14 +432,19 @@ class Assignments extends CI_Controller
 			'text' => 'Assignment '.($this->edit?'updated':'added').' successfully.'
 		);
 
+		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
+		$assignment_dir = "$assignments_root/assignment_{$the_id}";
+		$this->_take_test_file_upload($assignments_root, $assignment_dir);
+
 		// Create assignment directory
 		if ( ! file_exists($assignment_dir) )
-			mkdir($assignment_dir, 0700);
+		mkdir($assignment_dir, 0700);
 
+		return TRUE;
+	}
 
-
+	private function _take_test_file_upload($assignments_root, $assignment_dir){
 		// Upload Tests (zip file)
-
 		shell_exec('rm -f '.$assignments_root.'/*.zip');
 		$config = array(
 			'upload_path' => $assignments_root,
@@ -473,10 +469,7 @@ class Assignments extends CI_Controller
 				'text' => "Tests (zip file) uploaded successfully."
 			);
 
-
-
 		// Upload PDF File of Assignment
-
 		$config = array(
 			'upload_path' => $assignment_dir,
 			'allowed_types' => 'pdf',
@@ -504,78 +497,60 @@ class Assignments extends CI_Controller
 			);
 		}
 
-
-
-		// Extract Tests (zip file)
-
-		if ($zip_uploaded) // if zip file is uploaded
-		{
-			// Create a temp directory
-			$tmp_dir_name = "shj_tmp_directory";
-			$tmp_dir = "$assignments_root/$tmp_dir_name";
-			shell_exec("rm -rf $tmp_dir; mkdir $tmp_dir;");
-
-			// Extract new test cases and descriptions in temp directory
-			$this->load->library('unzip');
-			$this->unzip->allow(array('txt', 'cpp', 'html', 'md', 'pdf'));
-			$extract_result = $this->unzip->extract($u_data['full_path'], $tmp_dir);
-
-			// Remove the zip file
-			unlink($u_data['full_path']);
-
-			if ( $extract_result )
-			{
-				// Remove previous test cases and descriptions
-				shell_exec("cd $assignment_dir;"
-					." rm -rf */in; rm -rf */out; rm -f */tester.cpp; rm -f */tester.executable;"
-					." rm -rf */template.*;"
-					." rm -f */desc.html; rm -f */desc.md; rm -f */*.pdf;");
-				if (glob("$tmp_dir/*.pdf"))
-					shell_exec("cd $assignment_dir; rm -f *.pdf");
-				// Copy new test cases from temp dir
-				shell_exec("cd $assignments_root; cp -R $tmp_dir_name/* assignment_{$the_id};");
-				$this->messages[] = array(
-					'type' => 'success',
-					'text' => 'Tests (zip file) extracted successfully.'
-				);
-			}
-			else
-			{
-				$this->messages[] = array(
-					'type' => 'error',
-					'text' => 'Error: Error extracting zip archive.'
-				);
-				foreach($this->unzip->errors_array() as $msg)
-					$this->messages[] = array(
-						'type' => 'error',
-						'text' => " Zip Extraction Error: ".$msg
-					);
-			}
-
-			// Remove temp directory
-			shell_exec("rm -rf $tmp_dir");
-		}
-
-
-
-		// Create problem directories and parsing markdown files
-
-		for ($i=1; $i <= $this->input->post('number_of_problems'); $i++)
-		{
-			if ( ! file_exists("$assignment_dir/p$i"))
-				mkdir("$assignment_dir/p$i", 0700);
-			elseif (file_exists("$assignment_dir/p$i/desc.md"))
-			{
-				$this->load->library('parsedown');
-				$html = $this->parsedown->parse(file_get_contents("$assignment_dir/p$i/desc.md"));
-				file_put_contents("$assignment_dir/p$i/desc.html", $html);
-			}
-		}
-
-		return TRUE;
+		if ($zip_uploaded) $this->unload_zip_test_file($assignments_root, $assignment_dir, $u_data);
 	}
 
+	private function unload_zip_test_file($assignments_root, $assignment_dir, $u_data){
+		// Create a temp directory
+		$tmp_dir_name = "shj_tmp_directory";
+		$tmp_dir = "$assignments_root/$tmp_dir_name";
+		shell_exec("rm -rf $tmp_dir; mkdir $tmp_dir;");
 
+		// Extract new test cases and descriptions in temp directory
+		$this->load->library('unzip');
+		$this->unzip->allow(array('txt', 'cpp', 'html', 'md', 'pdf'));
+		$extract_result = $this->unzip->extract($u_data['full_path'], $tmp_dir);
+
+		// Remove the zip file
+		unlink($u_data['full_path']);
+
+		if ( $extract_result )
+		{
+			// Remove previous test cases and descriptions
+			shell_exec("cd $assignment_dir;"
+				." rm -rf */in; rm -rf */out; rm -f */tester.cpp; rm -f */tester.executable;"
+				." rm -rf */template.*;"
+				." rm -f */desc.html; rm -f */desc.md; rm -f */*.pdf;");
+			if (glob("$tmp_dir/*.pdf"))
+				shell_exec("cd $assignment_dir; rm -f *.pdf");
+			// Copy new test cases from temp dir
+			// echo $tmp_dir . "<br/>";
+			// echo $assignment_dir . "<br/>";
+			// echo shell_exec("ls $tmp_dir/*");
+			// echo "cp -R $tmp_dir/* $assignment_dir;";
+			//die();
+			shell_exec("cp -R $tmp_dir/* $assignment_dir;");
+			$this->messages[] = array(
+				'type' => 'success',
+				'text' => 'Tests (zip file) extracted successfully.'
+			);
+		}
+		else
+		{
+			$this->messages[] = array(
+				'type' => 'error',
+				'text' => 'Error: Error extracting zip archive.'
+			);
+			foreach($this->unzip->errors_array() as $msg)
+				$this->messages[] = array(
+					'type' => 'error',
+					'text' => " Zip Extraction Error: ".$msg
+				);
+		}
+
+		// Remove temp directory
+		shell_exec("rm -rf $tmp_dir");
+	}
 	// ------------------------------------------------------------------------
 
 
