@@ -517,10 +517,14 @@ class Assignments extends CI_Controller
 		if ( $extract_result )
 		{
 			// Remove previous test cases and descriptions
-			shell_exec("cd $assignment_dir;"
-				." rm -rf */in; rm -rf */out; rm -f */tester.cpp; rm -f */tester.executable;"
-				." rm -rf */template.*;"
-				." rm -f */desc.html; rm -f */desc.md; rm -f */*.pdf;");
+			$remove = 
+			"cd $tmp_dir; for i in p*; do "
+				." rm -rf $assignment_dir/\$i/in $assignment_dir/\$i/out $assignment_dir/\$i/tester*"
+				."  $assignment_dir/\$i/template.* "
+				."  $assignment_dir/\$i/desc.*  $assignment_dir/\$i/*.pdf; done";
+			//echo $remove; die();
+			shell_exec($remove);
+
 			if (glob("$tmp_dir/*.pdf"))
 				shell_exec("cd $assignment_dir; rm -f *.pdf");
 			// Copy new test cases from temp dir
