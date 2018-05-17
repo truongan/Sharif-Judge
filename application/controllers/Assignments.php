@@ -519,6 +519,7 @@ class Assignments extends CI_Controller
 			// Remove previous test cases and descriptions
 			$remove = 
 			"cd $tmp_dir; for i in p*; do "
+				."[ -e \$i ] || continue"
 				." rm -rf $assignment_dir/\$i/in $assignment_dir/\$i/out $assignment_dir/\$i/tester*"
 				."  $assignment_dir/\$i/template.* "
 				."  $assignment_dir/\$i/desc.*  $assignment_dir/\$i/*.pdf; done";
