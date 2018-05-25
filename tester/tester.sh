@@ -309,8 +309,15 @@ for((i=1;i<=TST;i++)); do
 
 	shj_log "Exit Code = $EXITCODE"
 	shj_log "err file:`cat err`"
+
+	t=`grep "SHJ_" err|cut -d" " -f3`
+	m=`grep "SHJ_" err|cut -d" " -f5`
+
+	echo "<span class=\"text-secondary\">$t s and $m KiB</span>" >>$PROBLEMPATH/$UN/result.html
+	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$PROBLEMPATH/$UN/result.html
+	found_error=0
 	if ! grep -q "FINISHED" err; then
-		found_error=0
+
 		for K in "${!errors[@]}"
 		do
 			if grep -q "$K" err; then
@@ -320,15 +327,16 @@ for((i=1;i<=TST;i++)); do
 				break
 			fi
 		done
-		if [ $found_error = "1" ]; then
-			continue
-			shj_log "found error"
-
-		fi
-	else
-		t=`grep "FINISHED" err|cut -d" " -f3`
-		shj_log "Time: $t s"
+			
 	fi
+
+	shj_log "Time: $t s"
+	shj_log "Mem: $m kib"
+	if [ $found_error = "1" ]; then
+		continue
+		shj_log "found error"
+	fi
+
 
 	if [ $EXITCODE -eq 137 ]; then
 		shj_log "Killed"
