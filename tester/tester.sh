@@ -313,7 +313,7 @@ for((i=1;i<=TST;i++)); do
 	t=`grep "SHJ_" err|cut -d" " -f3`
 	m=`grep "SHJ_" err|cut -d" " -f5`
 
-	echo "<span class=\"text-secondary\">$t s and $m KiB</span>" >>$PROBLEMPATH/$UN/result.html
+	echo "<span class=\"text-muted\"><small>$t s and $m KiB</small></span>" >>$PROBLEMPATH/$UN/result.html
 	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$PROBLEMPATH/$UN/result.html
 	found_error=0
 	if ! grep -q "FINISHED" err; then
