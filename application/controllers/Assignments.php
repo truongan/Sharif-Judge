@@ -524,7 +524,9 @@ class Assignments extends CI_Controller
 				." rm -rf $assignment_dir/\$i/in $assignment_dir/\$i/out $assignment_dir/\$i/tester*"
 				."  $assignment_dir/\$i/template.* "
 				."  $assignment_dir/\$i/desc.*  $assignment_dir/\$i/*.pdf; done";
-			//echo "cp -R $tmp_dir/* $assignment_dir;";			echo $remove; die();			shell_exec($remove);
+			//echo "cp -R $tmp_dir/* $assignment_dir;";			
+			echo $remove; die();			
+			shell_exec($remove);
 
 			if (glob("$tmp_dir/*.pdf"))
 				shell_exec("cd $assignment_dir; rm -f *.pdf");
