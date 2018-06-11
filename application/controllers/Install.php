@@ -95,153 +95,17 @@ class Install extends CI_Controller
 		return $data;
 	}
 	private function setup_database(){
-		$DATETIME = 'DATETIME';
-		if ($this->db->dbdriver === 'postgre')
-			$DATETIME = 'TIMESTAMP';
-
-		$this->load->dbforge();
-
-		// Use InnoDB engine for MySql database
-		if ($this->db->dbdriver === 'mysql' || $this->db->dbdriver === 'mysqli')
-			$this->db->query('SET storage_engine=InnoDB;');
-
 		// Creating Tables:
 		// sessions, submissions, assignments, notifications, problems, queue, scoreboard, settings, users
 
-		// create table 'sessions'
-		$fields = array(
-			'session_id'    => array('type' => 'VARCHAR', 'constraint' => 40, 'default' => '0'),
-			'ip_address'    => array('type' => 'VARCHAR', 'constraint' => 45, 'default' => '0'),
-			'user_agent'    => array('type' => 'VARCHAR', 'constraint' => 120),
-			'last_activity' => array('type' => 'INT', 'constraint' => 10, 'unsigned' => TRUE, 'default' => '0'),
-			'user_data'     => array('type' => 'TEXT'),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('session_id', TRUE); // PRIMARY KEY
-		$this->dbforge->add_key('last_activity');
-		if ( ! $this->dbforge->create_table('sessions', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('sessions'));
+		$this->load->library('migration');
 
-		// create table 'submissions'
-		$fields = array(
-			'submit_id'     => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
-			'username'      => array('type' => 'VARCHAR', 'constraint' => 20),
-			'assignment'    => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'problem'       => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'is_final'      => array('type' => 'TINYINT', 'constraint' => 1, 'default' => 0),
-			'time'          => array('type' => $DATETIME),
-			'status'        => array('type' => 'VARCHAR', 'constraint' => 100),
-			'pre_score'     => array('type' => 'INT', 'constraint' => 11),
-			'coefficient'   => array('type' => 'VARCHAR', 'constraint' => 6),
-			'file_name'     => array('type' => 'VARCHAR', 'constraint' => 30),
-			'main_file_name'=> array('type' => 'VARCHAR', 'constraint' => 30),
-			'file_type'     => array('type' => 'VARCHAR', 'constraint' => 6),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key(array('assignment', 'submit_id'));
-		if ( ! $this->dbforge->create_table('submissions', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('submissions'));
-
-		// create table 'assignments'
-		$fields = array(
-			'id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-			'name'          => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
-			'problems'      => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'total_submits' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
-			'open'          => array('type' => 'TINYINT', 'constraint' => 1),
-			'scoreboard'    => array('type' => 'TINYINT', 'constraint' => 1),
-			'javaexceptions'=> array('type' => 'TINYINT', 'constraint' => 1),
-			'description'   => array('type' => 'TEXT'),
-			'start_time'    => array('type' => $DATETIME),
-			'finish_time'   => array('type' => $DATETIME),
-			'extra_time'    => array('type' => 'INT', 'constraint' => 11),
-			'late_rule'     => array('type' => 'TEXT'),
-			'participants'  => array('type' => 'TEXT'),
-			'moss_update'   => array('type' => 'VARCHAR', 'constraint' => 30, 'default' => 'Never'),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
-		if ( ! $this->dbforge->create_table('assignments', TRUE)){
-			var_dump($this->db->last_query());
-			show_error("Error creating database table ".$this->db->dbprefix('assignments') . print_r($this->db->error(), true));
-
+		// if ( ! $this->migration->version(20180611171404))
+		if ( ! $this->migration->latest())
+		{
+			show_error($this->migration->error_string());
 		}
 
-		// create table 'notifications'
-		$fields = array(
-			'id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-			'title'         => array('type' => 'VARCHAR', 'constraint' => 200, 'default' => ''),
-			'text'          => array('type' => 'TEXT'),
-			'time'          => array('type' => $DATETIME),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
-		if ( ! $this->dbforge->create_table('notifications', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('notifications'));
-
-		// create table 'problems'
-		$fields = array(
-			'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'id'                => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'name'              => array('type' => 'VARCHAR', 'constraint' => 50, 'default' => ''),
-			'score'             => array('type' => 'INT', 'constraint' => 11),
-			'is_upload_only'    => array('type' => 'TINYINT', 'constraint' => 1, 'default' => '0'),
-			'c_time_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
-			'python_time_limit' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 1500),
-			'java_time_limit'   => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 2000),
-			'memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
-			'allowed_languages' => array('type' => 'TEXT'),
-			'diff_cmd'          => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => 'diff'),
-			'diff_arg'          => array('type' => 'VARCHAR', 'constraint' => 20, 'default' => '-bB'),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key(array('assignment', 'id'));
-		if ( ! $this->dbforge->create_table('problems', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('problems'));
-
-		// create table 'queue'
-		$fields = array(
-			'id'                => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-			'submit_id'         => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
-			'username'          => array('type' => 'VARCHAR', 'constraint' => 20),
-			'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'problem'           => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'type'              => array('type' => 'VARCHAR', 'constraint' => 8),
-		);
-		$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
-		$this->dbforge->add_field($fields);
-		if ( ! $this->dbforge->create_table('queue', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('queue'));
-		//Add UNIQUE (submit_id, username, assignment, problem) constraint
-		$this->db->query(
-			"ALTER TABLE {$this->db->dbprefix('queue')}
-			 ADD CONSTRAINT {$this->db->dbprefix('suap_unique')} UNIQUE (submit_id, username, assignment, problem);"
-		);
-
-		// create table 'scoreboard'
-		$fields = array(
-			'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
-			'scoreboard'        => array('type' => 'LONGTEXT'),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('assignment');
-		if ( ! $this->dbforge->create_table('scoreboard', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('scoreboard'));
-		//Add UNIQUE ( assignment) constraint
-		$this->db->query(
-			"ALTER TABLE {$this->db->dbprefix('scoreboard')}
-			 ADD CONSTRAINT {$this->db->dbprefix('suap_unique')} UNIQUE (assignment);"
-		);
-
-		// create table 'settings'
-		$fields = array(
-			'shj_key'        => array('type' => 'VARCHAR', 'constraint' => 50),
-			'shj_value'      => array('type' => 'TEXT'),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('shj_key');
-		if ( ! $this->dbforge->create_table('settings', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('settings'));
 
 		// insert default settings to table 'settings'
 		$result = $this->db->insert_batch('settings', array(
@@ -253,7 +117,6 @@ class Install extends CI_Controller
 			array('shj_key' => 'output_size_limit',      'shj_value' => '1024'),
 			array('shj_key' => 'queue_is_working',       'shj_value' => '0'),
 			array('shj_key' => 'default_late_rule',      'shj_value' => "/* \n * Put coefficient (from 100) in variable \$coefficient.\n * You can use variables \$extra_time and \$delay.\n * \$extra_time is the total extra time given to users\n * (in seconds) and \$delay is number of seconds passed\n * from finish time (can be negative).\n *  In this example, \$extra_time is 172800 (2 days):\n */\n\nif (\$delay<=0)\n  // no delay\n  \$coefficient = 100;\n\nelseif (\$delay<=3600)\n  // delay less than 1 hour\n  \$coefficient = ceil(100-((30*\$delay)/3600));\n\nelseif (\$delay<=86400)\n  // delay more than 1 hour and less than 1 day\n  \$coefficient = 70;\n\nelseif ((\$delay-86400)<=3600)\n  // delay less than 1 hour in second day\n  \$coefficient = ceil(70-((20*(\$delay-86400))/3600));\n\nelseif ((\$delay-86400)<=86400)\n  // delay more than 1 hour in second day\n  \$coefficient = 50;\n\nelseif (\$delay > \$extra_time)\n  // too late\n  \$coefficient = 0;"),
-			// array('shj_key' => 'enable_easysandbox',     'shj_value' => '1'),
 			array('shj_key' => 'enable_c_shield',        'shj_value' => '0'),
 			array('shj_key' => 'enable_cpp_shield',      'shj_value' => '0'),
 			array('shj_key' => 'enable_py2_shield',      'shj_value' => '0'),
@@ -275,29 +138,5 @@ class Install extends CI_Controller
 		));
 		if ( ! $result)
 			show_error("Error adding data to table ".$this->db->dbprefix('settings'));
-
-
-
-		// create table 'users'
-		$fields = array(
-			'id'                  => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-			'username'            => array('type' => 'VARCHAR', 'constraint' => 20),
-			'password'            => array('type' => 'VARCHAR', 'constraint' => 100),
-			'display_name'        => array('type' => 'VARCHAR', 'constraint' => 40, 'default' => ''),
-			'email'               => array('type' => 'VARCHAR', 'constraint' => 40),
-			'role'                => array('type' => 'VARCHAR', 'constraint' => 20),
-			'passchange_key'      => array('type' => 'VARCHAR', 'constraint' => 60, 'default' => ''),
-			'passchange_time'     => array('type' => $DATETIME, 'null' => TRUE),
-			'first_login_time'    => array('type' => $DATETIME, 'null' => TRUE),
-			'last_login_time'     => array('type' => $DATETIME, 'null' => TRUE),
-			'selected_assignment' => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE, 'default' => 0),
-		);
-		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
-		$this->dbforge->add_key('username'); // @todo is this needed?
-		if ( ! $this->dbforge->create_table('users', TRUE))
-			show_error("Error creating database table ".$this->db->dbprefix('users'));
-
-
 	}
 }
