@@ -31,7 +31,7 @@ class Migration_Multilang_schema extends CI_Migration {
         $new_id = $this->db->count_all('problems') + 1;
 
         $assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
-        $problems_dir = $assignments_root . "problems/";
+        $problems_dir = $assignments_root . "/problems/";
         if ( ! file_exists($problems_dir) )
             mkdir($problems_dir, "0700");
 
@@ -51,7 +51,19 @@ class Migration_Multilang_schema extends CI_Migration {
             ))) echo_error();
           
             //Moving directory
+            $old_p = $assignments_root . '/assignment_' . $prob->assignment . '/p' . $prob->id;
+            $new_p = $assignments_root . '/problems/' . $new_id;    
+            $new_prob_submission = $assignments_root . '/assignment_' . $prob->assignment . '/problem_' . $new_id;    
             
+            if ( ! file_exists($new_p) )
+                mkdir($new_p, "0700");
+            
+            foreach(array('in', 'out', 'tester*', 'template.*', 'desc.*', '*.pdf' , 'solution.*') as $i){
+                $cmd = "mv $old_p/$i $new_p";
+                var_dump ($cmd);
+                shell_exec($cmd);
+            }
+            rename($old_p, $new_prob_submission);
 
             //Update submission with new problem ID
             $this->db->where(array('assignment' => $prob->assignment, 'problem' => $prob->id))
@@ -71,7 +83,7 @@ class Migration_Multilang_schema extends CI_Migration {
                 else if ($i[0] == 'P') $arr['time_limit'] = $prob->python_time_limit;
 
                 $this->db->insert('problem_language', $arr);
-                var_dump($this->db->last_query());
+                //var_dump($this->db->last_query());
             }
             
             $new_id++;
