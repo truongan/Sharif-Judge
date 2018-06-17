@@ -437,7 +437,7 @@ class Assignments extends CI_Controller
 		
 		// Create assignment directory
 		if ( ! file_exists($assignment_dir) )
-		mkdir($assignment_dir, 0700);
+			mkdir($assignment_dir, 0700);
 		
 		$this->_take_test_file_upload($assignments_root, $assignment_dir);
 

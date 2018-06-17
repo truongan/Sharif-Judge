@@ -8,74 +8,60 @@ class Migration_Multilang_schema extends CI_Migration {
         if ( ! $this->dbforge->create_table($table_name, TRUE))
             show_error("Error creating database table ".$this->db->dbprefix($table_name));
     }
-    public function up()
-    {
-        $lang = array(
-            'C' => array('id' => 1, 'name' => 'C', 'extension' => 'c'),
-            'C++' => array('id' => 2, 'name' => 'C++', 'extension' => 'cpp'),
-            'Java' => array('id' => 3, 'name' => 'Java', 'extension' => 'java'),
-            'Python 3' => array('id' => 4, 'name' => 'Python 3', 'extension' => 'py3'),
-            'Python 2' => array('id' => 5, 'name' => 'C', 'extension' => 'py2'),
-        );
+    private function echo_error(){
+        echo "Error executing " 
+            . $this->db->last_query() 
+            . " message: " . $this->db->_error_message();
+        die();
+    }
+    private $lang = array(
+        'C' => array('id' => 1, 'name' => 'C', 'extension' => 'c'),
+        'C++' => array('id' => 2, 'name' => 'C++', 'extension' => 'cpp'),
+        'Java' => array('id' => 3, 'name' => 'Java', 'extension' => 'java'),
+        'Python 3' => array('id' => 4, 'name' => 'Python 3', 'extension' => 'py3'),
+        'Python 2' => array('id' => 5, 'name' => 'Python 2', 'extension' => 'py2'),
+    );
 
-        // create table 'languages'
-        $fields = array(
-            'id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-            'name'    => array('type' => 'VARCHAR', 'constraint' => 45, 'default' => '0'),
-            'extension'    => array('type' => 'VARCHAR', 'constraint' => 3),
-            'default_timle_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
-            'default_memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
-        );
-        $this->dbforge->add_field($fields)->add_key('id', TRUE); // PRIMARY KEY
-        create_and_show_err('languages');
-
-        foreach ($$lang as $key => $value) {
-            $this->db->insert('languages', $value);
-        }
-
-        // create table 'problem_language'
-        $fields = array(
-            'language_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
-            'problem_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
-            'timle_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
-            'memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
-        );
-        $this->dbforge->add_field($fields)->add_key(array('language_id', 'problem_id')); // PRIMARY KEY
-        create_and_show_error('problem_language');
-        
-        // create table 'problem_assignment'
-        $fields = array(
-            'assignment_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
-            'problem_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
-            'score'             => array('type' => 'INT', 'constraint' => 11),
-        );
-        $this->dbforge->add_field($fields)->add_key(array('assignment_id', 'problem_id')); // PRIMARY KEY
-        create_and_show_error('problem_assignment');
-        
-        
+    private function migrate_old_data(){
         /* 
         * Migrate old data
         */
         $this->db->trans_start();
         $query = $this->db->get('problems');
         $new_id = $this->db->count_all('problems') + 1;
+
+        $assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
+        $problems_dir = $assignments_root . "problems/";
+        if ( ! file_exists($problems_dir) )
+            mkdir($problems_dir, "0700");
+
         foreach ($query->result() as $prob)
         {
-            $where_clause = array('assignment_id' => $prob->assignment,
-                                    'problem_id' => $prob->id
-                                );
-            $this->db->update('submissions', array('problem' => $new_id))->where($where_clause);
-            $this->db->update('problems', array('id' => $new_id))->where($where_clause);
+            $where_clause 
+                = array('assignment' => $prob->assignment, 'id' => $prob->id);
+                                
+            $score_query = $this->db->where($where_clause)
+                            ->get('problems')->row();
 
-            $this->db->insert('problem_assignment',array(
+            //Create new problem - assignment relation
+            if (!$this->db->insert('problem_assignment',array(
                 'assignment_id' => $prob->assignment,
                 'problem_id' => $new_id,
-                'score' => $this->db->get('assignemnts')->where($where_clause)->result()->score
-            ));
+                'score' => $score_query->score
+            ))) echo_error();
+          
+            //Moving directory
+            
 
-            foreach(explode($prob->allowed_languages) as $i){
+            //Update submission with new problem ID
+            $this->db->where(array('assignment' => $prob->assignment, 'problem' => $prob->id))
+                    ->update('submissions', array('problem' => $new_id));
+            $this->db->where($where_clause)->update('problems', array('id' => $new_id));
+            
+            //Create new problem - language relation
+            foreach(explode(",", $prob->allowed_languages) as $i){
                 $arr = array(
-                    'language_id' => $lang[$i]['id'],
+                    'language_id' => $this->lang[$i]['id'],
                     'problem_id' => $new_id,
                     'memory_limit' => $prob->memory_limit
                 );
@@ -85,16 +71,63 @@ class Migration_Multilang_schema extends CI_Migration {
                 else if ($i[0] == 'P') $arr['time_limit'] = $prob->python_time_limit;
 
                 $this->db->insert('problem_language', $arr);
+                var_dump($this->db->last_query());
             }
             
+            $new_id++;
         }
 
         $this->dbforge->add_column('submissions', array(
                 'language_id' => array('type' =>'INT', 'constraint' => 11, 'unsigned' => TRUE)
         ));
-        foreach ($lang as  $l) {
-            $this->db->update('submissions', array('language_id' => $l['id']))->where('file_type', $l['extension']);
+        foreach ($this->lang as  $l) {
+            $this->db->where('file_type', $l['extension'])
+                    ->update('submissions', array('language_id' => $l['id']));
         }
+    }
+
+    private function create_new_table(){
+        // create table 'languages'
+        $fields = array(
+            'id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+            'name'    => array('type' => 'VARCHAR', 'constraint' => 45, 'default' => '0'),
+            'extension'    => array('type' => 'VARCHAR', 'constraint' => 3),
+            'default_timle_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
+            'default_memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
+        );
+        $this->dbforge->add_field($fields)->add_key('id', TRUE); // PRIMARY KEY
+        $this->create_and_show_err('languages');
+
+        foreach ($this->lang as $key => $value)
+            $this->db->insert('languages', $value);
+
+        // create table 'problem_language'
+        $fields = array(
+            'language_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
+            'problem_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
+            'time_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
+            'memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
+        );
+        $this->dbforge->add_field($fields)->add_key(array('language_id', 'problem_id')); // PRIMARY KEY
+        $this->create_and_show_err('problem_language');
+        
+        // create table 'problem_assignment'
+        $fields = array(
+            'assignment_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
+            'problem_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
+            'score'             => array('type' => 'INT', 'constraint' => 11),
+        );
+        $this->dbforge->add_field($fields)->add_key(array('assignment_id', 'problem_id')); // PRIMARY KEY
+        $this->create_and_show_err('problem_assignment');
+    }
+    public function up()
+    {
+        $this->create_new_table();
+        $this->migrate_old_data();
+
+        /*
+        * Alter old table structure
+        */
         $this->dbforge->drop_column('submissions', 'file_type');
         $this->dbforge->drop_column('submissions', 'main_file_type');
 
@@ -102,15 +135,18 @@ class Migration_Multilang_schema extends CI_Migration {
             'name' => 'assignment_id',
             'type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE
         )));
-
+        
     
         $this->dbforge->drop_column('assignments', 'problems');
 
-        $this->dbforge->drop_column('problems'
-            , array('assignment', 'score', 'c_time_limit'
-                , 'java_time_limit', 'pyton_time_limit'
-                , 'allowed_languages', 'memory_limit')
-        );
+        foreach (array('assignment','score','c_time_limit','java_time_limit','python_time_limit','allowed_languages','memory_limit') as $i)
+            $this->dbforge->drop_column('problems', $i);
+        
+        $this->dbforge->modify_column('problems', array(
+            'id' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE)
+        ));
+        var_dump($this->db->last_query());
+        $this->db->trans_complete();
     }
 
     public function down()
