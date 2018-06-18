@@ -6,7 +6,7 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Assignment_model extends CI_Model
+class Problem_model extends CI_Model
 {
 
 	public function __construct()
@@ -14,7 +14,9 @@ class Assignment_model extends CI_Model
 		parent::__construct();
 	}
 
-    
+    public function new_problem_id(){
+        
+    }
 
 }
 

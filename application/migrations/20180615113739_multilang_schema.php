@@ -132,8 +132,8 @@ class Migration_Multilang_schema extends CI_Migration {
         $this->dbforge->add_field($fields)->add_key(array('assignment_id', 'problem_id')); // PRIMARY KEY
         $this->create_and_show_err('problem_assignment');
     }
-    public function up()
-    {
+
+    public function up(){
         $this->create_new_table();
         $this->migrate_old_data();
 
@@ -148,7 +148,6 @@ class Migration_Multilang_schema extends CI_Migration {
             'type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE
         )));
         
-    
         $this->dbforge->drop_column('assignments', 'problems');
 
         foreach (array('assignment','score','c_time_limit','java_time_limit','python_time_limit','allowed_languages','memory_limit') as $i)
