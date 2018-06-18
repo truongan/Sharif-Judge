@@ -60,7 +60,7 @@ class Migration_Multilang_schema extends CI_Migration {
             
             foreach(array('in', 'out', 'tester*', 'template.*', 'desc.*', '*.pdf' , 'solution.*') as $i){
                 $cmd = "mv $old_p/$i $new_p";
-                var_dump ($cmd);
+                //var_dump ($cmd);
                 shell_exec($cmd);
             }
             rename($old_p, $new_prob_submission);
