@@ -1,7 +1,7 @@
 <?php
 /**
  * Sharif Judge online judge
- * @file Problems.php
+ * @file Notifications.php
  * @author Mohammad Javad Naderi <mjnaderi@gmail.com>
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Problems extends CI_Controller
 {
 
-	private $all_assignments;
+	private $notif_edit;
 
 
 	// ------------------------------------------------------------------------
@@ -20,183 +20,113 @@ class Problems extends CI_Controller
 		parent::__construct();
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
+		$this->load->model('notifications_model');
+        $this->notif_edit = FALSE;
 
-		$this->all_assignments = $this->assignment_model->all_assignments();
+        if ($this->user->level <= 1) {
+            // permission denied
+            show_403();
+            die();
+        }
 	}
 
 
 	// ------------------------------------------------------------------------
 
 
-	/**
-	* Download problem's template
-	**/
-	public function template($assignment_id = NULL, $problem_id = 1){
-		// Find pdf file
-		if ($assignment_id === NULL)
-			$assignment_id = $this->user->selected_assignment['id'];
-
-		if ($assignment_id == 0){
-			show_error("Pleas select an assignment first");
-		}
-		if ($problem_id === NULL)
-			show_error("File not found");
-
-		$pattern1 = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-					."/assignment_{$assignment_id}/p{$problem_id}/template.public.cpp";
-
-		$pdf_files = glob($pattern1);
-		if ( ! $pdf_files ){
-			$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-						."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
-
-			$pdf_files = glob($pattern);
-			if(!$pdf_files)
-				show_error("File not found");
-		}
-
-		// Download the file to browser
-		$this->load->helper('download')->helper('file');
-		$filename = shj_basename($pdf_files[0]);
-		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
-
-	}
-
-	/**
-	 * Displays detail description of given problem
-	 *
-	 * @param int $assignment_id
-	 * @param int $problem_id
-	 */
-	public function index($assignment_id = NULL, $problem_id = 1)
+	public function index()
 	{
-		// If no assignment is given, use selected assignment
-		if ($assignment_id === NULL)
-			$assignment_id = $this->user->selected_assignment['id'];
+		$data = array(
+			'all_problems' => $this->problem_model->all_problems(),
+		);
 
-		while (1){
+		$this->twig->display('pages/admin/list_problem.twig', $data);
 
-		
-			if ($assignment_id == 0) {
-				$data['error'] = 'Please select an assignment first';
-				break;
-			}
-
-			$assignment = $this->assignment_model->assignment_info($assignment_id);
-
-			if 	(shj_now() < strtotime($assignment['start_time'])
-				&& $this->user->level == 0
-				){
-				$data['error'] = "selected assignment hasn't started yet";
-				break;
-			}
-			if (! $this->assignment_model->is_participant($this->user->selected_assignment['participants'],$this->user->username)){
-				$data['error'] = "You are not registered to participate in this assignment";
-				break;
-			}
-			$data = array(
-				'all_assignments' => $this->all_assignments,
-				'all_problems' => $this->assignment_model->all_problems($assignment_id),
-				'description_assignment' => $assignment,
-				'can_submit' => TRUE,
-			);
-
-			if ( ! is_numeric($problem_id) || $problem_id < 1 || $problem_id > $data['description_assignment']['problems'])
-				show_404();
-
-			$languages = explode(',',$data['all_problems'][$problem_id]['allowed_languages']);
-
-			$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-			$problem_dir = "$assignments_root/assignment_{$assignment_id}/p{$problem_id}";
-			$data['problem'] = array(
-				'id' => $problem_id,
-				'description' => '<p>Description not found</p>',
-				'allowed_languages' => $languages,
-				'has_pdf' => glob("$problem_dir/*.pdf") != FALSE
-				,'has_template' => glob("$problem_dir/template.cpp") != FALSE
-			);
-
-			$path = "$problem_dir/desc.html";
-			if (file_exists($path))
-				$data['problem']['description'] = file_get_contents($path);
-
-			if ( $assignment['id'] == 0
-				OR $assignment_id != $this->user->selected_assignment['id']
-			)
-				$data['can_submit'] = FALSE;
-			else {
-				$a = $this->assignment_model->can_submit($assignment);
-				$data['can_submit'] = $a['can_submit'];
-			}
-
-			$data['error'] = 'none';
-			break;
-		}
-		$this->twig->display('pages/problems.twig', $data);
 	}
 
 
 	// ------------------------------------------------------------------------
 
 
-	/**
-	 * Edit problem description as html/markdown
-	 *
-	 * $type can be 'md', 'html', or 'plain'
-	 *
-	 * @param string $type
-	 * @param int $assignment_id
-	 * @param int $problem_id
-	 */
-	public function edit($type = 'md', $assignment_id = NULL, $problem_id = 1)
+	public function add()
 	{
-		if ($type !== 'html' && $type !== 'md' && $type !== 'plain')
+		if ( $this->user->level <=1) // permission denied
 			show_404();
 
-		if ($this->user->level <= 1)
-			show_404();
+		$this->form_validation->set_rules('title', 'title', 'trim');
+		$this->form_validation->set_rules('text', 'text', ''); /* todo: xss clean */
 
-
-		$ext = 'html';
-
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('text', 'text' ,'required'); /* todo: xss clean */
-		if ($this->form_validation->run())
-		{
-			if ($this->assignment_model->save_problem_description($assignment_id, $problem_id, $this->input->post('content'), $ext)){
-				echo "success";
-				return ;
-			}
-			else show_error("Error saving", 501);
+		if($this->form_validation->run()){
+			if ($this->input->post('id') === NULL)
+				$this->notifications_model->add_notification($this->input->post('title'), $this->input->post('text'));
+			else
+				$this->notifications_model->update_notification($this->input->post('id'), $this->input->post('title'), $this->input->post('text'));
+			redirect('notifications');
 		}
-
-
-		if ($assignment_id === NULL)
-			$assignment_id = $this->user->selected_assignment['id'];
-		if ($assignment_id == 0)
-			show_error('No assignment selected.');
 
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
-			'description_assignment' => $this->assignment_model->assignment_info($assignment_id),
+			'notif_edit' => $this->notif_edit
 		);
 
-		if ( ! is_numeric($problem_id) || $problem_id < 1 || $problem_id > $data['description_assignment']['problems'])
-			show_404();
-
-		$data['problem'] = array(
-			'id' => $problem_id,
-			'description' => ''
-		);
-
-		$path = rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/desc.".$ext;
-		if (file_exists($path))
-			$data['problem']['description'] = file_get_contents($path);
+		if ($this->notif_edit !== FALSE)
+			$data['title'] = 'Edit Notification';
 
 
-		$this->twig->display('pages/admin/edit_problem_'.$type.'.twig', $data);
+		$this->twig->display('pages/admin/add_notification.twig', $data);
 
 	}
 
+
+	// ------------------------------------------------------------------------
+
+
+	public function edit($notif_id = FALSE)
+	{
+		if ($this->user->level <= 1) // permission denied
+			show_404();
+		if ($notif_id === FALSE || ! is_numeric($notif_id))
+			show_404();
+		$this->notif_edit = $this->notifications_model->get_notification($notif_id);
+		$this->add();
+	}
+
+
+	// ------------------------------------------------------------------------
+
+
+	public function delete()
+	{
+		if ( ! $this->input->is_ajax_request() )
+			show_404();
+		if ($this->user->level <= 1) // permission denied
+			$json_result = array('done' => 0, 'message' => 'Permission Denied');
+		elseif ($this->input->post('id') === NULL)
+			$json_result = array('done' => 0, 'message' => 'Input Error');
+		else
+		{
+			$this->notifications_model->delete_notification($this->input->post('id'));
+			$json_result = array('done' => 1);
+		}
+
+		$this->output->set_header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($json_result);
+	}
+
+
+	// ------------------------------------------------------------------------
+
+
+	public function check()
+	{
+		if ( ! $this->input->is_ajax_request() )
+			show_404();
+		$time  = $this->input->post('time');
+		if ($time === NULL)
+			exit('error');
+		if ($this->notifications_model->have_new_notification(strtotime($time)))
+			exit('new_notification');
+		exit('no_new_notification');
+	}
 
 }

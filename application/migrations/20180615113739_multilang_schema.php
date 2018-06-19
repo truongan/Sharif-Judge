@@ -32,8 +32,10 @@ class Migration_Multilang_schema extends CI_Migration {
 
         $assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
         $problems_dir = $assignments_root . "/problems/";
-        if ( ! file_exists($problems_dir) )
+        if ( ! file_exists($problems_dir) ){
+            var_dump("creating directory $problems_dir as problem directory");
             mkdir($problems_dir, "0700");
+        }
 
         foreach ($query->result() as $prob)
         {

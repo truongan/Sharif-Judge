@@ -23,13 +23,29 @@ class Test extends CI_Controller
 
 		$this->load->library('migration');
 
-        //return;
+		//Update the path, should not be necessary on production site.
+		$path = dirname(__DIR__, 2);
+		$this->settings_model->set_setting('tester_path', $path . '/tester');
+		$this->settings_model->set_setting('assignments_root', $path . '/assignments');
+		
+		//return;
 		// if ( ! $this->migration->version(20180611171404))
 		if ( ! $this->migration->latest())
 		{
 			show_error($this->migration->error_string());
 		}
 
-
-    }
+	}
+	
+	public function add_test_user(){
+		$this->user_model->add_user(
+			'abc',
+			'def@fde.def',
+			'1234567890',
+			'admin'
+		);
+	}
+	public function ad_hoc(){
+		echo $this->problem_model->new_problem_id();
+	}
 }

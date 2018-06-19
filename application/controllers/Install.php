@@ -53,6 +53,7 @@ class Install extends CI_Controller
 
 		if (!is_cli()) {
 			show_error("This function is meant to be called from cli only");
+			die();
 			return ;
 		}
 

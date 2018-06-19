@@ -1,0 +1,65 @@
+{#
+ # Sharif Judge
+ # file: add_assignment.twig
+ # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
+ #}
+{% set selected = 'Problems' %}
+{% extends 'templates/base.twig' %}
+{% block icon %}{{ edit ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
+{% block title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
+{% block head_title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
+
+
+
+{% block title_menu %}
+{% if user.level >= 2 %}
+<span class="title_menu_item"><a href="{{ site_url('assignments/add') }}"><i class="fa fa-plus color8"></i> Add</a></span>
+{% endif %}
+{% endblock %}
+
+
+
+{% block main_content %}
+<div class="col">
+{% set msgclasses = {'success': 'text-success', 'notice': 'text-info', 'error': 'text-danger'} %}
+{% for message in messages %}
+	<p class="{{ msgclasses[message.type] }}">{{ message.text }}</p>
+{% endfor %}
+
+{% if all_problems|length == 0 %}
+	<p style="text-align: center;">Nothing to show...</p>
+{% else %}
+<br/>
+<table class="wecode_table table table-striped table-bordered">
+<thead class="thead-dark">
+<tr>
+	<th>ID</th>
+	<th>Name</th>
+	<th>upload only</th>
+	<th>diff command</th>
+	<th>diff argument</th>
+	<th>Tools</th>
+</tr>
+</thead>
+{% for item in all_problems %}
+<tr>
+	<td>{{ item.id}}</td>
+	<td>{{ item.name }}</td>
+	<td><i class="fa {{ item.is_upload_only == 1 ? 'fa-check-square-o color6' : 'fa-square-o' }} fa-2x" data-id="{{ item.id }}"></i></td>
+	
+	<td>{{ item.diff_cmd }}</td>
+	<td>{{ item.diff_arg }}</td>
+	<td>
+		<a href="{{ site_url('problems/downloadtestsdesc/'~item.id) }}"><i title="Download Tests and Descriptions" class="fa fa-cloud-download fa-lg color11"></i></a>
+		<a href="{{ site_url("problems/download_submissions/by_user/#{item.id}") }}"><i title="Download Final Submissions (by user)" class="fa fa-download fa-lg color12"></i></a>
+		<a href="{{ site_url("problems/download_submissions/by_problem/#{item.id}") }}"><i title="Download Final Submissions (by problem)" class="fa fa-download fa-lg color2"></i></a>
+		<a href="{{ site_url('problems/edit/'~item.id) }}"><i title="Edit" class="fa fa-pencil fa-lg color3"></i></a>
+		<a href="{{ site_url('problems/delete/'~item.id) }}"><i title="Delete" class="fa fa-times fa-lg color1"></i></a>
+	</td>
+
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+</div>
+{% endblock %}  {# main_content #}
