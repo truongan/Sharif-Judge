@@ -73,7 +73,7 @@ class View_problem extends CI_Controller
 		// If no assignment is given, use selected assignment
 		// if ($assignment_id === NULL)
 		// 	$assignment_id = $this->user->selected_assignment['id'];
-
+		//var_dump($problem_id);die();
 		while (1){
 			// if ($assignment_id == 0) {
 			// 	$data['error'] = 'Please select an assignment first';
@@ -123,19 +123,21 @@ class View_problem extends CI_Controller
 				}
 			}
 
-			$languages = explode(',',$data['problem']);
 
+			$languages = $data['problem']['languages'];
+			
 			$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-			$problem_dir = "$assignments_root/assignment_{$assignment_id}/p{$problem_id}";
-			$data['problem'] = array(
-				'id' => $problem_id,
+			$problem_dir = $assignments_root . "/problems/".$problem_id;
+			
+			
+			$data['problem'] = array_merge($data['problem'], array(
 				'description' => '<p>Description not found</p>',
-				'allowed_languages' => $languages,
 				'has_pdf' => glob("$problem_dir/*.pdf") != FALSE
 				,'has_template' => glob("$problem_dir/template.cpp") != FALSE
-			);
-
+			));
+			
 			$path = "$problem_dir/desc.html";
+			// var_dump($path); die();
 			if (file_exists($path))
 				$data['problem']['description'] = file_get_contents($path);
 

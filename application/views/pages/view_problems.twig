@@ -137,8 +137,8 @@ $(document).ready(function(){
 
 				<select id="languages" name="language" class="form-control custom-select">
 
-					{% for l in problem.allowed_languages %}
-						<option value="{{ l }}">{{ l }}</option>
+					{% for l in problem.languages %}
+						<option value="{{ l.name }}">{{ l.name }}</option>
 					{% endfor %}
 				</select>
 			</fieldset>
