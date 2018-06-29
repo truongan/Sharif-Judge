@@ -21,10 +21,10 @@
 {% block title_menu %}
 
 {% if problem.has_pdf %}
-	<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
+	<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{assignment.id}/#{problem.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
 {% endif %}
 {% if problem.has_template %}
-	<span class="title_menu_item"><a href="{{ site_url("problems/template/#{description_assignment.id}/#{problem.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
+	<span class="title_menu_item"><a href="{{ site_url("problems/template/#{assignment.id}/#{problem.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
 {% endif %}
 
 {% if user.level >= 2 %}
@@ -47,13 +47,13 @@ MathJax.Hub.Config({
 $(document).ready(function(){
 
 	shj.setup_save('.save-button'
-	, '{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}'
+	, '{{ site_url("problems/edit/plain/#{assignment.id}/#{problem.id}") }}'
 	, CKEDITOR.instances.problem_description);
 	
 	{# $('.save-button').click(function(){
 		$.ajax({
 			type: 'POST',
-			url: '{{ site_url("problems/edit/plain/#{description_assignment.id}/#{problem.id}") }}',
+			url: '{{ site_url("problems/edit/plain/#{assignment.id}/#{problem.id}") }}',
 			data: {
 				wcj_csrf_name: shj.csrf_token,
 				text : CKEDITOR.instances.problem_description.getData()
@@ -94,12 +94,11 @@ $(document).ready(function(){
 	</div>
 
 	<div class="col-md-5 col-lg-4 ">
+		{% if all_problems is defined %}
 		<div class="problems_widget row">
-			<p><i class="fa fa-file-text fa-lg color9"></i> {{ description_assignment.name }}</p>
+			<p><i class="fa fa-file-text fa-lg color9"></i> {{ assignment.name }}</p>
 
-			{% if all_problems|length == 0 %}
 				<p style="text-align: center;">Nothing to show...</p>
-			{% endif %}
 
 			<table class="wecode_table table table-striped table-bordered">
 				<thead>
@@ -114,7 +113,7 @@ $(document).ready(function(){
 					<tr{{ problem.id == one_problem.id ? ' class="table-active"' }}>
 						<td>{{ one_problem.id }}</td>
 						<td>
-							<a href="{{ site_url("problems/#{description_assignment.id}/#{one_problem.id}") }}">{{ one_problem.name }}</a>
+							<a href="{{ site_url("problems/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.name }}</a>
 						</td>
 						<td>{{ one_problem.score }}</td>
 						<td>{{ one_problem.is_upload_only ? 'Yes' : 'No' }}</td>
@@ -122,6 +121,8 @@ $(document).ready(function(){
 				{% endfor %}
 			</table>
 		</div>
+		{% endif %}
+
 
 		{% if can_submit %}
 		<div class="problems_widget ">

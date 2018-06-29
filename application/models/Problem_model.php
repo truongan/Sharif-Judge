@@ -37,8 +37,8 @@ class Problem_model extends CI_Model
 		return $problems;
 	}
 
-	public function get_problem($id = 1){
-
+	public function get_problem($id = NULL){
+		return $this->db->get_where('problems', array('id' => $id))->row_array();
 	}
 
 	public function add_problem(){

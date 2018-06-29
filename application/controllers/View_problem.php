@@ -65,44 +65,65 @@ class View_problem extends CI_Controller
 	/**
 	 * Displays detail description of given problem
 	 *
-	 * @param int $assignment_id
 	 * @param int $problem_id
+	 * @param int $assignment_id
 	 */
-	public function index($assignment_id = NULL, $problem_id = 1)
+	public function index($problem_id = 1, $assignment_id = NULL)
 	{
 		// If no assignment is given, use selected assignment
-		if ($assignment_id === NULL)
-			$assignment_id = $this->user->selected_assignment['id'];
+		// if ($assignment_id === NULL)
+		// 	$assignment_id = $this->user->selected_assignment['id'];
 
 		while (1){
-			if ($assignment_id == 0) {
-				$data['error'] = 'Please select an assignment first';
-				break;
-			}
+			// if ($assignment_id == 0) {
+			// 	$data['error'] = 'Please select an assignment first';
+			// 	break;
+			// }
 
 			$assignment = $this->assignment_model->assignment_info($assignment_id);
+			//var_dump($assignment); die();
+			if($assignment['id'] == 0 && $this->user->level < 2){
+				show_error('Only admin are allowed to view problem without assignment', 403);
+				die();
+			}
 
-			if 	(shj_now() < strtotime($assignment['start_time'])
-				&& $this->user->level == 0
-				){
-				$data['error'] = "selected assignment hasn't started yet";
-				break;
-			}
-			if (! $this->assignment_model->is_participant($this->user->selected_assignment['participants'],$this->user->username)){
-				$data['error'] = "You are not registered to participate in this assignment";
-				break;
-			}
-			$data = array(
-				'all_assignments' => $this->all_assignments,
-				'all_problems' => $this->assignment_model->all_problems($assignment_id),
-				'description_assignment' => $assignment,
-				'can_submit' => TRUE,
+			$data=array('all_assignments' => $this->all_assignments,
+						'problem' => $this->problem_model->get_problem($problem_id),
+						'can_submit' => TRUE,
 			);
 
-			if ( ! is_numeric($problem_id) || $problem_id < 1 || $problem_id > $data['description_assignment']['problems'])
-				show_404();
+			if ($assignment['id'] != 0){
+				if 	(shj_now() < strtotime($assignment['start_time'])
+					&& $this->user->level == 0
+				){
+					$data['error'] = "selected assignment hasn't started yet";
+					break;
+				}
+				if (! $this->assignment_model->is_participant(
+							$this->user->selected_assignment['participants'],$this->user->username
+				)){
+					$data['error'] = "You are not registered to participate in this assignment";
+					break;
+				}
+				$data = array_merge($data, array(
+					'all_problems' => $this->assignment_model->all_problems($assignment_id),
+					'assignment' => $assignment,
+					
+				));
 
-			$languages = explode(',',$data['all_problems'][$problem_id]['allowed_languages']);
+				if ( ! isset($data['all_problems']['problem_id']))
+					show_404();
+
+				if ( $assignment_id != $this->user->selected_assignment['id']
+				)
+					$data['can_submit'] = FALSE;
+				else {
+					$a = $this->assignment_model->can_submit($assignment);
+					$data['can_submit'] = $a['can_submit'];
+				}
+			}
+
+			$languages = explode(',',$data['problem']);
 
 			$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
 			$problem_dir = "$assignments_root/assignment_{$assignment_id}/p{$problem_id}";
@@ -118,19 +139,10 @@ class View_problem extends CI_Controller
 			if (file_exists($path))
 				$data['problem']['description'] = file_get_contents($path);
 
-			if ( $assignment['id'] == 0
-				OR $assignment_id != $this->user->selected_assignment['id']
-			)
-				$data['can_submit'] = FALSE;
-			else {
-				$a = $this->assignment_model->can_submit($assignment);
-				$data['can_submit'] = $a['can_submit'];
-			}
-
 			$data['error'] = 'none';
 			break;
 		}
-		$this->twig->display('pages/problems.twig', $data);
+		$this->twig->display('pages/view_problems.twig', $data);
 	}
 
 

@@ -17,9 +17,6 @@ class Assignment_model extends CI_Model
 
 
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * Add New Assignment to DB / Edit Existing Assignment
 	 *
@@ -205,33 +202,19 @@ class Assignment_model extends CI_Model
 	 */
 	public function all_problems($assignment_id)
 	{
-		$result = $this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
+		// $result = $this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
+		$result = $this->db->from('problems')
+					->join('problem_assignment', 'problems.id = problem_assignment.problem_id')
+					->where('problem_assignment.assignment_id', $assignment_id)
+					->get()
+					->result_array()
+		;
+		//var_dump($this->db->get_compiled_select()); die();	
 		$problems = array();
 		foreach ($result as $row)
 			$problems[$row['id']] = $row;
 		return $problems;
 	}
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Problem Info
-	 *
-	 * Returns database row for given problem (from given assignment)
-	 *
-	 * @param $assignment_id
-	 * @param $problem_id
-	 * @return mixed
-	 */
-	public function problem_info($assignment_id, $problem_id)
-	{
-		return $this->db->get_where('problems', array('assignment'=>$assignment_id, 'id'=>$problem_id))->row_array();
-	}
-
 
 
 	// ------------------------------------------------------------------------
