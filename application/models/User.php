@@ -97,7 +97,6 @@ class User extends CI_Model
 
 	// ------------------------------------------------------------------------
 
-
 	/**
 	 * Save Widget Positions
 	 *

@@ -47,13 +47,13 @@ MathJax.Hub.Config({
 $(document).ready(function(){
 
 	shj.setup_save('.save-button'
-	, '{{ site_url("problems/edit/plain/#{assignment.id}/#{problem.id}") }}'
+	, '{{ site_url("problems/edit/plain/#{problem.id}") }}'
 	, CKEDITOR.instances.problem_description);
 	
 	{# $('.save-button').click(function(){
 		$.ajax({
 			type: 'POST',
-			url: '{{ site_url("problems/edit/plain/#{assignment.id}/#{problem.id}") }}',
+			url: '{{ site_url("problems/edit/plain/#{problem.id}") }}',
 			data: {
 				wcj_csrf_name: shj.csrf_token,
 				text : CKEDITOR.instances.problem_description.getData()
@@ -113,7 +113,7 @@ $(document).ready(function(){
 					<tr{{ problem.id == one_problem.id ? ' class="table-active"' }}>
 						<td>{{ one_problem.id }}</td>
 						<td>
-							<a href="{{ site_url("problems/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.name }}</a>
+							<a href="{{ site_url("view_problem/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.name }}</a>
 						</td>
 						<td>{{ one_problem.score }}</td>
 						<td>{{ one_problem.is_upload_only ? 'Yes' : 'No' }}</td>

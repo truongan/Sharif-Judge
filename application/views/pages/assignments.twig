@@ -51,7 +51,7 @@
 <tr>
 	<td><i class="pointer select_assignment fa {{ item.id == user.selected_assignment.id ? 'fa-check-square-o color6' : 'fa-square-o' }} fa-2x" data-id="{{ item.id }}"></i></td>
 	<td>{{ item.name }}</td>
-	<td><a href="{{ site_url('problems/'~item.id) }}">{{ item.problems }} problem{{ item.problems != 1 ? 's' }}</a></td>
+	<td><a href="{{ site_url('view_problem/'~item.id) }}">{{ item.problems }} problem{{ item.problems != 1 ? 's' }}</a></td>
 	<td>{{ item.total_submits }} submission{{ item.total_submits != 1 ? 's' }}</td>
 	<td>
 		{% if item.finished %}

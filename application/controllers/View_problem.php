@@ -68,78 +68,52 @@ class View_problem extends CI_Controller
 	 * @param int $problem_id
 	 * @param int $assignment_id
 	 */
-	public function index($problem_id = 1, $assignment_id = NULL)
+	public function index( $assignment_id = NULL, $problem_id = NULL)
 	{
 		// If no assignment is given, use selected assignment
-		// if ($assignment_id === NULL)
-		// 	$assignment_id = $this->user->selected_assignment['id'];
-		//var_dump($problem_id);die();
+		if ($assignment_id === NULL)
+			$assignment_id = $this->user->selected_assignment['id'];
+		
+		$data=array('all_assignments' => $this->all_assignments,
+			'can_submit' => TRUE,
+		);
 		while (1){
-			// if ($assignment_id == 0) {
-			// 	$data['error'] = 'Please select an assignment first';
-			// 	break;
-			// }
 
 			$assignment = $this->assignment_model->assignment_info($assignment_id);
-			//var_dump($assignment); die();
-			if($assignment['id'] == 0 && $this->user->level < 2){
-				show_error('Only admin are allowed to view problem without assignment', 403);
+
+			if($assignment['id'] == 0){
+				show_error('Can not find your assignment', 404);
 				die();
 			}
 
-			$data=array('all_assignments' => $this->all_assignments,
-						'problem' => $this->problem_model->get_problem($problem_id),
-						'can_submit' => TRUE,
-			);
+			if (! $this->assignment_model->started($assignment)){
+				$data['error'] = "selected assignment hasn't started yet";
+				break;
+			}
+			
+			if (! $this->assignment_model->is_participant($assignment,$this->user->username)){
+				$data['error'] = "You are not registered to participate in this assignment";
+				break;
+			}
+			$data = array_merge($data, array(
+				'all_problems' => $this->assignment_model->all_problems($assignment_id),
+				'assignment' => $assignment,
+			));
 
-			if ($assignment['id'] != 0){
-				if 	(shj_now() < strtotime($assignment['start_time'])
-					&& $this->user->level == 0
-				){
-					$data['error'] = "selected assignment hasn't started yet";
-					break;
-				}
-				if (! $this->assignment_model->is_participant(
-							$this->user->selected_assignment['participants'],$this->user->username
-				)){
-					$data['error'] = "You are not registered to participate in this assignment";
-					break;
-				}
-				$data = array_merge($data, array(
-					'all_problems' => $this->assignment_model->all_problems($assignment_id),
-					'assignment' => $assignment,
-					
-				));
-
-				if ( ! isset($data['all_problems']['problem_id']))
-					show_404();
-
-				if ( $assignment_id != $this->user->selected_assignment['id']
-				)
-					$data['can_submit'] = FALSE;
-				else {
-					$a = $this->assignment_model->can_submit($assignment);
-					$data['can_submit'] = $a['can_submit'];
-				}
+			if ( $assignment_id != $this->user->selected_assignment['id'])
+				$data['can_submit'] = FALSE;
+			else {
+				$a = $this->assignment_model->can_submit($assignment);
+				$data['can_submit'] = $a['can_submit'];
 			}
 
+			if ($problem_id == NULL)
+				$problem_id = array_keys($data['all_problems'])[0];
+			else if ( ! isset($data['all_problems'][$problem_id]))
+				show_404();
 
-			$languages = $data['problem']['languages'];
-			
-			$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-			$problem_dir = $assignments_root . "/problems/".$problem_id;
-			
-			
-			$data['problem'] = array_merge($data['problem'], array(
-				'description' => '<p>Description not found</p>',
-				'has_pdf' => glob("$problem_dir/*.pdf") != FALSE
-				,'has_template' => glob("$problem_dir/template.cpp") != FALSE
-			));
-			
-			$path = "$problem_dir/desc.html";
-			// var_dump($path); die();
-			if (file_exists($path))
-				$data['problem']['description'] = file_get_contents($path);
+			$data['problem'] = $this->problem_model->get_problem($problem_id);
+			$data['problem'] = array_merge($data['problem'], $this->problem_model->get_description($problem_id));
 
 			$data['error'] = 'none';
 			break;

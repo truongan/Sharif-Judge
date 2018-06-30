@@ -50,6 +50,27 @@ class Problem_model extends CI_Model
 						->get()->result_array();
 	}
 
+	public function get_description($id = NULL){
+			
+		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
+		$problem_dir = $assignments_root . "/problems/".$id;
+		
+
+		
+		$result =  array(
+			'description' => '<p>Description not found</p>',
+			'has_pdf' => glob("$problem_dir/*.pdf") != FALSE
+			,'has_template' => glob("$problem_dir/template.cpp") != FALSE
+		);
+		
+		$path = "$problem_dir/desc.html";
+		// var_dump($path); die();
+		if (file_exists($path))
+			$result['description'] = file_get_contents($path);
+
+		return $result;
+	}
+
 	public function add_problem(){
 
 		//Now add new problems:

@@ -43,12 +43,14 @@
 </thead>
 {% for item in all_problems %}
 <tr>
+	
 	<td>{{ item.id}}</td>
-	<td>{{ item.name }}</td>
+	<td><a href="{{ site_url("problems/show/#{item.id}") }}">{{ item.name }}</a></td>
 	<td><i class="fa {{ item.is_upload_only == 1 ? 'fa-check-square-o color6' : 'fa-square-o' }} fa-2x" data-id="{{ item.id }}"></i></td>
 	
 	<td>{{ item.diff_cmd }}</td>
 	<td>{{ item.diff_arg }}</td>
+	
 	<td>
 		<a href="{{ site_url('problems/downloadtestsdesc/'~item.id) }}"><i title="Download Tests and Descriptions" class="fa fa-cloud-download fa-lg color11"></i></a>
 		<a href="{{ site_url("problems/download_submissions/by_user/#{item.id}") }}"><i title="Download Final Submissions (by user)" class="fa fa-download fa-lg color12"></i></a>

@@ -117,7 +117,7 @@ class Assignment_model extends CI_Model
 			// if assignment is closed, non-student users (admin, instructors) still can submit
 			$result['error_message'] = 'Selected assignment is closed.';
 		}
-		elseif (shj_now() < strtotime($this->user->selected_assignment['start_time']) && $this->user->level == 0 ){
+		elseif (!$this->started($assignment_info)){
 			// non-student users can submit to not started assignments
 			$result['error_message'] = 'Selected assignment has not started.';
 		}
@@ -137,6 +137,38 @@ class Assignment_model extends CI_Model
 
 		return $result;
 
+	}
+
+	public function can_view($assigment_info){
+		return $this->started($assigment_info) && $this->is_participant($assigment_info, $this->user->username);
+	}
+
+	/**
+	 * Is Participant
+	 *
+	 * Returns TRUE if $username if one of the $participants
+	 * Examples for participants: "ALL" or "user1, user2,user3"
+	 *
+	 * @param $participants
+	 * @param $username
+	 * @return bool
+	 */
+	public function is_participant($assignment_info, $username)
+	{
+		$participants = explode(',', $assignment_info['participants']);
+		foreach ($participants as &$participant){
+			$participant = trim($participant);
+		}
+		if(in_array('ALL', $participants))
+			return TRUE;
+		if(in_array($username, $participants))
+			return TRUE;
+		return FALSE;
+	}
+
+	public function started($assignment_info){
+		return shj_now() >= strtotime($this->user->selected_assignment['start_time']) //now should be larger than start time
+				|| $this->user->level > 0; ///instructor can view assignment before start time
 	}
 
 	// ------------------------------------------------------------------------
@@ -217,6 +249,7 @@ class Assignment_model extends CI_Model
 	}
 
 
+
 	// ------------------------------------------------------------------------
 
 
@@ -238,39 +271,13 @@ class Assignment_model extends CI_Model
 				'name' => 'Not Selected',
 				'finish_time' => 0,
 				'extra_time' => 0,
-				'problems' => 0
+				'problems' => 0,
 			);
+
 		return $query->row_array();
 	}
 
 
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Is Participant
-	 *
-	 * Returns TRUE if $username if one of the $participants
-	 * Examples for participants: "ALL" or "user1, user2,user3"
-	 *
-	 * @param $participants
-	 * @param $username
-	 * @return bool
-	 */
-	public function is_participant($participants, $username)
-	{
-		$participants = explode(',', $participants);
-		foreach ($participants as &$participant){
-			$participant = trim($participant);
-		}
-		if(in_array('ALL', $participants))
-			return TRUE;
-		if(in_array($username, $participants))
-			return TRUE;
-		return FALSE;
-	}
 
 
 

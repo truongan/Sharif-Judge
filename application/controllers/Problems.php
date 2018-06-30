@@ -27,7 +27,9 @@ class Problems extends CI_Controller
             // permission denied
             show_403();
             die();
-        }
+		}
+		
+		$this->all_assignments = $this->assignment_model->all_assignments();
 	}
 
 
@@ -44,7 +46,22 @@ class Problems extends CI_Controller
 
 	}
 
+	public function show($id){
+		if ( $this->user->level <=1) // permission denied
+			show_404();
+		$data=array(
+			'all_assignments' => $this->all_assignments,
+			'problem' => $this->problem_model->get_problem($id),
+			'can_submit' => TRUE,
+			'assignment' => NULL,
+		);
 
+		$data['problem'] = array_merge($data['problem'], $this->problem_model->get_description($id));
+
+		$data['error'] = 'none';
+
+		$this->twig->display('pages/view_problems.twig', $data);
+	}
 	// ------------------------------------------------------------------------
 
 
