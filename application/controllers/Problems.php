@@ -96,19 +96,33 @@ class Problems extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
-
-	public function edit($notif_id = FALSE)
+	/**
+	 * Edit problem description as html/markdown
+	 *
+	 * $type can be 'md', 'html', or 'plain'
+	 *
+	 * @param string $type
+	 * @param int $assignment_id
+	 * @param int $problem_id
+	 */
+	public function edit($assignment_id = NULL, $problem_id = 1)
 	{
-		if ($this->user->level <= 1) // permission denied
+		if ($this->user->level <= 1)
 			show_404();
-		if ($notif_id === FALSE || ! is_numeric($notif_id))
-			show_404();
-		$this->notif_edit = $this->notifications_model->get_notification($notif_id);
-		$this->add();
+
+		$ext = 'html';
+
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('text', 'text' ,'required'); /* todo: xss clean */
+		if ($this->form_validation->run())
+		{
+			if ($this->problem_model->save_problem_description($problem_id, $this->input->post('content'))){
+				echo "success";
+				return ;
+			}
+			else show_error("Error saving", 501);
+		}
 	}
-
-
 	// ------------------------------------------------------------------------
 
 

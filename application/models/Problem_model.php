@@ -50,13 +50,14 @@ class Problem_model extends CI_Model
 						->get()->result_array();
 	}
 
-	public function get_description($id = NULL){
-			
+	public function get_directory_path($id = NULL){
+		if ($id === NULL) return NULL;
 		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
 		$problem_dir = $assignments_root . "/problems/".$id;
-		
-
-		
+		return $problem_dir;
+	}
+	public function get_description($id = NULL){
+		$problem_dir = $this->get_directory_path($id);
 		$result =  array(
 			'description' => '<p>Description not found</p>',
 			'has_pdf' => glob("$problem_dir/*.pdf") != FALSE
@@ -64,13 +65,37 @@ class Problem_model extends CI_Model
 		);
 		
 		$path = "$problem_dir/desc.html";
-		// var_dump($path); die();
+
 		if (file_exists($path))
 			$result['description'] = file_get_contents($path);
 
 		return $result;
 	}
 
+	// ------------------------------------------------------------------------
+	/**
+	 * Save Problem Description
+	 *
+	 * Saves (Adds/Updates) problem description (html or markdown)
+	 *
+	 * @param $assignment_id
+	 * @param $problem_id
+	 * @param $text
+	 * @param $type
+	 */
+	public function save_problem_description($problem_id, $text, $type = 'html')
+	{
+		$problem_dir = $this->get_directory_path($problem_id);
+
+		if ($type === 'html')
+		{
+			if (file_put_contents("$problem_dir/desc.html", $text) ) {
+				return true;
+			} else return false;
+		}
+	}
+
+	// ------------------------------------------------------------------------
 	public function add_problem(){
 
 		//Now add new problems:

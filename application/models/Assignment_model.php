@@ -172,9 +172,6 @@ class Assignment_model extends CI_Model
 	}
 
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * All Assignments
 	 *
@@ -194,11 +191,7 @@ class Assignment_model extends CI_Model
 	}
 
 
-
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * New Assignment ID
 	 *
@@ -221,9 +214,6 @@ class Assignment_model extends CI_Model
 
 
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * All Problems of an Assignment
 	 *
@@ -345,37 +335,7 @@ class Assignment_model extends CI_Model
 	}
 
 
-
 	// ------------------------------------------------------------------------
-
-
-	/**
-	 * Save Problem Description
-	 *
-	 * Saves (Adds/Updates) problem description (html or markdown)
-	 *
-	 * @param $assignment_id
-	 * @param $problem_id
-	 * @param $text
-	 * @param $type
-	 */
-	public function save_problem_description($assignment_id, $problem_id, $text, $type)
-	{
-		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
-
-		if ($type === 'html')
-		{
-			if (file_put_contents("$assignments_root/assignment_{$assignment_id}/p{$problem_id}/desc.html", $text) ) {
-				return true;
-			} else return false;
-		}
-	}
-
-
-	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * Update Coefficients
 	 *
