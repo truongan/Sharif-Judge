@@ -121,14 +121,14 @@ class Assignment_model extends CI_Model
 			// non-student users can submit to not started assignments
 			$result['error_message'] = 'Selected assignment has not started.';
 		}
-		elseif (strtotime($this->user->selected_assignment['start_time']) < strtotime($this->user->selected_assignment['finish_time'])
-		  		&& shj_now() > strtotime($this->user->selected_assignment['finish_time'])+$this->user->selected_assignment['extra_time'])
+		elseif (strtotime($assignment_info['start_time']) < strtotime($assignment_info['finish_time'])
+		  		&& shj_now() > strtotime($assignment_info['finish_time'])+$assignment_info['extra_time'])
 		{
 	  		// deadline = finish_time + extra_time
 			// but if start time is before finish time, the deadline is NEVER
 			$result['error_message'] =  'Selected assignment has finished.';
 		}
-		elseif ( ! $this->assignment_model->is_participant($this->user->selected_assignment['participants'],$this->user->username) )
+		elseif ( ! $this->assignment_model->is_participant($assignment_info,$this->user->username) )
 			$result['error_message'] = 'You are not registered for submitting.';
 		else{
 			$result['error_message'] = 'none';

@@ -37,7 +37,7 @@ class Problem_model extends CI_Model
 		return $problems;
 	}
 
-	public function get_problem($id = NULL){
+	public function problem_info($id = NULL){
 		$a =  $this->db->get_where('problems', array('id' => $id))->row_array();
 		$a['languages'] = $this->get_languages($id);
 		return $a;
@@ -71,7 +71,19 @@ class Problem_model extends CI_Model
 
 		return $result;
 	}
+	public function get_template_path($problem_id = NULL){
+		$pattern1 = rtrim($this->problem_model->get_directory_path($problem_id)
+		."/template.public.cpp");
 
+		$template_file = glob($pattern1);
+		if ( ! $template_file ){
+			$pattern = rtrim($this->problem_model->get_directory_path($problem_id)
+						."/template.cpp");
+
+			$template_file = glob($pattern);
+		}
+		return $template_file;
+	}
 	// ------------------------------------------------------------------------
 	/**
 	 * Save Problem Description

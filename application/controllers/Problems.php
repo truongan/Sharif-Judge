@@ -29,7 +29,7 @@ class Problems extends CI_Controller
             die();
 		}
 		
-		$this->all_assignments = $this->assignment_model->all_assignments();
+		
 	}
 
 
@@ -47,11 +47,9 @@ class Problems extends CI_Controller
 	}
 
 	public function show($id){
-		if ( $this->user->level <=1) // permission denied
-			show_404();
+
 		$data=array(
-			'all_assignments' => $this->all_assignments,
-			'problem' => $this->problem_model->get_problem($id),
+			'problem' => $this->problem_model->problem_info($id),
 			'can_submit' => TRUE,
 			'assignment' => NULL,
 		);
@@ -123,9 +121,8 @@ class Problems extends CI_Controller
 			else show_error("Error saving", 501);
 		}
 	}
+	
 	// ------------------------------------------------------------------------
-
-
 	public function delete()
 	{
 		if ( ! $this->input->is_ajax_request() )
@@ -146,8 +143,6 @@ class Problems extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
-
 	public function check()
 	{
 		if ( ! $this->input->is_ajax_request() )
@@ -158,6 +153,24 @@ class Problems extends CI_Controller
 		if ($this->notifications_model->have_new_notification(strtotime($time)))
 			exit('new_notification');
 		exit('no_new_notification');
+	}
+
+	/**
+	* Download problem's template
+	**/
+	public function template($problem_id = 1,$assignment_id = NULL){
+		// Find pdf file
+		if ($assignment_id == NULL && $this->user->level < 2)
+			show_error("Only admin can view template without assignment", 403);
+
+		$pdf_files = $this->problem_model->get_template_path($problem_id);
+		if(!$pdf_files)
+			show_error("File not found");
+
+		// Download the file to browser
+		$this->load->helper('download')->helper('file');
+		$filename = shj_basename($pdf_files[0]);
+		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
 	}
 
 }

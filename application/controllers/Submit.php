@@ -37,18 +37,19 @@ class Submit extends CI_Controller
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 		$this->load->library('upload')->model('queue_model');
-		$this->assignment_root = $this->settings_model->get_setting('assignments_root');
-		$this->problems = $this->assignment_model->all_problems($this->user->selected_assignment['id']);
+		
+		// $this->assignment_root = $this->settings_model->get_setting('assignments_root');
+		// $this->problems = $this->assignment_model->all_problems($this->user->selected_assignment['id']);
 
-		$extra_time = $this->user->selected_assignment['extra_time'];
-		$delay = shj_now()-strtotime($this->user->selected_assignment['finish_time']);;
-		ob_start();
-		if ( eval($this->user->selected_assignment['late_rule']) === FALSE )
-			$coefficient = "error";
-		if (!isset($coefficient))
-			$coefficient = "error";
-		ob_end_clean();
-		$this->coefficient = $coefficient;
+		// $extra_time = $this->user->selected_assignment['extra_time'];
+		// $delay = shj_now()-strtotime($this->user->selected_assignment['finish_time']);;
+		// ob_start();
+		// if ( eval($this->user->selected_assignment['late_rule']) === FALSE )
+		// 	$coefficient = "error";
+		// if (!isset($coefficient))
+		// 	$coefficient = "error";
+		// ob_end_clean();
+		// $this->coefficient = $coefficient;
 
 	}
 
@@ -101,9 +102,8 @@ class Submit extends CI_Controller
 		return FALSE;
 	}
 
-	public function template(){
-		// Find pdf file
-
+	//-----------------------------------------------------------------
+	private function get_request_template_content(){
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 
@@ -115,60 +115,62 @@ class Submit extends CI_Controller
 			$assignment_id = $this->input->post('assignment');
 			$problem_id = $this->input->post('problem');
 
-			$pattern1 = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-						."/assignment_{$assignment_id}/p{$problem_id}/template.public.cpp";
-
-			$template_file = glob($pattern1);
-			if ( ! $template_file ){
-				$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')
-							."/assignment_{$assignment_id}/p{$problem_id}/template.cpp";
-
-				$template_file = glob($pattern);
-
-			}
+			$template_file = $this->problem_model->get_template_path($problem_id);
 
 			if(!$template_file){
-				$result = array('banned' => '', 'before'  => '', 'after' => '');
+				return NULL;
 			} else {
 				$filename = shj_basename($template_file[0]);
 				$template = file_get_contents($template_file[0]);
 
-				preg_match("/(\/\*###Begin banned.*\n)((.*\n)*)(###End banned keyword\*\/)/"
-					, $template, $matches
-				);
-
-
-				$set_or_empty = function($arr, $key){
-					//print_r($arr[$key]);
-
-					if(isset($arr[$key])) return $arr[$key];
-					return "";
-				};
-
-				$banned = $set_or_empty($matches, 2);
-
-				preg_match("/(###End banned keyword\*\/\n)((.*\n)*)\/\/###INSERT CODE HERE -\n?((.*\n?)*)/"
-					, $template, $matches
-				);
-				//print_r($matches);
-				$before = $set_or_empty($matches, 2);
-				$after = $set_or_empty($matches, 4);
-
-				$result = array('banned' => $banned, 'before'  => $before, 'after' => $after);
+				return $template;
 			}
-
-			$this->output->set_content_type('application/json')
-				->set_output(json_encode($result));
 		}
-		else
-			exit('Are you trying to see other users\' codes? :)');
+		else {
+			show_error("Invalid request assignment or problem", 400);
+		}
+	}
+	/*
+	* Return the template split into 3 variables 
+	* to be displayed in submit page
+	*/
+	public function template(){
+		// Find pdf file
+		$template = $this->get_request_template_content();
+		
+		if ($template == NULL)
+			$result = array('banned' => '', 'before'  => '', 'after' => '');
+
+		preg_match("/(\/\*###Begin banned.*\n)((.*\n)*)(###End banned keyword\*\/)/"
+			, $template, $matches
+		);
+	
+		$set_or_empty = function($arr, $key){
+			if(isset($arr[$key])) return $arr[$key];
+			return "";
+		};
+
+		$banned = $set_or_empty($matches, 2);
+
+		preg_match("/(###End banned keyword\*\/\n)((.*\n)*)\/\/###INSERT CODE HERE -\n?((.*\n?)*)/"
+			, $template, $matches
+		);
+
+		$before = $set_or_empty($matches, 2);
+		$after = $set_or_empty($matches, 4);
+
+		$result = array('banned' => $banned, 'before'  => $before, 'after' => $after);
+
+		$this->output->set_content_type('application/json')
+			->set_output(json_encode($result));
 	}
 
 	// ------------------------------------------------------------------------
 
 
-	public function index()
+	public function index($problem = NULL, $assignment = NULL)
 	{
+		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[-1]');
 		$this->form_validation->set_rules('problem', 'problem', 'required|integer|greater_than[0]', array('greater_than' => 'Select a %s.'));
 		$this->form_validation->set_rules('language', 'language', 'required|callback__check_language', array('_check_language' => 'Select a valid %s.'));
 
@@ -179,63 +181,83 @@ class Submit extends CI_Controller
 			else
 				show_error('Error Uploading File: '.$this->upload->display_errors());
 		}
+		else {
+			// If form not pass validation, we redirect to the editor page
+			if ($problem == NULL && $assignment == NULL){
+				$assignment = $this->user->selected_assignment['id']; 
+				$problem = 0;//No problem should have id 0 so the editor will just select first prob in assigment
+			}
+			redirect ("submit/editor/$problem/$assignment");
+		}
+	}
 
+	//------------------------------------------------------------------------
+	/*
+	* The editor will require valid problem_id always
+	* only admin or head instructor can submit without assigment id
+	*/
+	public function editor($problem_id = NULL,$assignment_id = NULL){
 		$this->data = array(
-			'all_assignments' => $this->assignment_model->all_assignments(),
-			'problems' => $this->problems,
-			'in_queue' => FALSE,
-			'coefficient' => $this->coefficient,
-			'upload_state' => '',
+			'all_assignments' => $this->assignment_model->all_assignments(),	
 			'problems_js' => '',
-			'error' => '',
+			'error' => 'none',
 		);
-		foreach ($this->problems as $problem)
+
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
+		if ($assignment['id'] == 0 && $this->user->level < 2){
+			show_error('Only admin can submit without assignment', 403);
+		} 
+		
+		if($assignment['id'] == 0)
+			$this->data['problems'] = array($this->problem_model->problem_info($problem_id));
+		else 
 		{
-			$languages = explode(',', $problem['allowed_languages']);
+			$this->data['problems'] = $this->assignment_model->all_problems($assignment_id);
+			$this->data['error'] = $this->assignment_model->can_submit($assignment)['error_message'];
+			$this->data['assignment'] = $assignment;
+			/*
+			* if $problem_id doesn't belong to this assignemnt
+			* set it to the first problems in the assigment
+			*/
+			if (!isset($this->data['problems'][$problem_id]))
+				$problem_id = key($this->data['problems']);
+		}
+		 
+		foreach ($this->data['problems'] as $problem)
+		{
 			$items='';
-			foreach ($languages as $language)
+			foreach ($this->problem_model->get_languages($problem['id']) as $language)
 			{
-				$items = $items."'".trim($language)."',";
+				$items = $items."'".trim($language['name'])."',";
 			}
 			$items = substr($items,0,strlen($items)-1);
 			$this->data['problems_js'] .= "shj.p[{$problem['id']}]=[{$items}]; ";
 		}
 
-		if ($this->user->selected_assignment['id'] == 0)
-			$this->data['error']='Please select an assignment first.';
-		else {
-			$this->data['error'] = $this->assignment_model->can_submit($this->user->selected_assignment)['error_message'];
-		}
+		$this->data['from'] = $problem_id;
 
-
-		$this->data['from'] = "";
-		$this->load->library('user_agent');
-	    $a = $this->agent->referrer();
-
-		if (preg_match('/\/problems\/\d+\/(\d+)$/', $a, $pno)) $this->data['from'] = $pno[1];
-
+		//var_dump($this->data); die();
 		$this->twig->display('pages/submit.twig', $this->data);
-
 	}
-
-
 	// ------------------------------------------------------------------------
 
+	private function show_submit_form(){
+
+	}
 
 	/**
 	 * Saves submitted code and adds it to queue for judging
 	 */
 	private function _upload()
 	{
-		$now = shj_now();
-		foreach($this->problems as $item)
-			if ($item['id'] == $this->input->post('problem'))
-			{
-				$this->problem = $item;
-				break;
-			}
+
+		$problem = $this->problem_model->get_info($this->input->post('problem'));
+		$assignment = $this->problem_model->get_info($this->input->post('assignment'));
+		$lang = $this->problem_model->get_info($this->input->post('language'));
 		$this->filetype = $this->_language_to_type(strtolower(trim($this->input->post('language'))));
 
+		$now = shj_now();
+	
 		if ( $this->queue_model->in_queue($this->user->username,$this->user->selected_assignment['id'], $this->problem['id']) )
 			show_error('You have already submitted for this problem. Your last submission is still in queue.');
 		if ($this->user->level==0 && !$this->user->selected_assignment['open'])

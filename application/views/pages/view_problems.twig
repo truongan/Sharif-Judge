@@ -6,7 +6,7 @@
 {% set selected = 'problems' %}
 {% extends 'templates/base.twig' %}
 {% block icon %}fa-puzzle-piece{% endblock %}
-{% block title %}{{ all_problems[problem.id].name }}{% endblock %}
+{% block title %}{{ problem.name }}{% endblock %}
 {% block head_title %}Problem {{ problem.id }}{% endblock %}
 
 {% block other_assets %}
@@ -21,10 +21,10 @@
 {% block title_menu %}
 
 {% if problem.has_pdf %}
-	<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{assignment.id}/#{problem.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
+	<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
 {% endif %}
 {% if problem.has_template %}
-	<span class="title_menu_item"><a href="{{ site_url("problems/template/#{assignment.id}/#{problem.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
+	<span class="title_menu_item"><a href="{{ site_url("problems/template/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
 {% endif %}
 
 {% if user.level >= 2 %}
@@ -157,7 +157,7 @@ $(document).ready(function(){
 
 		</div>
 		<div class="problems_widget row">
-			<span class=""><a href="{{ site_url("submit/") }}" target="_blank"><i class="fa fa-pencil-square-o"></i> Code editor</a></span>
+			<span class=""><a href="{{ site_url("submit/editor/#{problem.id}/#{assignment.id}") }}" target="_blank"><i class="fa fa-pencil-square-o"></i> Code editor</a></span>
 		</div>
 		{% endif %}
 

@@ -26,7 +26,7 @@ class Migration_Multilang_schema extends CI_Migration {
         /* 
         * Migrate old data
         */
-        $this->db->trans_start();
+
         $query = $this->db->get('problems');
         $new_id = $this->db->count_all('problems') + 1;
 
@@ -49,7 +49,9 @@ class Migration_Multilang_schema extends CI_Migration {
             if (!$this->db->insert('problem_assignment',array(
                 'assignment_id' => $prob->assignment,
                 'problem_id' => $new_id,
-                'score' => $score_query->score
+                'score' => $score_query->score,
+                'ordering' => $prob->id,
+                'problem_name' => $prob->name,
             ))) echo_error();
           
             //Moving directory
@@ -104,7 +106,7 @@ class Migration_Multilang_schema extends CI_Migration {
         // create table 'languages'
         $fields = array(
             'id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-            'name'    => array('type' => 'VARCHAR', 'constraint' => 45, 'default' => '0'),
+            'name'    => array('type' => 'VARCHAR', 'constraint' => 45, 'default' => '0', 'unique' => true),
             'extension'    => array('type' => 'VARCHAR', 'constraint' => 3),
             'default_timle_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
             'default_memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
@@ -131,9 +133,12 @@ class Migration_Multilang_schema extends CI_Migration {
             'problem_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
             'score'             => array('type' => 'INT', 'constraint' => 11),
             'ordering'             => array('type' => 'INT', 'constraint' => 11),
+            'problem_name'             => array('type' => 'VARCHAR', 'constraint' => 150, 'default' => ''),
         );
         $this->dbforge->add_field($fields)->add_key(array('assignment_id', 'problem_id')); // PRIMARY KEY
         $this->create_and_show_err('problem_assignment');
+
+
     }
 
     public function up(){
@@ -159,13 +164,14 @@ class Migration_Multilang_schema extends CI_Migration {
         foreach (array('assignment','score','c_time_limit','java_time_limit','python_time_limit','allowed_languages','memory_limit') as $i)
             $this->dbforge->drop_column('problems', $i);
         $this->dbforge->add_column('problems'
-                    , array('admin_note' => array('type' => 'VARCHAR', 'constraint' => 150, 'default' => '')));
+                    , array('admin_note' => array('type' => 'VARCHAR', 'constraint' => 1500, 'default' => '')));
         
         $this->dbforge->modify_column('problems', array(
             'id' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
             'name' => array('type' => 'VARCHAR', 'constraint' => 150, 'default' => '')
         ));
         var_dump($this->db->last_query());
+        
         $this->db->trans_complete();
     }
 

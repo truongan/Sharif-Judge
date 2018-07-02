@@ -6,8 +6,19 @@
 {% set selected = 'submit' %}
 {% extends 'templates/base.twig' %}
 {% block icon %}fa-location-arrow{% endblock %}
-{% block title %}Submit{% endblock %}
+{% block title %}
+	{% if assignment is defined %} 
+	<h5 class="ml-2">Assignment: {{assignment.name}}</h5>
+	{% else %}
+	<h5 class="ml-2">Problem: {{problems|first.name}}</h5>
+	{% endif %}
+{% endblock %}
+
 {% block head_title %}Submit{% endblock %}
+
+{% block title_menu %}
+
+{% endblock %}
 
 {% block other_assets %}
     <link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/submit_page.css') }}"/>
@@ -24,11 +35,9 @@
 	shj.selected_assignment = {{ user.selected_assignment.id }};
 	$(document).ready(function(){
 		///Select the problem from referring page
-		{% if from == '' %}
-			$("select#problems").val(1);
-		{% else  %}
-			$("select#problems").val({{ from }});
-		{% endif %}
+
+		$("select#problems").val({{ from }});
+
 		$("select#problems").change();
 	});
 </script>
