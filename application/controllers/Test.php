@@ -46,6 +46,7 @@ class Test extends CI_Controller
 		);
 	}
 	public function ad_hoc(){
-		echo $this->problem_model->new_problem_id();
+		
+		var_dump($this->assignment_model->all_problems(5));
 	}
 }

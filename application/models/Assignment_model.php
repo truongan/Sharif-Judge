@@ -171,6 +171,7 @@ class Assignment_model extends CI_Model
 				|| $this->user->level > 0; ///instructor can view assignment before start time
 	}
 
+
 	// ------------------------------------------------------------------------
 	/**
 	 * All Assignments

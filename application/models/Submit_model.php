@@ -36,6 +36,7 @@ class Submit_model extends CI_Model {
 	}
 
 
+
 	// ------------------------------------------------------------------------
 
 
@@ -58,6 +59,20 @@ class Submit_model extends CI_Model {
 				return $this->db->order_by('username asc, problem asc')->get_where('submissions', $arr)->result_array();
 			else
 				return $this->db->order_by('username asc, problem asc')->limit($per_page,($page_number-1)*$per_page)->get_where('submissions', $arr)->result_array();
+		}
+
+	}
+
+	public function directory($assignment_id, $problem_id, $user_name){
+		$user = $this->user_model->get_user_by_name($username);
+		
+		if($assignment_id == NULL && $user->role != 'student'){
+			return $this->problem_model->get_directory_path($problem_id) . "/$username/";
+		} else {
+			if (isset($this->assignment_model->all_problems($assignment_id)[$problem_id]) ){
+				$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
+				return $assignments_root . "/assignment_$assignment_id/problem_$problem_id/$username/";
+			}
 		}
 
 	}
