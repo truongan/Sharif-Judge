@@ -167,12 +167,16 @@ class Submit_model extends CI_Model {
 
 
 	public function get_path($username, $assignment, $problem){
+		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
 		if ($assignment == NULL){
 			if ($this->user->level < 2) show_error("Only admin can havae submission without assignment", 403);
+
+			return $assignment_root . "/problem_$problem/$username";
 		} else {
 			if ($this->user->username != $username && $this->user->level < 1){
 				show_error("Only and instructor can access other user submission", 403);
 			}
+			return $assignment_root . "/assignment_$assignment/problem_$problem/$username";
 		}
 	}
 

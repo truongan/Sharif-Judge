@@ -13,8 +13,6 @@ class View_problem extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -26,10 +24,6 @@ class View_problem extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
-
-
-
 	/**
 	 * Displays detail description of given problem
 	 *

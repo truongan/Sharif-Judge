@@ -503,27 +503,25 @@ class Submissions extends CI_Controller
 			if ($this->user->level === 0 && $this->user->username != $submission['username'])
 				exit('Don\'t try to see submitted codes :)');
 
-			
+			$submit_path = $this->submit_model->get_path($submission['username'], $submission['assignment_id'], $submission['problem_id']);
+			$file_extension = $this->language_model->get_language($submission['language_id'])->extension;
 			
 			if ($type === 'result')
-				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/result-{$submission['submit_id']}.html";
+				$file_path = $submit_path . "/result-{$submission['submit_id']}.html";
 			elseif ($type === 'code')
-				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
+				$file_path = $submit_path . "/{$submission['file_name']}.". $file_extension;
 			elseif ($type === 'log')
-				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/log-{$submission['submit_id']}";
+				$file_path = $submit_path . "/log-{$submission['submit_id']}";
 			else
-				$file_path = '/nowhere'; // This line is never reached!
-
+				$file_path = '/nowhere'; // This line should never be reached!
+			
 			$result = array(
-				'file_name' => $submission['main_file_name'].'.'.filetype_to_extension($submission['file_type']),
-				'text' => file_exists($file_path)?file_get_contents($file_path):'File Not Found'
+				'file_name' => $submission['main_file_name'].'.'. $file_extension,
+				'text' => file_exists($file_path)?file_get_contents($file_path):"File Not Found $file_path"
 			);
 
 			if ($type === 'code') {
-				$result['lang'] = $submission['file_type'];
+				$result['lang'] = $file_extension;
 				if ($result['lang'] == 'py2' || $result['lang'] == 'py3')
 					$result['lang'] = 'python';
 			}
