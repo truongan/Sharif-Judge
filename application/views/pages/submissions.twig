@@ -54,9 +54,9 @@
 
 
 {% block title_menu %}
-	<span class="title_menu_item">
+	{# <span class="title_menu_item">
 		<a href="{{ excel_link }}"><i class="fa fa-download color2"></i> Excel</a>
-	</span>
+	</span> #}
 	{% if filter_user %}
 	<span class="title_menu_item">
 		<a href="{{ site_url('submissions/'~view~(filter_problem ? '/problem/'~filter_problem)) }}">
