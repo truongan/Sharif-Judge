@@ -503,6 +503,8 @@ class Submissions extends CI_Controller
 			if ($this->user->level === 0 && $this->user->username != $submission['username'])
 				exit('Don\'t try to see submitted codes :)');
 
+			
+			
 			if ($type === 'result')
 				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
 					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/result-{$submission['submit_id']}.html";

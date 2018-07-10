@@ -21,13 +21,13 @@ class Submit_model extends CI_Model {
 	/**
 	 * Returns table row for a specific submission
 	 */
-	public function get_submission($username, $assignment, $problem, $submit_id)
+	public function get_submission($username, $assignment, $problem_id, $submit_id)
 	{
 		$query = $this->db->get_where('submissions',
 			array(
 				'username'=>$username,
-				'assignment'=>$assignment,
-				'problem'=>$problem,
+				'assignment_id'=>$assignment,
+				'problem_id'=>$problem_id,
 				'submit_id'=>$submit_id
 			)
 		);
@@ -52,14 +52,14 @@ class Submit_model extends CI_Model {
 		if ($filter_problem !== NULL)
 			$arr['problem_id'] = $filter_problem;
 		if ($page_number === NULL)
-			return $this->db->order_by('username asc, problem asc')->get_where('submissions', $arr)->result_array();
+			return $this->db->order_by('username asc, problem_id asc')->get_where('submissions', $arr)->result_array();
 		else
 		{
 			$per_page = $this->settings_model->get_setting('results_per_page_final');
 			if ($per_page == 0)
-				return $this->db->order_by('username asc, problem asc')->get_where('submissions', $arr)->result_array();
+				return $this->db->order_by('username asc, problem_id asc')->get_where('submissions', $arr)->result_array();
 			else
-				return $this->db->order_by('username asc, problem asc')->limit($per_page,($page_number-1)*$per_page)->get_where('submissions', $arr)->result_array();
+				return $this->db->order_by('username asc, problem_id asc')->limit($per_page,($page_number-1)*$per_page)->get_where('submissions', $arr)->result_array();
 		}
 
 	}
@@ -137,7 +137,7 @@ class Submit_model extends CI_Model {
 		elseif ($filter_user !== NULL)
 			$arr['username'] = $filter_user;
 		if ($filter_problem !== NULL)
-			$arr['problem'] = $filter_problem;
+			$arr['problem_id'] = $filter_problem;
 		return $this->db->where($arr)->count_all_results('submissions');
 	}
 
@@ -145,26 +145,36 @@ class Submit_model extends CI_Model {
 	// ------------------------------------------------------------------------
 
 
-	public function set_final_submission($username, $assignment, $problem, $submit_id)
+	public function set_final_submission($username, $assignment, $problem_id, $submit_id)
 	{
 
 		$this->db->where(array(
 			'is_final' => 1,
 			'username' => $username,
 			'assignment' => $assignment,
-			'problem' => $problem,
+			'problem_id' => $problem_id,
 		))->update('submissions', array('is_final'=>0));
 
 		$this->db->where(array(
 			'username' => $username,
 			'assignment' => $assignment,
-			'problem' => $problem,
+			'problem_id' => $problem_id,
 			'submit_id' => $submit_id,
 		))->update('submissions', array('is_final'=>1));
 
 		return TRUE;
 	}
 
+
+	public function get_path($username, $assignment, $problem){
+		if ($assignment == NULL){
+			if ($this->user->level < 2) show_error("Only admin can havae submission without assignment", 403);
+		} else {
+			if ($this->user->username != $username && $this->user->level < 1){
+				show_error("Only and instructor can access other user submission", 403);
+			}
+		}
+	}
 
 	// ------------------------------------------------------------------------
 
@@ -179,7 +189,7 @@ class Submit_model extends CI_Model {
 			'is_final' => 1,
 			'username' => $submit_info['username'],
 			'assignment' => $submit_info['assignment'],
-			'problem' => $submit_info['problem'],
+			'problem_id' => $submit_info['problem'],
 		))->update('submissions', array('is_final'=>0));
 
 		$submit_info['is_final'] = 1;
