@@ -517,7 +517,7 @@ class Submissions extends CI_Controller
 			
 			$result = array(
 				'file_name' => $submission['main_file_name'].'.'. $file_extension,
-				'text' => file_exists($file_path)?file_get_contents($file_path):"File Not Found $file_path"
+				'text' => file_exists($file_path)?file_get_contents($file_path):"File Not Found"
 			);
 
 			if ($type === 'code') {
