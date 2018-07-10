@@ -155,6 +155,10 @@ class Migration_Multilang_schema extends CI_Migration {
             'name' => 'assignment_id',
             'type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE
         )));
+        $this->dbforge->modify_column('submissions', array('problem' => array(
+            'name' => 'problem_id',
+            'type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE
+        )));
         
         $this->dbforge->drop_column('assignments', 'problems');
         $this->dbforge->modify_column('assignments', array('name' => array(

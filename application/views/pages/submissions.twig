@@ -157,8 +157,8 @@
 				</td>
 			<td>{{ submission.name }}</td>
 		{% endif %}
-			<td><a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem) }}" title="{{ problems[submission.problem].name }}"><span class="btn btn-info">{{ submission.problem }}</span></a>
-				<a href="{{ site_url('problems/' ~ submission.assignment ~ '/'~ submission.problem ) }}" title="View problem {{submission.problem}}'s statements"><span class="badge badge-pill badge-secondary">&larr;</span></a>
+			<td><a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem_id) }}" title="{{ problems[submission.problem_id].name }}"><span class="btn btn-info">{{ submission.problem_id }}</span></a>
+				<a href="{{ site_url('view_problem/' ~ submission.assignment_id ~ '/'~ submission.problem_id ) }}" title="View problem {{submission.problem_id}}'s statements"><span class="badge badge-pill badge-secondary">&larr;</span></a>
 			</td>
 			<td><small>{{ submission.time }}</small></td>
 			<td>{{ submission.pre_score }}</td>

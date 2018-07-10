@@ -355,7 +355,9 @@ class Submissions extends CI_Controller
 
 		$this->pagination_config['base_url'] = site_url('submissions/all'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
 		$this->pagination_config['cur_page'] = $this->page_number;
-		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem);
+		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->user->selected_assignment['id']
+						, $this->user->level, $this->user->username
+						, $this->filter_user, $this->filter_problem);
 		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_all');
 
 		if ($this->pagination_config['per_page'] == 0)
@@ -372,9 +374,9 @@ class Submissions extends CI_Controller
 		{
 			$item['name'] = $names[$item['username']];
 			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
+			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem_id']]['score']/10000);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
-			$item['language'] = filetype_to_language($item['file_type']);
+			$item['language'] = $this->language_model->get_language($item['language_id'])->name;
 			if ($item['coefficient'] === 'error')
 				$item['final_score'] = 0;
 			else

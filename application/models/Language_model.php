@@ -14,10 +14,12 @@ class Language_model extends CI_Model
 		parent::__construct();
 	}
 
-    public function new_problem_id(){
-        
-    }
-
+    public function get_language($id){
+		return $this->db->get_where('languages', array('id'=>$id))->row();
+	}
+	public function get_all_languages(){
+		return $this->db->get_where('languages')->result_array();;
+	}
 }
 
 ?>

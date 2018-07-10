@@ -11,6 +11,7 @@ class Submit_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('language_model');
 	}
 
 
@@ -42,14 +43,14 @@ class Submit_model extends CI_Model {
 
 	public function get_final_submissions($assignment_id, $user_level, $username, $page_number = NULL, $filter_user = NULL, $filter_problem = NULL)
 	{
-		$arr['assignment'] = $assignment_id;
+		$arr['assignment_id'] = $assignment_id;
 		$arr['is_final'] = 1;
 		if ($user_level === 0)// students can only get final submissions of themselves
 			$arr['username']=$username;
 		elseif ($filter_user !== NULL)
 			$arr['username'] = $filter_user;
 		if ($filter_problem !== NULL)
-			$arr['problem'] = $filter_problem;
+			$arr['problem_id'] = $filter_problem;
 		if ($page_number === NULL)
 			return $this->db->order_by('username asc, problem asc')->get_where('submissions', $arr)->result_array();
 		else
@@ -83,23 +84,28 @@ class Submit_model extends CI_Model {
 
 	public function get_all_submissions($assignment_id, $user_level, $username, $page_number = NULL, $filter_user = NULL, $filter_problem = NULL)
 	{
-		$arr['assignment']=$assignment_id;
+		$kq = NULL;
+		$arr['assignment_id']=$assignment_id;
 		if ($user_level === 0)
 			$arr['username']=$username;
 		elseif ($filter_user !== NULL)
 			$arr['username'] = $filter_user;
 		if ($filter_problem !== NULL)
-			$arr['problem'] = $filter_problem;
+			$arr['problem_id'] = $filter_problem;
+		
 		if ($page_number === NULL)
-			return $this->db->order_by('submit_id','desc')->get_where('submissions', $arr)->result_array();
+			$kq =  $this->db->order_by('submit_id','desc')->get_where('submissions', $arr)->result_array();
 		else
 		{
 			$per_page = $this->settings_model->get_setting('results_per_page_all');
 			if ($per_page == 0)
-				return $this->db->order_by('submit_id','desc')->get_where('submissions', $arr)->result_array();
+				$kq =  $this->db->order_by('submit_id','desc')->get_where('submissions', $arr)->result_array();
 			else
-				return $this->db->order_by('submit_id','desc')->limit($per_page,($page_number-1)*$per_page)->get_where('submissions', $arr)->result_array();
+				$kq =  $this->db->order_by('submit_id','desc')->limit($per_page,($page_number-1)*$per_page)->get_where('submissions', $arr)->result_array();
 		}
+
+//		$kq['languages'] = $this->language_model->get_language($item['language_id']);
+		return $kq;
 	}
 
 
@@ -108,14 +114,14 @@ class Submit_model extends CI_Model {
 
 	public function count_final_submissions($assignment_id, $user_level, $username, $filter_user = NULL, $filter_problem = NULL)
 	{
-		$arr['assignment'] = $assignment_id;
+		$arr['assignment_id'] = $assignment_id;
 		$arr['is_final'] = 1;
 		if ($user_level === 0)
 			$arr['username']=$username;
 		elseif ($filter_user !== NULL)
 			$arr['username'] = $filter_user;
 		if ($filter_problem !== NULL)
-			$arr['problem'] = $filter_problem;
+			$arr['problem_id'] = $filter_problem;
 		return $this->db->where($arr)->count_all_results('submissions');
 	}
 
@@ -125,7 +131,7 @@ class Submit_model extends CI_Model {
 
 	public function count_all_submissions($assignment_id, $user_level, $username, $filter_user = NULL, $filter_problem = NULL)
 	{
-		$arr['assignment']=$assignment_id;
+		$arr['assignment_id']=$assignment_id;
 		if ($user_level === 0)
 			$arr['username']=$username;
 		elseif ($filter_user !== NULL)
