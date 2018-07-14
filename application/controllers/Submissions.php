@@ -51,18 +51,28 @@ class Submissions extends CI_Controller
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 		$this->load->model('submit_model');
-		$this->problems = $this->assignment_model->all_problems($this->user->selected_assignment['id']);
+		
 
 		$input = $this->uri->uri_to_assoc();
-		$this->filter_user = $this->filter_problem = NULL;
+		$this->filter_user = $this->filter_problem = $this->assignment = NULL;
 		$this->page_number = 1;
+		
 		if (array_key_exists('user', $input) && $input['user'])
 			if ($this->user->level > 0) // students are not able to filter submissions by user
 				$this->filter_user = $this->form_validation->alpha_numeric($input['user'])?$input['user']:NULL;
 		if (array_key_exists('problem', $input) && $input['problem'])
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
-
-		//var_dump($input); die();
+		
+		if (array_key_exists('problem', $input) && $input['problem'])
+			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
+			
+		if (array_key_exists('assignment', $input) && $input['assignment'])
+			$this->assignment = is_numeric($input['assignment'])?$input['assignment']:NULL;
+		
+		if ($this->assignment == NULL && $this->user->level < 2) show_error("Only admin can view submission without assignment", 403);
+		$this->problems = $this->assignment_model->all_problems($this->assignment);
+		
+		// var_dump($this->db->last_query()); die();
 		if (array_key_exists('page', $input) && $input['page'])
 			$this->page_number = is_numeric($input['page'])?$input['page']:1;
 
@@ -70,83 +80,30 @@ class Submissions extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-	public function the_final()
+	public function final()
 	{
-
-		if ( ! is_numeric($this->page_number))
-			show_404();
-
-		if ($this->page_number<1)
-			show_404();
-
-
-		$this->pagination_config['base_url'] = site_url('submissions/final'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
-		$this->pagination_config['cur_page'] = $this->page_number;
-		$this->pagination_config['total_rows'] = $this->submit_model->count_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem);
-		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_final');
-
-
-		if ($this->pagination_config['per_page'] == 0)
-			$this->pagination_config['per_page'] = $config['total_rows'];
-		$this->load->library('pagination');
-		$this->pagination->initialize($this->pagination_config);
-
-		//$submissions = $this->submit_model->get_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
-		$submissions = $this->submit_model->get_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, NULL, $this->filter_user, $this->filter_problem);
-
-		$names = $this->user_model->get_names();
-
-		foreach ($submissions as &$item)
-		{
-			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
-			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
-			$item['language'] = filetype_to_language($item['file_type']);
-			if ($item['coefficient'] === 'error')
-				$item['final_score'] = 0;
-			else
-				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
-		}
-
-
-		$data = array(
-			'view' => 'final',
-			'all_assignments' => $this->assignment_model->all_assignments(),
-			'problems' => $this->problems,
-			'submissions' => $submissions,
-			'excel_link' => site_url('submissions/final_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
-			'filter_user' => $this->filter_user,
-			'filter_problem' => $this->filter_problem,
-			'pagination' => $this->pagination->create_links(),
-			'page_number' => $this->page_number,
-			'per_page' => $this->pagination_config['per_page'],
-		);
-
-		$this->twig->display('pages/submissions.twig', $data);
+		return $this->_index("final");
 	}
 
 
+	public function index(){
+		return redirect('submissions/all');
+	}
 
-
-	// ------------------------------------------------------------------------
-
-
-
-
-	public function all()
-	{
-
+	private function _index($type = "all"){
 		if ( ! is_numeric($this->page_number))
 			show_404();
 
 		if ($this->page_number < 1)
 			show_404();
-
-
+		
+		$assignment =  $this->assignment_model->assignment_info($this->assignment);
+			
+			// var_dump($this->assignment_model->assignment_info($this->assignment));die();
+		
 		$this->pagination_config['base_url'] = site_url('submissions/all'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
 		$this->pagination_config['cur_page'] = $this->page_number;
-		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->user->selected_assignment['id']
+		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->assignment
 						, $this->user->level, $this->user->username
 						, $this->filter_user, $this->filter_problem);
 		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_all');
@@ -156,8 +113,11 @@ class Submissions extends CI_Controller
 		$this->load->library('pagination');
 		$this->pagination->initialize($this->pagination_config);
 
-		$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
-		//$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, null, $this->filter_user, $this->filter_problem);
+		if ($type == "all") 
+			$submissions = $this->submit_model->get_all_submissions($this->assignment, $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
+		else if ($type == "final")
+			$submissions = $this->submit_model->get_final_submissions($this->assignment, $this->user->level, $this->user->username, NULL, $this->filter_user, $this->filter_problem);
+		else show_404();
 
 		$names = $this->user_model->get_names();
 
@@ -166,26 +126,32 @@ class Submissions extends CI_Controller
 			$item['name'] = $names[$item['username']];
 			$item['fullmark'] = ($item['pre_score'] == 10000);
 			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem_id']]['score']/10000);
-			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
+			$item['delay'] = strtotime($item['time'])-strtotime($assignment['finish_time']);
 			$item['language'] = $this->language_model->get_language($item['language_id'])->name;
 			if ($item['coefficient'] === 'error')
 				$item['final_score'] = 0;
 			else
 				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
 		}
-
+		//var_dump($assignment); die();
 		$data = array(
-			'view' => 'all',
+			'view' => $type,
 			'all_assignments' => $this->assignment_model->all_assignments(),
+			'assignment' => $assignment,
 			'problems' => $this->problems,
 			'submissions' => $submissions,
-			'excel_link' => site_url('submissions/all_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
+			// 'excel_link' => site_url('submissions/all_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
 			'filter_user' => $this->filter_user,
 			'filter_problem' => $this->filter_problem,
 			'pagination' => $this->pagination->create_links(),
 		);
 
 		$this->twig->display('pages/submissions.twig', $data);
+	}
+	// ------------------------------------------------------------------------
+	public function all()
+	{
+		return $this->_index('all');
 	}
 
 

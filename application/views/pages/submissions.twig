@@ -76,7 +76,13 @@
 
 {% block main_content %}
 <div class="col">
-<p>{{ view|title }} Submissions of <span>{{ user.selected_assignment.name }}</span></p>
+<p>
+
+    <a class="badge badge-pill {{ (view == 'all') ? 'badge-info' : 'badge-secondary' }}" 
+		href="{{ site_url('submissions/all/assignment/'~assignment.id~'') }}">All</a>
+    <a class="badge badge-pill {{ view == 'final' ? 'badge-info' : 'badge-secondary' }}" 
+		href="{{ site_url('submissions/final/assignment/'~assignment.id~'') }}">Final</a>
+Submissions of <kbd> {{ assignment.name }}</kbd></p>
 {%  if view == 'all' %}
 <p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
 {% endif %}
@@ -151,13 +157,13 @@
 			{% endif %}
 
 				<td>
-			<a href="{{ site_url('submissions/'~view~'/user/'~submission.username~(filter_problem?'/problem/'~filter_problem)) }}">
+			<a href="{{ site_url('submissions/'~view~'/assignment/'~assignment.id~'/user/'~submission.username~(filter_problem?'/problem/'~filter_problem)) }}">
 					<small>{{submission.username}}</small>
 			</a>
 				</td>
 			<td>{{ submission.name }}</td>
 		{% endif %}
-			<td><a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem_id) }}" title="{{ problems[submission.problem_id].name }}"><span class="btn btn-info">{{ submission.problem_id }}</span></a>
+			<td><a href="{{ site_url('submissions/'~view~'/assignment/'~assignment.id~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem_id) }}" title="{{ problems[submission.problem_id].name }}"><span class="btn btn-info">{{ submission.problem_id }}</span></a>
 				<a href="{{ site_url('view_problem/' ~ submission.assignment_id ~ '/'~ submission.problem_id ) }}" title="View problem {{submission.problem_id}}'s statements"><span class="badge badge-pill badge-secondary">&larr;</span></a>
 			</td>
 			<td><small>{{ submission.time }}</small></td>

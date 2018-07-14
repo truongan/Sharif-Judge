@@ -258,8 +258,8 @@ class Assignment_model extends CI_Model
 		$query = $this->db->get_where('assignments', array('id'=>$assignment_id));
 		if ($query->num_rows() != 1)
 			return array(
-				'id' => 0,
-				'name' => 'Not Selected',
+				'id' => NULL,
+				'name' => "instructors'submit",
 				'finish_time' => 0,
 				'extra_time' => 0,
 				'problems' => 0,
