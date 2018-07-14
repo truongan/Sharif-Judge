@@ -59,13 +59,13 @@
 	</span> #}
 	{% if filter_user %}
 	<span class="title_menu_item">
-		<a href="{{ site_url('submissions/'~view~(filter_problem ? '/problem/'~filter_problem)) }}">
+		<a href="{{ site_url('submissions/'~view~'/assignment/'~assignment.id~(filter_problem ? '/problem/'~filter_problem)) }}">
 		<i class="fa fa-filter color1"></i> Remove Username Filter</a>
 	</span>
 	{% endif %}
 	{% if filter_problem %}
 	<span class="title_menu_item">
-		<a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)) }}">
+		<a href="{{ site_url('submissions/'~view~'/assignment/'~assignment.id~(filter_user?'/user/'~filter_user)) }}">
 		<i class="fa fa-filter color4"></i> Remove Problem Filter</a>
 	</span>
 	{% endif %}
@@ -79,9 +79,9 @@
 <p>
 
     <a class="badge badge-pill {{ (view == 'all') ? 'badge-info' : 'badge-secondary' }}" 
-		href="{{ site_url('submissions/all/assignment/'~assignment.id~'') }}">All</a>
+		href="{{ site_url('submissions/all/assignment/'~assignment.id~(filter_user?'/user/'~filter_user)~(filter_problem?'/problem/'~filter_problem)) }}">All</a>
     <a class="badge badge-pill {{ view == 'final' ? 'badge-info' : 'badge-secondary' }}" 
-		href="{{ site_url('submissions/final/assignment/'~assignment.id~'') }}">Final</a>
+		href="{{ site_url('submissions/final/assignment/'~assignment.id~(filter_user?'/user/'~filter_user)~(filter_problem?'/problem/'~filter_problem)) }}">Final</a>
 Submissions of <kbd> {{ assignment.name }}</kbd></p>
 {%  if view == 'all' %}
 <p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
