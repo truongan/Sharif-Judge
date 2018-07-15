@@ -43,10 +43,7 @@ $(document).ready(function () {
 		var button = $(this);
 		var row = button.parents('tr');
 		var type = button.data('type');
-		if (type == 'download') {
-			window.location = shj.site_url + 'submissions/download_file/' + row.data('u') + '/' + row.data('a') + '/' + row.data('p') + '/' + row.data('s');
-			return;
-		}
+
 		var view_code_request = $.ajax({
 			cache: true,
 			type: 'POST',

@@ -171,7 +171,7 @@ class Submit extends CI_Controller
 		else {
 			// If form not pass validation, we redirect to the editor page
 			if ($problem == NULL && $assignment == NULL){
-				$assignment = $assignment['id']; 
+				$assignment = $this->user->selected_assignment['id']; 
 				$problem = 0;//No problem should have id 0 so the editor will just select first prob in assigment
 			}
 			redirect ("submit/editor/$problem/$assignment");
