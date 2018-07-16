@@ -32,7 +32,6 @@
 	shj.p={};
 	{{ problems_js|raw }}
 
-	shj.selected_assignment = {{ user.selected_assignment.id }};
 	$(document).ready(function(){
 		///Select the problem from referring page
 
@@ -51,6 +50,10 @@
 <p>{{ error }}</p>
 {% else %}
 	{{ form_open_multipart('submit') }}
+		{% if assignment is defined %} 
+			<input type ="hidden" value="{{assignment.id}}"/>
+		{% endif %}
+	<input type="hidden"/>
 	<div class="form-inline">
 		{# <div class="inp_grp"> #}
 			<div class="form-group mr-3">

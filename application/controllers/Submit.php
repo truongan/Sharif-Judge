@@ -304,13 +304,7 @@ class Submit extends CI_Controller
 
 		return FALSE;
 	}
-
-	private function _upload(){
-		$problem = $this->problem_model->get_info($this->input->post('problem'));
-		$assignment = $this->problem_model->get_info($this->input->post('assignment'));
-		$lang = $this->problem_model->get_info($this->input->post('language'));
-		$this->filetype = $this->_language_to_type(strtolower(trim($this->input->post('language'))));
-
+	private function eval_coefficient($assignment){
 		$extra_time = $assignment['extra_time'];
 		$delay = shj_now()-strtotime($assignment['finish_time']);;
 		ob_start();
@@ -320,20 +314,34 @@ class Submit extends CI_Controller
 			$coefficient = "error";
 		ob_end_clean();
 		$this->coefficient = $coefficient;
+	}
+	private function _upload(){
+		$problem = $this->problem_model->problem_info($this->input->post('problem'));
+		$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
+		$this->filetype = $this->_language_to_type(strtolower(trim($this->input->post('language'))));
 
-		if ( $this->queue_model->in_queue($this->user->username,$assignment['id'], $problem['id']) )
-			show_error('You have already submitted for this problem. Your last submission is still in queue.');
+		if ($assignment['id'] == NULL && $this->user->level < 2){
+			show_error("Only admin can submit without assignment", 403);
+		}
+
+		$this->eval_coefficient($assignment);
 
 		$a = $this->assignment_model->can_submit($assignment);
 		if(! $a['can_submit'] ) show_error($a['error_message'], 403);
 
-		$filetypes = $problem['languages'];
-		foreach ($filetypes as &$filetype)
+		if ( $this->queue_model->in_queue($this->user->username,$assignment['id'], $problem['id']) )
+			show_error('You have already submitted for this problem. Your last submission is still in queue.');
+
+		$wrong_language = true;
+		foreach ($problem['languages'] as $lang)
 		{
-			$filetype = $this->_language_to_type(strtolower(trim($filetype)));
+			if ($this->filetype == $lang['ext']){
+				$wrong_language = false;
+				break;
+			}
 		}
 
-		if ( ! in_array($this->filetype, $filetypes))
+		if ( $wrong_language )
 			show_error('This file type is not allowed for this problem.');
 
 		//$user_dir = rtrim($this->assignment_root, '/').'/assignment_'.$assignment['id'].'/p'.$this->problem['id'].'/'.$this->user->username;

@@ -88,6 +88,7 @@ div.login2 a {
 
 input.sharif_input {
 	background-color: #fefefe;
+	color: #111;
 	width: 100%;
 	line-height: 1;
 	font-family: sans-serif;
@@ -97,18 +98,14 @@ input.sharif_input {
 	border-radius: 2px;
 	border: 1px solid #c4c4c4;
 	transition: box-shadow 200ms ease;
-	-webkit-transition: box-shadow 200ms ease;
 	box-shadow: rgba(0,0,0,0.04) 0 0 0 1px inset;
-	-moz-box-shadow: rgba(0,0,0,0.04) 0 0 0 1px inset;
-	-webkit-box-shadow: rgba(0,0,0,0.04) 0 0 0 1px inset;
+
 }
 
 input.sharif_input:focus {
 	outline: 0;
 	border-color: rgba(82, 168, 236, 0.6);
 	box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;
-	-moz-box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;
-	-webkit-box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;
 }
 
 .shj_error {
