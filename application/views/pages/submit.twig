@@ -47,7 +47,7 @@
 
 {% block main_content %}
 {% if error != 'none' %}
-<p>{{ error }}</p>
+<div class="alert alert-danger"> {{ error }}</div>
 {% else %}
 	{{ form_open_multipart('submit') }}
 		{% if assignment is defined %} 

@@ -232,7 +232,7 @@ class Assignment_model extends CI_Model
 					->get()
 					->result_array()
 		;
-		//var_dump($this->db->get_compiled_select()); die();	
+		//var_dump($this->db->last_query()); die();	
 		$problems = array();
 		foreach ($result as $row)
 			$problems[$row['id']] = $row;

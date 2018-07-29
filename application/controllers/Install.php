@@ -101,8 +101,8 @@ class Install extends CI_Controller
 
 		$this->load->library('migration');
 
-		if ( ! $this->migration->version(20180611171404))
-		//if ( ! $this->migration->latest())
+		//if ( ! $this->migration->version(20180611171404))
+		if ( ! $this->migration->latest())
 		{
 			show_error($this->migration->error_string());
 		}

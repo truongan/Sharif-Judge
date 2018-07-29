@@ -340,7 +340,6 @@ class Submit extends CI_Controller
 				break;
 			}
 		}
-
 		if ( $wrong_language )
 			show_error('This file type is not allowed for this problem.');
 

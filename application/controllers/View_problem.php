@@ -44,8 +44,9 @@ class View_problem extends CI_Controller
 			$assignment = $this->assignment_model->assignment_info($assignment_id);
 
 			if($assignment['id'] == 0){
-				show_error('Can not find your assignment', 404);
-				die();
+				//show_error('Can not find your assignment', 404);				die();
+				$data['error'] = "There is no assignment as of yet, please be paitent.";
+				break;
 			}
 
 			if (! $this->assignment_model->started($assignment)){
