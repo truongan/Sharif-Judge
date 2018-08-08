@@ -17,7 +17,7 @@ class Language_model extends CI_Model
     public function get_language($id){
 		return $this->db->get_where('languages', array('id'=>$id))->row();
 	}
-	public function get_all_languages(){
+	public function all_languages(){
 		return $this->db->get_where('languages')->result_array();;
 	}
 }

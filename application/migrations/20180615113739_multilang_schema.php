@@ -108,7 +108,7 @@ class Migration_Multilang_schema extends CI_Migration {
             'id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
             'name'    => array('type' => 'VARCHAR', 'constraint' => 45, 'default' => '0', 'unique' => true),
             'extension'    => array('type' => 'VARCHAR', 'constraint' => 3),
-            'default_timle_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
+            'default_time_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
             'default_memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
         );
         $this->dbforge->add_field($fields)->add_key('id', TRUE); // PRIMARY KEY

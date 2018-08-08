@@ -20,7 +20,7 @@ class Problems extends CI_Controller
 		parent::__construct();
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
-		$this->load->model('notifications_model');
+		$this->load->model('language_model');
         $this->notif_edit = FALSE;
 
         if ($this->user->level <= 1) {
@@ -67,28 +67,14 @@ class Problems extends CI_Controller
 	{
 		if ( $this->user->level <=1) // permission denied
 			show_404();
-
-		$this->form_validation->set_rules('title', 'title', 'trim');
-		$this->form_validation->set_rules('text', 'text', ''); /* todo: xss clean */
-
-		if($this->form_validation->run()){
-			if ($this->input->post('id') === NULL)
-				$this->notifications_model->add_notification($this->input->post('title'), $this->input->post('text'));
-			else
-				$this->notifications_model->update_notification($this->input->post('id'), $this->input->post('title'), $this->input->post('text'));
-			redirect('notifications');
-		}
-
+	
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
-			'notif_edit' => $this->notif_edit
+			'languages' => $this->language_model->all_languages()
 		);
 
-		if ($this->notif_edit !== FALSE)
-			$data['title'] = 'Edit Notification';
 
-
-		$this->twig->display('pages/admin/add_notification.twig', $data);
+		$this->twig->display('pages/admin/add_problem.twig', $data);
 
 	}
 
@@ -103,7 +89,7 @@ class Problems extends CI_Controller
 	 * @param int $assignment_id
 	 * @param int $problem_id
 	 */
-	public function edit($assignment_id = NULL, $problem_id = 1)
+	public function edit($problem_id)
 	{
 		if ($this->user->level <= 1)
 			show_404();
