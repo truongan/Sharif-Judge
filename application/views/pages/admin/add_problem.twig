@@ -12,7 +12,7 @@
 
 
 {% block other_assets %}
-<link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}">
+{# <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}">
 <style type="text/css">
 form {
 	width: 100%;
@@ -30,20 +30,13 @@ input[type='number'].short_text{
 }
 .medium_text{
 	min-width: 150px!important;
-}
+} #}
 
 </style>
 {% endblock %}
 
 {% block body_end %}
-<script type="text/javascript" src="{{ base_url('assets/select2/select2.min.js') }}"></script>
-<script type="text/javascript" src="{{ base_url('assets/js/add_assignments.js') }}"></script>
-<script type='text/javascript' src="{{ base_url('assets/js/taboverride.min.js') }}"></script>
-<script>
-	$(document).ready(function(){
-		tabOverride.set(document.getElementsByTagName('textarea'));
-	});
-</script>
+
 <script type="text/javascript">shj.num_of_problems={{ problems|length }};</script>
 {% endblock %}
 
@@ -70,7 +63,7 @@ input[type='number'].short_text{
 </p>
 {% endif %}
 
-{{ form_open_multipart(edit ? 'assignments/edit/'~edit_problem.id : 'assignments/add') }}
+{{ form_open_multipart(edit ? 'problems/edit/'~edit_problem.id : 'problems/put') }}
 
 	<div class="row">
 		<div class="col-sm-6">
@@ -109,11 +102,7 @@ input[type='number'].short_text{
 			<fieldset class="form-group">
 				<div class="form-row">
 					<div class="col-sm-4">
-						<label for="form_tests_desc">Tests and Descriptions (zip file)<br>
-							<small class="form-text text-muted">
-								<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/tests_structure.md" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i> Use this structure</a>
-							</small>
-						</label>
+						<label for="form_tests_desc">Tests and Descriptions (zip file)</label>
 					</div>
 					<div class="col-sm-8">
 						<div class="custom-file">
@@ -129,47 +118,48 @@ input[type='number'].short_text{
 		<div class="col-sm-6">
 			<fieldset class="form-group">
 				<div class="form-row">
-						<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)
-						<small class="form-text text-muted medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</small>
-						</label>
-				<textarea id="form_late_rule" name="late_rule" rows="15" class="form-control add_text">{{ edit ? edit_problem.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
-				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
+						<label for="admin_note">Admin's note</label>
+				<textarea id="admin_note" name="admin_note" rows="8" class="form-control add_text">{{ edit ? edit_problem.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
 			</fieldset>
 		</div>
 	</div>
 
-<span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span>
-
-<table id="problems_table">
-	<thead>
-	<tr>
-		<th >ID</th>
-		<th >Name</th>
-		<th >Time Limit (ms)</th>
-		<th >Memory<br>Limit (kB)</th>
-		<th >Allowed</th>
-	</tr>
-	</thead class="form-inline">
-	<tbody>
-		{% for lang in languages %}
-		<tr>
-			<td>{{ lang.id }}</td>
-			<td>{{ lang.name }}</td>
-			<td><input type="number" name="c_time_limit[]" class="form-control" value="{{ lang.default_time_limit }}"/></td>
-			<td><input type="number" name="memory_limit[]" class="form-control" value="{{ lang.default_memory_limit }}"/></td>
-
-			<td><label class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" class="custom-control-input" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/><span class="custom-control-label"></span></label></td>
-
-		</tr>
+	<div class ="form-row">
+		{% for lang in all_languages %}
+			{% if not languages[lang.id]%}
+				<a name="" id="" class="btn btn-primary mr-2 add_language" href="#" role="button">{{ lang.name }}</a>
+			{% endif %}
 		{% endfor %}
-	</tbody>
-</table>
-{{ form_error('name[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('score[]', '<div class="alert alert-danger">', '</div>') }}
+	</div>
 
-<fieldset class="form-group mt-2">
-	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary"/>
-</p>
+	<div class="form-row">
+	<table id="problems_table" class="table mt-2">
+		<thead class="thead-light">
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Time Limit (ms)</th>
+			<th>Memory<br>Limit (kB)</th>
+			<th>Remove</th>
+		</tr>
+		</thead class="form-inline">
+		<tbody>
+			{% for lang in all_languages %}
+			<tr>
+				<input type="hidden" name="enable[]" vaue="1"/>
+				<td>{{ lang.id }} <input type="hidden" name="language_id[]" value="{{ lang.id }}"></td>
+				<td>{{ lang.name }} <input type="hidden" name="language_name[]" value="{{ lang.name }}"></td>
+				<td><input type="number" name="time_limit[]" class="form-control" value="{{ lang.default_time_limit }}"/></td>
+				<td><input type="number" name="memory_limit[]" class="form-control" value="{{ lang.default_memory_limit }}"/></td>
+				<td><a name="" id="" class="btn btn-danger remove_language" href="#" role="button"><i class="fa fa-remove" aria-hidden="true"></i></a></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
+
+<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary mt-2"/>
+
 </form>
 </div>
 {% endblock %}  {# main_content #}

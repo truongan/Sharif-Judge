@@ -15,8 +15,8 @@ class Migration_Multilang_schema extends CI_Migration {
         die();
     }
     private $lang = array(
-        'C' => array('id' => 1, 'name' => 'C', 'extension' => 'c'),
         'C++' => array('id' => 2, 'name' => 'C++', 'extension' => 'cpp'),
+        'C' => array('id' => 1, 'name' => 'C', 'extension' => 'c'),
         'Java' => array('id' => 3, 'name' => 'Java', 'extension' => 'java'),
         'Python 3' => array('id' => 4, 'name' => 'Python 3', 'extension' => 'py3'),
         'Python 2' => array('id' => 5, 'name' => 'Python 2', 'extension' => 'py2'),

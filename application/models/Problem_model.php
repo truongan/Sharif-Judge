@@ -71,6 +71,7 @@ class Problem_model extends CI_Model
 
 		return $result;
 	}
+
 	public function get_template_path($problem_id = NULL){
 		$pattern1 = rtrim($this->problem_model->get_directory_path($problem_id)
 		."/template.public.cpp");
@@ -110,20 +111,24 @@ class Problem_model extends CI_Model
 	// ------------------------------------------------------------------------
 	public function add_problem(){
 
+		$id = $this->new_problem_id();
 		//Now add new problems:
-		$names = $this->input->post('name');
-		$scores = $this->input->post('score');
-		$c_tl = $this->input->post('c_time_limit');
-		$py_tl = $this->input->post('python_time_limit');
-		$java_tl = $this->input->post('java_time_limit');
-		$ml = $this->input->post('memory_limit');
-		$ft = $this->input->post('languages');
+		$name = $this->input->post('problem_name');
+		$admin_note = $this->input->post('admin_note');
 		$dc = $this->input->post('diff_cmd');
 		$da = $this->input->post('diff_arg');
-		$uo = $this->input->post('is_upload_only');
-		if ($uo === NULL)
-			$uo = array();
-		for ($i=1; $i<=$this->input->post('number_of_problems'); $i++)
+		//$uo = $this->input->post('is_upload_only');
+
+		$problem = array(
+			'id' => $id,
+			'name' => $name,
+			//'is_upload_only' => $uo,
+			'diff_cmd' => $dc[$i-1],
+			'diff_arg' => $da[$i-1],
+		);
+		$this->db->insert('problems', $problem);
+		
+		for ($i=1; $i<=$this->input->post('language_id'); $i++)
 		{
 			$items = explode(',', $ft[$i-1]);
 			$ft[$i-1] = '';
@@ -146,22 +151,8 @@ class Problem_model extends CI_Model
 				$ft[$i-1] .= $item.",";
 			}
 			$ft[$i-1] = substr($ft[$i-1],0,strlen($ft[$i-1])-1); // remove last ','
-			$problem = array(
-				'assignment' => $id,
-				'id' => $i,
-				'name' => $names[$i-1],
-				'score' => $scores[$i-1],
-				'is_upload_only' => in_array($i,$uo)?1:0,
-				'c_time_limit' => $c_tl[$i-1],
-				'python_time_limit' => $py_tl[$i-1],
-				'java_time_limit' => $java_tl[$i-1],
-				'memory_limit' => $ml[$i-1],
-				'allowed_languages' => $ft[$i-1],
-				'diff_cmd' => $dc[$i-1],
-				'diff_arg' => $da[$i-1],
-			);
-			$this->db->insert('problems', $problem);
 		}
+		
 
 	}
 }

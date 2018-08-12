@@ -20,6 +20,11 @@ class Language_model extends CI_Model
 	public function all_languages(){
 		return $this->db->get_where('languages')->result_array();;
 	}
+	public function first_language(){
+		
+		return $this->db->get_where('languages')->row_array();;
+	
+	}
 }
 
 ?>

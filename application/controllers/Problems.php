@@ -67,10 +67,13 @@ class Problems extends CI_Controller
 	{
 		if ( $this->user->level <=1) // permission denied
 			show_404();
-	
+
+		$first_language = $this->language_model->first_language();
+		
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
-			'languages' => $this->language_model->all_languages()
+			'all_languages' => $this->language_model->all_languages(),
+			'languages' =>  array($first_language['id'] => $first_language)
 		);
 
 
@@ -78,7 +81,11 @@ class Problems extends CI_Controller
 
 	}
 
+	public function put(){
+		var_dump($this->input->post());
 
+	}
+	
 	// ------------------------------------------------------------------------
 	/**
 	 * Edit problem description as html/markdown
@@ -128,19 +135,6 @@ class Problems extends CI_Controller
 	}
 
 
-	// ------------------------------------------------------------------------
-	public function check()
-	{
-		if ( ! $this->input->is_ajax_request() )
-			show_404();
-		$time  = $this->input->post('time');
-		if ($time === NULL)
-			exit('error');
-		if ($this->notifications_model->have_new_notification(strtotime($time)))
-			exit('new_notification');
-		exit('no_new_notification');
-	}
-
 	/**
 	* Download problem's template
 	**/
@@ -158,5 +152,73 @@ class Problems extends CI_Controller
 		$filename = shj_basename($pdf_files[0]);
 		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
 	}
+
+
+	/**
+	 * Compressing and downloading test data and descriptions of an assignment to the browser
+	 */
+	public function downloadtestsdesc($problem_id = FALSE)
+	{
+
+		if ( $this->user->level <= 1) // permission denied
+			show_403();
+		$this->load->library('zip');
+
+		$root_path = $this->problem_model->get_directory_path($problem_id);
+
+		$path = "$root_path/in";
+		$this->zip->read_dir($path, FALSE, $root_path);
+
+		$path = "$root_path/out";
+		$this->zip->read_dir($path, FALSE, $root_path);
+
+		$path = "$root_path/tester.cpp";
+		if (file_exists($path))
+			$this->zip->add_data("/tester.cpp", file_get_contents($path));
+
+		$pdf_files = glob("$root_path/*.pdf");
+		if ($pdf_files)
+		{
+			$path = $pdf_files[0];
+			$this->zip->add_data(shj_basename($path), file_get_contents($path));
+		}
+
+		$template_files = glob("$root_path/template.*");
+		if ($template_files){
+			foreach ($template_files as $file )
+			{
+				$this->zip->add_data(shj_basename($file), file_get_contents($file));
+			}
+		}
+
+		$path = "$root_path/desc.html";
+		if (file_exists($path))
+			$this->zip->add_data("desc.html", file_get_contents($path));
+
+		$this->zip->download("assignment{$assignment_id}_tests_desc_".date('Y-m-d_H-i', shj_now()).'.zip');
+	}
+
+		/**
+	 * Download pdf file of an assignment (or problem) to browser
+	 */
+	public function pdf($problem_id)
+	{
+		// Find pdf file
+		if ($problem_id === NULL)
+			show_404();
+		else
+			$pattern = $this->problem_model->get_directory_path()."/*.pdf";
+			// rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/*.pdf";
+		
+		$pdf_files = glob($pattern);
+		if ( ! $pdf_files )
+			show_error("File not found");
+
+		// Download the file to browser
+		$this->load->helper('download')->helper('file');
+		$filename = shj_basename($pdf_files[0]);
+		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
+	}
+
 
 }

@@ -263,13 +263,6 @@ div.content-wrapper div#main_content {
 	cursor: pointer;
 }
 
-#problems_table {
-	padding: 5px;
-	text-align: center;
-	border-radius: 5px;
-	border: 1px solid #a9a9a9;
-	width: 100%;
-}
 
 #ui-datepicker-div {
 	font-size: 0.75em !important;
