@@ -18,11 +18,11 @@ class Language_model extends CI_Model
 		return $this->db->get_where('languages', array('id'=>$id))->row();
 	}
 	public function all_languages(){
-		return $this->db->get_where('languages')->result_array();;
+		return $this->db->get_where('languages')->result();;
 	}
 	public function first_language(){
 		
-		return $this->db->get_where('languages')->row_array();;
+		return $this->db->get_where('languages')->row();;
 	
 	}
 }

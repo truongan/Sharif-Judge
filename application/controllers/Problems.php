@@ -73,7 +73,8 @@ class Problems extends CI_Controller
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'all_languages' => $this->language_model->all_languages(),
-			'languages' =>  array($first_language['id'] => $first_language)
+			'languages' =>  array($first_language->id => $first_language),
+			//'languages' =>  $first_language,
 		);
 
 

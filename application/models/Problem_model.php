@@ -44,10 +44,15 @@ class Problem_model extends CI_Model
 	}
 
 	public function get_languages($id = NULL){
-		return $this->db->from('languages')
+		$query =  $this->db->from('languages')
 						->join('problem_language', 'languages.id = problem_language.language_id')
 						->where('problem_language.problem_id' , $id)
-						->get()->result_array();
+						->get()->result();
+		$a = array();
+		foreach($query as $lang){
+			$a[$lang->id] = $lang;
+		}
+		return $a;
 	}
 
 	public function get_directory_path($id = NULL){

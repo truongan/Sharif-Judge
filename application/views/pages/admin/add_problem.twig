@@ -124,16 +124,17 @@ input[type='number'].short_text{
 		</div>
 	</div>
 
+		<label>Click on the button to add more language for this problems</label></br>
 	<div class ="form-row">
 		{% for lang in all_languages %}
-			{% if not languages[lang.id]%}
-				<a name="" id="" class="btn btn-primary mr-2 add_language" href="#" role="button">{{ lang.name }}</a>
-			{% endif %}
+			
+				<a name="" id="" class="btn btn-primary mr-2 add_{{ lang.name }} {{ languages[lang.id] ? "d-none" : "" }}" href="#" role="button">{{ lang.name }}</a>
+			
 		{% endfor %}
 	</div>
 
 	<div class="form-row">
-	<table id="problems_table" class="table mt-2">
+	<table id="problems_table" class="table mt-2 table-striped">
 		<thead class="thead-light">
 		<tr>
 			<th>ID</th>
@@ -145,8 +146,8 @@ input[type='number'].short_text{
 		</thead class="form-inline">
 		<tbody>
 			{% for lang in all_languages %}
-			<tr>
-				<input type="hidden" name="enable[]" vaue="1"/>
+			<tr class = "lang_row_{{ lang.name }} {{ languages[lang.id] ? "" : "d-none" }}">
+				<input type="hidden" name="enable[]" vaue="{{ languages[lang.id] ? "1" : "0" }}"/>
 				<td>{{ lang.id }} <input type="hidden" name="language_id[]" value="{{ lang.id }}"></td>
 				<td>{{ lang.name }} <input type="hidden" name="language_name[]" value="{{ lang.name }}"></td>
 				<td><input type="number" name="time_limit[]" class="form-control" value="{{ lang.default_time_limit }}"/></td>
