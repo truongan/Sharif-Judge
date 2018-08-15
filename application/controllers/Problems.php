@@ -74,48 +74,52 @@ class Problems extends CI_Controller
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  array($first_language->id => $first_language),
-			//'languages' =>  $first_language,
 		);
-
-
+		
 		$this->twig->display('pages/admin/add_problem.twig', $data);
-
-	}
-
-	public function put(){
-		var_dump($this->input->post());
-
 	}
 	
-	// ------------------------------------------------------------------------
-	/**
-	 * Edit problem description as html/markdown
-	 *
-	 * $type can be 'md', 'html', or 'plain'
-	 *
-	 * @param string $type
-	 * @param int $assignment_id
-	 * @param int $problem_id
-	 */
-	public function edit($problem_id)
-	{
-		if ($this->user->level <= 1)
-			show_404();
-
-		$ext = 'html';
-
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('text', 'text' ,'required'); /* todo: xss clean */
-		if ($this->form_validation->run())
-		{
-			if ($this->problem_model->save_problem_description($problem_id, $this->input->post('content'))){
-				echo "success";
-				return ;
-			}
-			else show_error("Error saving", 501);
+	public function store(){
+		$this->form_validation->set_rules('problem_name', 'Problem name', 'required|max_length[150]' );
+		$this->form_validation->set_rules('diff_cmd', 'Problem name', 'required|max_length[20]' );
+		$this->form_validation->set_rules('diff_arg', 'Problem name', 'required|max_length[20]' );
+		$this->form_validation->set_rules('admin_note', 'Problem name', 'max_length[1500]' );
+		
+		if($this->form_validation->run() == FALSE){
+			$this->add();
+		} else {
+			$this->problem_model->add_problem();
+			$this->index();
 		}
 	}
 	
+
+	public function edit($problem_id)
+	{
+		if ( $this->user->level <=1) // permission denied
+			show_404();
+
+		$problem = $this->problem_model->problem_info($problem_id);
+
+		if (!$problem) show_404();
+		
+		$data = array(
+			'all_assignments' => $this->assignment_model->all_assignments(),
+			'edit_problem' => $problem,
+			'all_languages' => $this->language_model->all_languages(),
+			'languages' =>  $problem['languages'],
+		);
+
+		//var_dump($data); die();
+
+		$this->twig->display('pages/admin/add_problem.twig', $data);
+	}
+	public function update($problme_id){
+		var_dump($this->input->post());
+		
+	}
+
+
 	// ------------------------------------------------------------------------
 	public function delete()
 	{

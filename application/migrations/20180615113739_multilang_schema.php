@@ -124,7 +124,7 @@ class Migration_Multilang_schema extends CI_Migration {
             'time_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 500),
             'memory_limit'      => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'default' => 50000),
         );
-        $this->dbforge->add_field($fields)->add_key(array('language_id', 'problem_id')); // PRIMARY KEY
+        $this->dbforge->add_field($fields)->add_key(array('language_id', 'problem_id'), TRUE); // PRIMARY KEY
         $this->create_and_show_err('problem_language');
         
         // create table 'problem_assignment'
@@ -135,7 +135,7 @@ class Migration_Multilang_schema extends CI_Migration {
             'ordering'             => array('type' => 'INT', 'constraint' => 11),
             'problem_name'             => array('type' => 'VARCHAR', 'constraint' => 150, 'default' => ''),
         );
-        $this->dbforge->add_field($fields)->add_key(array('assignment_id', 'problem_id')); // PRIMARY KEY
+        $this->dbforge->add_field($fields)->add_key(array('assignment_id', 'problem_id'), TRUE); // PRIMARY KEY
         $this->create_and_show_err('problem_assignment');
 
 

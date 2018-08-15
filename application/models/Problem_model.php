@@ -115,50 +115,38 @@ class Problem_model extends CI_Model
 
 	// ------------------------------------------------------------------------
 	public function add_problem(){
-
+		$this->db->trans_start();
 		$id = $this->new_problem_id();
+		
 		//Now add new problems:
 		$name = $this->input->post('problem_name');
 		$admin_note = $this->input->post('admin_note');
 		$dc = $this->input->post('diff_cmd');
 		$da = $this->input->post('diff_arg');
-		//$uo = $this->input->post('is_upload_only');
 
+		
 		$problem = array(
 			'id' => $id,
 			'name' => $name,
-			//'is_upload_only' => $uo,
-			'diff_cmd' => $dc[$i-1],
-			'diff_arg' => $da[$i-1],
+			'diff_cmd' => $dc,
+			'diff_arg' => $da,
 		);
 		$this->db->insert('problems', $problem);
 		
-		for ($i=1; $i<=$this->input->post('language_id'); $i++)
-		{
-			$items = explode(',', $ft[$i-1]);
-			$ft[$i-1] = '';
-			foreach ($items as $item){
-				$item = trim($item);
-				$item2 = strtolower($item);
-				$item = ucfirst($item2);
-				if ($item2 === 'python2')
-					$item = 'Python 2';
-				elseif ($item2 === 'python3')
-					$item = 'Python 3';
-				elseif ($item2 === 'pdf')
-					$item = 'PDF';
-				$item2 = strtolower($item);
-				if ( ! in_array($item2, array('c','c++','python 2','python 3','java','zip','pdf')))
-					continue;
-				// If the problem is not Upload-Only, its language should be one of {C,C++,Python 2, Python 3,Java}
-				if ( ! in_array($i, $uo) && ! in_array($item2, array('c','c++','python 2','python 3','java')) )
-					continue;
-				$ft[$i-1] .= $item.",";
+		$enable = $this->input->post('enable');
+		$time_limit = $this->input->post('time_limit');
+		$memory_limit = $this->input->post('memory_limit');
+		foreach($this->input->post('language_id') as $i => $lang_id){
+			if($enable[$i]){
+				$this->db->insert('problem_language', array(
+					'language_id' => $lang_id,
+					'problem_id' => $id,
+					'time_limit' => $time_limit[$i],
+					'memory_limit' => $memory_limit[$i],
+				));
 			}
-			$ft[$i-1] = substr($ft[$i-1],0,strlen($ft[$i-1])-1); // remove last ','
 		}
-		
-
+		$this->db->trans_complete();
 	}
 }
 

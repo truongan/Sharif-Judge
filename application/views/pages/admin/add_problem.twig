@@ -12,32 +12,42 @@
 
 
 {% block other_assets %}
-{# <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}">
+{# <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}"> #}
 <style type="text/css">
-form {
-	width: 100%;
-	margin-bottom: 1em;
-}
-form  select{
-	width: 180px;
+
+
+input[type='number']{
+	min-width: 80px!important;
 }
 
-input[type='number'].short_text{
-	width: 80px!important;
-}
-.short_text{
-	width: 90px!important;
-}
-.medium_text{
-	min-width: 150px!important;
-} #}
 
 </style>
 {% endblock %}
 
 {% block body_end %}
 
-<script type="text/javascript">shj.num_of_problems={{ problems|length }};</script>
+<script type="text/javascript">
+	$(".add_language").click(function(){
+		var lang = $(this).data('lang');
+		console.log(lang);
+		$(this).toggleClass('d-none');
+		
+		var row = $(".lang_row_" + lang);
+		row.toggleClass('d-none');//.show();
+		row.children('.lang_checkbox').val(1);
+	});
+
+	$(".remove_language").click(function(){
+		var lang = $(this).data('lang');
+		console.log(lang);
+		var row = $(".lang_row_" + lang);
+		row.toggleClass('d-none');//.show();
+		row.children('.lang_checkbox').val(0);
+
+		$('.add_language_' + lang).toggleClass('d-none');
+	});
+</script>
+
 {% endblock %}
 
 
@@ -63,17 +73,17 @@ input[type='number'].short_text{
 </p>
 {% endif %}
 
-{{ form_open_multipart(edit ? 'problems/edit/'~edit_problem.id : 'problems/put') }}
+{{ form_open_multipart(edit_problem ? 'problems/update/'~edit_problem.id : 'problems/store') }}
 
 	<div class="row">
 		<div class="col-sm-6">
 			<fieldset class="form-group">
 				<div class="form-row">
 					<div class="col-sm-4">
-						<label for="form_a_name">Problem Name</label>
+						<label for="problem_name">Problem Name</label>
 					</div>
 					<div class="col-sm-8">
-						<input id="problem_name" type="text" name="problem_name" class="form-control col-xs-7" value="{{ edit ? edit_problem.name : set_value('problem_name') }}"/>
+						<input id="problem_name" type="text" name="problem_name" class="form-control col-xs-7" value="{{ edit_problem ? edit_problem.name : set_value('problem_name') }}"/>
 						{{ form_error('problem_name', '<div class="alert alert-danger">', '</div>') }}
 					</div>
 				</div>
@@ -81,10 +91,11 @@ input[type='number'].short_text{
 			<fieldset class="form-group">
 				<div class="form-row">
 					<div class="col-sm-4">
-						<label for="form_a_name">Diff command</label>
+						<label for="diff_cmd">Diff command</label>
 					</div>
 					<div class="col-sm-8">
-						<input id="form_a_name" type="text" name="diff_cmd" class="form-control col-xs-7" value="{{ edit ? edit_problem.diff_cmd : set_value('diff_cmd') }}"/>
+						<input  type="text" name="diff_cmd" class="form-control col-xs-7" value="{{ edit_problem ? edit_problem.diff_cmd : set_value('diff_cmd', 'diff') }}"/>
+						{{ form_error('diff_cmd', '<div class="alert alert-danger">', '</div>') }}
 					</div>
 				</div>
 			</fieldset>
@@ -94,7 +105,8 @@ input[type='number'].short_text{
 						<label for="diff_arg">Diff arguments</label>
 					</div>
 					<div class="col-sm-8">
-						<input id="form_a_name" type="text" name="diff_arg" class="form-control col-xs-7" value="{{ edit ? edit_problem.diff_arg : set_value('diff_arg') }}"/>
+						<input  type="text" name="diff_arg" class="form-control col-xs-7" value="{{ edit_problem ? edit_problem.diff_arg : set_value('diff_arg', '-bB') }}"/>
+						{{ form_error('diff_arg', '<div class="alert alert-danger">', '</div>') }}
 					</div>
 				</div>
 			</fieldset>
@@ -118,8 +130,9 @@ input[type='number'].short_text{
 		<div class="col-sm-6">
 			<fieldset class="form-group">
 				<div class="form-row">
-						<label for="admin_note">Admin's note</label>
-				<textarea id="admin_note" name="admin_note" rows="8" class="form-control add_text">{{ edit ? edit_problem.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
+					<label for="admin_note">Admin's note</label>
+					<textarea id="admin_note" name="admin_note" rows="8" class="form-control add_text">{{ edit ? edit_problem.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
+						{{ form_error('admin_note', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 		</div>
 	</div>
@@ -127,14 +140,12 @@ input[type='number'].short_text{
 		<label>Click on the button to add more language for this problems</label></br>
 	<div class ="form-row">
 		{% for lang in all_languages %}
-			
-				<a name="" id="" class="btn btn-primary mr-2 add_{{ lang.name }} {{ languages[lang.id] ? "d-none" : "" }}" href="#" role="button">{{ lang.name }}</a>
-			
+			<a data-lang="{{ lang.id }}" class="btn btn-success mr-2 add_language add_language_{{ lang.id }} {{ languages[lang.id] ? "d-none" : "" }}" href="#" role="button">{{ lang.name }}</a>
 		{% endfor %}
 	</div>
 
-	<div class="form-row">
-	<table id="problems_table" class="table mt-2 table-striped">
+	<div class="form-row"> <div class="table-responsive">
+	<table id="problems_table" class="mt-2 table">
 		<thead class="thead-light">
 		<tr>
 			<th>ID</th>
@@ -146,18 +157,18 @@ input[type='number'].short_text{
 		</thead class="form-inline">
 		<tbody>
 			{% for lang in all_languages %}
-			<tr class = "lang_row_{{ lang.name }} {{ languages[lang.id] ? "" : "d-none" }}">
-				<input type="hidden" name="enable[]" vaue="{{ languages[lang.id] ? "1" : "0" }}"/>
+			<tr class = "lang_row_{{ lang.id }} {{ languages[lang.id] ? "" : "d-none" }}">
+				<input class="lang_checkbox" type="hidden" name="enable[]" value="{{ languages[lang.id] ? "1" : "0" }}"/>
 				<td>{{ lang.id }} <input type="hidden" name="language_id[]" value="{{ lang.id }}"></td>
-				<td>{{ lang.name }} <input type="hidden" name="language_name[]" value="{{ lang.name }}"></td>
+				<td>{{ lang.name }}</td>
 				<td><input type="number" name="time_limit[]" class="form-control" value="{{ lang.default_time_limit }}"/></td>
 				<td><input type="number" name="memory_limit[]" class="form-control" value="{{ lang.default_memory_limit }}"/></td>
-				<td><a name="" id="" class="btn btn-danger remove_language" href="#" role="button"><i class="fa fa-remove" aria-hidden="true"></i></a></td>
+				<td><a  data-lang="{{ lang.id }}"  class="btn btn-danger remove_language remove_language_{{ lang.id }}" href="#" role="button"><i class="fa fa-remove" aria-hidden="true"></i></a></td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-	</div>
+	</div></div>
 
 <input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary mt-2"/>
 
