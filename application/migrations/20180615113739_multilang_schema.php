@@ -142,6 +142,8 @@ class Migration_Multilang_schema extends CI_Migration {
     }
 
     public function up(){
+        $this->db->trans_start();
+
         $this->create_new_table();
         $this->migrate_old_data();
 
@@ -160,6 +162,9 @@ class Migration_Multilang_schema extends CI_Migration {
             'type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE
         )));
         var_dump($this->db->last_query());
+        $table = $this->db->dbprefix('submissions');
+        $this->db->query("ALTER TABLE $table ADD PRIMARY KEY(submit_id, assignment_id, problem_id)");
+        var_dump($this->db->last_query());
         
         $this->dbforge->drop_column('assignments', 'problems');
         $this->dbforge->modify_column('assignments', array('name' => array(
@@ -172,9 +177,13 @@ class Migration_Multilang_schema extends CI_Migration {
                     , array('admin_note' => array('type' => 'VARCHAR', 'constraint' => 1500, 'default' => '')));
         
         $this->dbforge->modify_column('problems', array(
-            'id' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+            'id' => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
             'name' => array('type' => 'VARCHAR', 'constraint' => 150, 'default' => '')
         ));
+        var_dump($this->db->last_query());
+        
+        $table = $this->db->dbprefix('problems');
+        $this->db->query("ALTER TABLE $table ADD PRIMARY KEY(id)");
         var_dump($this->db->last_query());
         
         $this->db->trans_complete();
