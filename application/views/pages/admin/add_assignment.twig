@@ -158,25 +158,6 @@ input[type='number'].short_text{
 			<fieldset class="form-group">
 				<div class="form-row">
 					<div class="col-sm-4">
-						<label for="form_tests_desc">Tests and Descriptions (zip file)<br>
-							<small class="form-text text-muted">
-								<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/tests_structure.md" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i> Use this structure</a>
-							</small>
-						</label>
-					</div>
-					<div class="col-sm-8">
-						<div class="custom-file">
-							<input id="form_tests_desc" type="file" name="tests_desc" class="custom-file-input" />
-							<label class="custom-file-label text-muted"><small>Test and description zip file</small></label>
-						</div>
-					</div>
-				</div>
-			</fieldset>
-
-
-			<fieldset class="form-group">
-				<div class="form-row">
-					<div class="col-sm-4">
 						<label for="form_pdf">PDF File<br>
 							<small class="form-text text-muted">PDF File of Assignment</small>
 						</label>
@@ -230,29 +211,21 @@ input[type='number'].short_text{
 
 <span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span>
 
-<table id="problems_table">
-	<thead>
-	<tr>
-		<th rowspan="2">stt</th>
-		<th rowspan="2">Name</th>
-		<th rowspan="2">Score</th>
-		<th rowspan="2">Ordering</th>
-		<th rowspan="2">Remove</th>
-	<tbody>
-
+<ul class="list-group">
 	{% set i = 0 %}
 	{% for problem in problems %}
-		<tr>
-			<td>{{ problem.id }}</td>
-			<td><input type="text" name="name[]" class="form-control medium_text" value="{{ problem.name }}"/></td>
-			<td><input type="number" name="score[]" class="form-control short_text" value="{{ problem.score }}"/></td>
-			<td><input type="number" name="c_time_limit[]" class="form-control short_text" value="{{ problem.ordering }}"/></td>
-			<td><span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></td>
-		</tr>
+	<li  class="list-group-item">
+		<legend>Problem #{{ problem.id }}: {{ problem.name }}</legend>
+		<div class="form-row form-inline">
+			<input type="text" name="name[]" class="form-control " value="{{ problem.name }}"/>
+			<input type="number" name="score[]" class="form-control" value="{{ problem.score }}"/>
+			{# <td><input type="number" name="c_time_limit[]" class="form-control short_text" value="{{ problem.ordering }}"/></td> #}
+			<span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span>
+		</div>
 		{% set i = i + 1 %}
+	</li>
 	{% endfor %}
-	</tbody>
-</table>
+<ul class="list-group">
 
 <fieldset class="form-group mt-2">
 	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary"/>
