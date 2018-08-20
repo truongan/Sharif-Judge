@@ -215,7 +215,7 @@ class Submit extends CI_Controller
 			$items='';
 			foreach ($this->problem_model->get_languages($problem['id']) as $language)
 			{
-				$items = $items."'".trim($language['name'])."',";
+				$items = $items."'".trim($language->name)."',";
 			}
 			$items = substr($items,0,strlen($items)-1);
 			$this->data['problems_js'] .= "shj.p[{$problem['id']}]=[{$items}]; ";

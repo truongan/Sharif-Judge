@@ -63,11 +63,8 @@ class Problems extends CI_Controller
 	// ------------------------------------------------------------------------
 
 
-	public function add()
+	public function show_add_form()
 	{
-		if ( $this->user->level <=1) // permission denied
-			show_404();
-
 		$first_language = $this->language_model->first_language();
 		
 		$data = array(
@@ -78,29 +75,9 @@ class Problems extends CI_Controller
 		
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}
-	
-	public function store(){
-		$this->form_validation->set_rules('problem_name', 'Problem name', 'required|max_length[150]' );
-		$this->form_validation->set_rules('diff_cmd', 'Problem name', 'required|max_length[20]' );
-		$this->form_validation->set_rules('diff_arg', 'Problem name', 'required|max_length[20]' );
-		$this->form_validation->set_rules('admin_note', 'Problem name', 'max_length[1500]' );
-		
-		if($this->form_validation->run() == FALSE){
-			$this->add();
-		} else {
-			$this->problem_model->add_problem();
-			$this->index();
-		}
-	}
-	
-
-	public function edit($problem_id)
+	public function show_edit_form($problem_id)
 	{
-		if ( $this->user->level <=1) // permission denied
-			show_404();
-
 		$problem = $this->problem_model->problem_info($problem_id);
-
 		if (!$problem) show_404();
 		
 		$data = array(
@@ -109,16 +86,133 @@ class Problems extends CI_Controller
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  $problem['languages'],
 		);
-
-		//var_dump($data); die();
-
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}
-	public function update($problme_id){
-		var_dump($this->input->post());
+	
+	public function add(){
+		return $this->edit(NULL);
+	}
+	public function edit($problem_id){
+		if ( $this->user->level <=1) // permission denied
+			show_404();
+
+		$this->form_validation->set_rules('problem_name', 'Problem name', 'required|max_length[150]' );
+		$this->form_validation->set_rules('diff_cmd', 'Problem name', 'required|max_length[20]' );
+		$this->form_validation->set_rules('diff_arg', 'Problem name', 'required|max_length[20]' );
+		$this->form_validation->set_rules('admin_note', 'Problem name', 'max_length[1500]' );
 		
+		if($this->form_validation->run() == FALSE){
+			if ($problem_id != NULL)
+				$this->show_edit_form($problem_id);
+			else 
+				$this->show_add_form();
+		} else {
+			if ($problem_id!= NULL) {
+				$problem = $this->problem_model->problem_info($problem_id);
+				if($problem == NULL) show_404();
+			}
+			$the_id = $this->problem_model->replace_problem($problem_id ? $problem_id : NULL);
+
+			$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
+			$problem_dir = $this->problem_model->get_directory_path($the_id);
+			
+			// Create assignment directory
+			if ( ! file_exists($problem_dir) )
+				mkdir($problem_dir, 0700);
+			
+			$this->_take_test_file_upload($assignments_root, $problem_dir);
+			
+			redirect('problems');
+		}
 	}
 
+
+	private function _take_test_file_upload($assignments_root, $problem_dir){
+		$this->load->library('upload');
+		
+		// Upload Tests (zip file)
+		shell_exec('rm -f '.$assignments_root.'/*.zip');
+		$config = array(
+			'upload_path' => $assignments_root,
+			'allowed_types' => 'zip',
+		);
+		$this->upload->initialize($config);
+		$zip_uploaded = $this->upload->do_upload('tests_desc');
+		$u_data = $this->upload->data();
+		if ( $_FILES['tests_desc']['error'] === UPLOAD_ERR_NO_FILE )
+			$this->messages[] = array(
+				'type' => 'notice',
+				'text' => "Notice: You did not upload any zip file for tests. If needed, upload by editing assignment."
+			);
+		elseif ( ! $zip_uploaded )
+			$this->messages[] = array(
+				'type' => 'error',
+				'text' => "Error: Error uploading tests zip file: ".$this->upload->display_errors('', '')
+			);
+		else
+			$this->messages[] = array(
+				'type' => 'success',
+				'text' => "Tests (zip file) uploaded successfully."
+			);
+
+		if ($zip_uploaded) $this->unload_zip_test_file($assignments_root, $problem_dir, $u_data);
+	}
+
+	private function unload_zip_test_file($assignments_root, $problem_dir, $u_data){
+		// Create a temp directory
+		$tmp_dir_name = "shj_tmp_directory";
+		$tmp_dir = "$assignments_root/$tmp_dir_name";
+		shell_exec("rm -rf $tmp_dir; mkdir $tmp_dir;");
+
+		// Extract new test cases and descriptions in temp directory
+		$this->load->library('unzip');
+		$this->unzip->allow(array('txt', 'cpp', 'html', 'md', 'pdf'));
+		$extract_result = $this->unzip->extract($u_data['full_path'], $tmp_dir);
+
+		// Remove the zip file
+		unlink($u_data['full_path']);
+
+		if ( $extract_result )
+		{
+			// Remove previous test cases and descriptions
+			$remove = 
+			" rm -rf $problem_dir/in $problem_dir/out $problem_dir/tester*"
+				."  $problem_dir/template.* "
+				."  $problem_dir/desc.*  $problem_dir/*.pdf; done";
+			//echo "cp -R $tmp_dir/* $problem_dir;";			
+			//echo $remove; die();			
+			shell_exec($remove); 
+
+			if (glob("$tmp_dir/*.pdf"))
+				shell_exec("cd $problem_dir; rm -f *.pdf");
+			// Copy new test cases from temp dir
+			// echo $tmp_dir . "<br/>";
+			// echo $problem_dir . "<br/>";
+			// echo shell_exec("ls $tmp_dir/*");
+			// echo "cp -R $tmp_dir/* $problem_dir;";
+			//die();
+			shell_exec("cp -R $tmp_dir/* $problem_dir;");
+			$this->messages[] = array(
+				'type' => 'success',
+				'text' => 'Tests (zip file) extracted successfully.'
+			);
+		}
+		else
+		{
+			$this->messages[] = array(
+				'type' => 'error',
+				'text' => 'Error: Error extracting zip archive.'
+			);
+			foreach($this->unzip->errors_array() as $msg)
+				$this->messages[] = array(
+					'type' => 'error',
+					'text' => " Zip Extraction Error: ".$msg
+				);
+		}
+
+		// Remove temp directory
+		shell_exec("rm -rf $tmp_dir");
+	}
 
 	// ------------------------------------------------------------------------
 	public function delete()

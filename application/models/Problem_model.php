@@ -39,7 +39,7 @@ class Problem_model extends CI_Model
 
 	public function problem_info($id = NULL){
 		$a =  $this->db->get_where('problems', array('id' => $id))->row_array();
-		$a['languages'] = $this->get_languages($id);
+		if($a != NULL) $a['languages'] = $this->get_languages($id);
 		return $a;
 	}
 
@@ -94,9 +94,7 @@ class Problem_model extends CI_Model
 	/**
 	 * Save Problem Description
 	 *
-	 * Saves (Adds/Updates) problem description (html or markdown)
-	 *
-	 * @param $assignment_id
+	 * Saves (Adds/Updates) problem description (html)
 	 * @param $problem_id
 	 * @param $text
 	 * @param $type
@@ -104,19 +102,15 @@ class Problem_model extends CI_Model
 	public function save_problem_description($problem_id, $text, $type = 'html')
 	{
 		$problem_dir = $this->get_directory_path($problem_id);
-
-		if ($type === 'html')
-		{
-			if (file_put_contents("$problem_dir/desc.html", $text) ) {
-				return true;
-			} else return false;
-		}
+		if (file_put_contents("$problem_dir/desc.html", $text) ) 
+			return true;
+		else return false;
 	}
 
 	// ------------------------------------------------------------------------
-	public function add_problem(){
+	public function replace_problem($problem_id = NULL){
 		$this->db->trans_start();
-		$id = $this->new_problem_id();
+		$id = $problem_id ? $problem_id : $this->new_problem_id();;
 		
 		//Now add new problems:
 		$name = $this->input->post('problem_name');
@@ -124,15 +118,16 @@ class Problem_model extends CI_Model
 		$dc = $this->input->post('diff_cmd');
 		$da = $this->input->post('diff_arg');
 
-		
 		$problem = array(
 			'id' => $id,
 			'name' => $name,
 			'diff_cmd' => $dc,
 			'diff_arg' => $da,
 		);
-		$this->db->insert('problems', $problem);
+		$this->db->replace('problems', $problem);
 		
+		$this->db->where('problem_id', $id)->delete('problem_language');
+
 		$enable = $this->input->post('enable');
 		$time_limit = $this->input->post('time_limit');
 		$memory_limit = $this->input->post('memory_limit');
@@ -147,6 +142,7 @@ class Problem_model extends CI_Model
 			}
 		}
 		$this->db->trans_complete();
+		return $id;
 	}
 }
 

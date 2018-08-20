@@ -73,7 +73,7 @@ input[type='number']{
 </p>
 {% endif %}
 
-{{ form_open_multipart(edit_problem ? 'problems/update/'~edit_problem.id : 'problems/store') }}
+{{ form_open_multipart(edit_problem ? 'problems/edit/'~edit_problem.id : 'problems/add') }}
 
 	<div class="row">
 		<div class="col-sm-6">
