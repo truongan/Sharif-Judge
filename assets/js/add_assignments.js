@@ -51,7 +51,7 @@ $(document).ready(function(){
 		}
 	});
 	var a = Sortable.create(problem_list, {
-		// handle : '.list_handle',
+		handle : '.list_handle',
 		ghostClass: 'list-group-item-secondary',
 		chosenClass : 'list-group-item-primary',
 		animation: 150,

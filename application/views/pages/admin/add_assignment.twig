@@ -199,33 +199,40 @@
 <ul id="problem_list" class="list-group">
 	{% set i = 0 %}
 	{% for problem in problems %}
-	<li  class="list-group-item">
-		<div class="row  align-items-center" >			
-			<input type="hidden" name="problem_id[]" value={{problem.id}}/>
-
-			<h6 class="lead">{{ problem.name }}
-			<span class="badge badge-light align-middle">{{ problem.id }}</span>
-			</h6>
-			<div class="form-inline">
-				<div class="input-group input-group-sm mr-2">
-					<div class="input-group-prepend">
-						<label class="input-group-text">Custom name</label>
+	<li  class=" list-group-item"><div class="row align-items-center">
+		<div class="col-auto list_handle p-3">
+			<span><i class="fa fa-grip-vertical fa-lg fa-fw"></i></span>
+		</div>
+		<div class="col">
+			<div class="row  align-items-center" >			
+				<input type="hidden" name="problem_id[]" value={{problem.id}}/>
+				<span class="lead">{{ problem.name }}
+					<span class="badge badge-light align-middle">{{ problem.id }}</span>
+				</span>
+			</div>
+			<div class="row  align-items-center" >			
+				<div class="form-inline">
+					<div class="input-group input-group-sm mr-2">
+						<div class="input-group-prepend">
+							<label class="input-group-text">Alias</label>
+						</div>
+						<input type="text" name="problem_name[]" class="form-control form-control-sm " value="{{ problem.name }}"/>
 					</div>
-					<input type="text" name="problem_name[]" class="form-control form-control-sm " value="{{ problem.name }}"/>
-				</div>
-				
-				<div class="input-group input-group-sm mr-2">
-					<div class="input-group-prepend">
-					<label class="input-group-text">Score</label>
+					
+					<div class="input-group input-group-sm mr-2">
+						<div class="input-group-prepend">
+						<label class="input-group-text">Score</label>
+						</div>
+						<input type="number" name="problem_score[]" class="form-control form-control-sm" value="{{ problem.score }}"/>
 					</div>
-					<input type="number" name="problem_score[]" class="form-control form-control-sm" value="{{ problem.score }}"/>
 				</div>
 			</div>
-			<button class="btn btn-danger list_remover"><span><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></button>
-
+		</div>
+		<div class="col-auto">
+				<button class="btn btn-danger list_remover"><span><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></button>
 		</div>
 		{% set i = i + 1 %}
-	</li>
+	</div></li>
 	{% endfor %}
 <ul class="list-group">
 
