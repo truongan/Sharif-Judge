@@ -1,27 +1,3 @@
-
-shj.row ='<tr><td>SPID</td>';
-shj.row +=			'<td><input type="text" name="name[]" class="form-control medium_text" value="Problem SPID "/></td>';
-shj.row +=			'<td><input type="number" name="score[]" class="form-control short_text" value="100" /></td>';
-shj.row +=			'<td><input type="number" name="c_time_limit[]" class="form-control short_text"  value="500" /></td>';
-shj.row +=			'<td><input type="number" name="python_time_limit[]" class="form-control short_text"  value="1500"/></td>';
-shj.row +=			'<td><input type="number" name="java_time_limit[]" class="form-control short_text"  value="2000"/></td>';
-shj.row +=			'<td><input type="number" name="memory_limit[]" class="form-control short_text"  value="50000"/></td>';
-shj.row +=			'<input id="allowed_langPID" type="hidden" name="allowed_languages[PID]" class="form-control" />';
-shj.row +=			'<input id="submit_langPID" type="hidden" name="languages[PID]" class="form-control"/>';
-shj.row +=			'<td>';
-shj.row +=				'<select id="langPID" name="select_languages[PID][]"  multiple>';
-shj.row +=					'<option value="C">C</option>';
-shj.row +=					'<option value="C++" selected>C++</option>';
-shj.row +=					'<option value="Python 2">Python 2</option>';
-shj.row +=					'<option value="Python 3">Python 3</option>';
-shj.row +=					'<option value="Java">Java</option>';
-shj.row +=				'</select>';
-shj.row +=			'</td>';
-shj.row +=			'<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="diff" /></td>';
-shj.row +=			'<td><input type="text" name="diff_arg[]" class="form-control short_text" value="-bB"/></td>';
-shj.row +=			'<td><label class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" class="custom-control-input" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? "checked" }}/><span class="custom-control-label"></span></label></td>';
-shj.row +=			'<td><span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></td>';
-shj.row +=		'</tr>';
 	$(document).ready(function(){
 		$("#add").click(function(){
 			$('#problems_table>tbody').append(shj.row
@@ -74,5 +50,19 @@ $(document).ready(function(){
 			$("#lang" + i).val(allow_langs);
 		}
 	});
-	$("select").select2();
+	var a = Sortable.create(problem_list, {
+		// handle : '.list_handle',
+		ghostClass: 'list-group-item-secondary',
+		chosenClass : 'list-group-item-primary',
+		animation: 150,
+		filter: '.list_remover',
+		onFilter: function (evt) {
+			var item = evt.item,
+				ctrl = evt.target;
+	
+			if (Sortable.utils.is(ctrl, ".list_remover")) {  // Click on remove button
+				item.parentNode.removeChild(item); // remove sortable item
+			}
+		}
+	});
 });

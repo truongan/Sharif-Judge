@@ -12,26 +12,11 @@
 
 
 {% block other_assets %}
-{# <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}"> #}
-<style type="text/css">
-form {
-	width: 100%;
-	margin-bottom: 1em;
+<style>
+.list_handle {
+  cursor: move;
+  cursor: -webkit-grabbing;
 }
-form  select{
-	width: 180px;
-}
-
-input[type='number'].short_text{
-	width: 80px!important;
-}
-.short_text{
-	width: 90px!important;
-}
-.medium_text{
-	min-width: 150px!important;
-}
-
 </style>
 {% endblock %}
 
@@ -211,16 +196,33 @@ input[type='number'].short_text{
 
 <span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span>
 
-<ul class="list-group">
+<ul id="problem_list" class="list-group">
 	{% set i = 0 %}
 	{% for problem in problems %}
 	<li  class="list-group-item">
-		<legend>Problem #{{ problem.id }}: {{ problem.name }}</legend>
-		<div class="form-row form-inline">
-			<input type="text" name="name[]" class="form-control " value="{{ problem.name }}"/>
-			<input type="number" name="score[]" class="form-control" value="{{ problem.score }}"/>
-			{# <td><input type="number" name="c_time_limit[]" class="form-control short_text" value="{{ problem.ordering }}"/></td> #}
-			<span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span>
+		<div class="row  align-items-center" >			
+			<input type="hidden" name="problem_id[]" value={{problem.id}}/>
+
+			<h6 class="lead">{{ problem.name }}
+			<span class="badge badge-light align-middle">{{ problem.id }}</span>
+			</h6>
+			<div class="form-inline">
+				<div class="input-group input-group-sm mr-2">
+					<div class="input-group-prepend">
+						<label class="input-group-text">Custom name</label>
+					</div>
+					<input type="text" name="problem_name[]" class="form-control form-control-sm " value="{{ problem.name }}"/>
+				</div>
+				
+				<div class="input-group input-group-sm mr-2">
+					<div class="input-group-prepend">
+					<label class="input-group-text">Score</label>
+					</div>
+					<input type="number" name="problem_score[]" class="form-control form-control-sm" value="{{ problem.score }}"/>
+				</div>
+			</div>
+			<button class="btn btn-danger list_remover"><span><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></button>
+
 		</div>
 		{% set i = i + 1 %}
 	</li>
