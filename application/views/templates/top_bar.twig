@@ -12,14 +12,14 @@
 	  	<ul class="navbar-nav bg-dark navbar-sidenav color-{{ selected }}" id="exampleAccordion">
 		  	<li class="nav-item color-dashboard{{ selected=='dashboard' ? ' selected' }}">
 				<a class="nav-link" href="{{ site_url('dashboard') }}">
-					<i class="fa fa-fw fa-dashboard fa-lg"></i>
+					<i class="fa fa-fw fa-tachometer-alt fa-lg"></i>
 					<span class="nav-link-text">Dashboard</span>
 				</a>
 		  	</li>
 			{% if user.level == 3 %}
 			<li class="nav-item color-settings{{ selected=='settings' ? ' selected' }}" >
 				<a class="nav-link" href="{{ site_url('settings') }}">
-					<i class="fa fa-fw fa-gear fa-lg"></i>
+					<i class="fa fa-fw fa-sliders-h fa-lg"></i>
 					<span class="nav-link-text">Settings</span>
 				</a>
 			</li>
@@ -56,7 +56,7 @@
 			</li>
 			<li class="nav-item color-submit{{ selected=='submit' ? ' selected' }}">
 				<a class="nav-link" href="{{ site_url('submit') }}">
-					<i class="fa fa-fw fa-location-arrow fa-lg"></i>
+					<i class="fa fa-fw fa-code fa-lg"></i>
 					<span class="nav-link-text">Code Editor</span>
 				</a>
 			</li>

@@ -193,21 +193,18 @@ class Assignments extends CI_Controller
 			show_404();
 
 		$this->load->library('upload');
-		//if ($_POST){ var_dump($_POST) ; die(); };
+
 		if ( ! empty($_POST) )
-			//echo("<pre>"); print_r($_POST); echo("</pre>"); die();
 			if ($this->_add()) // add/edit assignment
 			{
-				//if ( ! $this->edit) // if adding assignment (not editing)
-				//{
-				//   goto Assignments page
-					$this->index();
-					return;
-				//}
+				$this->index();
+				return;
+
 			}
 
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
+			'all_problems' => $this->problem_model->all_problems(),
 			'messages' => $this->messages,
 			'edit' => $this->edit,
 			'default_late_rule' => $this->settings_model->get_setting('default_late_rule'),
@@ -224,49 +221,22 @@ class Assignments extends CI_Controller
 		{
 			$names = $this->input->post('name');
 			if ($names === NULL)
-				$data['problems'] = array(
-					array(
-						'id' => 1,
-						'name' => 'Problem ',
-						'score' => 100,
-						'c_time_limit' => 500,
-						'python_time_limit' => 1500,
-						'java_time_limit' => 2000,
-						'memory_limit' => 50000,
-						'allowed_languages' => 'C++',
-						'diff_cmd' => 'diff',
-						'diff_arg' => '-bB',
-						'is_upload_only' => 0
-					)
-				);
+				$data['problems'] = array();
 			else
 			{
-				$names = $this->input->post('name');
-				$scores = $this->input->post('score');
-				$c_tl = $this->input->post('c_time_limit');
-				$py_tl = $this->input->post('python_time_limit');
-				$java_tl = $this->input->post('java_time_limit');
-				$ml = $this->input->post('memory_limit');
-				$ft = $this->input->post('languages');
-				$dc = $this->input->post('diff_cmd');
-				$da = $this->input->post('diff_arg');
+				$id = $this->input->post('problem_id');
+				$names = $this->input->post('problem_name');
+				$scores = $this->input->post('problem_score');
+
 				$data['problems'] = array();
 				$uo = $this->input->post('is_upload_only');
 				if ($uo === NULL)
 					$uo = array();
 				for ($i=0; $i<count($names); $i++){
 					array_push($data['problems'], array(
-						'id' => $i+1,
+						'id' => $id[$i],
 						'name' => $names[$i],
-						'score' => $scores[$i],
-						'c_time_limit' => $c_tl[$i],
-						'python_time_limit' => $py_tl[$i],
-						'java_time_limit' => $java_tl[$i],
-						'memory_limit' => $ml[$i],
-						'allowed_languages' => $ft[$i],
-						'diff_cmd' => $dc[$i],
-						'diff_arg' => $da[$i],
-						'is_upload_only' => in_array($i+1,$uo)?1:0,
+						'score' => $scores[$i],		
 					));
 				}
 			}
@@ -289,13 +259,13 @@ class Assignments extends CI_Controller
 		if ($this->user->level <= 1) // permission denied
 			show_404();
 
-		$this->form_validation->set_rules('assignment_name', 'assignment name', 'required|max_length[50]');
+		$this->form_validation->set_rules('assignment_name', 'assignment name', 'required|max_length[150]');
 		$this->form_validation->set_rules('start_time', 'start time', 'required');
 		$this->form_validation->set_rules('finish_time', 'finish time', 'required');
 		$this->form_validation->set_rules('extra_time', 'extra time', 'required');
 		$this->form_validation->set_rules('participants', 'participants', '');
 		$this->form_validation->set_rules('late_rule', 'coefficient rule', 'required');
-		$this->form_validation->set_rules('name[]', 'problem name', 'required|max_length[50]');
+		$this->form_validation->set_rules('name[]', 'problem name', 'required|max_length[150]');
 		$this->form_validation->set_rules('score[]', 'problem score', 'required|integer');
 
 		// Validate input data

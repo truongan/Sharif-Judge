@@ -47,7 +47,6 @@ class Test extends CI_Controller
 	}
 	public function ad_hoc(){
 		$this->load->model('language_model');
-		var_dump($this->language_model->all_languages());
-		var_dump($this->problem_model->problem_info(70));
+		var_dump($this->assignment_model->all_problems(5));
 	}
 }

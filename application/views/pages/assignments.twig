@@ -49,7 +49,7 @@
 </thead>
 {% for item in all_assignments|reverse %}
 <tr>
-	<td><i class="pointer select_assignment fa {{ item.id == user.selected_assignment.id ? 'fa-check-square-o color6' : 'fa-square-o' }} fa-2x" data-id="{{ item.id }}"></i></td>
+	<td><i class="pointer select_assignment fa {{ item.id == user.selected_assignment.id ? 'fa-check-square color6' : 'fa-square' }} fa-2x" data-id="{{ item.id }}"></i></td>
 	<td><a href="{{ site_url('view_problem/'~item.id) }}" data-toggle="tooltip" title="Click to view problem(s)">{{ item.name }}</a></td>
 	{# <td>View problem(s)</td> #}
 	<td><a href="{{ site_url('submissions/all/assignment/'~item.id) }}" data-toggle="tooltip" title="View all submissions">
@@ -85,13 +85,13 @@
 			<a href="{{ site_url("assignments/download_submissions/by_problem/#{item.id}") }}"><i title="Download Final Submissions (by problem)" class="fa fa-download fa-lg color2"></i></a>
 		{% endif %}
 		{% if user.level >= 2 %}
-			<a href="{{ site_url('moss/'~item.id) }}"><i title="Detect Similar Codes" class="fa fa-shield fa-lg color7"></i></a>
+			<a href="{{ site_url('moss/'~item.id) }}"><i title="Detect Similar Codes" class="fa fa-user-secret fa-lg color7"></i></a>
 		{% endif %}
 		{% if user.level >= 2 %}
 			<a href="{{ site_url('assignments/reload_scoreboard/'~item.id) }}"><i title="Force reload scoreboard" class="fa fa-retweet fa-lg color11"></i></a>
 		{% endif %}
 		{% if user.level >= 2 %}
-			<a href="{{ site_url('assignments/edit/'~item.id) }}"><i title="Edit" class="fa fa-pencil fa-lg color3"></i></a>
+			<a href="{{ site_url('assignments/edit/'~item.id) }}"><i title="Edit" class="fa fa-edit fa-lg color3"></i></a>
 		{% endif %}
 		{% if user.level >= 2 %}
 			<a href="{{ site_url('assignments/delete/'~item.id) }}"><i title="Delete" class="fa fa-times fa-lg color1"></i></a>
