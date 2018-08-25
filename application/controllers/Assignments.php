@@ -210,34 +210,31 @@ class Assignments extends CI_Controller
 			'default_late_rule' => $this->settings_model->get_setting('default_late_rule'),
 		);
 
+		$data['problems'][-1] = array('id' => -1, 'name' => 'dummy', 'score'=>0);
+
 		if ($this->edit)
 		{
 			$data['edit_assignment'] = $this->assignment_model->assignment_info($this->edit_assignment);
 			if ($data['edit_assignment']['id'] === 0)
 				show_404();
-			$data['problems'] = $this->assignment_model->all_problems($this->edit_assignment);
+			$data['problems'] += $this->assignment_model->all_problems($this->edit_assignment) ;
 		}
 		else
 		{
 			$names = $this->input->post('name');
-			if ($names === NULL)
-				$data['problems'] = array();
-			else
+			$data['problems'] = array();
+			if ($names !== NULL)
 			{
 				$id = $this->input->post('problem_id');
 				$names = $this->input->post('problem_name');
 				$scores = $this->input->post('problem_score');
 
-				$data['problems'] = array();
-				$uo = $this->input->post('is_upload_only');
-				if ($uo === NULL)
-					$uo = array();
 				for ($i=0; $i<count($names); $i++){
-					array_push($data['problems'], array(
+					$data['problems'][$id[$i]] = array(
 						'id' => $id[$i],
 						'name' => $names[$i],
 						'score' => $scores[$i],		
-					));
+					);
 				}
 			}
 		}

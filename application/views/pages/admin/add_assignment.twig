@@ -13,7 +13,11 @@
 
 {% block other_assets %}
 <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}">
-
+<style>
+.select2-selection__choice{
+	display:none !important;
+}
+</style>
 {% endblock %}
 
 {% block body_end %}
@@ -192,25 +196,32 @@
 	</div>
 
 {# <span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span> #}
-
-<select class="all_problems" multiple="multiple">
+<fieldset class="form-group">
+<label> Select problem(s) for this assignment</label>
+<select class="all_problems form-control" multiple="multiple">
 	{% for p in all_problems %}
-		<option value="{{ p.id }}"  {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.name}} </option>
+		<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}"
+		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.name}} </option>
 	{% endfor %}
 </select>
+</fieldset>
 
+<fieldset class="form-group">
+<label> Set alias, score and order for problems in this assignment  <small class="form-text text-muted">Problem's alias will be displayed when student view this assignment instead of the problem's original name<br/>
+You can drag the handle to re-order the problems
+</small></label>
 <ul id="problem_list" class="list-group">
 	{% set i = 0 %}
 	{% for problem in problems %}
-	<li  class=" list-group-item"><div class="row align-items-center">
+	<li   class="list-group-item {{problem.id == -1 ? 'd-none' : ''}} "><div class="row align-items-center">
 		<div class="col-auto list_handle p-3 pointer">
 			<span><i class="fa fa-grip-vertical fa-lg fa-fw"></i></span>
 		</div>
 		<div class="col">
 			<div class="row  align-items-center" >			
-				<input type="hidden" name="problem_id[]" value={{problem.id}}/>
+				<input type="hidden" name="problem_id[]" value="{{problem.id}}"/>
 				<span class="lead">{{ problem.name }}
-					<span class="badge badge-light align-middle">{{ problem.id }}</span>
+					<span class="badge badge-light">{{ problem.id }}</span>
 				</span>
 			</div>
 			<div class="row  align-items-center" >			
@@ -238,6 +249,7 @@
 	</div></li>
 	{% endfor %}
 <ul class="list-group">
+</fieldset>
 
 <fieldset class="form-group mt-2">
 	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary"/>
