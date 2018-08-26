@@ -199,7 +199,6 @@ class Assignments extends CI_Controller
 			{
 				$this->index();
 				return;
-
 			}
 
 		$data = array(
@@ -221,13 +220,12 @@ class Assignments extends CI_Controller
 		}
 		else
 		{
-			$names = $this->input->post('name');
-			$data['problems'] = array();
+			$names = $this->input->post('problem_name[]');
 			if ($names !== NULL)
 			{
-				$id = $this->input->post('problem_id');
-				$names = $this->input->post('problem_name');
-				$scores = $this->input->post('problem_score');
+				$id = $this->input->post('problem_id[]');
+				$names = $this->input->post('problem_name[]');
+				$scores = $this->input->post('problem_score[]');
 
 				for ($i=0; $i<count($names); $i++){
 					$data['problems'][$id[$i]] = array(

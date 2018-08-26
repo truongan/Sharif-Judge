@@ -47,6 +47,13 @@ class Test extends CI_Controller
 	}
 	public function ad_hoc(){
 		$this->load->model('language_model');
-		var_dump($this->assignment_model->all_problems(5));
+		var_dump(
+			$this->db->select('username, problem_id, count(*) as subcount')
+					->group_by(array('username', 'problem_id'))
+					->where('assignment_id', 5)
+					->get('submissions')
+					->result()
+		);
+		var_dump($this->db->last_query());
 	}
 }

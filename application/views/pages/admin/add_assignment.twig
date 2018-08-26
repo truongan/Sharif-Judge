@@ -122,7 +122,7 @@
 						</label>
 					</div>
 					<div class="col-sm-8">
-						<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="form-control" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time', 0) }}" />
+						<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="form-control" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time', 0)|extra_time_formatter }}" />
 						{{ form_error('extra_time', '<div class="alert alert-danger">', '</div>') }}
 					</div>
 				</div>
@@ -160,6 +160,14 @@
 
 		<div class="col-sm-6">
 			<fieldset class="form-group">
+				<div class="form-row">
+						<label for="form_late_rule">Description
+						<small class="form-text text-muted medium clear" style="display: block;"></small>
+						</label>
+				<textarea id="form_late_rule" name="description" rows="5" class="form-control add_text">{{ edit ? edit_assignment.description : set_value('late_rule', description, false) }}</textarea>
+				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+			<fieldset class="form-group">
 				<div class="custom-control custom-checkbox">
 					<input id="form_a_open" class="custom-control-input" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
 					<label for="form_a_open" class="custom-control-label">Open</label>
@@ -173,23 +181,16 @@
 					<input id="form_a_scoreboard" class="custom-control-input" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
 					<span {#for="form_a_scoreboard"#} class="custom-control-label">Scoreboard</span>
 				</label>
-				<small class="form-text text-muted ">Check this to publish scoreboard to student</small>
+				<small class="form-text text-muted ">Check this to publish scoreboard to student, lecturer can always see scoreboard</small>
 				{{ form_error('scoreboard', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
-			<fieldset class="form-group">
-				<div class="custom-control custom-checkbox">
-					<input id="form_a_javaexceptions" class="custom-control-input" type="checkbox" name="javaexceptions" value="1" {{ edit ? (edit_assignment.javaexceptions ? 'checked') : set_checkbox('javaexceptions', '1')|raw }} />
-					<label for="form_a_javaexceptions" class="custom-control-label">Java Exceptions</label>
-				</div>
-				<small class="form-text text-muted ">Check this to show Java exceptions to users</small>
-				{{ form_error('javaexceptions', '<div class="alert alert-danger">', '</div>') }}
-			</fieldset>
+
 			<fieldset class="form-group">
 				<div class="form-row">
 						<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)
 						<small class="form-text text-muted medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</small>
 						</label>
-				<textarea id="form_late_rule" name="late_rule" rows="15" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
+				<textarea id="form_late_rule" name="late_rule" rows="12" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
 				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 		</div>
@@ -197,18 +198,21 @@
 
 {# <span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span> #}
 <fieldset class="form-group">
-<label> Select problem(s) for this assignment</label>
+<label> Select problem(s) for this assignment
+<small class="form-text text-muted">You can type in the box below to search for problems
+</small></label>
 <select class="all_problems form-control" multiple="multiple">
 	{% for p in all_problems %}
 		<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}"
-		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.name}} </option>
+		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.id}} - {{p.name}} </option>
 	{% endfor %}
 </select>
 </fieldset>
 
 <fieldset class="form-group">
 <label> Set alias, score and order for problems in this assignment  <small class="form-text text-muted">Problem's alias will be displayed when student view this assignment instead of the problem's original name<br/>
-You can drag the handle to re-order the problems
+You can drag the handle to re-order the problems.<br/>
+Remove one problem from assignment won't remove the submissions of that problem but will reset its alias and score to default if you re-add it later.
 </small></label>
 <ul id="problem_list" class="list-group">
 	{% set i = 0 %}

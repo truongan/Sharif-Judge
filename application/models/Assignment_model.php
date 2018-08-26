@@ -38,12 +38,11 @@ class Assignment_model extends CI_Model
 		$assignment = array(
 			'id' => $id,
 			'name' => $this->input->post('assignment_name'),
-			'problems' => $this->input->post('number_of_problems'),
 			'total_submits' => 0,
 			'open' => ($this->input->post('open')===NULL?0:1),
 			'scoreboard' => ($this->input->post('scoreboard')===NULL?0:1),
-			'javaexceptions' => ($this->input->post('javaexceptions')===NULL?0:1),
-			'description' => '', /* todo */
+			'javaexceptions' => 1, // ($this->input->post('javaexceptions')===NULL?0:1), to be removed later
+			'description' => $this->input->post('description'),
 			'start_time' => date('Y-m-d H:i:s', strtotime($this->input->post('start_time'))),
 			'finish_time' => date('Y-m-d H:i:s', strtotime($this->input->post('finish_time'))),
 			'extra_time' => $extra_time*60,
@@ -65,8 +64,25 @@ class Assignment_model extends CI_Model
 		/* **** Adding problems to "problems" table **** */
 
 		//First remove all previous problems
-		$this->db->delete('problems', array('assignment'=>$id));
+		$this->db->delete('problem_assignment', array('assignment_id'=>$id));
 
+		$ids = $this->input->post('problem_id[]');
+		$names = $this->input->post('problem_name[]');
+		$scores = $this->input->post('problem_score[]');
+
+		$count = 1;
+		foreach($ids as $i => $pid){
+			if($pid == -1) continue; //Don't insert the dummy row.
+
+			$this->db->insert('problem_assignment', array(
+				'assignment_id' => $id,
+				'problem_id' => $pid,
+				'problem_name' => $names[$i],
+				'score' => $scores[$i],
+				'ordering' => $count++,
+			));
+		}
+		
 		if ($edit)
 		{
 			// We must update scoreboard of the assignment
@@ -78,6 +94,7 @@ class Assignment_model extends CI_Model
 		$this->db->trans_complete();
 
 		return $this->db->trans_status();
+		
 	}
 
 
@@ -229,6 +246,7 @@ class Assignment_model extends CI_Model
 		$result = $this->db->from('problems')
 					->join('problem_assignment', 'problems.id = problem_assignment.problem_id')
 					->where('problem_assignment.assignment_id', $assignment_id)
+					->order_by('ordering')
 					->get()
 					->result_array()
 		;
@@ -352,7 +370,7 @@ class Assignment_model extends CI_Model
 	 */
 	private function _update_coefficients($assignment_id, $extra_time, $finish_time, $new_late_rule)
 	{
-		$submissions = $this->db->get_where('submissions', array('assignment'=>$assignment_id))->result_array();
+		$submissions = $this->db->get_where('submissions', array('assignment_id'=>$assignment_id))->result_array();
 
 		$finish_time = strtotime($finish_time);
 
