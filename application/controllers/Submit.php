@@ -10,12 +10,8 @@ class Submit extends CI_Controller
 {
 
 	private $data; //data sent to view
-	private $assignment_root;
-	private $problems;
-	private $problem;//submitted problem id
-	private $filetype; //type of submitted file
-	private $ext; //uploaded file extension
-	private $file_name; //uploaded file name without extension
+
+
 	private $coefficient;
 
 	private $language_to_ext = array(
@@ -42,44 +38,6 @@ class Submit extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
-
-	public function _language_to_type($language)
-	{
-		$language = strtolower ($language);
-		switch ($language) {
-			case 'c': return 'c';
-			case 'c++': return 'cpp';
-			case 'python 2': return 'py2';
-			case 'python 3': return 'py3';
-			case 'java': return 'java';
-			case 'zip': return 'zip';
-			case 'pdf': return 'pdf';
-			default: return FALSE;
-		}
-	}
-
-
-	// ------------------------------------------------------------------------
-
-
-	public function _match($type, $extension)
-	{
-		switch ($type) {
-			case 'c': return ($extension==='c'?TRUE:FALSE);
-			case 'cpp': return ($extension==='cpp'?TRUE:FALSE);
-			case 'py2': return ($extension==='py'?TRUE:FALSE);
-			case 'py3': return ($extension==='py'?TRUE:FALSE);
-			case 'java': return ($extension==='java'?TRUE:FALSE);
-			case 'zip': return ($extension==='zip'?TRUE:FALSE);
-			case 'pdf': return ($extension==='pdf'?TRUE:FALSE);
-		}
-	}
-
-
-	// ------------------------------------------------------------------------
-
-
 	public function _check_language($str)
 	{
 		if ($str=='0')
@@ -227,74 +185,7 @@ class Submit extends CI_Controller
 		$this->twig->display('pages/submit.twig', $this->data);
 	}
 	// ------------------------------------------------------------------------
-
-	/**
-	 * Saves submitted code and adds it to queue for judging
-	 */
-
-	private function upload_post_code($assignment, $problem, $a,$user_dir, $submit_info){
-		if (strlen($a) > $this->settings_model->get_setting('file_size_limit') * 1024 ){
-			//string length larger tan file size limit
-			show_error("Your submission is larger than system limited size");
-		}
-		$this->ext = $this->language_to_ext[$this->filetype];
-
-		$file_name = "solution";
-		file_put_contents("$user_dir/$file_name-"
-							.($assignment['total_submits']+1)
-							. "." . $this->ext, $a);
-
-		$this->load->model('submit_model');
-
-		$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
-		$submit_info['file_name'] = "$file_name-"
-						.($assignment['total_submits']+1);
-		$submit_info['main_file_name'] = "$file_name";
-
-		if ($problem['is_upload_only'] == 0)
-		{
-			$this->queue_model->add_to_queue($submit_info);
-			process_the_queue();
-		}
-		return TRUE;
-	}
-	private function _upload_file_code($assignment, $problem, $user_dir, $submit_info){
-		if (!isset($_FILES['userfile']) or $_FILES['userfile']['error'] == 4)
-			show_error('No file chosen.');
-
-		$this->ext = substr(strrchr($_FILES['userfile']['name'],'.'),1); // uploaded file extension
-		$this->file_name = basename($_FILES['userfile']['name'], ".{$this->ext}"); // uploaded file name without extension
-		if ( ! $this->_match($this->filetype, $this->ext) )
-			show_error('This file type does not match your selected language.');
-									  
-		$this->file_name = preg_replace('/[^a-zA-Z0-9_\-()]+/', '', $this->file_name);
-		
-		$config['upload_path'] = $user_dir;
-		$config['allowed_types'] = '*';
-		$config['max_size']	= $this->settings_model->get_setting('file_size_limit');
-		$config['file_name'] = $this->file_name."-".($assignment['total_submits']+1).".".$this->ext;
-		$config['max_file_name'] = 200;
-		$config['remove_spaces'] = TRUE;
-		$this->upload->initialize($config);
-
-		if ($this->upload->do_upload('userfile'))
-		{
-			$result = $this->upload->data();			
-
-			$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
-			$submit_info['file_name'] = $result['raw_name'];
-			$submit_info['main_file_name'] = $this->file_name;
-			
-			if ($problem['is_upload_only'] == 0)
-			{
-				$this->queue_model->add_to_queue($submit_info);
-				process_the_queue();
-			}
-			return TRUE;
-		}
-
-		return FALSE;
-	}
+	
 	private function eval_coefficient($assignment){
 		$extra_time = $assignment['extra_time'];
 		$delay = shj_now()-strtotime($assignment['finish_time']);;
@@ -306,11 +197,70 @@ class Submit extends CI_Controller
 		ob_end_clean();
 		$this->coefficient = $coefficient;
 	}
+	/**
+	 * Saves submitted code and adds it to queue for judging
+	 */
+
+	private function upload_post_code($assignment, $problem, $a,$user_dir, $submit_info){
+		if (strlen($a) > $this->settings_model->get_setting('file_size_limit') * 1024 ){
+			//string length larger tan file size limit
+			show_error("Your submission is larger than system limited size");
+		}
+
+		$file_name = "solution";
+		file_put_contents("$user_dir/$file_name-"
+							.($assignment['total_submits']+1)
+							. "." . $submit_info['file_ext'], $a);
+
+		$this->load->model('submit_model');
+
+		$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
+		$submit_info['file_name'] = "$file_name-"
+						.($assignment['total_submits']+1);
+		$submit_info['main_file_name'] = "$file_name";
+
+		$this->queue_model->add_to_queue($submit_info);
+		process_the_queue();
+
+		return TRUE;
+	}
+	private function _upload_file_code($assignment, $problem, $user_dir, $submit_info){
+		if (!isset($_FILES['userfile']) or $_FILES['userfile']['error'] == 4)
+			show_error('No file chosen.');
+		
+		$ext = substr(strrchr($_FILES['userfile']['name'],'.'),1);
+		$file_name = basename($_FILES['userfile']['name'], ".{$ext}"); // uploaded file name without extension	  
+		$file_name = preg_replace('/[^a-zA-Z0-9_\-()]+/', '', $file_name);
+		
+		$config['upload_path'] = $user_dir;
+		$config['allowed_types'] = '*';
+		$config['max_size']	= $this->settings_model->get_setting('file_size_limit');
+		$config['file_name'] = $file_name."-".($assignment['total_submits']+1).".".$submit_info['file_ext'];
+		$config['max_file_name'] = 200;
+		$config['remove_spaces'] = TRUE;
+		$this->upload->initialize($config);
+
+		if ($this->upload->do_upload('userfile'))
+		{
+			$result = $this->upload->data();			
+
+			$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
+			$submit_info['file_name'] = $result['raw_name'];
+			$submit_info['main_file_name'] = $file_name;
+
+			$this->queue_model->add_to_queue($submit_info);
+			process_the_queue();
+		
+			return TRUE;
+		}
+
+		return FALSE;
+	}
 	private function _upload(){
 		
 		$problem = $this->problem_model->problem_info($this->input->post('problem'));
 		$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
-		$this->filetype = $this->_language_to_type(strtolower(trim($this->input->post('language'))));
+		$lang_id = $this->input->post('language');
 
 		if ($assignment['id'] == NULL && $this->user->level < 2){
 			show_error("Only admin can submit without assignment", 403);
@@ -324,10 +274,9 @@ class Submit extends CI_Controller
 		if ( $this->queue_model->in_queue($this->user->username,$assignment['id'], $problem['id']) )
 			show_error('You have already submitted for this problem. Your last submission is still in queue.');
 
-		if ( !isset($problem['language'][$this->filetype]) )
+		if ( !isset($problem['language'][$lang_id]) )
 			show_error('This file type is not allowed for this problem.');
 
-		
 		$user_dir = $this->submit_model->directory($assignment['id'], $problem['id'], $this->user->username);
 		if ( ! file_exists($user_dir))
 			mkdir($user_dir, 0700);
@@ -336,7 +285,7 @@ class Submit extends CI_Controller
 			'username' => $this->user->username,
 			'assignment' => $assignment['id'],
 			'problem' => $problem['id'],
-			'file_type' => $this->filetype,
+			'file_ext' => $$this->language_model->language_info($lang_id),
 			'coefficient' => $this->coefficient,
 			'pre_score' => 0,
 			'time' => shj_now_str(),
