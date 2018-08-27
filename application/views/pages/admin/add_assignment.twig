@@ -131,12 +131,12 @@
 				<div class="form-row">
 					<div class="col-sm-4">
 						<label for="form_participants">Participants<br>
-							<small class="form-text text-muted">Enter username of participants here (comma separated).
-								Only these users are able to submit. You can use keyword <code>ALL</code>.</small>
+							<small class="form-text text-muted">Only the users in this list (comma separated) are able to submit.
+								You can use keyword <code>ALL</code>.</small>
 						</label>
 					</div>
 					<div class="col-sm-8">
-				<textarea id="form_participants" name="participants" rows="5" class="form-control">{{ edit ? edit_assignment.participants : set_value('participants', 'ALL') }}</textarea>
+				<textarea id="form_participants" name="participants" rows="2" class="form-control">{{ edit ? edit_assignment.participants : set_value('participants', 'ALL') }}</textarea>
 					</div>
 				</div>
 			</fieldset>
@@ -164,7 +164,7 @@
 						<label for="form_late_rule">Description
 						<small class="form-text text-muted medium clear" style="display: block;"></small>
 						</label>
-				<textarea id="form_late_rule" name="description" rows="5" class="form-control add_text">{{ edit ? edit_assignment.description : set_value('late_rule', description, false) }}</textarea>
+				<textarea id="form_late_rule" name="description" rows="3" class="form-control add_text">{{ edit ? edit_assignment.description : set_value('late_rule', description, false) }}</textarea>
 				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 			<fieldset class="form-group">
@@ -190,7 +190,7 @@
 						<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)
 						<small class="form-text text-muted medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</small>
 						</label>
-				<textarea id="form_late_rule" name="late_rule" rows="12" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
+				<textarea id="form_late_rule" name="late_rule" rows="8" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
 				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 		</div>

@@ -51,9 +51,9 @@
 {% else %}
 	{{ form_open_multipart('submit') }}
 		{% if assignment is defined %} 
-			<input type ="hidden" value="{{assignment.id}}"/>
+			<input type ="hidden" value="{{assignment.id}}" name="assignment"/>
 		{% endif %}
-	<input type="hidden"/>
+	<input type="hidden" value="{{ problem.id }}" name="problem"/>
 	<div class="form-inline">
 		{# <div class="inp_grp"> #}
 			<div class="form-group mr-3">

@@ -231,6 +231,7 @@ class Submit extends CI_Controller
 	/**
 	 * Saves submitted code and adds it to queue for judging
 	 */
+
 	private function upload_post_code($assignment, $problem, $a,$user_dir, $submit_info){
 		if (strlen($a) > $this->settings_model->get_setting('file_size_limit') * 1024 ){
 			//string length larger tan file size limit
@@ -255,11 +256,6 @@ class Submit extends CI_Controller
 			$this->queue_model->add_to_queue($submit_info);
 			process_the_queue();
 		}
-		else
-		{
-			$this->submit_model->add_upload_only($submit_info);
-		}
-
 		return TRUE;
 	}
 	private function _upload_file_code($assignment, $problem, $user_dir, $submit_info){
@@ -294,11 +290,6 @@ class Submit extends CI_Controller
 				$this->queue_model->add_to_queue($submit_info);
 				process_the_queue();
 			}
-			else
-			{
-				$this->submit_model->add_upload_only($submit_info);
-			}
-
 			return TRUE;
 		}
 
@@ -316,6 +307,7 @@ class Submit extends CI_Controller
 		$this->coefficient = $coefficient;
 	}
 	private function _upload(){
+		
 		$problem = $this->problem_model->problem_info($this->input->post('problem'));
 		$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
 		$this->filetype = $this->_language_to_type(strtolower(trim($this->input->post('language'))));
@@ -332,18 +324,10 @@ class Submit extends CI_Controller
 		if ( $this->queue_model->in_queue($this->user->username,$assignment['id'], $problem['id']) )
 			show_error('You have already submitted for this problem. Your last submission is still in queue.');
 
-		$wrong_language = true;
-		foreach ($problem['languages'] as $lang)
-		{
-			if ($this->filetype == $lang['ext']){
-				$wrong_language = false;
-				break;
-			}
-		}
-		if ( $wrong_language )
+		if ( !isset($problem['language'][$this->filetype]) )
 			show_error('This file type is not allowed for this problem.');
 
-		//$user_dir = rtrim($this->assignment_root, '/').'/assignment_'.$assignment['id'].'/p'.$this->problem['id'].'/'.$this->user->username;
+		
 		$user_dir = $this->submit_model->directory($assignment['id'], $problem['id'], $this->user->username);
 		if ( ! file_exists($user_dir))
 			mkdir($user_dir, 0700);

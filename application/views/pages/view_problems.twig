@@ -125,7 +125,12 @@ $(document).ready(function(){
 		<div class="problems_widget ">
 
 			<span><i class="fa fa-upload fa-lg color11"></i> Submit</span>
-			{{ form_open_multipart('submit') }}
+			
+			{{ form_open_multipart("submit/") }}
+
+			{% if all_problems is defined %}
+				<input type="hidden" name="assignment" value="{{ assignment.id }}"/>
+			{% endif %}
 			<input type="hidden" name="problem" value="{{ problem.id }}"/>
 			<fieldset class="form-group form-row">
 				<label>
@@ -135,7 +140,7 @@ $(document).ready(function(){
 				<select id="languages" name="language" class="form-control custom-select">
 
 					{% for l in problem.languages %}
-						<option value="{{ l.name }}">{{ l.name }}</option>
+						<option value="{{ l.id }}">{{ l.name }}</option>
 					{% endfor %}
 				</select>
 			</fieldset>

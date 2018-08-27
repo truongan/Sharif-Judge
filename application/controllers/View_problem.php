@@ -36,7 +36,8 @@ class View_problem extends CI_Controller
 		if ($assignment_id === NULL)
 			$assignment_id = $this->user->selected_assignment['id'];
 		
-		$data=array('all_assignments' => $this->all_assignments,
+		$data=array(
+			'all_assignments' => $this->all_assignments,
 			'can_submit' => TRUE,
 		);
 		while (1){
