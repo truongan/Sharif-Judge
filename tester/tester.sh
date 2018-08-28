@@ -52,25 +52,25 @@ PROBLEMPATH=${1}
 # username
 UN=${2}
 # main file name (used only for java)
-MAINFILENAME=${3}
+#MAINFILENAME=${3}
 # file name without extension
-FILENAME=${4}
+FILENAME=${3}
 # file extension
-EXT=${5}
+EXT=${4}
 # time limit in seconds
-TIMELIMIT=${6}
+TIMELIMIT=${5}
 # integer time limit in seconds (should be an integer greater than TIMELIMIT)
-TIMELIMITINT=${7}
+TIMELIMITINT=${6}
 # memory limit in kB
-MEMLIMIT=${8}
+MEMLIMIT=${7}
 # output size limit in Bytes
-OUTLIMIT=${9}
+OUTLIMIT=${8}
 # diff tool (default: diff)
-DIFFTOOL=${10}
+DIFFTOOL=${9}
 # diff options (default: -bB)
-DIFFOPTION=${11}
+DIFFOPTION=${10}
 # enable/disable judge log
-if [ ${12} = "1" ]; then
+if [ ${11} = "1" ]; then
 	LOG_ON=true
 else
 	LOG_ON=false
@@ -241,7 +241,7 @@ for((i=1;i<=TST;i++)); do
 	languages_to_comm["cpp"]="./$EXEFILE"
 	languages_to_comm["py2"]="python2 -O $FILENAME.py"
 	languages_to_comm["py3"]="python3 -O $FILENAME.py"
-	languages_to_comm["java"]="java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFIL"
+	languages_to_comm["java"]="java -mx${MEMLIMIT}k $JAVA_POLICY $FILENAME"
 
 	if [ ! ${languages_to_comm[$EXT]+_} ]; then
 		shj_log "File Format Not Supported"

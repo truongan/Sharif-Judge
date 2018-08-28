@@ -30,7 +30,8 @@ class Test extends CI_Controller
 		
 		//return;
 		// if ( ! $this->migration->version(20180611171404))
-		if ( ! $this->migration->latest())
+		// if ( ! $this->migration->latest())
+		if ( ! $this->migration->version(20180615113739))
 		{
 			show_error($this->migration->error_string());
 		}
@@ -47,7 +48,7 @@ class Test extends CI_Controller
 	}
 	public function ad_hoc(){
 		$this->load->model('language_model');
-		var_dump($this->assignment_model->can_submit(5));
+		var_dump($this->problem_model->problem_info(50));
 
 		var_dump($this->db->last_query());
 	}

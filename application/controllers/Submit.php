@@ -36,17 +36,6 @@ class Submit extends CI_Controller
 		$this->load->model('submit_model');
 	}
 
-
-	// ------------------------------------------------------------------------
-	public function _check_language($str)
-	{
-		if ($str=='0')
-			return FALSE;
-		if (in_array( strtolower($str),array('c', 'c++', 'python 2', 'python 3', 'java', 'zip', 'pdf')))
-			return TRUE;
-		return FALSE;
-	}
-
 	//-----------------------------------------------------------------
 	private function get_request_template_content(){
 		if ( ! $this->input->is_ajax_request() )
@@ -117,7 +106,7 @@ class Submit extends CI_Controller
 	{
 		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[-1]');
 		$this->form_validation->set_rules('problem', 'problem', 'required|integer|greater_than[0]', array('greater_than' => 'Select a %s.'));
-		$this->form_validation->set_rules('language', 'language', 'required|callback__check_language', array('_check_language' => 'Select a valid %s.'));
+		//$this->form_validation->set_rules('language', 'language', 'required|callback__check_language', array('_check_language' => 'Select a valid %s.'));
 
 		if ($this->form_validation->run())
 		{
@@ -173,7 +162,9 @@ class Submit extends CI_Controller
 			$items='';
 			foreach ($this->problem_model->get_languages($problem['id']) as $language)
 			{
-				$items = $items."'".trim($language->name)."',";
+				$items = $items
+					."{langid:'".trim($language->id)."',"
+					."langname:'".trim($language->name)."',},";
 			}
 			$items = substr($items,0,strlen($items)-1);
 			$this->data['problems_js'] .= "shj.p[{$problem['id']}]=[{$items}]; ";
@@ -197,64 +188,61 @@ class Submit extends CI_Controller
 		ob_end_clean();
 		$this->coefficient = $coefficient;
 	}
+
 	/**
 	 * Saves submitted code and adds it to queue for judging
 	 */
-
-	private function upload_post_code($assignment, $problem, $a,$user_dir, $submit_info){
-		if (strlen($a) > $this->settings_model->get_setting('file_size_limit') * 1024 ){
+	private function upload_post_code($assignment, $problem, $code, $user_dir, $submit_info){
+		if (strlen($code) > $this->settings_model->get_setting('file_size_limit') * 1024 ){
 			//string length larger tan file size limit
 			show_error("Your submission is larger than system limited size");
 		}
 
+		$ext = $problem['languages'][$submit_info['language_id']]->extension;
 		$file_name = "solution";
 		file_put_contents("$user_dir/$file_name-"
 							.($assignment['total_submits']+1)
-							. "." . $submit_info['file_ext'], $a);
+							. "." . $ext, $code);
 
-		$this->load->model('submit_model');
-
-		$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
-		$submit_info['file_name'] = "$file_name-"
-						.($assignment['total_submits']+1);
-		$submit_info['main_file_name'] = "$file_name";
-
-		$this->queue_model->add_to_queue($submit_info);
-		process_the_queue();
-
+		
+		$this->_add_to_queue($submit_info, $assignment
+								, "$file_name-".($assignment['total_submits']+1) 
+							);
 		return TRUE;
 	}
 	private function _upload_file_code($assignment, $problem, $user_dir, $submit_info){
 		if (!isset($_FILES['userfile']) or $_FILES['userfile']['error'] == 4)
-			show_error('No file chosen.');
+		show_error('No file chosen.');
 		
 		$ext = substr(strrchr($_FILES['userfile']['name'],'.'),1);
 		$file_name = basename($_FILES['userfile']['name'], ".{$ext}"); // uploaded file name without extension	  
 		$file_name = preg_replace('/[^a-zA-Z0-9_\-()]+/', '', $file_name);
-		
+		$ext = $problem['languages'][$submit_info['language_id']]->extension;
+
 		$config['upload_path'] = $user_dir;
 		$config['allowed_types'] = '*';
 		$config['max_size']	= $this->settings_model->get_setting('file_size_limit');
-		$config['file_name'] = $file_name."-".($assignment['total_submits']+1).".".$submit_info['file_ext'];
+		$config['file_name'] = $file_name."-".($assignment['total_submits']+1).".".$ext;
 		$config['max_file_name'] = 200;
 		$config['remove_spaces'] = TRUE;
 		$this->upload->initialize($config);
-
+		
 		if ($this->upload->do_upload('userfile'))
 		{
-			$result = $this->upload->data();			
-
-			$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
-			$submit_info['file_name'] = $result['raw_name'];
-			$submit_info['main_file_name'] = $file_name;
-
-			$this->queue_model->add_to_queue($submit_info);
-			process_the_queue();
-		
+			$result = $this->upload->data();		
+			$this->_add_to_queue($submit_info, $assignment, $result['raw_name']);
+			
 			return TRUE;
 		}
-
+		
 		return FALSE;
+	}
+	private function _add_to_queue($submit_info, $assignment, $file_name){
+		$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
+		$submit_info['file_name'] = $file_name;
+
+		$this->queue_model->add_to_queue($submit_info);
+		process_the_queue();
 	}
 	private function _upload(){
 		
@@ -262,8 +250,13 @@ class Submit extends CI_Controller
 		$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
 		$lang_id = $this->input->post('language');
 
-		if ($assignment['id'] == NULL && $this->user->level < 2){
-			show_error("Only admin can submit without assignment", 403);
+
+		if ($assignment['id'] == NULL){
+			if ( $this->user->level < 2)
+				show_error("Only admin can submit without assignment", 403);
+			else {
+				/// TODO: Admin submit test solution without creating assignment
+			}
 		}
 
 		$this->eval_coefficient($assignment);
@@ -274,18 +267,22 @@ class Submit extends CI_Controller
 		if ( $this->queue_model->in_queue($this->user->username,$assignment['id'], $problem['id']) )
 			show_error('You have already submitted for this problem. Your last submission is still in queue.');
 
-		if ( !isset($problem['language'][$lang_id]) )
+		
+		if ( !isset($problem['languages'][$lang_id]) ){
 			show_error('This file type is not allowed for this problem.');
+		}
+		
+		$user_dir = $this->submit_model->get_path($this->user->username,$assignment['id'], $problem['id']);
 
-		$user_dir = $this->submit_model->directory($assignment['id'], $problem['id'], $this->user->username);
+		var_dump($user_dir);
 		if ( ! file_exists($user_dir))
-			mkdir($user_dir, 0700);
+			mkdir($user_dir, 0700, TRUE);
 
 		$submit_info = array(
 			'username' => $this->user->username,
-			'assignment' => $assignment['id'],
-			'problem' => $problem['id'],
-			'file_ext' => $$this->language_model->language_info($lang_id),
+			'assignment_id' => $assignment['id'],
+			'problem_id' => $problem['id'],
+			'language_id' => $lang_id,
 			'coefficient' => $this->coefficient,
 			'pre_score' => 0,
 			'time' => shj_now_str(),

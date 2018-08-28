@@ -63,12 +63,12 @@ class Queue_model extends CI_Model
 		$submit_info['status'] = 'PENDING';
 
 		$this->db->insert('submissions', $submit_info);
-
+		//var_dump($this->db->last_query());die();
 		$this->db->insert('queue', array(
 			'submit_id' => $submit_info['submit_id'],
 			'username' => $submit_info['username'],
-			'assignment' => $submit_info['assignment'],
-			'problem' => $submit_info['problem'],
+			'assignment' => $submit_info['assignment_id'],
+			'problem' => $submit_info['problem_id'],
 			'type' => 'judge'
 		));
 	}

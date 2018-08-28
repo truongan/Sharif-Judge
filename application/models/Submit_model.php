@@ -64,21 +64,6 @@ class Submit_model extends CI_Model {
 
 	}
 
-	public function directory($assignment_id, $problem_id, $user_name){
-		$user = $this->user_model->get_user_by_name($username);
-		
-		if($assignment_id == NULL && $user->role != 'student'){
-			return $this->problem_model->get_directory_path($problem_id) . "/$username/";
-		} else {
-			if (isset($this->assignment_model->all_problems($assignment_id)[$problem_id]) ){
-				$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-				return $assignments_root . "/assignment_$assignment_id/problem_$problem_id/$username/";
-			}
-		}
-
-	}
-
-
 	// ------------------------------------------------------------------------
 
 
@@ -169,13 +154,8 @@ class Submit_model extends CI_Model {
 	public function get_path($username, $assignment, $problem){
 		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
 		if ($assignment == NULL){
-			if ($this->user->level < 2) show_error("Only admin can havae submission without assignment", 403);
-
 			return $assignment_root . "/problem_$problem/$username";
 		} else {
-			if ($this->user->username != $username && $this->user->level < 1){
-				show_error("Only and instructor can access other user submission", 403);
-			}
 			return $assignment_root . "/assignment_$assignment/problem_$problem/$username";
 		}
 	}

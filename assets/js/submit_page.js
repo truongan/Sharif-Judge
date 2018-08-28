@@ -95,7 +95,7 @@ $(document).ready(function(){
         if (v==0)
             return;
         for (var i=0;i<shj.p[v].length;i++)
-            $('<option value="'+shj.p[v][i]+'">'+shj.p[v][i]+'</option>').appendTo('select#languages');
+            $('<option value="'+shj.p[v][i].langid+'">'+shj.p[v][i].langname+'</option>').appendTo('select#languages');
         $("#problem_link").attr('href', shj.site_url + "problems/"+shj.selected_assignment+"/" + $(this).val());
 
         get_template($(this).val());

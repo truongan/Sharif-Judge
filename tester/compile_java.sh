@@ -1,8 +1,8 @@
 #!/bin/bash
 	cp ../java.policy java.policy
-	cp $PROBLEMPATH/$UN/$FILENAME.java $MAINFILENAME.java
+	cp $PROBLEMPATH/$UN/$FILENAME.java $FILENAME.java
 	shj_log "Compiling as Java"
-	javac $MAINFILENAME.java >/dev/null 2>cerr
+	javac $FILENAME.java >/dev/null 2>cerr
 	EXITCODE=$?
 	COMPILE_END_TIME=$(($(date +%s%N)/1000000));
 	shj_log "Compiled. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIME-COMPILE_BEGIN_TIME)) ms"

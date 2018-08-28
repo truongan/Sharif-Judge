@@ -151,7 +151,7 @@ class Migration_Multilang_schema extends CI_Migration {
         * Alter old table structure
         */
         $this->dbforge->drop_column('submissions', 'file_type');
-        $this->dbforge->drop_column('submissions', 'main_file_type');
+        $this->dbforge->drop_column('submissions', 'main_file_name');
 
         $this->dbforge->modify_column('submissions', array('assignment' => array(
             'name' => 'assignment_id',

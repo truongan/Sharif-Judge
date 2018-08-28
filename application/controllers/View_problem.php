@@ -64,12 +64,9 @@ class View_problem extends CI_Controller
 				'assignment' => $assignment,
 			));
 
-			if ( $assignment_id != $this->user->selected_assignment['id'])
-				$data['can_submit'] = FALSE;
-			else {
-				$a = $this->assignment_model->can_submit($assignment);
-				$data['can_submit'] = $a['can_submit'];
-			}
+			$a = $this->assignment_model->can_submit($assignment);
+			$data['can_submit'] = $a['can_submit'];
+
 
 			if ($problem_id == NULL)
 				$problem_id = array_keys($data['all_problems'])[0];
