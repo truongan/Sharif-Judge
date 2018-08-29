@@ -39,7 +39,7 @@ class Problem_model extends CI_Model
 
 	public function problem_info($id = NULL){
 		$a =  $this->db->get_where('problems', array('id' => $id))->row_array();
-		if($a != NULL) $a['languages'] = $this->get_languages($id);
+		if($a != NULL) $a['languages'] = $this->all_languages($id);
 		return $a;
 	}
 

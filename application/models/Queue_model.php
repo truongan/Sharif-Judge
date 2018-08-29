@@ -127,16 +127,12 @@ class Queue_model extends CI_Model
 	 */
 	public function rejudge_single($submission)
 	{
-		$problem = $this->assignment_model->problem_info($submission['assignment'], $submission['problem']);
-		if ($problem['is_upload_only'])
-			return;
-
 		// Changing the status of submission to PENDING
 		$this->db->where(array(
 			'submit_id' => $submission['submit_id'],
 			'username' => $submission['username'],
-			'assignment' => $submission['assignment'],
-			'problem' => $submission['problem']
+			'assignment_id' => $submission['assignment'],
+			'problem_id' => $submission['problem']
 		))->update('submissions', array('pre_score'=>0, 'status'=>'PENDING'));
 
 		// Adding Submission to Queue

@@ -130,7 +130,9 @@ class Submit_model extends CI_Model {
 
 	public function set_final_submission($username, $assignment, $problem_id, $submit_id)
 	{
-
+		if ($username != $this->user->username && $this->user->role < 1){
+			show_error("Only instructor can change final submission of other users", 403);
+		}
 		$this->db->where(array(
 			'is_final' => 1,
 			'username' => $username,
@@ -157,29 +159,5 @@ class Submit_model extends CI_Model {
 			return $assignment_root . "/assignment_$assignment/problem_$problem/$username";
 		}
 	}
-
-	// ------------------------------------------------------------------------
-
-
-	/**
-	 * add the result of an "upload only" submit to the database
-	 */
-	public function add_upload_only($submit_info)
-	{
-
-		$this->db->where(array(
-			'is_final' => 1,
-			'username' => $submit_info['username'],
-			'assignment' => $submit_info['assignment'],
-			'problem_id' => $submit_info['problem'],
-		))->update('submissions', array('is_final'=>0));
-
-		$submit_info['is_final'] = 1;
-		$submit_info['status'] = 'Uploaded';
-
-		$this->db->insert('submissions', $submit_info);
-
-	}
-
 
 }

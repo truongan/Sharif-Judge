@@ -54,6 +54,7 @@ class Submissions extends CI_Controller
 		
 
 		$input = $this->uri->uri_to_assoc();
+
 		$this->filter_user = $this->filter_problem = $this->assignment = NULL;
 		$this->page_number = 1;
 		
@@ -87,7 +88,7 @@ class Submissions extends CI_Controller
 
 
 	public function index(){
-		return redirect('submissions/all');
+		return redirect('submissions/all/assignment/'.$this->user->selected_assignment['id']);
 	}
 
 	private function _index($type = "all"){
@@ -271,7 +272,7 @@ class Submissions extends CI_Controller
 				$file_path = '/nowhere'; // This line should never be reached!
 			
 			$result = array(
-				'file_name' => $submission['main_file_name'].'.'. $file_extension,
+				'file_name' => $submission['file_name'].'.'. $file_extension,
 				'text' => file_exists($file_path)?file_get_contents($file_path):"File Not Found"
 			);
 
@@ -292,22 +293,29 @@ class Submissions extends CI_Controller
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 
-		$this->form_validation->set_rules('submit_id', 'submit id', 'required|integer');
-		$this->form_validation->set_rules('username', 'username', 'required|alpha_numeric');
 		$this->form_validation->set_rules('assignment', 'assignment', 'required|integer');
 		$this->form_validation->set_rules('problem', 'problem', 'required|integer');
+		$this->form_validation->set_rules('submit_id','submit_id','integer|greater_than[0]');
 
-		$submission = $this->submit_model->get_submission(
-					$this->input->post('assignment'),
-					$this->input->post('submit_id')
-			);
-		$submission['fullmark'] = ($submission['pre_score'] == 10000);
-		$submission['pre_score'] = ceil($submission['pre_score']*$this->problems[$submission['problem']]['score']/10000);
-		if ($submission['coefficient'] === 'error')
-			$submission['final_score'] = 0;
-		else
-			$submission['final_score'] = ceil($submission['pre_score']*$submission['coefficient']/100);
-		echo json_encode($submission);
+		if($this->form_validation->run())
+		{
+			$submission = $this->submit_model->get_submission(
+						$this->input->post('assignment'),
+						$this->input->post('submit_id')
+				);
+
+			$all_problems = $this->assignment_model->all_problems($this->input->post('assignment'));
+
+			$submission['fullmark'] = ($submission['pre_score'] == 10000);
+			$submission['pre_score'] = ceil($submission['pre_score']*$all_problems[$submission['problem_id']]['score']/10000);
+			if ($submission['coefficient'] === 'error')
+				$submission['final_score'] = 0;
+			else
+				$submission['final_score'] = ceil($submission['pre_score']*$submission['coefficient']/100);
+			echo json_encode($submission);
+		} else {
+
+		}
 	}
 
 }

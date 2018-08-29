@@ -33,15 +33,15 @@ class View_problem extends CI_Controller
 	public function index( $assignment_id = NULL, $problem_id = NULL)
 	{
 		// If no assignment is given, use selected assignment
-		if ($assignment_id === NULL)
-			$assignment_id = $this->user->selected_assignment['id'];
+		if ($assignment_id === NULL){
+			redirect('view_problem/'.$this->user->selected_assignment['id']);
+		}
 		
 		$data=array(
 			'all_assignments' => $this->all_assignments,
 			'can_submit' => TRUE,
 		);
 		while (1){
-
 			$assignment = $this->assignment_model->assignment_info($assignment_id);
 
 			if($assignment['id'] == 0){
