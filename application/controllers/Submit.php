@@ -111,7 +111,7 @@ class Submit extends CI_Controller
 		if ($this->form_validation->run())
 		{
 			if ($this->_upload())
-				redirect('submissions/all');
+				redirect('submissions/all/assignment/');
 			else
 				show_error('Error Uploading File: '.$this->upload->display_errors());
 		}
@@ -160,7 +160,7 @@ class Submit extends CI_Controller
 		foreach ($this->data['problems'] as $problem)
 		{
 			$items='';
-			foreach ($this->problem_model->get_languages($problem['id']) as $language)
+			foreach ($this->problem_model->all_languages($problem['id']) as $language)
 			{
 				$items = $items
 					."{langid:'".trim($language->id)."',"

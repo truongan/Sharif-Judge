@@ -50,7 +50,7 @@ tester_dir="$(pwd)"
 # problem directory
 PROBLEMPATH=${1}
 # username
-UN=${2}
+USERDIR=${2}
 # main file name (used only for java)
 #MAINFILENAME=${3}
 # file name without extension
@@ -81,30 +81,20 @@ fi
 # else
 # 	SANDBOX_ON=false
 # fi
-# enable/disable C/C++ shield
-if [ ${13} = "1" ]; then
-	C_SHIELD_ON=true
-else
-	C_SHIELD_ON=false
-fi
-# enable/disable Python shield
-if [ ${14} = "1" ]; then
-	PY_SHIELD_ON=true
-else
-	PY_SHIELD_ON=false
-fi
+
+
 # enable/disable java security manager
-if [ ${15} = "1" ]; then
-	JAVA_POLICY="-Djava.security.manager -Djava.security.policy=java.policy"
-else
-	JAVA_POLICY=""
-fi
+# if [ ${14} = "1" ]; then
+# 	JAVA_POLICY="-Djava.security.manager -Djava.security.policy=java.policy"
+# else
+# 	JAVA_POLICY=""
+# fi
+
 # enable/disable displaying java exception to students
-if [ ${16} = "1" ]; then
-	DISPLAY_JAVA_EXCEPTION_ON=true
-else
-	DISPLAY_JAVA_EXCEPTION_ON=false
-fi
+
+
+DISPLAY_JAVA_EXCEPTION_ON=true
+
 
 # DIFFOPTION can also be "ignore" or "exact".
 # ignore: In this case, before diff command, all newlines and whitespaces will be removed from both files
@@ -115,7 +105,7 @@ if [[ "$DIFFOPTION" != "identical" && "$DIFFOPTION" != "ignore" ]]; then
 fi
 
 
-LOG="$PROBLEMPATH/$UN/log"; echo "" >$LOG
+LOG="$USERDIR/log"; echo "" >$LOG
 function shj_log
 {
 	if $LOG_ON; then
@@ -190,7 +180,7 @@ fi
 shj_log "\nTesting..."
 shj_log "$TST test cases found"
 
-echo "" >$PROBLEMPATH/$UN/result.html
+echo "" >$USERDIR/result.html
 
 if [ -f "$PROBLEMPATH/tester.cpp" ] && [ ! -f "$PROBLEMPATH/tester.executable" ]; then
 	shj_log "Tester file found. Compiling tester..."
@@ -224,7 +214,7 @@ PASSEDTESTS=0
 
 for((i=1;i<=TST;i++)); do
 	shj_log "\n=== TEST $i ==="
-	echo "<span class=\"text-primary\">Test $i</span>" >>$PROBLEMPATH/$UN/result.html
+	echo "<span class=\"text-primary\">Test $i</span>" >>$USERDIR/result.html
 
 	touch err
 
@@ -241,7 +231,7 @@ for((i=1;i<=TST;i++)); do
 	languages_to_comm["cpp"]="./$EXEFILE"
 	languages_to_comm["py2"]="python2 -O $FILENAME.py"
 	languages_to_comm["py3"]="python3 -O $FILENAME.py"
-	languages_to_comm["java"]="java -mx${MEMLIMIT}k $JAVA_POLICY $FILENAME"
+	languages_to_comm["java"]="java -mx${MEMLIMIT}k $FILENAME"
 
 	if [ ! ${languages_to_comm[$EXT]+_} ]; then
 		shj_log "File Format Not Supported"
@@ -283,7 +273,7 @@ for((i=1;i<=TST;i++)); do
 	if [ "$EXT" = "java" ]; then
 		if grep -iq -m 1 "Too small initial heap" out || grep -q -m 1 "java.lang.OutOfMemoryError" err; then
 			shj_log "Memory Limit Exceeded"
-			echo "<span class=\"text-warning\">Memory Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
+			echo "<span class=\"text-warning\">Memory Limit Exceeded</span>" >>$USERDIR/result.html
 			continue
 		fi
 		if grep -q -m 1 "Exception in" err; then # show Exception
@@ -292,9 +282,9 @@ for((i=1;i<=TST;i++)); do
 			shj_log "Exception: $javaexceptionname\nMaybe at:$javaexceptionplace"
 			# if DISPLAY_JAVA_EXCEPTION_ON is true and the exception is in the trusted list, we show the exception name
 			if $DISPLAY_JAVA_EXCEPTION_ON && grep -q -m 1 "^$javaexceptionname\$" ../java_exceptions_list; then
-				echo "<span class=\"text-warning\">Runtime Error ($javaexceptionname)</span>" >>$PROBLEMPATH/$UN/result.html
+				echo "<span class=\"text-warning\">Runtime Error ($javaexceptionname)</span>" >>$USERDIR/result.html
 			else
-				echo "<span class=\"text-warning\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
+				echo "<span class=\"text-warning\">Runtime Error</span>" >>$USERDIR/result.html
 			fi
 			continue
 		fi
@@ -313,8 +303,8 @@ for((i=1;i<=TST;i++)); do
 	t=`grep "SHJ_" err|cut -d" " -f3`
 	m=`grep "SHJ_" err|cut -d" " -f5`
 
-	echo "<span class=\"text-muted\"><small>$t s and $m KiB</small></span>" >>$PROBLEMPATH/$UN/result.html
-	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$PROBLEMPATH/$UN/result.html
+	echo "<span class=\"text-muted\"><small>$t s and $m KiB</small></span>" >>$USERDIR/result.html
+	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$USERDIR/result.html
 	found_error=0
 	if ! grep -q "FINISHED" err; then
 
@@ -322,7 +312,7 @@ for((i=1;i<=TST;i++)); do
 		do
 			if grep -q "$K" err; then
 				shj_log ${errors[$K]}
-				echo "<span class=\"text-warning\">${errors[$K]}</span>" >>$PROBLEMPATH/$UN/result.html
+				echo "<span class=\"text-warning\">${errors[$K]}</span>" >>$USERDIR/result.html
 				found_error=1
 				break
 			fi
@@ -340,13 +330,13 @@ for((i=1;i<=TST;i++)); do
 
 	if [ $EXITCODE -eq 137 ]; then
 		shj_log "Killed"
-		echo "<span class=\"text-warning\">Killed</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-warning\">Killed</span>" >>$USERDIR/result.html
 		continue
 	fi
 
 	if [ $EXITCODE -ne 0 ]; then
 		shj_log "Runtime Error"
-		echo "<span class=\"text-warning\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-warning\">Runtime Error</span>" >>$USERDIR/result.html
 		continue
 	fi
 ############################################################################
@@ -385,11 +375,11 @@ for((i=1;i<=TST;i++)); do
 
 	if $ACCEPTED; then
 		shj_log "ACCEPTED"
-		echo "<span class=\"text-success\">ACCEPT</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-success\">ACCEPT</span>" >>$USERDIR/result.html
 		((PASSEDTESTS=PASSEDTESTS+1))
 	else
 		shj_log "WRONG"
-		echo "<span class=\"text-danger\">WRONG</span>" >>$PROBLEMPATH/$UN/result.html
+		echo "<span class=\"text-danger\">WRONG</span>" >>$USERDIR/result.html
 	fi
 done
 
@@ -400,8 +390,8 @@ done
 # show place of exception. So I commented following lines:
 	## Print last java exception (if enabled)
 	#if $DISPLAY_JAVA_EXCEPTION_ON && [ "$javaexceptionname" != "" ]; then
-	#	echo -e "\n<span class=\"text-primary\">Last Java Exception:</span>" >>$PROBLEMPATH/$UN/result.html
-	#	echo -e "$javaexceptionname\n$javaexceptionplace" >>$PROBLEMPATH/$UN/result.html
+	#	echo -e "\n<span class=\"text-primary\">Last Java Exception:</span>" >>$USERDIR/result.html
+	#	echo -e "$javaexceptionname\n$javaexceptionplace" >>$USERDIR/result.html
 	#fi
 
 

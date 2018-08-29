@@ -244,9 +244,7 @@ class Submissions extends CI_Controller
 		if($this->form_validation->run())
 		{
 			$submission = $this->submit_model->get_submission(
-				$this->input->post('username'),
 				$this->input->post('assignment'),
-				$this->input->post('problem'),
 				$this->input->post('submit_id')
 			);
 			if ($submission === FALSE)
@@ -300,9 +298,7 @@ class Submissions extends CI_Controller
 		$this->form_validation->set_rules('problem', 'problem', 'required|integer');
 
 		$submission = $this->submit_model->get_submission(
-					$this->input->post('username'),
 					$this->input->post('assignment'),
-					$this->input->post('problem'),
 					$this->input->post('submit_id')
 			);
 		$submission['fullmark'] = ($submission['pre_score'] == 10000);

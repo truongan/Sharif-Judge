@@ -21,13 +21,11 @@ class Submit_model extends CI_Model {
 	/**
 	 * Returns table row for a specific submission
 	 */
-	public function get_submission($username, $assignment, $problem_id, $submit_id)
+	public function get_submission($assignment, $submit_id)
 	{
 		$query = $this->db->get_where('submissions',
 			array(
-				'username'=>$username,
 				'assignment_id'=>$assignment,
-				'problem_id'=>$problem_id,
 				'submit_id'=>$submit_id
 			)
 		);

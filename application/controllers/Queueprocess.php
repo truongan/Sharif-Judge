@@ -38,7 +38,7 @@ class Queueprocess extends CI_Controller
 		// Because we are in cli mode, base_url is not available, and we get
 		// it from an environment variable that we have set in shj_helper.php
 		$this->config->set_item('base_url', getenv('SHJ_BASE_URL'));
-
+	
 		$queue_item = $this->queue_model->get_first_item();
 		if ($queue_item === NULL) {
 			$this->settings_model->set_setting('queue_is_working', '0');
@@ -51,7 +51,8 @@ class Queueprocess extends CI_Controller
 		if ($this->settings_model->get_setting('queue_is_working'))
 		 	exit;
 
-		$this->settings_model->set_setting('queue_is_working', '1');
+		//$this->settings_model->set_setting('queue_is_working', '1');
+
 
 
 		do { // loop over queue items
@@ -60,52 +61,38 @@ class Queueprocess extends CI_Controller
 			$username = $queue_item['username'];
 			$assignment = $queue_item['assignment'];
 			$assignment_info = $this->assignment_model->assignment_info($assignment);
-			$problem = $this->assignment_model->problem_info($assignment, $queue_item['problem']);
+			$problem = $this->assignment_model->all_problems($assignment)[$queue_item['problem']];
+
+			
 			$type = $queue_item['type'];  // $type can be 'judge' or 'rejudge'
+			
+			$submission = $this->submit_model->get_submission( $assignment, $submit_id);
+			var_dump($submission);
 
-			$submission = $this->submit_model->get_submission($username, $assignment, $problem['id'], $submit_id);
+			$language = $this->problem_model->all_languages($problem['id'])[$submission['language_id']];
 
-			$file_type = $submission['file_type'];
-			$file_extension = filetype_to_extension($file_type);
+			$file_extension = $language->extension;
+
 			$raw_filename = $submission['file_name'];
-			$main_filename = $submission['main_file_name'];
 
-			$assignments_dir = rtrim($this->settings_model->get_setting('assignments_root'), '/');
 			$tester_path = rtrim($this->settings_model->get_setting('tester_path'), '/');
-			$problemdir = $assignments_dir."/assignment_$assignment/p".$problem['id'];
-			$userdir = "$problemdir/$username";
-			//$the_file = "$userdir/$raw_filename.$file_extension";
+			
+			$problemdir = $this->problem_model->get_directory_path($problem['id']);
+			$userdir = $this->submit_model->get_path($username, $assignment, $problem['id']);
+
 
 			$op1 = $this->settings_model->get_setting('enable_log');
-			// $op2 = $this->settings_model->get_setting('enable_easysandbox');
-			$op3 = 0;
-			if ($file_type === 'c')
-				$op3 = $this->settings_model->get_setting('enable_c_shield');
-			elseif ($file_type === 'cpp')
-				$op3 = $this->settings_model->get_setting('enable_cpp_shield');
-			$op4 = 0;
-			if ($file_type === 'py2')
-				$op4 = $this->settings_model->get_setting('enable_py2_shield');
-			elseif ($file_type === 'py3')
-				$op4 = $this->settings_model->get_setting('enable_py3_shield');
-			$op5 = $this->settings_model->get_setting('enable_java_policy');
-			$op6 = $assignment_info['javaexceptions'];
 
-			if ($file_type === 'c' OR $file_type === 'cpp')
-				$time_limit = $problem['c_time_limit']/1000;
-			elseif ($file_type === 'java')
-				$time_limit = $problem['java_time_limit']/1000;
-			elseif ($file_extension === 'py')
-				$time_limit = $problem['python_time_limit']/1000;
+
+			$time_limit = $language->time_limit/1000;
 			$time_limit = round($time_limit, 3);
 			$time_limit_int = floor($time_limit) + 1;
-
-			$memory_limit = $problem['memory_limit'];
+			$memory_limit = $language->memory_limit;
 			$diff_cmd = $problem['diff_cmd'];
 			$diff_arg = $problem['diff_arg'];
 			$output_size_limit = $this->settings_model->get_setting('output_size_limit') * 1024;
 
-			$cmd = "cd $tester_path;\n./tester.sh $problemdir ".escapeshellarg($username).' '.escapeshellarg($main_filename).' '.escapeshellarg($raw_filename)." $file_type $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 $op3 $op4 $op5 $op6";
+			$cmd = "cd $tester_path;\n./tester.sh $problemdir $userdir ".escapeshellarg($raw_filename)." $file_extension $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd $diff_arg $op1 ";
 
 			file_put_contents($userdir.'/log', $cmd);
 
@@ -123,11 +110,9 @@ class Queueprocess extends CI_Controller
 			echo $output;
 
 			// Saving judge result
-			//if ( is_numeric($output) || $output === 'Compilation Error' || $output === 'Syntax Error' )
-			{
-				shell_exec("mv $userdir/result.html $userdir/result-{$submit_id}.html");
-				shell_exec("mv $userdir/log $userdir/log-{$submit_id}");
-			}
+
+			shell_exec("mv $userdir/result.html $userdir/result-{$submit_id}.html");
+			shell_exec("mv $userdir/log $userdir/log-{$submit_id}");
 
 			if (is_numeric($output)) {
 				$submission['pre_score'] = $output;

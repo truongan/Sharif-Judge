@@ -163,7 +163,7 @@ class Migration_Multilang_schema extends CI_Migration {
         )));
         var_dump($this->db->last_query());
         $table = $this->db->dbprefix('submissions');
-        $this->db->query("ALTER TABLE $table ADD PRIMARY KEY(submit_id, assignment_id, problem_id)");
+        $this->db->query("ALTER TABLE $table ADD PRIMARY KEY(submit_id, assignment_id)");
         var_dump($this->db->last_query());
         
         $this->dbforge->drop_column('assignments', 'problems');

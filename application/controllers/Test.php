@@ -46,10 +46,11 @@ class Test extends CI_Controller
 			'admin'
 		);
 	}
-	public function ad_hoc(){
+	public function adhoc(){
 		$this->load->model('language_model');
-		var_dump($this->problem_model->problem_info(50));
-
+		echo('export SHJ_BASE_URL='.escapeshellarg(base_url()).'; ');
+		// var_dump($this->assignment_model->all_problems(7));
+		var_dump($this->problem_model->all_languages(68));
 		var_dump($this->db->last_query());
 	}
 }

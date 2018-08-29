@@ -43,7 +43,7 @@ class Problem_model extends CI_Model
 		return $a;
 	}
 
-	public function get_languages($id = NULL){
+	public function all_languages($id = NULL){
 		$query =  $this->db->from('languages')
 						->join('problem_language', 'languages.id = problem_language.language_id')
 						->where('problem_language.problem_id' , $id)

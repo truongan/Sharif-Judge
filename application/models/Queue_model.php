@@ -203,8 +203,8 @@ class Queue_model extends CI_Model
 			$this->db->where(array(
 				'is_final' => 1,
 				'username' => $submission['username'],
-				'assignment' => $submission['assignment'],
-				'problem' => $submission['problem'],
+				'assignment_id' => $submission['assignment_id'],
+				'problem_id' => $submission['problem_id'],
 			))->update('submissions', array('is_final'=>0));
 			$arr['is_final'] = 1;
 		}
@@ -212,13 +212,13 @@ class Queue_model extends CI_Model
 		$this->db->where(array(
 			'submit_id' => $submission['submit_id'],
 			'username' => $submission['username'],
-			'assignment' => $submission['assignment'],
-			'problem' => $submission['problem']
+			'assignment_id' => $submission['assignment_id'],
+			'problem_id' => $submission['problem_id']
 		))->update('submissions', $arr);
 
 		// update scoreboard:
 		$this->load->model('scoreboard_model');
-		$this->scoreboard_model->update_scoreboard($submission['assignment']);
+		$this->scoreboard_model->update_scoreboard($submission['assignment_id']);
 	}
 
 }

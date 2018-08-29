@@ -25,9 +25,4 @@ if [ $EXITCODE -ne 0 ]; then
 	rm -r $JAIL >/dev/null 2>/dev/null
 	shj_finish "Syntax Error"
 fi
-if $PY_SHIELD_ON; then
-	shj_log "Enabling Shield For Python 3"
-	# adding shield to beginning of code:
-	cat $shield | cat - $FILENAME.py > thetemp && mv thetemp $FILENAME.py
-fi
 
