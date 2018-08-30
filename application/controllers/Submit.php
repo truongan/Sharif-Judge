@@ -111,7 +111,7 @@ class Submit extends CI_Controller
 		if ($this->form_validation->run())
 		{
 			if ($this->_upload())
-				redirect('submissions/all/assignment/');
+				redirect('submissions/all/assignment/' . $this->input->post('assignment'));
 			else
 				show_error('Error Uploading File: '.$this->upload->display_errors());
 		}

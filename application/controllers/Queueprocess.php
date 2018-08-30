@@ -51,7 +51,7 @@ class Queueprocess extends CI_Controller
 		if ($this->settings_model->get_setting('queue_is_working'))
 		 	exit;
 
-		//$this->settings_model->set_setting('queue_is_working', '1');
+		$this->settings_model->set_setting('queue_is_working', '1');
 
 
 
