@@ -112,23 +112,21 @@ $(document).ready(function () {
 	$(".set_final").click(
 		function () {
 			var row = $(this).parents('tr');
-			var submit_id = row.data('s');
-			var problem = row.data('p');
-			var username = row.data('u');
 			$.ajax({
 				type: 'POST',
 				url: shj.site_url + 'submissions/select',
 				data: {
-					submit_id: submit_id,
-					problem: problem,
-					username: username,
+					submit_id:row.data('s'),
+					problem: row.data('p'),
+					username: row.data('u'),
+					assignment : row.data('a'),
 					wcj_csrf_name: shj.csrf_token
 				},
 				error: shj.loading_error,
 				success: function (response) {
 					if (response.done) {
-						$("tr[data-u='" + username + "'][data-p='" + problem + "'] i.set_final").removeClass('fa-check-circle-o color11').addClass('fa-circle-o');
-						$("tr[data-u='" + username + "'][data-p='" + problem + "'][data-s='" + submit_id + "'] i.set_final").removeClass('fa-circle-o').addClass('fa-check-circle-o color11');
+						$("tr[data-u='" + username + "'][data-p='" + problem + "'] i.set_final").removeClass('fa-check-circle color11').addClass('fa-circle');
+						$("tr[data-u='" + username + "'][data-p='" + problem + "'][data-s='" + submit_id + "'] i.set_final").removeClass('fa-circle').addClass('fa-check-circle color11');
 					}
 					else
 						shj.loading_failed(response.message);

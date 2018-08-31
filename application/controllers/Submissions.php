@@ -170,30 +170,33 @@ class Submissions extends CI_Controller
 	{
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
-
-		// Students cannot change their final submission after finish_time + extra_time
-		if ($this->user->level === 0)
-			if ( shj_now() > strtotime($this->user->selected_assignment['finish_time'])+$this->user->selected_assignment['extra_time'])
-			{
-				$json_result = array(
-					'done' => 0,
-					'message' => 'This assignment is finished. You cannot change your final submissions.'
-				);
-				$this->output->set_header('Content-Type: application/json; charset=utf-8');
-				echo json_encode($json_result);
-				return;
-			}
-
+			
 		$this->form_validation->set_rules('submit_id', 'Submit ID', 'integer|greater_than[0]');
 		$this->form_validation->set_rules('problem', 'problem', 'integer|greater_than[0]');
+		$this->form_validation->set_rules('assignment', 'problem', 'integer|required');
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|max_length[20]|alpha_numeric');
-
+			
 		if ($this->form_validation->run())
 		{
+			// Students can only change the final submission in assignment they can still submit.
+			if ($this->user->level === 0){
+				$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
+	
+				if ( $this->assignment_info->can_submit($assignment))
+				{
+					$json_result = array(
+						'done' => 0,
+						'message' => 'This assignment is finished. You cannot change your final submissions.'
+					);
+					$this->output->set_header('Content-Type: application/json; charset=utf-8');
+					echo json_encode($json_result);
+					return;
+				}
+			}
 			$username = $this->input->post('username');
 			if ($this->user->level === 0)
-				$username = $this->user->username;
-
+			$username = $this->user->username;
+			
 			$res = $this->submit_model->set_final_submission(
 				$username,
 				$this->user->selected_assignment['id'],

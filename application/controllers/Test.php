@@ -49,7 +49,7 @@ class Test extends CI_Controller
 	public function adhoc(){
 		$this->load->model('language_model');
 		echo('export SHJ_BASE_URL='.escapeshellarg(base_url()).'; ');
-		// var_dump($this->assignment_model->all_problems(7));
+		var_dump($this->assignment_model->all_problems(7));
 		var_dump($this->problem_model->all_languages(68));
 		var_dump($this->db->last_query());
 	}

@@ -130,19 +130,19 @@ class Submit_model extends CI_Model {
 
 	public function set_final_submission($username, $assignment, $problem_id, $submit_id)
 	{
-		if ($username != $this->user->username && $this->user->role < 1){
+		if ($username != $this->user->username && $this->user->level < 1){
 			show_error("Only instructor can change final submission of other users", 403);
 		}
 		$this->db->where(array(
 			'is_final' => 1,
 			'username' => $username,
-			'assignment' => $assignment,
+			'assignment_id' => $assignment,
 			'problem_id' => $problem_id,
 		))->update('submissions', array('is_final'=>0));
 
 		$this->db->where(array(
 			'username' => $username,
-			'assignment' => $assignment,
+			'assignment_id' => $assignment,
 			'problem_id' => $problem_id,
 			'submit_id' => $submit_id,
 		))->update('submissions', array('is_final'=>1));
