@@ -49,7 +49,7 @@
 </thead>
 {% for item in all_assignments|reverse %}
 <tr>
-	<td><i data-togle="tooltip" title="Set this assignment as your default for sidebar shortcut" class="pointer select_assignment fa {{ item.id == user.selected_assignment.id ? 'fa-check-square color6' : 'fa-square' }} fa-2x" data-id="{{ item.id }}"></i></td>
+	<td><i data-togle="tooltip" title="Set this assignment as your default for sidebar shortcut" class="pointer select_assignment far {{ item.id == user.selected_assignment.id ? 'fa-check-square color6' : 'fa-square' }} fa-2x" data-id="{{ item.id }}"></i></td>
 	<td><a href="{{ site_url('view_problem/'~item.id) }}" data-toggle="tooltip" title="Click to view problem(s)">{{ item.name }}</a></td>
 	{# <td>View problem(s)</td> #}
 	<td><a href="{{ site_url('submissions/all/assignment/'~item.id) }}" data-toggle="tooltip" title="View all submissions">

@@ -36,16 +36,16 @@
 					<span class="nav-link-text">Notifications</span>
 				</a>
 			</li>
+			<li class="nav-item color-problem_list{{ selected=='Problems' ? ' selected' }}">
+				<a class="nav-link" href="{{ site_url('problems') }}">
+					<i class="fa fa-fw fa-puzzle-piece fa-lg"></i>
+					<span class="nav-link-text">Problem List</span>
+				</a>
+			</li>
 			<li class="nav-item color-assignments{{ selected=='assignments' ? ' selected' }}">
 				<a class="nav-link" href="{{ site_url('assignments') }}">
 					<i class="fa fa-fw fa-folder-open fa-lg"></i>
 					<span class="nav-link-text">Assignments</span>
-				</a>
-			</li>
-			<li class="nav-item color-final_submissions{{ selected=='Problems' ? ' selected' }}">
-				<a class="nav-link" href="{{ site_url('problems') }}">
-					<i class="fa fa-fw fa-puzzle-piece fa-lg"></i>
-					<span class="nav-link-text">Problem List</span>
 				</a>
 			</li>
 			<li class="nav-item color-problems{{ selected=='view_problem' ? ' selected' }}">
@@ -60,12 +60,6 @@
 					<span class="nav-link-text">Code Editor</span>
 				</a>
 			</li>
-			{# <li class="nav-item color-final_submissions{{ selected=='final_submissions' ? ' selected' }}">
-				<a class="nav-link" href="{{ site_url('submissions/final') }}">
-					<i class="fa fa-fw fa-map-marker fa-lg"></i>
-					<span class="nav-link-text">Final Submissions</span>
-				</a>
-			</li> #}
 			<li class="nav-item color-all_submissions{{ selected=='all_submissions' ? ' selected' }}">
 				<a class="nav-link" href="{{ site_url('submissions/') }}">
 					<i class="fa fa-fw fa-bars fa-lg"></i>

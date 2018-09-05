@@ -159,7 +159,7 @@ Submissions of <kbd> {{ assignment.name }}</kbd></p>
 		<tr data-u="{{submission.username}}" data-a="{{ submission.assignment_id }}" data-p="{{ submission.problem_id }}" data-s="{{submission.submit_id}}" {% if view == 'final' and j is even %}class="table-active"{% endif %}>
 		{% if view == 'all' %}
 			<td>
-				<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle color11' : 'fa-circle' }} fa-2x"></i>
+				<i class="pointer set_final far {{ submission.is_final ? 'fa-check-circle color11' : 'fa-circle' }} fa-2x"></i>
 			</td>
 		{% endif %}
 		{% if user.level > 0 %}
