@@ -108,14 +108,13 @@ input.sharif_input:focus {
 	box-shadow: rgba(82, 168, 236, 0.6) 0 0 3px;
 }
 
-.shj_error {
+.text-danger {
 	color: red;
-	font-size: 12px;
+	
 }
 
-.shj_ok {
+.text-success {
 	color: green;
-	font-size: 12px;
 }
 
 input#sharif_submit {

@@ -31,6 +31,10 @@ class Migration_Multilang_schema extends CI_Migration {
         $new_id = $this->db->count_all('problems') + 1;
 
         $assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
+        if ($assignments_root == NULL) {
+            //We have no assignments folder, this could mean this is a freshly installed judge
+            return ;
+        }
         $problems_dir = $assignments_root . "/problems/";
         if ( ! file_exists($problems_dir) ){
             var_dump("creating directory $problems_dir as problem directory");
