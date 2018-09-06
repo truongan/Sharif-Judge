@@ -46,6 +46,14 @@ class Test extends CI_Controller
 			'admin'
 		);
 	}
+	public function add_user($name, $email, $password, $role){
+		$this->user_model->add_user(
+			$name,
+			$email,
+			$password,
+			$role
+		);
+	}
 	public function adhoc(){
 		$this->load->model('language_model');
 		echo('export SHJ_BASE_URL='.escapeshellarg(base_url()).'; ');
