@@ -118,7 +118,7 @@ class Problems extends CI_Controller
 			
 			// Create assignment directory
 			if ( ! file_exists($problem_dir) )
-				mkdir($problem_dir, 0700);
+				mkdir($problem_dir, 0700, TRUE);
 			
 			$this->_take_test_file_upload($assignments_root, $problem_dir);
 			
@@ -294,7 +294,7 @@ class Problems extends CI_Controller
 		if (file_exists($path))
 			$this->zip->add_data("desc.html", file_get_contents($path));
 
-		$this->zip->download("assignment{$assignment_id}_tests_desc_".date('Y-m-d_H-i', shj_now()).'.zip');
+		$this->zip->download("problem{$problem_id}_tests_and_desccription_".date('Y-m-d_H-i', shj_now()).'.zip');
 	}
 
 		/**
