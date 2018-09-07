@@ -9,7 +9,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Problems extends CI_Controller
 {
 
-	private $notif_edit;
 
 
 	// ------------------------------------------------------------------------
@@ -87,6 +86,24 @@ class Problems extends CI_Controller
 			'languages' =>  $problem['languages'],
 		);
 		$this->twig->display('pages/admin/add_problem.twig', $data);
+	}
+
+	public function edit_description($problem_id){
+		if ( ! $this->input->is_ajax_request() )
+			show_404();
+		if ( $this->user->level <=1) // permission denied
+			show_404();
+		
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('content', 'text' ,'required'); /* todo: xss clean */
+		if ($this->form_validation->run())
+		{
+			if ($this->problem_model->save_problem_description($problem_id, $this->input->post('content'))){
+				echo "success";
+				return ;
+			}
+			else show_error("Error saving", 501);
+		}
 	}
 	
 	public function add(){

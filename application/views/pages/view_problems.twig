@@ -47,7 +47,7 @@ MathJax.Hub.Config({
 $(document).ready(function(){
 
 	shj.setup_save('.save-button'
-	, '{{ site_url("problems/edit/plain/#{problem.id}") }}'
+	, '{{ site_url("problems/edit_description/#{problem.id}") }}'
 	, CKEDITOR.instances.problem_description);
 	
 	{# $('.save-button').click(function(){
