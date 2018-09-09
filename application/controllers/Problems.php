@@ -208,9 +208,9 @@ class Problems extends CI_Controller
 					'text' => "Error {$up_dir['error'][$i]} when uploading file $name",
 				);
 			}
-			if (substr($name, 5) == 'input') {
+			if (substr($name, 0, 5) == 'input') {
 				$in[$name] = $up_dir['tmp_name'][$i];
-			} else if (substr($name, 6) == 'output'){
+			} else if (substr($name, 0, 6) == 'output'){
 				$out[$name] = $up_dir['tmp_name'][$i];
 			} else {
 				$files[$name] = $up_dir['tmp_name'][$i];
@@ -223,21 +223,22 @@ class Problems extends CI_Controller
 			if (!isset($in["input$i.txt"])){
 				$this->messages[] = array('type' => 'error', 'text' => "A file name input$i.txt seem to be missing in your folder");
 			} else {
-				if (!isset($in["output$i.txt"])){
+				if (!isset($out["output$i.txt"])){
 					$this->messages[] = array('type' => 'error', 'text' => "A file name output$i.txt seem to be missing in your folder");
 				}
 			}
 		}
 
-		var_dump($in); var_dump($out); var_dump($files); var_dump($this->messages);die();
+		$this->clean_up_old_problem_dir($problem_dir);
+		//var_dump($in); var_dump($out); var_dump($files); var_dump($this->messages);die();
 		foreach($in as $name => $tmp_name ){
 			move_uploaded_file($tmp_name, "$problem_dir/in/$name");
 		}
 		foreach($out as $name => $tmp_name ){
-			move_uploaded_file($tmp_name, "$problem_dir/in/$name");
+			move_uploaded_file($tmp_name, "$problem_dir/out/$name");
 		}
 		foreach($files as $name => $tmp_name ){
-			move_uploaded_file($tmp_name, "$problem_dir/in/$name");
+			move_uploaded_file($tmp_name, "$problem_dir/$name");
 		}
 	}
 	private function clean_up_old_problem_dir($problem_dir){

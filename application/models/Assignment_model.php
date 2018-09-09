@@ -184,7 +184,7 @@ class Assignment_model extends CI_Model
 	}
 
 	public function started($assignment_info){
-		return shj_now() >= strtotime($this->user->selected_assignment['start_time']) //now should be larger than start time
+		return shj_now() >= strtotime($assignment_info['start_time']) //now should be larger than start time
 				|| $this->user->level > 0; ///instructor can view assignment before start time
 	}
 
