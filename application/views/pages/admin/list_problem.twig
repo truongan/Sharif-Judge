@@ -23,7 +23,7 @@
 <div class="col">
 {% set msgclasses = {'success': 'text-success', 'notice': 'text-info', 'error': 'text-danger'} %}
 {% for message in messages %}
-	<p class="{{ msgclasses[message.type] }}">{{ message.text }}</p>
+	<p class="{{ msgclasses[message.type] }} {{message.type}}">{{ message.text }}</p>
 {% endfor %}
 
 {% if all_problems|length == 0 %}
