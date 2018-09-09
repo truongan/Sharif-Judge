@@ -70,6 +70,7 @@ class Problems extends CI_Controller
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  array($first_language->id => $first_language),
+			'max_file_uploads' => ini_get('max_file_uploads'),
 		);
 		
 		$this->twig->display('pages/admin/add_problem.twig', $data);
@@ -84,6 +85,7 @@ class Problems extends CI_Controller
 			'edit_problem' => $problem,
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  $problem['languages'],
+			'max_file_uploads' => ini_get('max_file_uploads'),
 		);
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}
@@ -107,6 +109,7 @@ class Problems extends CI_Controller
 	}
 	
 	public function add(){
+		//var_dump(); die();
 		return $this->edit(NULL);
 	}
 	public function edit($problem_id){
@@ -124,6 +127,7 @@ class Problems extends CI_Controller
 			else 
 				$this->show_add_form();
 		} else {
+			var_dump($_FILES); die();
 			if ($problem_id!= NULL) {
 				$problem = $this->problem_model->problem_info($problem_id);
 				if($problem == NULL) show_404();

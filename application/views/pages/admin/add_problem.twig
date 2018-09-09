@@ -114,12 +114,16 @@ input[type='number']{
 			<fieldset class="form-group">
 				<div class="form-row">
 					<div class="col-sm-4">
-						<label for="form_tests_desc">Tests and Descriptions (zip file)</label>
+						<label for="form_tests_desc">Tests and Descriptions (zip file)
+							<br/>
+<small>You can upload an entire directory of {{ max_file_uploads }}  file(s).
+								If your test directory have more files you will have to zip that folder. </small>
+						</label>
 					</div>
 					<div class="col-sm-8">
 						<div class="custom-file">
-							<input id="form_tests_desc" type="file" name="tests_desc" class="custom-file-input" />
-							<label class="custom-file-label text-muted"><small>Test and description zip file</small></label>
+							<input id="form_tests_desc" type="file" webkitdirectory directory multiple name="tests_desc[]" class="custom-file-input" />
+							<label class="custom-file-label text-muted"><small>Test case and description zip file</small></label>
 						</div>
 					</div>
 				</div>

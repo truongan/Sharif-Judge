@@ -117,11 +117,6 @@ class Migration_Old_schema extends CI_Migration {
         $this->dbforge->add_field($fields);
         if ( ! $this->dbforge->create_table('queue', TRUE))
             show_error("Error creating database table ".$this->db->dbprefix('queue'));
-        //Add UNIQUE (submit_id, username, assignment, problem) constraint
-        $this->db->query(
-            "ALTER TABLE {$this->db->dbprefix('queue')}
-            ADD CONSTRAINT {$this->db->dbprefix('suap_unique')} UNIQUE (submit_id, username, assignment, problem);"
-        );
 
         // create table 'scoreboard'
         $fields = array(
@@ -132,12 +127,7 @@ class Migration_Old_schema extends CI_Migration {
         $this->dbforge->add_key('assignment');
         if ( ! $this->dbforge->create_table('scoreboard', TRUE))
             show_error("Error creating database table ".$this->db->dbprefix('scoreboard'));
-        //Add UNIQUE ( assignment) constraint
-        $this->db->query(
-            "ALTER TABLE {$this->db->dbprefix('scoreboard')}
-            ADD CONSTRAINT {$this->db->dbprefix('suap_unique')} UNIQUE (assignment);"
-        );
-
+ 
         // create table 'settings'
         $fields = array(
             'shj_key'        => array('type' => 'VARCHAR', 'constraint' => 50),

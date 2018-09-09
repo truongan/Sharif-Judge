@@ -103,7 +103,7 @@ else
 	then
 	  	rm index.html index.php .htacess
 	  	rm -rf ./assets
-		ln -s $install/index.php $install/assets $install/.htaccess .
+		ln -s $install/index.php $install/assets $install/.htaccess $install/.user.ini .
 	else
 		echo "Abort"
 		exit 0
