@@ -270,14 +270,7 @@ class Problems extends CI_Controller
 
 		if ( $extract_result )
 		{
-			// Remove previous test cases and descriptions
-			$remove = 
-			" rm -rf $problem_dir/in $problem_dir/out $problem_dir/tester*"
-				."  $problem_dir/template.* "
-				."  $problem_dir/desc.*  $problem_dir/*.pdf; done";
-			//echo "cp -R $tmp_dir/* $problem_dir;";			
-			//echo $remove; die();			
-			shell_exec($remove); 
+			$this->clean_up_old_problem_dir($problem_dir);
 
 			if (glob("$tmp_dir/*.pdf"))
 				shell_exec("cd $problem_dir; rm -f *.pdf");

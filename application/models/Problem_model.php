@@ -33,8 +33,12 @@ class Problem_model extends CI_Model
 		{
 			$problems[$item['id']] = $item;
 		}
-
+		
 		return $problems;
+	}
+	public function all_problems_detailed(){
+		$problems = $this->all_problems();
+		
 	}
 
 	public function problem_info($id = NULL){

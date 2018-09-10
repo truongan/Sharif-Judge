@@ -208,7 +208,6 @@ class Assignment_model extends CI_Model
 		return $assignments;
 	}
 
-
 	// ------------------------------------------------------------------------
 	/**
 	 * New Assignment ID
