@@ -35,7 +35,7 @@
 <tr>
 	<th>ID</th>
 	<th>Name</th>
-	<th>upload only</th>
+	<th>Note</th>
 	<th>diff command</th>
 	<th>diff argument</th>
 	<th>Tools</th>
@@ -46,7 +46,7 @@
 	
 	<td>{{ item.id}}</td>
 	<td><a href="{{ site_url("problems/show/#{item.id}") }}">{{ item.name }}</a></td>
-	<td><i class="fa {{ item.is_upload_only == 1 ? 'fa-check-square-o color6' : 'fa-square-o' }} fa-2x" data-id="{{ item.id }}"></i></td>
+	<td>{{item.admin_note}}</td>
 	
 	<td>{{ item.diff_cmd }}</td>
 	<td>{{ item.diff_arg }}</td>

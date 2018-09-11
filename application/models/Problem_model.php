@@ -37,8 +37,30 @@ class Problem_model extends CI_Model
 		return $problems;
 	}
 	public function all_problems_detailed(){
-		$problems = $this->all_problems();
+		$problem_language = $this->db->dbprefix('problem_language');
+		$problem_assignment = $this->db->dbprefix('problem_assignment');
+		$problems = array();
+		$a =  $this->db
+				->select("id, name, diff_cmd, diff_arg, admin_note, count($problem_language.language_id) as no_of_lang, count($problem_assignment.assignment_id) as no_of_ass")
+				->from('problems')
+				->join('problem_language', 'problems.id = problem_language.problem_id', 'left')
+				->join('problem_assignment', 'problems.id = problem_assignment.problem_id', 'left')
+				->group_by('id')
+				->order_by('id', 'DESC')
+				->get()
+				->result_array()
+				;
 		
+		
+		//var_dump($a); die();
+		// foreach ($a as $item)
+		// {
+		// 	$problems[$item['id']] = $item;
+		// }	
+	
+		// return $problems;
+		return $a;
+	
 	}
 
 	public function problem_info($id = NULL){

@@ -42,7 +42,7 @@ class Problems extends CI_Controller
 	public function index()
 	{
 		$data = array(
-			'all_problems' => $this->problem_model->all_problems(),
+			'all_problems' => $this->problem_model->all_problems_detailed(),
 			'messages' => $this->messages,
 		);
 
