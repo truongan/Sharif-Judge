@@ -34,8 +34,9 @@
 <thead class="thead-dark">
 <tr>
 	<th>ID</th>
-	<th>Name</th>
+	<th style="width: 30%">Name</th>
 	<th>Note</th>
+	<th style="width: 30%">Info</th>
 	<th>diff command</th>
 	<th>diff argument</th>
 	<th>Tools</th>
@@ -47,7 +48,7 @@
 	<td>{{ item.id}}</td>
 	<td><a href="{{ site_url("problems/show/#{item.id}") }}">{{ item.name }}</a></td>
 	<td>{{item.admin_note}}</td>
-	
+	<td>{{item.no_of_lang}} language(s)</br>{{item.no_of_ass}} assignment(s) </br>{{item.no_of_sub}} submission(s)</td>
 	<td>{{ item.diff_cmd }}</td>
 	<td>{{ item.diff_arg }}</td>
 	

@@ -114,8 +114,8 @@ class Assignment_model extends CI_Model
 
 		// Phase 1: Delete this assignment and its submissions from database
 		$this->db->delete('assignments', array('id'=>$assignment_id));
-		$this->db->delete('problems', array('assignment'=>$assignment_id));
-		$this->db->delete('submissions', array('assignment'=>$assignment_id));
+		$this->db->delete('problem_assignment', array('assignment_id'=>$assignment_id));
+		$this->db->delete('submissions', array('assignment_id'=>$assignment_id));
 
 		$this->db->trans_complete();
 
