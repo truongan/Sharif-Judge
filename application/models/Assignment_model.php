@@ -114,8 +114,8 @@ class Assignment_model extends CI_Model
 
 		// Phase 1: Delete this assignment and its submissions from database
 		$this->db->delete('assignments', array('id'=>$assignment_id));
-		$this->db->delete('problems', array('assignment'=>$assignment_id));
-		$this->db->delete('submissions', array('assignment'=>$assignment_id));
+		$this->db->delete('problem_assignment', array('assignment_id'=>$assignment_id));
+		$this->db->delete('submissions', array('assignment_id'=>$assignment_id));
 
 		$this->db->trans_complete();
 
@@ -184,7 +184,7 @@ class Assignment_model extends CI_Model
 	}
 
 	public function started($assignment_info){
-		return shj_now() >= strtotime($this->user->selected_assignment['start_time']) //now should be larger than start time
+		return shj_now() >= strtotime($assignment_info['start_time']) //now should be larger than start time
 				|| $this->user->level > 0; ///instructor can view assignment before start time
 	}
 
@@ -207,7 +207,6 @@ class Assignment_model extends CI_Model
 		}
 		return $assignments;
 	}
-
 
 	// ------------------------------------------------------------------------
 	/**

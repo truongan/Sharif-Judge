@@ -9,15 +9,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Problems extends CI_Controller
 {
 
-	private $notif_edit;
 
 
 	// ------------------------------------------------------------------------
 
+	private $messages;
 
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->messages = array();
+
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 		$this->load->model('language_model');
@@ -39,7 +42,8 @@ class Problems extends CI_Controller
 	public function index()
 	{
 		$data = array(
-			'all_problems' => $this->problem_model->all_problems(),
+			'all_problems' => $this->problem_model->all_problems_detailed(),
+			'messages' => $this->messages,
 		);
 
 		$this->twig->display('pages/admin/list_problem.twig', $data);
@@ -71,6 +75,7 @@ class Problems extends CI_Controller
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  array($first_language->id => $first_language),
+			'max_file_uploads' => ini_get('max_file_uploads'),
 		);
 		
 		$this->twig->display('pages/admin/add_problem.twig', $data);
@@ -85,8 +90,27 @@ class Problems extends CI_Controller
 			'edit_problem' => $problem,
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  $problem['languages'],
+			'max_file_uploads' => ini_get('max_file_uploads'),
 		);
 		$this->twig->display('pages/admin/add_problem.twig', $data);
+	}
+
+	public function edit_description($problem_id){
+		if ( ! $this->input->is_ajax_request() )
+			show_404();
+		if ( $this->user->level <=1) // permission denied
+			show_404();
+		
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('content', 'text' ,'required'); /* todo: xss clean */
+		if ($this->form_validation->run())
+		{
+			if ($this->problem_model->save_problem_description($problem_id, $this->input->post('content'))){
+				echo "success";
+				return ;
+			}
+			else show_error("Error saving", 501);
+		}
 	}
 	
 	public function add(){
@@ -107,6 +131,7 @@ class Problems extends CI_Controller
 			else 
 				$this->show_add_form();
 		} else {
+			//var_dump($_FILES); die();
 			if ($problem_id!= NULL) {
 				$problem = $this->problem_model->problem_info($problem_id);
 				if($problem == NULL) show_404();
@@ -118,46 +143,117 @@ class Problems extends CI_Controller
 			
 			// Create assignment directory
 			if ( ! file_exists($problem_dir) )
-				mkdir($problem_dir, 0700);
+				mkdir($problem_dir, 0700, TRUE);
 			
 			$this->_take_test_file_upload($assignments_root, $problem_dir);
 			
-			redirect('problems');
+			$this->index();
 		}
 	}
 
 
 	private function _take_test_file_upload($assignments_root, $problem_dir){
 		$this->load->library('upload');
-		
-		// Upload Tests (zip file)
-		shell_exec('rm -f '.$assignments_root.'/*.zip');
-		$config = array(
-			'upload_path' => $assignments_root,
-			'allowed_types' => 'zip',
-		);
-		$this->upload->initialize($config);
-		$zip_uploaded = $this->upload->do_upload('tests_desc');
-		$u_data = $this->upload->data();
-		if ( $_FILES['tests_desc']['error'] === UPLOAD_ERR_NO_FILE )
+		$up_dir = $_FILES['tests_dir'];
+		$up_zip = $_FILES['tests_zip'];
+
+		//var_dump($_FILES); die();
+		if ( $up_dir['error'][0] === UPLOAD_ERR_NO_FILE 
+			&& $up_zip['error'] === UPLOAD_ERR_NO_FILE 
+		){
 			$this->messages[] = array(
 				'type' => 'notice',
-				'text' => "Notice: You did not upload any zip file for tests. If needed, upload by editing assignment."
+				'text' => "Notice: You did not upload test case and description. If needed, upload by editing assignment."
 			);
-		elseif ( ! $zip_uploaded )
-			$this->messages[] = array(
-				'type' => 'error',
-				'text' => "Error: Error uploading tests zip file: ".$this->upload->display_errors('', '')
-			);
-		else
-			$this->messages[] = array(
-				'type' => 'success',
-				'text' => "Tests (zip file) uploaded successfully."
-			);
+			return;
+		}
 
-		if ($zip_uploaded) $this->unload_zip_test_file($assignments_root, $problem_dir, $u_data);
+		if ($up_dir['error'][0] === UPLOAD_ERR_NO_FILE ) {
+			// Upload Tests (zip file)
+			shell_exec('rm -f '.$assignments_root.'/*.zip');
+			$config = array(
+				'upload_path' => $assignments_root,
+				'allowed_types' => 'zip',
+			);
+			$this->upload->initialize($config);
+			$zip_uploaded = $this->upload->do_upload('tests_zip');
+			$u_data = $this->upload->data();
+			
+			if ( ! $zip_uploaded )
+				$this->messages[] = array(
+					'type' => 'error',
+					'text' => "Error: Error uploading tests zip file: ".$this->upload->display_errors('', '')
+				);
+			else
+				$this->messages[] = array(
+					'type' => 'success',
+					'text' => "Tests (zip file) uploaded successfully."
+				);
+
+			if ($zip_uploaded) $this->unload_zip_test_file($assignments_root, $problem_dir, $u_data);
+
+		} else {
+			return $this->handle_test_dir_upload($up_dir, $problem_dir);
+		}
 	}
+	private function handle_test_dir_upload($up_dir, $problem_dir){
+		$in = array();
+		$out = array();
 
+		$files = array();
+		foreach($up_dir['name'] as $i => $name){
+			if ($up_dir['error'][$i] !== UPLOAD_ERR_OK){
+				$this->messages[] = array(
+					'type' => 'error',
+					'text' => "Error {$up_dir['error'][$i]} when uploading file $name",
+				);
+			}
+			if (substr($name, 0, 5) == 'input') {
+				$in[$name] = $up_dir['tmp_name'][$i];
+			} else if (substr($name, 0, 6) == 'output'){
+				$out[$name] = $up_dir['tmp_name'][$i];
+			} else {
+				$files[$name] = $up_dir['tmp_name'][$i];
+			}
+		}
+		if (!isset($files['desc.html'])){
+			$this->messages[] = array('type' => 'error', 'text' => "Your test folder doesn't have desc.html file for problem description");
+		}
+		for($i = 1; $i < count($in); $i++){
+			if (!isset($in["input$i.txt"])){
+				$this->messages[] = array('type' => 'error', 'text' => "A file name input$i.txt seem to be missing in your folder");
+			} else {
+				if (!isset($out["output$i.txt"])){
+					$this->messages[] = array('type' => 'error', 'text' => "A file name output$i.txt seem to be missing in your folder");
+				}
+			}
+		}
+
+		$this->clean_up_old_problem_dir($problem_dir);
+		//var_dump($in); var_dump($out); var_dump($files); var_dump($this->messages);die();
+		foreach($in as $name => $tmp_name ){
+			move_uploaded_file($tmp_name, "$problem_dir/in/$name");
+		}
+		foreach($out as $name => $tmp_name ){
+			move_uploaded_file($tmp_name, "$problem_dir/out/$name");
+		}
+		foreach($files as $name => $tmp_name ){
+			move_uploaded_file($tmp_name, "$problem_dir/$name");
+		}
+	}
+	private function clean_up_old_problem_dir($problem_dir){
+		$remove = 
+		" rm -rf $problem_dir/in $problem_dir/out $problem_dir/tester*"
+			."  $problem_dir/template.* "
+			."  $problem_dir/desc.*  $problem_dir/*.pdf; done";
+		//echo "cp -R $tmp_dir/* $problem_dir;";			
+		//echo $remove; die();			
+		shell_exec($remove); 
+
+		mkdir("$problem_dir/in", 0700, TRUE);
+		mkdir("$problem_dir/out", 0700, TRUE);
+			
+	}
 	private function unload_zip_test_file($assignments_root, $problem_dir, $u_data){
 		// Create a temp directory
 		$tmp_dir_name = "shj_tmp_directory";
@@ -174,14 +270,7 @@ class Problems extends CI_Controller
 
 		if ( $extract_result )
 		{
-			// Remove previous test cases and descriptions
-			$remove = 
-			" rm -rf $problem_dir/in $problem_dir/out $problem_dir/tester*"
-				."  $problem_dir/template.* "
-				."  $problem_dir/desc.*  $problem_dir/*.pdf; done";
-			//echo "cp -R $tmp_dir/* $problem_dir;";			
-			//echo $remove; die();			
-			shell_exec($remove); 
+			$this->clean_up_old_problem_dir($problem_dir);
 
 			if (glob("$tmp_dir/*.pdf"))
 				shell_exec("cd $problem_dir; rm -f *.pdf");
@@ -294,10 +383,10 @@ class Problems extends CI_Controller
 		if (file_exists($path))
 			$this->zip->add_data("desc.html", file_get_contents($path));
 
-		$this->zip->download("assignment{$assignment_id}_tests_desc_".date('Y-m-d_H-i', shj_now()).'.zip');
+		$this->zip->download("problem{$problem_id}_tests_and_desccription_".date('Y-m-d_H-i', shj_now()).'.zip');
 	}
 
-		/**
+	/**
 	 * Download pdf file of an assignment (or problem) to browser
 	 */
 	public function pdf($problem_id)

@@ -33,8 +33,36 @@ class Problem_model extends CI_Model
 		{
 			$problems[$item['id']] = $item;
 		}
-
+		
 		return $problems;
+	}
+	public function all_problems_detailed(){
+		$problem_language = $this->db->dbprefix('problem_language');
+		$problem_assignment = $this->db->dbprefix('problem_assignment');
+		$submissions = $this->db->dbprefix('submissions');
+		$problems = array();
+		$a =  $this->db
+				->select("id, name, diff_cmd, diff_arg, admin_note, count(distinct $problem_language.language_id) as no_of_lang, count(distinct $problem_assignment.assignment_id) as no_of_ass, count(distinct $submissions.submit_id) as no_of_sub ")
+				->from('problems')
+				->join('problem_language', 'problems.id = problem_language.problem_id', 'left')
+				->join('problem_assignment', 'problems.id = problem_assignment.problem_id', 'left')
+				->join('submissions', 'problems.id = submissions.problem_id', 'left')
+				->group_by('id')
+				->order_by('id', 'DESC')
+				->get()
+				->result_array()
+				;
+		
+		echo($this->db->last_query());
+		//var_dump($a); die();
+		// foreach ($a as $item)
+		// {
+		// 	$problems[$item['id']] = $item;
+		// }	
+	
+		// return $problems;
+		return $a;
+	
 	}
 
 	public function problem_info($id = NULL){
@@ -121,6 +149,7 @@ class Problem_model extends CI_Model
 		$problem = array(
 			'id' => $id,
 			'name' => $name,
+			'admin_note' => $admin_note,
 			'diff_cmd' => $dc,
 			'diff_arg' => $da,
 		);

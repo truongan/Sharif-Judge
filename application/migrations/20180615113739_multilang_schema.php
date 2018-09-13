@@ -97,9 +97,6 @@ class Migration_Multilang_schema extends CI_Migration {
             $new_id++;
         }
 
-        $this->dbforge->add_column('submissions', array(
-                'language_id' => array('type' =>'INT', 'constraint' => 11, 'unsigned' => TRUE)
-        ));
         foreach ($this->lang as  $l) {
             $this->db->where('file_type', $l['extension'])
                     ->update('submissions', array('language_id' => $l['id']));
@@ -149,6 +146,10 @@ class Migration_Multilang_schema extends CI_Migration {
         $this->db->trans_start();
 
         $this->create_new_table();
+
+        $this->dbforge->add_column('submissions', array(
+            'language_id' => array('type' =>'INT', 'constraint' => 11, 'unsigned' => TRUE)
+        ));
         $this->migrate_old_data();
 
         /*

@@ -5,9 +5,9 @@
  #}
 {% set selected = 'Problems' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}{{ edit ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
-{% block title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
-{% block head_title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
+{% block icon %}{{ edit_problem ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
+{% block title %}{{ edit_problem ? 'Edit' : 'Add' }} Problem {% endblock %}
+{% block head_title %}{{ edit_problem ? 'Edit' : 'Add' }} Problem {% endblock %}
 
 
 
@@ -114,12 +114,16 @@ input[type='number']{
 			<fieldset class="form-group">
 				<div class="form-row">
 					<div class="col-sm-4">
-						<label for="form_tests_desc">Tests and Descriptions (zip file)</label>
+						<label for="form_tests_dir"><i class="far fa-lg fa-folder-open"></i>Tests and Descriptions (folder)
+							<br/>
+<small class="text-secondary">You can upload an entire folder of <strong> {{ max_file_uploads }} </strong> file(s).
+								If your test folder have more files you will have to upload a zip file of that folder instead. Also, this features is not web standard, some browser may not support it </small>
+						</label>
 					</div>
 					<div class="col-sm-8">
 						<div class="custom-file">
-							<input id="form_tests_desc" type="file" name="tests_desc" class="custom-file-input" />
-							<label class="custom-file-label text-muted"><small>Test and description zip file</small></label>
+							<input id="form_tests_dir" type="file" webkitdirectory  multiple name="tests_dir[]" class="custom-file-input" />
+							<label class="custom-file-label text-muted"><small>Test cases and description folder</small></label>
 						</div>
 					</div>
 				</div>
@@ -133,6 +137,21 @@ input[type='number']{
 					<label for="admin_note">Admin's note</label>
 					<textarea id="admin_note" name="admin_note" rows="8" class="form-control add_text">{{ edit ? edit_problem.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
 						{{ form_error('admin_note', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+			<fieldset class="form-group">
+				<div class="form-row">
+					<div class="col-sm-4">
+						<label for="form_tests_zip"><i class="far fa-lg fa-file-archive"></i>Tests and Descriptions (zip file) </br>
+							<small class="text-secondary">Folder upload will always take precedent, if you want to upload zip file, leave upload folder field blank. </small>
+						</label>
+					</div>
+					<div class="col-sm-8">
+						<div class="custom-file">
+							<input id="form_tests_zip" type="file" name="tests_zip" class="custom-file-input" />
+							<label class="custom-file-label text-muted"><small>Test case and description zip file</small></label>
+						</div>
+					</div>
+				</div>
 			</fieldset>
 		</div>
 	</div>
