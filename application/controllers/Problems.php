@@ -104,6 +104,10 @@ class Problems extends CI_Controller
 
 		if ($problem == NULL)
 			show_404();
+		
+		if ($problem['no_of_ass'] != 0 & $problem['no_of_sub'] != 0){
+			show_error("Problem already appear in assignments and got some submission should not be delete", 403);
+		}
 
 		if ($this->input->post('delete') === 'delete')
 		{

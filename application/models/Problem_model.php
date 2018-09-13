@@ -127,6 +127,27 @@ class Problem_model extends CI_Model
 		return $result;
 	}
 
+	public function delete_problem($id){
+		$cmd = 'rm -rf '.$this->get_directory_path($id);
+		//var_dump($cmd);die();
+		$this->db->trans_start();
+
+
+		// Phase 1: Delete this assignment and its submissions from database
+		$this->db->delete('problems', array('id'=>$id));
+		$this->db->delete('problem_language', array('problem_id'=>$id));
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status())
+		{
+			// Phase 2: Delete assignment's folder (all test cases and submitted codes)
+			$cmd = 'rm -rf '.$this->get_directory_path($id);
+
+			shell_exec($cmd);
+		}
+	}
+
 	public function get_template_path($problem_id = NULL){
 		$pattern1 = rtrim($this->problem_model->get_directory_path($problem_id)
 		."/template.public.cpp");
