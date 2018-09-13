@@ -95,6 +95,30 @@ class Problems extends CI_Controller
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}
 
+	public function destroy($id = FALSE)
+	{
+		if ($this->user->level <= 1) // permission denied
+			show_404();
+
+		$problem = $this->problem_model->problem_info_detailed($id);
+
+		if ($problem == NULL)
+			show_404();
+
+		if ($this->input->post('delete') === 'delete')
+		{
+			$this->problem_model->delete_problem($id);
+			redirect('problems');
+		}
+
+		$data = array(
+			'problem' => $problem
+		);
+
+		$this->twig->display('pages/admin/delete_problem.twig', $data);
+
+	}
+
 	public function edit_description($problem_id){
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
