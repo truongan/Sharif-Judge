@@ -317,7 +317,9 @@ class Submissions extends CI_Controller
 			$all_problems = $this->assignment_model->all_problems($this->input->post('assignment'));
 
 			$submission['fullmark'] = ($submission['pre_score'] == 10000);
-			$submission['pre_score'] = ceil($submission['pre_score']*$all_problems[$submission['problem_id']]['score']/10000);
+			$submission['pre_score'] = ceil($submission['pre_score']*
+								($all_problems[$submission['problem_id']]['score']??0)
+								/10000);
 			if ($submission['coefficient'] === 'error')
 				$submission['final_score'] = 0;
 			else

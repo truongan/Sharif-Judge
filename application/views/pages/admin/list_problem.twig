@@ -13,7 +13,12 @@
 
 {% block title_menu %}
 {% if user.level >= 2 %}
-<span class="title_menu_item"><a href="{{ site_url('problems/add') }}"><i class="fas fa-plus fa-lg color8"></i> Add</a></span>
+<span class="title_menu_item">
+	<a href="{{ site_url('problems/add') }}"><i class="fas fa-plus fa-lg color8"></i> Add</a>
+</span>
+<span class="title_menu_item">
+		<a href="{{ site_url('submissions/all/assignments/0') }}"><i class="fas fa-list-ul fa-lg color8"></i>Review test submissions for problems</a>
+</span>
 {% endif %}
 {% endblock %}
 
