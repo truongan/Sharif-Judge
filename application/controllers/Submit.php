@@ -110,7 +110,7 @@ class Submit extends CI_Controller
 
 		if ($this->form_validation->run())
 		{
-			if ($this->_upload())
+			if ($this->upload())
 				redirect('submissions/all/assignment/' . $this->input->post('assignment'));
 			else
 				show_error('Error Uploading File: '.$this->upload->display_errors());
@@ -142,8 +142,13 @@ class Submit extends CI_Controller
 			show_error('Only admin can submit without assignment', 403);
 		} 
 		
-		if($assignment['id'] == 0)
+		if($assignment['id'] == 0){
 			$this->data['problems'] = array($this->problem_model->problem_info($problem_id));
+
+			if ($this->data['problems'][0] == 0){
+				$this->data['error'] = "There is nothing to submit to. Please select assignment and problem";
+			}
+		}
 		else 
 		{
 			$this->data['problems'] = $this->assignment_model->all_problems($assignment_id);
@@ -192,7 +197,7 @@ class Submit extends CI_Controller
 	/**
 	 * Saves submitted code and adds it to queue for judging
 	 */
-	private function upload_post_code($assignment, $problem, $code, $user_dir, $submit_info){
+	private function _upload_post_code($assignment, $problem, $code, $user_dir, $submit_info){
 		if (strlen($code) > $this->settings_model->get_setting('file_size_limit') * 1024 ){
 			//string length larger tan file size limit
 			show_error("Your submission is larger than system limited size");
@@ -238,13 +243,17 @@ class Submit extends CI_Controller
 		return FALSE;
 	}
 	private function _add_to_queue($submit_info, $assignment, $file_name){
-		$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
+		if ($assignment['id'] != 0){
+			$submit_info['submit_id'] = $this->assignment_model->increase_total_submits($assignment['id']);
+		} else {
+			$submit_info['submit_id'] = $assignment['total_submits']+1;
+		}
 		$submit_info['file_name'] = $file_name;
 
 		$this->queue_model->add_to_queue($submit_info);
 		process_the_queue();
 	}
-	private function _upload(){
+	private function upload(){
 		
 		$problem = $this->problem_model->problem_info($this->input->post('problem'));
 		$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
@@ -256,22 +265,23 @@ class Submit extends CI_Controller
 				show_error("Only admin can submit without assignment", 403);
 			else {
 				/// TODO: Admin submit test solution without creating assignment
+				$this->coefficient = 100;
+			}
+		} else {
+			$this->eval_coefficient($assignment);
+
+			$a = $this->assignment_model->can_submit($assignment);
+			if(! $a['can_submit'] ) show_error($a['error_message'], 403);
+
+			if ( $this->queue_model->in_queue($this->user->username,$assignment['id'], $problem['id']) )
+				show_error('You have already submitted for this problem. Your last submission is still in queue.');
+
+			
+			if ( !isset($problem['languages'][$lang_id]) ){
+				show_error('This file type is not allowed for this problem.');
 			}
 		}
 
-		$this->eval_coefficient($assignment);
-
-		$a = $this->assignment_model->can_submit($assignment);
-		if(! $a['can_submit'] ) show_error($a['error_message'], 403);
-
-		if ( $this->queue_model->in_queue($this->user->username,$assignment['id'], $problem['id']) )
-			show_error('You have already submitted for this problem. Your last submission is still in queue.');
-
-		
-		if ( !isset($problem['languages'][$lang_id]) ){
-			show_error('This file type is not allowed for this problem.');
-		}
-		
 		$user_dir = $this->submit_model->get_path($this->user->username,$assignment['id'], $problem['id']);
 
 		var_dump($user_dir);
@@ -290,7 +300,7 @@ class Submit extends CI_Controller
 
 		$a = $this->input->post('code');
 		if ($a != NULL){
-			return $this->upload_post_code($assignment, $problem, $a, $user_dir, $submit_info);
+			return $this->_upload_post_code($assignment, $problem, $a, $user_dir, $submit_info);
 		} else {
 			return $this->_upload_file_code($assignment, $problem, $user_dir, $submit_info);
 		}

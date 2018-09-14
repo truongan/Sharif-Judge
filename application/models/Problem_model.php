@@ -132,10 +132,11 @@ class Problem_model extends CI_Model
 		//var_dump($cmd);die();
 		$this->db->trans_start();
 
-
 		// Phase 1: Delete this assignment and its submissions from database
 		$this->db->delete('problems', array('id'=>$id));
 		$this->db->delete('problem_language', array('problem_id'=>$id));
+		$this->db->delete('problem_assignment', array('problem_id'=>$id));
+		$this->db->delete('submissions', array('problem_id'=>$id));
 
 		$this->db->trans_complete();
 

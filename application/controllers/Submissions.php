@@ -55,7 +55,8 @@ class Submissions extends CI_Controller
 
 		$input = $this->uri->uri_to_assoc();
 
-		$this->filter_user = $this->filter_problem = $this->assignment = NULL;
+		$this->filter_user = $this->filter_problem = NULL;
+		$this->assignment = 0;
 		$this->page_number = 1;
 		
 		if (array_key_exists('user', $input) && $input['user'])
@@ -68,9 +69,12 @@ class Submissions extends CI_Controller
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
 			
 		if (array_key_exists('assignment', $input) && $input['assignment'])
-			$this->assignment = is_numeric($input['assignment'])?$input['assignment']:NULL;
+			$this->assignment = is_numeric($input['assignment'])?$input['assignment']:0;
 		
-		if ($this->assignment == NULL && $this->user->level < 2) show_error("Only admin can view submission without assignment", 403);
+		if ($this->assignment == 0 && $this->user->level < 2) {
+			show_error("Only admin can view submission without assignment", 403);
+		}
+
 		$this->problems = $this->assignment_model->all_problems($this->assignment);
 		
 		// var_dump($this->db->last_query()); die();
@@ -124,9 +128,12 @@ class Submissions extends CI_Controller
 
 		foreach ($submissions as &$item)
 		{
+			// var_dump($this->problems); die();
 			$item['name'] = $names[$item['username']];
 			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem_id']]['score']/10000);
+			$item['pre_score'] = ceil($item['pre_score']
+				*($this->problems[$item['problem_id']]['score']?? 0)
+				/10000);
 			$item['delay'] = strtotime($item['time'])-strtotime($assignment['finish_time']);
 			$item['language'] = $this->language_model->get_language($item['language_id'])->name;
 			if ($item['coefficient'] === 'error')
@@ -241,7 +248,7 @@ class Submissions extends CI_Controller
 			show_404();
 		$this->form_validation->set_rules('type','type','callback__check_type');
 		$this->form_validation->set_rules('username','username','required|min_length[3]|max_length[20]|alpha_numeric');
-		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[0]');
+		$this->form_validation->set_rules('assignment','assignment','integer');
 		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 		$this->form_validation->set_rules('submit_id','submit_id','integer|greater_than[0]');
 

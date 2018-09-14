@@ -46,7 +46,7 @@ class Queueprocess extends CI_Controller
 		}
 
 		//To pause the queue when debugging, just exit here
-		//exit;
+		// exit;
 
 		if ($this->settings_model->get_setting('queue_is_working'))
 		 	exit;
@@ -60,14 +60,12 @@ class Queueprocess extends CI_Controller
 			$submit_id = $queue_item['submit_id'];
 			$username = $queue_item['username'];
 			$assignment = $queue_item['assignment'];
-			$assignment_info = $this->assignment_model->assignment_info($assignment);
-			$problem = $this->assignment_model->all_problems($assignment)[$queue_item['problem']];
+			$problem = $this->problem_model->problem_info($queue_item['problem']);
 
 			
 			$type = $queue_item['type'];  // $type can be 'judge' or 'rejudge'
 			
 			$submission = $this->submit_model->get_submission( $assignment, $submit_id);
-			var_dump($submission);
 
 			$language = $this->problem_model->all_languages($problem['id'])[$submission['language_id']];
 
@@ -79,7 +77,7 @@ class Queueprocess extends CI_Controller
 			
 			$problemdir = $this->problem_model->get_directory_path($problem['id']);
 			$userdir = $this->submit_model->get_path($username, $assignment, $problem['id']);
-
+			
 
 			$op1 = $this->settings_model->get_setting('enable_log');
 

@@ -153,8 +153,9 @@ class Submit_model extends CI_Model {
 
 	public function get_path($username, $assignment, $problem){
 		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-		if ($assignment == NULL){
-			return $assignment_root . "/problem_$problem/$username";
+
+		if ($assignment == 0){
+			return $assignment_root . "/problems/$problem/admin_test_submit/$username";
 		} else {
 			return $assignment_root . "/assignment_$assignment/problem_$problem/$username";
 		}

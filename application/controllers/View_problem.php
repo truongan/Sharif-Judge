@@ -46,7 +46,8 @@ class View_problem extends CI_Controller
 
 			if($assignment['id'] == 0){
 				//show_error('Can not find your assignment', 404);				die();
-				$data['error'] = "There is no assignment as of yet, please be paitent.";
+				if ($this->user->level > 1 && $problem_id != 0) redirect('problems/show/'.$problem_id);
+				$data['error'] = "There is no assignment as of yet, please be patience.";
 				break;
 			}
 

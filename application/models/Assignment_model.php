@@ -249,7 +249,7 @@ class Assignment_model extends CI_Model
 					->get()
 					->result_array()
 		;
-		//var_dump($this->db->last_query()); die();	
+		// var_dump($this->db->last_query()); die();	
 		$problems = array();
 		foreach ($result as $row)
 			$problems[$row['id']] = $row;
@@ -275,11 +275,12 @@ class Assignment_model extends CI_Model
 		$query = $this->db->get_where('assignments', array('id'=>$assignment_id));
 		if ($query->num_rows() != 1)
 			return array(
-				'id' => NULL,
+				'id' => 0,
 				'name' => "instructors'submit",
 				'finish_time' => 0,
 				'extra_time' => 0,
 				'problems' => 0,
+				'total_submits' => $this->db->count_all_results('submissions'),
 			);
 
 		return $query->row_array();
@@ -304,7 +305,7 @@ class Assignment_model extends CI_Model
 	public function increase_total_submits($assignment_id)
 	{
 		// Get total submits
-		$total = $this->db->select('total_submits')->get_where('assignments', array('id'=>$assignment_id))->row()->total_submits;
+		$total = $this->db->select('total_submits')->get_whincreaseere('assignments', array('id'=>$assignment_id))->row()->total_submits;
 		// Save total+1 in DB
 		$this->db->where('id', $assignment_id)->update('assignments', array('total_submits'=>($total+1)));
 
