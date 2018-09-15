@@ -30,7 +30,7 @@
 	{# {% include 'templates/side_bar.twig' %} #}
 	<div class="row">
 		<div id="page_title" class="jumbotron jumbontron-fluid py-3 mb-0 col-12 align-items-center d-flex">
-			<i class="fa {% block icon %}{% endblock %} fa-fw fa-lg"></i>
+			<i class="{% block icon %}{% endblock %} fa-fw fa-lg"></i>
 			<span>{% block title %}{% endblock %}</span>
 			{% block title_menu %}{% endblock %}
 		</div>

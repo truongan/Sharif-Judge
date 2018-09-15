@@ -5,7 +5,7 @@
  #}
 {% set selected = 'assignments' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}{{ edit ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
+{% block icon %}fas {{ edit ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
 {% block title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
 {% block head_title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
 

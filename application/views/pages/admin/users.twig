@@ -5,7 +5,7 @@
  #}
 {% set selected = 'users' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}fa-users{% endblock %}
+{% block icon %}fas fa-users{% endblock %}
 {% block title %}Users{% endblock %}
 {% block head_title %}Users{% endblock %}
 
@@ -13,7 +13,7 @@
 
 {% block title_menu %}
 	<span class="title_menu_item"><a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/users.md" target="_blank"><i class="fa fa-question-circle color6"></i> Help</a></span>
-	<span class="title_menu_item"><a href="{{ site_url('users/add') }}"><i class="fa fa-plus color11"></i> Add Users</a></span>
+	<span class="title_menu_item"><a href="{{ site_url('users/add') }}"><i class="fa fa-user-plus color11"></i> Add Users</a></span>
 	<span class="title_menu_item"><a href="{{ site_url('users/list_excel') }}"><i class="fa fa-download color9"></i> Excel</a></span>
 {% endblock %}
 
@@ -53,9 +53,9 @@
 			<td>{{ user.first_login_time ? user.first_login_time : 'Never' }}</td>
 			<td>{{ user.last_login_time ? user.last_login_time : 'Never' }}</td>
 			<td>
-				<a title="Edit" href="{{ site_url('profile/'~user.id) }}"><i class="fa fa-pencil fa-lg color9"></i></a>
-				<a title="Submissions" href="{{ site_url('submissions/all/user/'~user.username) }}"><i class="fa fa-bars fa-lg color12"></i></a>
-				<span title="Delete User" class="delete-btn delete_user pointer"><i title="Delete User" class="fa fa-times fa-lg color2"></i></span>
+				<a title="Edit" href="{{ site_url('profile/'~user.id) }}"><i class="fas fa-user-edit fa-lg color9"></i></a>
+				{# <a title="Submissions" href="{{ site_url('submissions/all/user/'~user.username) }}"><i class="fa fa-bars fa-lg color12"></i></a> #}
+				<span title="Delete User" class="delete-btn delete_user pointer"><i title="Delete User" class="fa fa-user-times fa-lg color2"></i></span>
 				<span title="Delete Submissions" class="delete-btn delete_submissions pointer"><i class="fa fa-times-circle fa-lg color1"></i></span>
 			</td>
 		</tr>

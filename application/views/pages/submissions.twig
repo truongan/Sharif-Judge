@@ -5,7 +5,7 @@
  #}
 {% set selected=view~'_submissions' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}{{ view == 'all' ? 'fa-bars' : 'fa-map-marker' }}{% endblock %}
+{% block icon %}fas {{ view == 'all' ? 'fa-bars' : 'fa-map-marker' }}{% endblock %}
 {% block title %}{{ view|title }} Submissions{% endblock %}
 {% block head_title %}{{ view|title }} Submissions{% endblock %}
 
