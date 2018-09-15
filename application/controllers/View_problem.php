@@ -69,8 +69,13 @@ class View_problem extends CI_Controller
 			$data['can_submit'] = $a['can_submit'];
 
 
-			if ($problem_id == NULL)
-				$problem_id = array_keys($data['all_problems'])[0];
+			if ($problem_id == NULL){
+				if (count($data['all_problems']) > 0) $problem_id = array_keys($data['all_problems'])[0];
+				else {
+					$data['error'] = "No problem in this assignment";
+					break;
+				}
+			}
 			else if ( ! isset($data['all_problems'][$problem_id]))
 				show_404();
 
