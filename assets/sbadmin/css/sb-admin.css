@@ -129,7 +129,7 @@ body.fixed-nav {
 
 @media (min-width: 992px) {
   #mainNav .navbar-brand {
-    width: 189px;
+    width: 159px;
   }
   #mainNav .navbar-collapse {
     overflow: visible;
@@ -145,7 +145,7 @@ body.fixed-nav {
     margin-top: 40px;
   }
   #mainNav .navbar-collapse .navbar-sidenav > .nav-item {
-    width: 189px;
+    width: 159px;
     padding: 0;
   }
   #mainNav .navbar-collapse .navbar-sidenav > .nav-item > .nav-link {
@@ -158,7 +158,7 @@ body.fixed-nav {
   }
   #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-second-level > li,
   #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-third-level > li {
-    width: 189px;
+    width: 159px;
   }
   #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-second-level > li > a,
   #mainNav .navbar-collapse .navbar-sidenav > .nav-item .sidenav-third-level > li > a {
@@ -201,7 +201,7 @@ body.fixed-nav {
     margin-top: calc(100vh - 40px);
   }
   #mainNav.fixed-top .sidenav-toggler > .nav-item {
-    width: 189px;
+    width: 159px;
     padding: 0;
   }
   #mainNav.fixed-top .sidenav-toggler > .nav-item > .nav-link {
@@ -269,7 +269,7 @@ body.sidenav-toggled #mainNav.static-top #sidenavToggler i {
 
 @media (min-width: 992px) {
   .content-wrapper {
-    margin-left: 189px;
+    margin-left: 159px;
   }
 }
 
@@ -450,7 +450,7 @@ footer.sticky-footer {
 
 @media (min-width: 992px) {
   footer.sticky-footer {
-    width: calc(100% - 189px);
+    width: calc(100% - 159px);
   }
 }
 
