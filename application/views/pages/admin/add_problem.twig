@@ -5,7 +5,7 @@
  #}
 {% set selected = 'Problems' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}{{ edit_problem ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
+{% block icon %}fas {{ edit_problem ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
 {% block title %}{{ edit_problem ? 'Edit' : 'Add' }} Problem {% endblock %}
 {% block head_title %}{{ edit_problem ? 'Edit' : 'Add' }} Problem {% endblock %}
 
