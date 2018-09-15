@@ -179,7 +179,7 @@ Submissions of <kbd> {{ assignment.name }}</kbd></p>
 					<small>{{submission.username}}</small>
 			</a>
 				</td>
-			<td>{{ submission.name }}</td>
+			<td>{{ submission.problem_name }}</td>
 		{% endif %}
 			<td><a href="{{ site_url('submissions/'~view
 							~'/assignment/'~(assignment.id?assignment.id : '0')

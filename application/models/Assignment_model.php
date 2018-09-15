@@ -305,7 +305,7 @@ class Assignment_model extends CI_Model
 	public function increase_total_submits($assignment_id)
 	{
 		// Get total submits
-		$total = $this->db->select('total_submits')->get_whincreaseere('assignments', array('id'=>$assignment_id))->row()->total_submits;
+		$total = $this->db->select('total_submits')->get_where('assignments', array('id'=>$assignment_id))->row()->total_submits;
 		// Save total+1 in DB
 		$this->db->where('id', $assignment_id)->update('assignments', array('total_submits'=>($total+1)));
 

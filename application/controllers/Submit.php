@@ -284,7 +284,7 @@ class Submit extends CI_Controller
 
 		$user_dir = $this->submit_model->get_path($this->user->username,$assignment['id'], $problem['id']);
 
-		var_dump($user_dir);
+		//var_dump($user_dir);
 		if ( ! file_exists($user_dir))
 			mkdir($user_dir, 0700, TRUE);
 

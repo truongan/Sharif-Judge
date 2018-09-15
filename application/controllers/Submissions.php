@@ -130,6 +130,7 @@ class Submissions extends CI_Controller
 		{
 			// var_dump($this->problems); die();
 			$item['name'] = $names[$item['username']];
+			$item['problem_name'] = ($this->problems[$item['problem_id']]['problem_name']??'');
 			$item['fullmark'] = ($item['pre_score'] == 10000);
 			$item['pre_score'] = ceil($item['pre_score']
 				*($this->problems[$item['problem_id']]['score']?? 0)
