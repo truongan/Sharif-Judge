@@ -24,7 +24,7 @@
 	<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
 {% endif %}
 {% if problem.has_template %}
-	<span class="title_menu_item"><a href="{{ site_url("problems/template/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
+	<span class="title_menu_item"><a href="{{ site_url("view_problem/template/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
 {% endif %}
 
 {% if user.level >= 2 %}
