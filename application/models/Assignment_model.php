@@ -255,7 +255,11 @@ class Assignment_model extends CI_Model
 			$problems[$row['id']] = $row;
 		return $problems;
 	}
-
+	public function count_no_problems($assignment_id){
+		return $result = $this->db->from('problem_assignment')
+		->where('problem_assignment.assignment_id', $assignment_id)
+		->count_all_results();
+	}
 
 
 	// ------------------------------------------------------------------------

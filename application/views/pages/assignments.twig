@@ -34,23 +34,23 @@
 <thead class="thead-dark">
 <tr>
 	<th>Select</th>
-	<th>Name</th>
+	<th>Name<br/> </th>
 	{# <th>Problems</th> #}
 	<th>Submissions</th>
 	<th>Coefficient</th>
 	<th>Start Time</th>
 	<th>Finish Time</th>
-	<th>Status</th>
 	<th>PDF</th>
 	{% if user.level > 0 %}
+	<th>Status</th>
 	<th>Actions</th>
 	{% endif %}
 </tr>
 </thead>
-{% for item in all_assignments|reverse %}
+{% for item in all_assignments|reverse if (item.open or user.level > 0) %}
 <tr>
 	<td><i data-togle="tooltip" title="Set this assignment as your default for sidebar shortcut" class="pointer select_assignment far {{ item.id == user.selected_assignment.id ? 'fa-check-square color6' : 'fa-square' }} fa-2x" data-id="{{ item.id }}"></i></td>
-	<td><a href="{{ site_url('view_problem/'~item.id) }}" data-toggle="tooltip" title="Click to view problem(s)"><large>{{ item.name }}</large></a></td>
+	<td><a href="{{ site_url('view_problem/'~item.id) }}" data-toggle="tooltip" title="Click to view problem(s)"><strong>{{ item.name }}</strong><br/>({{ item.no_of_problems }} problems)</a></td>
 	{# <td>View problem(s)</td> #}
 	<td><a href="{{ site_url('submissions/all/assignment/'~item.id) }}" data-toggle="tooltip" title="View all submissions">
 		<small>{{ item.total_submits }} submission{{ item.total_submits > 1 ? 's' }}</small>
@@ -66,16 +66,16 @@
 	<td>{{ item.start_time }}</td>
 	<td>{{ item.finish_time }}</td>
 	<td>
+		<a href="{{ site_url('assignments/pdf/'~item.id) }}"><i class="far fa-lg fa-file-pdf"></i></a>
+	</td>
+	{% if user.level > 0 %}
+	<td>
 		{% if item.open %}
 			<span style="color: green;">Open</span>
 		{% else %}
 			<span style="color: red;">Close</span>
 		{% endif %}
 	</td>
-	<td>
-		<a href="{{ site_url('assignments/pdf/'~item.id) }}"><img src="{{ base_url('assets/images/pdf.svg') }}" /></a>
-	</td>
-	{% if user.level > 0 %}
 	<td>
 		{% if user.level >= 2 %}
 			<a href="{{ site_url('assignments/downloadtestsdesc/'~item.id) }}"><i title="Download Tests and Descriptions" class="fa fa-cloud-download fa-lg color11"></i></a>

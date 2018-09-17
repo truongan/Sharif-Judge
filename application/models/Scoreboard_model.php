@@ -50,7 +50,7 @@ class Scoreboard_model extends CI_Model
 				->where('assignment_id', $assignment_id)
 				->get('submissions')
 				->result();
-		var_dump($this->db->last_query());
+		// var_dump($this->db->last_query());
 		foreach($tmp as $x){
 			$number_of_submissions[$x->username][$x->problem_id] = $x->subcount;
 		}
