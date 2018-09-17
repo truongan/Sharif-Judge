@@ -47,9 +47,10 @@ class Scoreboard_model extends CI_Model
 		*/
 		$tmp = $this->db->select('username, problem_id, count(*) as subcount')
 				->group_by(array('username', 'problem_id'))
-				->where('assignment_id', 5)
+				->where('assignment_id', $assignment_id)
 				->get('submissions')
 				->result();
+		var_dump($this->db->last_query());
 		foreach($tmp as $x){
 			$number_of_submissions[$x->username][$x->problem_id] = $x->subcount;
 		}
