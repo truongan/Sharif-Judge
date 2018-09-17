@@ -71,7 +71,7 @@ class Submissions extends CI_Controller
 		if (array_key_exists('assignment', $input) && $input['assignment'])
 			$this->assignment = is_numeric($input['assignment'])?$input['assignment']:0;
 		
-		if ($this->assignment == 0 && $this->user->level < 2) {
+		if ($this->assignment == 0 && $this->user->level < 2 && ! $this->input->is_ajax_request()) {
 			show_error("Only admin can view submission without assignment", 403);
 		}
 
@@ -255,6 +255,7 @@ class Submissions extends CI_Controller
 
 		if($this->form_validation->run())
 		{
+
 			$submission = $this->submit_model->get_submission(
 				$this->input->post('assignment'),
 				$this->input->post('submit_id')
