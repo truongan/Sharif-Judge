@@ -40,6 +40,7 @@
 	<th>Coefficient</th>
 	<th>Start Time</th>
 	<th>Finish Time</th>
+	<th>Scoreboard</th>
 	<th>PDF</th>
 	{% if user.level > 0 %}
 	<th>Status</th>
@@ -65,6 +66,10 @@
 	</td>
 	<td>{{ item.start_time }}</td>
 	<td>{{ item.finish_time }}</td>
+	<td>{% if item.scoreboard %}
+		<a href="{{ site_url('scoreboard/full/'~item.id)}}">View<i class="fas fa-external-link-alt"></i></a>
+		{% endif %}
+	</td>
 	<td>
 		<a href="{{ site_url('assignments/pdf/'~item.id) }}"><i class="far fa-lg fa-file-pdf"></i></a>
 	</td>
