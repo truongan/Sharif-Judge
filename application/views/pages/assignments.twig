@@ -67,7 +67,12 @@
 	<td>{{ item.start_time }}</td>
 	<td>{{ item.finish_time }}</td>
 	<td>{% if item.scoreboard %}
+		{% else %}
 		<a href="{{ site_url('scoreboard/full/'~item.id)}}">View<i class="fas fa-external-link-alt"></i></a>
+		{% if item.scoreboard %}
+		<a href="{{ site_url('scoreboard/full/'~item.id)}}">View<i class="fas fa-external-link-alt"></i></a>
+		
+			{% endif %}
 		{% endif %}
 	</td>
 	<td>
