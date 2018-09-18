@@ -11,11 +11,11 @@
 
 {% block title_menu %}
 <span class="title_menu_item">
-	<a href="{{ site_url('scoreboard/') }}">
+	<a href="{{ site_url('scoreboard/full/'~assignment_id) }}">
 	<i class="fas fa-star color10"></i> Full information </a>
 </span>
 <span class="title_menu_item">
-	<a href="{{ site_url('scoreboard/simplify') }}">
+	<a href="{{ site_url('scoreboard/simplify/'~assignment_id) }}">
 	<i class="fas fa-star-half-alt color10"></i> Minimal information </a>
 </span>
 {% endblock %} {# title_menu #}
