@@ -27,8 +27,9 @@ class Scoreboard extends CI_Controller
 		redirect('scoreboard/full/'.$this->user->selected_assignment['id']);
 	}
 	public function full($assignment_id){
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
 		$data = array(
-			'assignment_id' => $assignment_id,
+			'assignment' => $assignment,
 			'scoreboard' => $this->scoreboard_model->get_scoreboard($assignment_id)
 		);
 
@@ -36,7 +37,7 @@ class Scoreboard extends CI_Controller
 
 	}
 	public function simplify($assignment_id){
-		$this->load->model('scoreboard_model');
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
 
 		$a = $this->scoreboard_model->get_scoreboard($assignment_id);
 
@@ -56,7 +57,7 @@ class Scoreboard extends CI_Controller
 		$a = substr($a, 0, $i);
 
 		$data = array(
-			'assignment_id' => $assignment_id,
+			'assignment' => $assignment,
 			'scoreboard' => $a
 		);
 
