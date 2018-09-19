@@ -284,6 +284,7 @@ class Assignment_model extends CI_Model
 				'finish_time' => 0,
 				'extra_time' => 0,
 				'problems' => 0,
+				'open' => 0,
 				'total_submits' => $this->db->count_all_results('submissions'),
 			);
 

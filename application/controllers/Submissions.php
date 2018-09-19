@@ -70,10 +70,6 @@ class Submissions extends CI_Controller
 			
 		if (array_key_exists('assignment', $input) && $input['assignment'])
 			$this->assignment = is_numeric($input['assignment'])?$input['assignment']:0;
-		
-		// if ($this->assignment == 0 && $this->user->level < 2 && ! $this->input->is_ajax_request()) {
-		// 	show_error("Only admin can view submission without assignment", 403);
-		// }
 
 		$this->problems = $this->assignment_model->all_problems($this->assignment);
 		
@@ -83,7 +79,16 @@ class Submissions extends CI_Controller
 
 	}
 
-
+	private function _do_access_check($assignment_id){
+		$assignment =  $this->assignment_model->assignment_info($assignment_id);
+			
+		if ($assignment['id'] == 0 && $this->user->level < 2) {
+			show_error("Only admin can view submission without assignment", 403);
+		}
+		if ($assignment['open'] == 0  && $this->user->level < 2){
+			show_error("assignment " . $assignment['id'] . " has ben closed. Only admin can view submission", 403);
+		}
+	}
 	// ------------------------------------------------------------------------
 	public function final()
 	{
@@ -92,6 +97,10 @@ class Submissions extends CI_Controller
 
 
 	public function index(){
+		$last_submission = $this->submit_model->find_last_submission($this->user->username);
+		if ($last_submission){
+			return redirect('submissions/all/assignment' .  $last_submission->assignment->id);
+		}
 		return redirect('submissions/all/assignment/'.$this->user->selected_assignment['id']);
 	}
 
@@ -102,8 +111,9 @@ class Submissions extends CI_Controller
 		if ($this->page_number < 1)
 			show_404();
 		
+		$this->_do_access_check($this->assignment);
 		$assignment =  $this->assignment_model->assignment_info($this->assignment);
-			
+	
 			// var_dump($this->assignment_model->assignment_info($this->assignment));die();
 		
 		$this->pagination_config['base_url'] = site_url('submissions/all'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
@@ -255,6 +265,7 @@ class Submissions extends CI_Controller
 
 		if($this->form_validation->run())
 		{
+			$this->_do_access_check($this->input->post('assignment'));
 
 			$submission = $this->submit_model->get_submission(
 				$this->input->post('assignment'),
@@ -311,6 +322,8 @@ class Submissions extends CI_Controller
 
 		if($this->form_validation->run())
 		{
+			$this->_do_access_check($this->input->post('assignment'));
+			
 			$submission = $this->submit_model->get_submission(
 						$this->input->post('assignment'),
 						$this->input->post('submit_id')

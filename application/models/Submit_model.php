@@ -161,4 +161,10 @@ class Submit_model extends CI_Model {
 		}
 	}
 
+	public function find_last_submission($username){
+		return $this->db->order_by('submit_id','desc')
+			->get_where('submissions', array('username' =>  $username))
+			->row();
+	}
+
 }

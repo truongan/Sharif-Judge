@@ -67,7 +67,11 @@
 	<td>{{ item.start_time }}</td>
 	<td>{{ item.finish_time }}</td>
 	<td>{% if item.scoreboard %}
-		<a href="{{ site_url('scoreboard/full/'~item.id)}}">View<i class="fas fa-external-link-alt"></i></a>
+		<a href="{{ site_url('scoreboard/full/'~item.id)}}" data-toggle="tooltip" title="Click to viewa assignment's scoreboard">View<i class="fas fa-external-link-alt"></i></a>
+		{% else %}
+			{% if user.level > 0 %}
+			<a href="{{ site_url('scoreboard/full/'~item.id)}}"  data-toggle="tooltip" title="Scoreboard closed, admin view only" ><span class="text-secondary">View<i class="fas fa-external-link-alt "></i></span></a>
+			{% endif %}
 		{% endif %}
 	</td>
 	<td>

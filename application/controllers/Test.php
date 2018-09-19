@@ -56,10 +56,7 @@ class Test extends CI_Controller
 	}
 	public function adhoc(){
 		$this->load->model('submit_model');
-		var_dump($this->submit_model->get_path('abc', "0", 6));die();
-		$this->load->dbforge();
-		$this->dbforge->add_column('submissions', array(
-			'language_id' => array('type' =>'INT', 'constraint' => 11, 'unsigned' => TRUE)
-	));
+		var_dump($this->submit_model->find_last_submission('abc'));die();
+		
 	}
 }
