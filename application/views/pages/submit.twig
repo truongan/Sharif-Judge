@@ -30,6 +30,10 @@
 <script  type="text/javascript" src="{{ base_url('assets/js/submit_page.js')   }}" charset="utf-8"></script>
 <script>
 	shj.p={};
+	{% if assignment is defined %} 
+		shj.selected_assignment = {{assignment.id}};
+	{% endif %}
+
 	{{ problems_js|raw }}
 
 	$(document).ready(function(){
