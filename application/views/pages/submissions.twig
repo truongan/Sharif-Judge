@@ -183,14 +183,17 @@ Submissions of <kbd> {{ assignment.name }}</kbd></p>
 		{% endif %}
 			<td>
 				<a href="{{ site_url('view_problem/' ~ submission.assignment_id ~ '/'~ submission.problem_id ) }}" title="View problem {{submission.problem_id}}'s statements">
-						<span>{{ problems[submission.problem_id].problem_name }}</span>
+						<span>{{ assignment.id ?  problems[submission.problem_id].problem_name : "Problem ID: #"~submission.problem_id }}</span>
 				</a>
 				<br/>
+				<a href="{{ site_url('submit/editor/'~submission.problem_id
+							~'/'~(assignment.id?assignment.id : '0')) 
+						}}" ><span class="btn btn-warning btn-sm"><i class="fas fa-code"></i></span></a>
 				<a href="{{ site_url('submissions/'~view
 							~'/assignment/'~(assignment.id?assignment.id : '0')
 							~(filter_user?'/user/'~filter_user)
 							~'/problem/'~submission.problem_id) 
-						}}" ><span class="btn btn-primary btn-sm"><i class="fas fa-filter"></i></span></a>
+						}}" ><span class="btn btn-info btn-sm"><i class="fas fa-filter"></i></span></a>
 			</td>
 			<td><small>{{ submission.time }}</small></td>
 			<td>{{ submission.pre_score }}</td>
