@@ -112,13 +112,16 @@ $(document).ready(function () {
 	$(".set_final").click(
 		function () {
 			var row = $(this).parents('tr');
+			var submit_id = row.data('s');
+			var problem = row.data('p');
+			var username = row.data('u');
 			$.ajax({
 				type: 'POST',
 				url: shj.site_url + 'submissions/select',
 				data: {
-					submit_id:row.data('s'),
-					problem: row.data('p'),
-					username: row.data('u'),
+					submit_id: submit_id,
+					problem: problem,
+					username: username,
 					assignment : row.data('a'),
 					wcj_csrf_name: shj.csrf_token
 				},
