@@ -2,15 +2,14 @@
 
 if [ "$EXT" = "py3" ]; then
 	python="python3"
-	shield="../shield/shield_py3.py"
 else
 	python="python2"
-	shield="../shield/shield_py2.py"
 fi
 
-cp $PROBLEMPATH/$UN/$FILENAME.py $FILENAME.py
+cp $PROBLEMPATH/$UN/$FILENAME.$EXT $FILENAME.$EXT
 shj_log "Checking Python Syntax"
-$python -O -m py_compile $FILENAME.py >/dev/null 2>cerr
+shj_log "$python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr"
+$python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr
 EXITCODE=$?
 COMPILE_END_TIME=$(($(date +%s%N)/1000000));
 shj_log "Syntax checked. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIME-COMPILE_BEGIN_TIME)) ms"
