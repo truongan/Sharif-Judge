@@ -135,7 +135,7 @@ input[type='number']{
 			<fieldset class="form-group">
 				<div class="form-row">
 					<label for="admin_note">Admin's note</label>
-					<textarea id="admin_note" name="admin_note" rows="8" class="form-control add_text">{{ edit ? edit_problem.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
+					<textarea id="admin_note" name="admin_note" rows="8" class="form-control add_text">{{ edit_problem ? edit_problem.admin_note : set_value('admin_note', "", false) }}</textarea>
 						{{ form_error('admin_note', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 			<fieldset class="form-group">
