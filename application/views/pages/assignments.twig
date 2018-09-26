@@ -50,7 +50,7 @@
 </thead>
 {% for item in all_assignments|reverse if (item.open or user.level > 0) %}
 <tr>
-	<td><i data-togle="tooltip" title="Set this assignment as your default for sidebar shortcut" class="pointer select_assignment far {{ item.id == user.selected_assignment.id ? 'fa-check-square color6' : 'fa-square' }} fa-2x" data-id="{{ item.id }}"></i></td>
+	<td><span data-toggle="tooltip" title="View an assignment's problem or submission will set it as your default assignment"><i  class=" far {{ item.id == user.selected_assignment.id ? 'fa-check-square color6' : 'fa-square' }} fa-2x" data-id="{{ item.id }}"></i></span></td>
 	<td><a href="{{ site_url('view_problem/'~item.id) }}" data-toggle="tooltip" title="Click to view problem(s)"><strong>{{ item.name }}</strong><br/>({{ item.no_of_problems }} problems)</a></td>
 	{# <td>View problem(s)</td> #}
 	<td><a href="{{ site_url('submissions/all/assignment/'~item.id) }}" data-toggle="tooltip" title="View all submissions">

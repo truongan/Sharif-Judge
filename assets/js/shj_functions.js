@@ -119,35 +119,6 @@ $(document).ready(function () {
 
 
 /**
- * Top Bar
- */
-$(document).ready(function () {
-	$(".select_assignment").click(
-		function () {
-			var id = $(this).children('i').addBack('i').data('id');
-			$.ajax({
-				type: 'POST',
-				url: shj.site_url + 'assignments/select',
-				data: {
-					assignment_select: id,
-					wcj_csrf_name : shj.csrf_token
-				},
-				error: shj.loading_error,
-				success: function (response) {
-					if (response.done)
-					{
-						location.reload();
-					}
-					else
-						shj.loading_failed(response.message);
-				}
-			});
-		}
-	);
-});
-
-
-/**
  * Set for all input elements
  */
 $(document).ready(function(){
