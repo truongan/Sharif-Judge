@@ -114,10 +114,12 @@ class Submissions extends CI_Controller
 		
 		$this->_do_access_check($this->assignment);
 		$assignment =  $this->assignment_model->assignment_info($this->assignment);
-	
+		if ($assignment['id'] != 0){
+			$this->user->select_assignment($assignment['id']);
+		}
 			// var_dump($this->assignment_model->assignment_info($this->assignment));die();
 		
-		$this->pagination_config['base_url'] = site_url('submissions/all'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
+		$this->pagination_config['base_url'] = site_url("submissions/$type/assignment/".$assignment['id']."/".($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
 		$this->pagination_config['cur_page'] = $this->page_number;
 		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->assignment
 						, $this->user->level, $this->user->username
@@ -201,11 +203,11 @@ class Submissions extends CI_Controller
 			if ($this->user->level === 0){
 				$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
 	
-				if ( $this->assignment_info->can_submit($assignment))
+				if ( ! $this->assignment_model->can_submit($assignment))
 				{
 					$json_result = array(
 						'done' => 0,
-						'message' => 'This assignment is finished. You cannot change your final submissions.'
+						'message' => 'You can only change final submission if when you can still submit.'
 					);
 					$this->output->set_header('Content-Type: application/json; charset=utf-8');
 					echo json_encode($json_result);

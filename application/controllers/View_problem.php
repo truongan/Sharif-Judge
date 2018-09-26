@@ -18,8 +18,6 @@ class View_problem extends CI_Controller
 		parent::__construct();
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
-
-		$this->all_assignments = $this->assignment_model->all_assignments();
 	}
 
 
@@ -38,7 +36,6 @@ class View_problem extends CI_Controller
 		}
 		
 		$data=array(
-			'all_assignments' => $this->all_assignments,
 			'can_submit' => TRUE,
 		);
 		while (1){
@@ -83,7 +80,12 @@ class View_problem extends CI_Controller
 			$data['problem'] = array_merge($data['problem'], $this->problem_model->get_description($problem_id));
 
 			$data['error'] = 'none';
+
+			//Select that assignment
+			$this->user->select_assignment($assignment['id']);
+			
 			break;
+
 		}
 		$this->twig->display('pages/view_problems.twig', $data);
 	}

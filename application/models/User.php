@@ -20,6 +20,19 @@ class User extends CI_Model
 	public $site_name;
 	public $theme;
 
+	private function _update_selected_assignment($assignment_id){
+		$query = $this->db->get_where('assignments', array('id' => $assignment_id));
+		if ($query->num_rows() != 1)
+			$this->selected_assignment = array(
+				'id' => 0,
+				'name' => 'Not Selected',
+				'finish_time' => 0,
+				'extra_time' => 0,
+				'problems' => 0
+			);
+		else
+			$this->selected_assignment = $query->row_array();
+	}
 	public function __construct()
 	{
 		parent::__construct();
@@ -41,17 +54,7 @@ class User extends CI_Model
 
 		$this->email = $user->email;
 
-		$query = $this->db->get_where('assignments', array('id' => $user->selected_assignment));
-		if ($query->num_rows() != 1)
-			$this->selected_assignment = array(
-				'id' => 0,
-				'name' => 'Not Selected',
-				'finish_time' => 0,
-				'extra_time' => 0,
-				'problems' => 0
-			);
-		else
-			$this->selected_assignment = $query->row_array();
+		$this->_update_selected_assignment($user->selected_assignment);
 
 		switch ($user->role)
 		{
@@ -92,6 +95,7 @@ class User extends CI_Model
 	public function select_assignment($assignment_id)
 	{
 		$this->db->where('username', $this->username)->update('users', array('selected_assignment'=>$assignment_id));
+		$this->_update_selected_assignment($assignment_id);
 	}
 
 
