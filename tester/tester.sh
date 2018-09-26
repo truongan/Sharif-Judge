@@ -159,14 +159,6 @@ elif [[ $EXT = "java" ]]; then
 	shj_log "DISPLAY_JAVA_EXCEPTION_ON: $DISPLAY_JAVA_EXCEPTION_ON"
 fi
 
-
-declare -A languages_to_comm
-languages_to_comm["c"]="./$EXEFILE"
-languages_to_comm["cpp"]="./$EXEFILE"
-languages_to_comm["py2"]="python2 -O $FILENAME.py"
-languages_to_comm["py3"]="python3 -O $FILENAME.py"
-languages_to_comm["java"]="java -mx${MEMLIMIT}k $FILENAME"
-
 ########################################################################################################
 ################################################ COMPILING #############################################
 ########################################################################################################
@@ -175,7 +167,7 @@ COMPILE_BEGIN_TIME=$(($(date +%s%N)/1000000));
 
 if [ "$EXT" = "java" ]; then
 	source $tester_dir/compile_java.sh
-elif [ "$EXT" = "py3"  ] || [ "$EXT" = "py2p" ]; then
+elif [ "$EXT" = "py3"  ] || [ "$EXT" = "py2" ]; then
 	source $tester_dir/compile_python.sh
 elif [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 	source $tester_dir/compile_c.sh
@@ -233,6 +225,13 @@ for((i=1;i<=TST;i++)); do
 	cp $tester_dir/runcode.sh ./runcode.sh
 	chmod +x runcode.sh
 	cp $PROBLEMPATH/in/input$i.txt ./input.txt
+
+	declare -A languages_to_comm
+	languages_to_comm["c"]="./$EXEFILE"
+	languages_to_comm["cpp"]="./$EXEFILE"
+	languages_to_comm["py2"]="python2 -O $FILENAME.py"
+	languages_to_comm["py3"]="python3 -O $FILENAME.py"
+	languages_to_comm["java"]="java -mx${MEMLIMIT}k $FILENAME"
 
 	if [ ! ${languages_to_comm[$EXT]+_} ]; then
 		shj_log "File Format Not Supported"

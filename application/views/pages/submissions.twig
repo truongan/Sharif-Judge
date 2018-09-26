@@ -106,6 +106,12 @@ Submissions of <kbd> {{ assignment.name }}</kbd></p>
 		{% if view == 'all' %}
 			<th width="1%" rowspan="1"><small>Final</small></th>
 		{% endif %}
+					{% if view == 'all' %}
+			<th width="2%" rowspan="1"><small>submit ID</small></th>
+			{% else %}
+			<th width="1%" rowspan="1">#</th>
+			<th width="2%" rowspan="1"><small>submit ID</small></th>
+			{% endif %}
 		{% if user.level > 0 %}
 			<th width="5%" rowspan="1"><small>Username</small></th>
 			<th width="20%" rowspan="1">Name</th>
@@ -127,12 +133,6 @@ Submissions of <kbd> {{ assignment.name }}</kbd></p>
 		{# <tr>
 		</tr> #}
 		{% else %}
-			{% if view == 'all' %}
-			<th width="2%" rowspan="1"><small>ID</small></th>
-			{% else %}
-			<th width="1%" rowspan="1">#</th>
-			<th width="2%" rowspan="1"><small>ID</small></th>
-			{% endif %}
 			<th width="20%" rowspan="1">Problem</th>
 			<th width="10%" rowspan="1">Submit Time</th>
 			
@@ -162,6 +162,12 @@ Submissions of <kbd> {{ assignment.name }}</kbd></p>
 				<i class="pointer set_final far {{ submission.is_final ? 'fa-check-circle color11' : 'fa-circle' }} fa-2x"></i>
 			</td>
 		{% endif %}
+					{% if view == 'all' %}
+				<td><small>{{submission.submit_id}}</small></td>
+			{% else %}
+				<td>{{ (page_number-1)*per_page+i }}</td>
+				<td><small>{{submission.submit_id}}</small></td>
+			{% endif %}
 		{% if user.level > 0 %}
 			<td>
 				<a href="{{ site_url('submissions/'~view
@@ -174,12 +180,6 @@ Submissions of <kbd> {{ assignment.name }}</kbd></p>
 			</td>
 			<td>{{ submission.name  }}</td>
 		{% endif %}
-			{% if view == 'all' %}
-				<td><small>{{submission.submit_id}}</small></td>
-			{% else %}
-				<td>{{ (page_number-1)*per_page+i }}</td>
-				<td><small>{{submission.submit_id}}</small></td>
-			{% endif %}
 			<td>
 				<a href="{{ site_url('view_problem/' ~ submission.assignment_id ~ '/'~ submission.problem_id ) }}" title="View problem {{submission.problem_id}}'s statements">
 						<span>{{ assignment.id ?  problems[submission.problem_id].problem_name : "Problem ID: #"~submission.problem_id }}</span>
