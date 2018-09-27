@@ -203,7 +203,7 @@
 </small></label>
 <select class="all_problems form-control" multiple="multiple">
 	{% for p in all_problems %}
-		<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}"
+		<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}" data-note="{{ p.admin_note }}"
 		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.id}} - {{p.name}} </option>
 	{% endfor %}
 </select>
@@ -234,7 +234,7 @@ Remove one problem from assignment won't remove the submissions of that problem 
 						<div class="input-group-prepend">
 							<label class="input-group-text">Alias</label>
 						</div>
-						<input type="text" name="problem_name[]" class="form-control form-control-sm " value="{{ problem.name }}"/>
+						<input type="text" name="problem_name[]" class="form-control form-control-sm " value="{{ problem.problem_name }}"/>
 					</div>
 					
 					<div class="input-group input-group-sm mr-2">
@@ -243,6 +243,7 @@ Remove one problem from assignment won't remove the submissions of that problem 
 						</div>
 						<input type="number" name="problem_score[]" class="form-control form-control-sm" value="{{ problem.score }}"/>
 					</div>
+					<span class="text-muted admin_note">{{ problem.admin_note }}</span>
 				</div>
 			</div>
 		</div>

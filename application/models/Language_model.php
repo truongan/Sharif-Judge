@@ -21,11 +21,11 @@ class Language_model extends CI_Model
 		return $this->db->get_where('languages', array('id'=>$id))->row();
 	}
 	public function all_languages(){
-		return $this->db->get_where('languages')->result();;
+		return $this->db->get('languages')->result();;
 	}
 	public function first_language(){
 		
-		return $this->db->get_where('languages')->row();;
+		return $this->db->order_by('sorting', 'ASC')->get('languages')->row();;
 	
 	}
 }

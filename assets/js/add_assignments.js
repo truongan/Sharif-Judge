@@ -50,6 +50,7 @@ $(document).ready(function(){
 				+ selected_data.id
 				+'</span>'
 			);
+		new_row.find('.admin_note').html(selected_data.note);
 
 
 		new_row.insertAfter(dummy_row).slideDown();

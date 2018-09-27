@@ -100,11 +100,10 @@ class Submissions extends CI_Controller
 
 
 	public function index(){
-		$last_submission = $this->submit_model->find_last_submission($this->user->username);
-		if ($last_submission){
-
-			return redirect('submissions/all/assignment/' .  $last_submission->assignment_id);
-		}
+		// $last_submission = $this->submit_model->find_last_submission($this->user->username);
+		// if ($last_submission){
+		// 	return redirect('submissions/all/assignment/' .  $last_submission->assignment_id);
+		// }
 		return redirect('submissions/all/assignment/'.$this->user->selected_assignment['id']);
 	}
 
