@@ -60,8 +60,11 @@ class Submissions extends CI_Controller
 		$this->page_number = 1;
 		
 		if (array_key_exists('user', $input) && $input['user'])
-			if ($this->user->level > 0) // students are not able to filter submissions by user
+			if ($this->user->level > 0) {
+				// Only non student user can use user filter
 				$this->filter_user = $this->form_validation->alpha_numeric($input['user'])?$input['user']:NULL;
+			}
+			
 		if (array_key_exists('problem', $input) && $input['problem'])
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
 		
