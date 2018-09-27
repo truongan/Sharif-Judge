@@ -95,6 +95,13 @@ fi
 
 DISPLAY_JAVA_EXCEPTION_ON=true
 
+#$runcode
+declare -A languages_to_docker
+languages_to_docker["c"]="gcc:6"
+languages_to_docker["cpp"]="gcc:6"
+languages_to_docker["py2"]="python:2"
+languages_to_docker["py3"]="python:3"
+languages_to_docker["java"]="openjdk:8"
 
 # DIFFOPTION can also be "ignore" or "exact".
 # ignore: In this case, before diff command, all newlines and whitespaces will be removed from both files
@@ -229,8 +236,8 @@ for((i=1;i<=TST;i++)); do
 	declare -A languages_to_comm
 	languages_to_comm["c"]="./$EXEFILE"
 	languages_to_comm["cpp"]="./$EXEFILE"
-	languages_to_comm["py2"]="python2 -O $FILENAME.py"
-	languages_to_comm["py3"]="python3 -O $FILENAME.py"
+	languages_to_comm["py2"]="python2 -O $FILENAME.py2"
+	languages_to_comm["py3"]="python3 -O $FILENAME.py3"
 	languages_to_comm["java"]="java -mx${MEMLIMIT}k $FILENAME"
 
 	if [ ! ${languages_to_comm[$EXT]+_} ]; then
@@ -247,14 +254,6 @@ for((i=1;i<=TST;i++)); do
 	else
 		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input.txt $command"
 	fi
-
-	#$runcode
-	declare -A languages_to_docker
-	languages_to_docker["c"]="gcc:6"
-	languages_to_docker["cpp"]="gcc:6"
-	languages_to_docker["py2"]="python:2"
-	languages_to_docker["py3"]="python:3"
-	languages_to_docker["java"]="openjdk:8"
 
 	shj_log "sudo run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $runcode"
 	
