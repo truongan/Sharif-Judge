@@ -21,7 +21,12 @@ class Language_model extends CI_Model
 		return $this->db->get_where('languages', array('id'=>$id))->row();
 	}
 	public function all_languages(){
-		return $this->db->get('languages')->result();;
+		$temp = $this->db->get('languages')->result();
+		$a = array();
+		foreach ($temp as $lang){
+			$a[$lang->id] = $lang;
+		}
+		return $a;
 	}
 	public function first_language(){
 		

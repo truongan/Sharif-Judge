@@ -90,6 +90,21 @@ class Assignments extends CI_Controller
 	}
 
 	
+	public function download_all_submissions($assignment_id){
+		if ($assignment_id === FALSE || ! is_numeric($assignment_id))
+			show_404();
+		if ( $this->user->level == 0) // permission denied
+			show_404();
+		$this->load->model('submit_model');
+		$this->load->library('zip');
+
+		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
+
+		$this->zip->add_dir(
+			$assignment_root . "/assignment_" . $assignment_id
+		);
+		$this->zip->download("assignment{$assignment_id}.".date('Y-m-d_H-i',shj_now()).'.zip');
+	}
 	/**
 	 * Compressing and downloading final codes of an assignment to the browser
 	 */
@@ -107,20 +122,25 @@ class Assignments extends CI_Controller
 
 		$this->load->library('zip');
 
-		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-
+		$lang = $this->language_model->all_languages();
+		
 		foreach ($items as $item)
 		{
-			$file_path = $assignments_root.
-				"/assignment_{$item['assignment']}/p{$item['problem']}/{$item['username']}/{$item['file_name']}."
-				.filetype_to_extension($item['file_type']);
+			$file_path = $this->submit_model->get_path($item['username'], $item['assignment_id'], $item['problem_id']) 
+			. "/{$item['file_name']}." 
+			. $lang[$item['language_id']]->extension
+			;
+			// var_dump($file_path); die();
+			// $file_path = $assignments_root.
+			// 	"/assignment_{$item['assignment']}/p{$item['problem']}/{$item['username']}/{$item['file_name']}."
+			// 	.filetype_to_extension($item['file_type']);
 			if ( ! file_exists($file_path))
 				continue;
 			$file = file_get_contents($file_path);
 			if ($type === 'by_user')
-				$this->zip->add_data("{$item['username']}/p{$item['problem']}.".filetype_to_extension($item['file_type']), $file);
+				$this->zip->add_data("{$item['username']}/problem_{$item['problem_id']}.".$lang[$item['language_id']]->extension, $file);
 			elseif ($type === 'by_problem')
-				$this->zip->add_data("problem_{$item['problem']}/{$item['username']}.".filetype_to_extension($item['file_type']), $file);
+				$this->zip->add_data("problem_{$item['problem_id']}/{$item['username']}.".$lang[$item['language_id']]->extension, $file);
 		}
 
 		$this->zip->download("assignment{$assignment_id}_submissions_{$type}_".date('Y-m-d_H-i',shj_now()).'.zip');
