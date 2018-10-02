@@ -84,13 +84,16 @@ class Problems extends CI_Controller
 	{
 		$problem = $this->problem_model->problem_info($problem_id);
 		if (!$problem) show_404();
-		
+		$root_path = $this->problem_model->get_directory_path($problem_id);
+		// var_dump(("tree " . $root_path));die();
+		$tree_dump = shell_exec("tree " . $root_path);
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'edit_problem' => $problem,
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  $problem['languages'],
 			'max_file_uploads' => ini_get('max_file_uploads'),
+			'tree_dump' => $tree_dump,
 		);
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}

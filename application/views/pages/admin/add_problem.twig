@@ -113,14 +113,14 @@ input[type='number']{
 		
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-6">
 						<label for="form_tests_dir"><i class="far fa-lg fa-folder-open"></i>Tests and Descriptions (folder)
 							<br/>
 <small class="text-secondary">You can upload an entire folder of <strong> {{ max_file_uploads }} </strong> file(s).
 								If your test folder have more files you will have to upload a zip file of that folder instead. Also, this features is not web standard, some browser may not support it </small>
 						</label>
 					</div>
-					<div class="col-sm-7">
+					<div class="col-sm-6">
 						<div class="custom-file">
 							<input id="form_tests_dir" type="file" webkitdirectory  multiple name="tests_dir[]" class="custom-file-input" />
 							<label class="custom-file-label text-muted"><small>Test cases and description folder</small></label>
@@ -140,12 +140,12 @@ input[type='number']{
 			</fieldset>
 			<fieldset class="form-group">
 				<div class="form-row">
-					<div class="col-sm-5">
+					<div class="col-sm-6">
 						<label for="form_tests_zip"><i class="far fa-lg fa-file-archive"></i>Tests and Descriptions (zip file) </br>
 							<small class="text-secondary">Folder upload will always take precedent, if you want to upload zip file, leave upload folder field blank. </small>
 						</label>
 					</div>
-					<div class="col-sm-7">
+					<div class="col-sm-6">
 						<div class="custom-file">
 							<input id="form_tests_zip" type="file" name="tests_zip" class="custom-file-input" />
 							<label class="custom-file-label text-muted"><small>Test case and description zip file</small></label>
@@ -155,8 +155,22 @@ input[type='number']{
 			</fieldset>
 		</div>
 	</div>
+	{% if tree_dump %}
+<p>
+  <a class="btn btn-primary btn-small" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Show current problem directory structure
+  </a>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+  <pre>
+    {{ tree_dump }}
+</pre>
+  </div>
+</div>
+	{% endif %}
 
-		<label>Click on the button to add more language for this problems</label></br>
+	<label>Click on the button to add more language for this problems</label></br>
 	<div class ="form-row">
 		{% for lang in all_languages %}
 			<a data-lang="{{ lang.id }}" class="btn btn-success mr-2 add_language add_language_{{ lang.id }} {{ languages[lang.id] ? "d-none" : "" }}" href="#" role="button">{{ lang.name }}</a>
@@ -180,8 +194,8 @@ input[type='number']{
 				<input class="lang_checkbox" type="hidden" name="enable[]" value="{{ languages[lang.id] ? "1" : "0" }}"/>
 				<td>{{ lang.id }} <input type="hidden" name="language_id[]" value="{{ lang.id }}"></td>
 				<td>{{ lang.name }}</td>
-				<td><input type="number" name="time_limit[]" class="form-control" value="{{ lang.default_time_limit }}"/></td>
-				<td><input type="number" name="memory_limit[]" class="form-control" value="{{ lang.default_memory_limit }}"/></td>
+				<td><input type="number" name="time_limit[]" class="form-control" value="{{  languages[lang.id] ? languages[lang.id].time_limit : lang.default_time_limit }}"/></td>
+				<td><input type="number" name="memory_limit[]" class="form-control" value="{{ languages[lang.id] ? languages[lang.id].memory_limit :  lang.default_memory_limit }}"/></td>
 				<td><a  data-lang="{{ lang.id }}"  class="btn btn-danger remove_language remove_language_{{ lang.id }}" href="#" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
 			</tr>
 			{% endfor %}
