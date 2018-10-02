@@ -194,7 +194,7 @@ input[type='number']{
 				<input class="lang_checkbox" type="hidden" name="enable[]" value="{{ languages[lang.id] ? "1" : "0" }}"/>
 				<td>{{ lang.id }} <input type="hidden" name="language_id[]" value="{{ lang.id }}"></td>
 				<td>{{ lang.name }}</td>
-				<td><input type="number" name="time_limit[]" class="form-control" value="{{  languages[lang.id] ? languages[lang.id].time_limit : lang.default_time_limit }}"/></td>
+				<td><input type="number" name="time_limit[]" class="form-control" value="{{  languages[lang.id] ? languages[lang.id].time_limit : 500}}"/></td>
 				<td><input type="number" name="memory_limit[]" class="form-control" value="{{ languages[lang.id] ? languages[lang.id].memory_limit :  lang.default_memory_limit }}"/></td>
 				<td><a  data-lang="{{ lang.id }}"  class="btn btn-danger remove_language remove_language_{{ lang.id }}" href="#" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
 			</tr>

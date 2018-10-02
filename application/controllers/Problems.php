@@ -71,13 +71,18 @@ class Problems extends CI_Controller
 	{
 		$first_language = $this->language_model->first_language();
 		
+		
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'all_languages' => $this->language_model->all_languages(),
 			'languages' =>  array($first_language->id => $first_language),
 			'max_file_uploads' => ini_get('max_file_uploads'),
 		);
-		
+		foreach($data['languages'] as $lang){
+			$lang->time_limit = $data['all_languages'][$lang->id]->default_time_limit;
+			$lang->memory_limit = $data['all_languages'][$lang->id]->default_memory_limit;
+		}
+		// var_dump($data['languages']); die();
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}
 	public function show_edit_form($problem_id)
