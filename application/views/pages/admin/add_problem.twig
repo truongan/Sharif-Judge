@@ -135,7 +135,7 @@ input[type='number']{
 			<fieldset class="form-group">
 				<div class="form-row">
 					<label for="admin_note">Admin's note</label>
-					<textarea id="admin_note" name="admin_note" rows="8" class="form-control add_text">{{ edit_problem ? edit_problem.admin_note : set_value('admin_note', "", false) }}</textarea>
+					<textarea id="admin_note" name="admin_note" rows="3" class="form-control add_text">{{ edit_problem ? edit_problem.admin_note : set_value('admin_note', "", false) }}</textarea>
 						{{ form_error('admin_note', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 			<fieldset class="form-group">
@@ -153,10 +153,7 @@ input[type='number']{
 					</div>
 				</div>
 			</fieldset>
-		</div>
-	</div>
-	{% if tree_dump %}
-<p>
+			<p>
   <a class="btn btn-primary btn-small" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
     Show current problem directory structure
   </a>
@@ -168,6 +165,10 @@ input[type='number']{
 </pre>
   </div>
 </div>
+		</div>
+	</div>
+	{% if tree_dump %}
+
 	{% endif %}
 
 	<label>Click on the button to add more language for this problems</label></br>

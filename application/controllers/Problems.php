@@ -91,7 +91,7 @@ class Problems extends CI_Controller
 		if (!$problem) show_404();
 		$root_path = $this->problem_model->get_directory_path($problem_id);
 		// var_dump(("tree " . $root_path));die();
-		$tree_dump = shell_exec("tree " . $root_path);
+		$tree_dump = shell_exec("tree -h " . $root_path);
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'edit_problem' => $problem,
