@@ -100,8 +100,9 @@ class Assignments extends CI_Controller
 
 		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
 
-		$this->zip->add_dir(
+		$this->zip->read_dir(
 			$assignment_root . "/assignment_" . $assignment_id
+			, FALSE
 		);
 		$this->zip->download("assignment{$assignment_id}.".date('Y-m-d_H-i',shj_now()).'.zip');
 	}
