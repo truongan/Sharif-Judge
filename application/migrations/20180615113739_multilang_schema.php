@@ -38,7 +38,7 @@ class Migration_Multilang_schema extends CI_Migration {
         $problems_dir = $assignments_root . "/problems/";
         if ( ! file_exists($problems_dir) ){
             var_dump("creating directory $problems_dir as problem directory");
-            mkdir($problems_dir, "0700");
+            mkdir($problems_dir, 0700);
         }
 
         foreach ($query->result() as $prob)
@@ -64,7 +64,7 @@ class Migration_Multilang_schema extends CI_Migration {
             $new_prob_submission = $assignments_root . '/assignment_' . $prob->assignment . '/problem_' . $new_id;    
             
             if ( ! file_exists($new_p) )
-                mkdir($new_p, "0700");
+                mkdir($new_p, 0700);
             
             foreach(array('in', 'out', 'tester*', 'template.*', 'desc.*', '*.pdf' , 'solution.*') as $i){
                 $cmd = "mv $old_p/$i $new_p";
