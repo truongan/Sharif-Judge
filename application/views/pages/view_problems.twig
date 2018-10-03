@@ -1,0 +1,168 @@
+{#
+ # Sharif Judge
+ # file: problems.twig
+ # author: Kelvin Ng <kelvin9302104@gmail.com>
+ #}
+{% set selected = 'problems' %}
+{% extends 'templates/base.twig' %}
+{% block icon %}fas fa-puzzle-piece{% endblock %}
+{% block title %}{{ problem.name }}{% endblock %}
+{% block head_title %}Problem {{ problem.id }}{% endblock %}
+
+{% block other_assets %}
+<style media="screen">
+.wecode_table td{
+	text-align: left;
+}
+
+</style>
+{% endblock %}
+
+{% block title_menu %}
+
+{% if problem.has_pdf %}
+	<span class="title_menu_item"><a href="{{ site_url("assignments/pdf/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
+{% endif %}
+{% if problem.has_template %}
+	<span class="title_menu_item"><a href="{{ site_url("view_problem/template/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-download color1"></i> Download the code template</a></span>
+{% endif %}
+
+{% if user.level >= 2 %}
+	<span class="title_menu_item ml-auto"><a href="#" class="btn btn-secondary save-button"><i class="fa fa-floppy-o "></i> Save</a></span>
+{% endif %}
+
+{% endblock %}
+
+{% block body_end %}
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script src="{{ base_url('assets/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	shj.setup_save('.save-button'
+	, '{{ site_url("problems/edit_description/#{problem.id}") }}'
+	, CKEDITOR.instances.problem_description);
+	
+	{# $('.save-button').click(function(){
+		$.ajax({
+			type: 'POST',
+			url: '{{ site_url("problems/edit/plain/#{problem.id}") }}',
+			data: {
+				wcj_csrf_name: shj.csrf_token,
+				text : CKEDITOR.instances.problem_description.getData()
+			},
+			success: function (response) {
+				$.notify('Change sucessfully saved'
+					, {position: 'bottom right', className: 'success', autoHideDelay: 3500});
+				$('.save-button').removeClass('btn-primary').addClass('btn-secondary');
+				//$.notify()
+			},
+			error: function(response){
+				$.notify('Error while saving'
+					, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
+				alert('There was problem saving change. You can backup by pressing "Source" button and copy the content out');
+			}
+		});
+	});
+	CKEDITOR.on('instanceReady', function(){
+		CKEDITOR.instances.problem_description.on('change', function(){
+			$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
+		});
+	}); #}
+
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+{% if error != 'none' %}
+<div class="alert alert-danger"> {{error}} </div>
+{% else %}
+
+	<div class="col-md-7 col-lg-8 col-sm-12">
+
+		<div class="problem_description" id="problem_description" {% if user.level >= 2 %} contenteditable="true" {% endif %} >
+			{{ problem.description|raw }}
+		</div>
+	</div>
+
+	<div class="col-md-5 col-lg-4 ">
+		{% if all_problems is defined %}
+		<div class="problems_widget row">
+			<p><i class="fa fa-file-text fa-lg color9"></i> {{ assignment.name }}</p>
+			<table class="wecode_table table table-striped table-bordered">
+				<thead>
+				<tr>
+					{# <th>#</th> #}
+					<th>Problem</th>
+					<th>Score</th>
+					{# <th><i class="fa fa-upload fa-fw"></i>Only</th> #}
+				</tr>
+				</thead>
+				{% for one_problem in all_problems %}
+					<tr{{ problem.id == one_problem.id ? ' class="table-active"' }}>
+						{# <td>{{ one_problem.id }}</td> #}
+						<td>
+							<a href="{{ site_url("view_problem/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.problem_name }}</a>
+						</td>
+						<td>{{ one_problem.score }}</td>
+						{# <td>{{ one_problem.is_upload_only ? 'Yes' : 'No' }}</td> #}
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+		{% endif %}
+
+
+		{% if can_submit %}
+		<div class="problems_widget ">
+
+			<span><i class="fa fa-upload fa-lg color11"></i> Submit</span>
+			
+			{{ form_open_multipart("submit/") }}
+
+			{% if all_problems is defined %}
+				<input type="hidden" name="assignment" value="{{ assignment.id }}"/>
+			{% endif %}
+			<input type="hidden" name="problem" value="{{ problem.id }}"/>
+			<fieldset class="form-group form-row">
+				<label>
+					Select language
+				</label>
+
+				<select id="languages" name="language" class="form-control custom-select">
+
+					{% for l in problem.languages %}
+						<option value="{{ l.id }}">{{ l.name }}</option>
+					{% endfor %}
+				</select>
+			</fieldset>
+
+			<fieldset class="form-group form-row">
+				<div class="col-12 custom-file">
+					<input type="file" id="file" class=" custom-file-input" name="userfile"/>
+					<label class="custom-file-label text-muted"><small>upload source code</small></label>
+				</div>
+			</fieldset>
+
+			<fieldset class="form-group form-row">
+				<input type="submit" value="Submit" class="form-control"/>
+			</fieldset>
+			</form>
+
+		</div>
+		<div class="problems_widget row">
+			<span class=""><a href="{{ site_url("submit/editor/#{problem.id}/#{assignment.id}") }}" target="_blank"><i class="fa fa-pencil-square-o"></i> Code editor</a></span>
+		</div>
+		{% endif %}
+
+	</div>
+{% endif %}
+{% endblock %}  {# main_content #}

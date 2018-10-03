@@ -5,30 +5,30 @@
  #}
 {% set selected = 'scoreboard' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}fa-star{% endblock %}
+{% block icon %}fas fa-star{% endblock %}
 {% block title %}Scoreboard{% endblock %}
 {% block head_title %}Scoreboard{% endblock %}
 
 {% block title_menu %}
 <span class="title_menu_item">
-	<a href="{{ site_url('scoreboard/') }}">
-	<i class="fa fa-star color10"></i> Full information </a>
+	<a href="{{ site_url('scoreboard/full/'~assignment.id) }}">
+	<i class="fas fa-star color10"></i> Full information </a>
 </span>
 <span class="title_menu_item">
-	<a href="{{ site_url('scoreboard/simplify') }}">
-	<i class="fa fa-star-half-o color10"></i> Minimal information </a>
+	<a href="{{ site_url('scoreboard/simplify/'~assignment.id) }}">
+	<i class="fas fa-star-half-alt color10"></i> Minimal information </a>
 </span>
 {% endblock %} {# title_menu #}
 
 
 {% block main_content %}
 <div class="col">
-{% if user.selected_assignment.id == 0 %}
+{% if assignment.id == 0 %}
 <p>No assignment is selected.</p>
-{% elseif not user.selected_assignment.scoreboard and user.level < 2%}
+{% elseif not assignment.scoreboard and user.level < 2%}
 <p>Scoreboard is disabled.</p>
 {% else %}
-	<p>Scoreboard of <span>{{ user.selected_assignment.name }}</span></p>
+	<p>Scoreboard of <span>{{ assignment.name }}</span></p>
 	{{ scoreboard|raw }}
 {% endif %}
 </div>

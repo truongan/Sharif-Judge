@@ -1,0 +1,211 @@
+{#
+ # Wecode Judge
+ # file: add_problem.twig
+ # author:truongan (hostmaster@truongan.name.vn)
+ #}
+{% set selected = 'Problems' %}
+{% extends 'templates/base.twig' %}
+{% block icon %}fas {{ edit_problem ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
+{% block title %}{{ edit_problem ? 'Edit' : 'Add' }} Problem {% endblock %}
+{% block head_title %}{{ edit_problem ? 'Edit' : 'Add' }} Problem {% endblock %}
+
+
+
+{% block other_assets %}
+{# <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}"> #}
+<style type="text/css">
+
+
+input[type='number']{
+	min-width: 80px!important;
+}
+
+
+</style>
+{% endblock %}
+
+{% block body_end %}
+
+<script type="text/javascript">
+	$(".add_language").click(function(){
+		var lang = $(this).data('lang');
+		console.log(lang);
+		$(this).toggleClass('d-none');
+		
+		var row = $(".lang_row_" + lang);
+		row.toggleClass('d-none');//.show();
+		row.children('.lang_checkbox').val(1);
+	});
+
+	$(".remove_language").click(function(){
+		var lang = $(this).data('lang');
+		console.log(lang);
+		var row = $(".lang_row_" + lang);
+		row.toggleClass('d-none');//.show();
+		row.children('.lang_checkbox').val(0);
+
+		$('.add_language_' + lang).toggleClass('d-none');
+	});
+</script>
+
+{% endblock %}
+
+
+{% block title_menu %}
+<span class="title_menu_item">
+	<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md" target="_blank"><i class="fa fa-question-circle color1"></i> Help</a>
+</span>
+{% endblock %}
+
+
+
+{% block main_content %}
+<div class="col">
+{% set msgclasses = {'text-success': 'text-success', 'text-info': 'text-warning', 'text-danger': 'text-danger'} %}
+
+{% for message in messages %}
+	<p class="{{ msgclasses[message.type] }}">{{ message.text }}</p>
+{% endfor %}
+
+{% if edit %}
+<p>
+	<i class="fa fa-info-circle fa-lg color8"></i> If you don't want to change tests or pdf file, just do not upload its file.
+</p>
+{% endif %}
+
+{{ form_open_multipart(edit_problem ? 'problems/edit/'~edit_problem.id : 'problems/add') }}
+
+	<div class="row">
+		<div class="col-sm-6">
+			<fieldset class="form-group">
+				<div class="form-row">
+					<div class="col-sm-5">
+						<label for="problem_name">Problem Name</label>
+					</div>
+					<div class="col-sm-7">
+						<input id="problem_name" type="text" name="problem_name" class="form-control col-xs-7" value="{{ edit_problem ? edit_problem.name : set_value('problem_name') }}"/>
+						{{ form_error('problem_name', '<div class="alert alert-danger">', '</div>') }}
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="form-group">
+				<div class="form-row">
+					<div class="col-sm-5">
+						<label for="diff_cmd">Diff command</label>
+					</div>
+					<div class="col-sm-7">
+						<input  type="text" name="diff_cmd" class="form-control col-xs-7" value="{{ edit_problem ? edit_problem.diff_cmd : set_value('diff_cmd', 'diff') }}"/>
+						{{ form_error('diff_cmd', '<div class="alert alert-danger">', '</div>') }}
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="form-group">
+				<div class="form-row">
+					<div class="col-sm-5">
+						<label for="diff_arg">Diff arguments</label>
+					</div>
+					<div class="col-sm-7">
+						<input  type="text" name="diff_arg" class="form-control col-xs-7" value="{{ edit_problem ? edit_problem.diff_arg : set_value('diff_arg', '-bB') }}"/>
+						{{ form_error('diff_arg', '<div class="alert alert-danger">', '</div>') }}
+					</div>
+				</div>
+			</fieldset>
+		
+			<fieldset class="form-group">
+				<div class="form-row">
+					<div class="col-sm-6">
+						<label for="form_tests_dir"><i class="far fa-lg fa-folder-open"></i>Tests and Descriptions (folder)
+							<br/>
+<small class="text-secondary">You can upload an entire folder of <strong> {{ max_file_uploads }} </strong> file(s).
+								If your test folder have more files you will have to upload a zip file of that folder instead. Also, this features is not web standard, some browser may not support it </small>
+						</label>
+					</div>
+					<div class="col-sm-6">
+						<div class="custom-file">
+							<input id="form_tests_dir" type="file" webkitdirectory  multiple name="tests_dir[]" class="custom-file-input" />
+							<label class="custom-file-label text-muted"><small>Test cases and description folder</small></label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+
+		</div>
+
+		<div class="col-sm-6">
+			<fieldset class="form-group">
+				<div class="form-row">
+					<label for="admin_note">Admin's note</label>
+					<textarea id="admin_note" name="admin_note" rows="3" class="form-control add_text">{{ edit_problem ? edit_problem.admin_note : set_value('admin_note', "", false) }}</textarea>
+						{{ form_error('admin_note', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+			<fieldset class="form-group">
+				<div class="form-row">
+					<div class="col-sm-6">
+						<label for="form_tests_zip"><i class="far fa-lg fa-file-archive"></i>Tests and Descriptions (zip file) </br>
+							<small class="text-secondary">Folder upload will always take precedent, if you want to upload zip file, leave upload folder field blank. </small>
+						</label>
+					</div>
+					<div class="col-sm-6">
+						<div class="custom-file">
+							<input id="form_tests_zip" type="file" name="tests_zip" class="custom-file-input" />
+							<label class="custom-file-label text-muted"><small>Test case and description zip file</small></label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<p>
+  <a class="btn btn-primary btn-small" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Show current problem directory structure
+  </a>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+  <pre>
+    {{ tree_dump }}
+</pre>
+  </div>
+</div>
+		</div>
+	</div>
+	{% if tree_dump %}
+
+	{% endif %}
+
+	<label>Click on the button to add more language for this problems</label></br>
+	<div class ="form-row">
+		{% for lang in all_languages %}
+			<a data-lang="{{ lang.id }}" class="btn btn-success mr-2 add_language add_language_{{ lang.id }} {{ languages[lang.id] ? "d-none" : "" }}" href="#" role="button">{{ lang.name }}</a>
+		{% endfor %}
+	</div>
+
+	<div class="form-row"> <div class="table-responsive">
+	<table id="problems_table" class="mt-2 table">
+		<thead class="thead-light">
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Time Limit (ms)</th>
+			<th>Memory<br>Limit (kB)</th>
+			<th>Remove</th>
+		</tr>
+		</thead class="form-inline">
+		<tbody>
+			{% for lang in all_languages %}
+			<tr class = "lang_row_{{ lang.id }} {{ languages[lang.id] ? "" : "d-none" }}">
+				<input class="lang_checkbox" type="hidden" name="enable[]" value="{{ languages[lang.id] ? "1" : "0" }}"/>
+				<td>{{ lang.id }} <input type="hidden" name="language_id[]" value="{{ lang.id }}"></td>
+				<td>{{ lang.name }}</td>
+				<td><input type="number" name="time_limit[]" class="form-control" value="{{  languages[lang.id] ? languages[lang.id].time_limit : 500}}"/></td>
+				<td><input type="number" name="memory_limit[]" class="form-control" value="{{ languages[lang.id] ? languages[lang.id].memory_limit :  lang.default_memory_limit }}"/></td>
+				<td><a  data-lang="{{ lang.id }}"  class="btn btn-danger remove_language remove_language_{{ lang.id }}" href="#" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div></div>
+
+<input type="submit" value="{{ edit_problem ? 'Edit' : 'Add' }} Problem" class="sharif_input btn btn-primary mt-2"/>
+
+</form>
+</div>
+{% endblock %}  {# main_content #}

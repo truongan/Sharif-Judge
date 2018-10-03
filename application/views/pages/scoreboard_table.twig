@@ -13,9 +13,9 @@
 		<th>Name</th>
 		{% for problem in problems %}
 		<th>
-			<a class="small" href="{{ site_url("problems/#{assignment_id}/#{problem.id}") }}">{{ problem.name }}</a>
+			<a class="small" href="{{ site_url("view_problem/#{assignment_id}/#{problem.id}") }}">{{ problem.name }}</a>
 			<br>
-			<a class="text-light" href="{{ site_url("submissions/final/problem/#{problem.id}") }}">{{ problem.score }}</a>
+			<a class="text-light" href="{{ site_url("submissions/final/assignment/#{assignment_id}/problem/#{problem.id}") }}">{{ problem.score }}</a>
 		</th>
 		{% endfor %}
 		<th>
@@ -32,11 +32,11 @@
 	<tr>
 	<td>{{ loop.index }}</td>
 	<td>{{ sc_username }}</td>
-	<td><a class="text-muted small" href="{{ site_url("submissions/all/user/#{sc_username}/") }}" >{{ names[sc_username] }}</a></td>
+	<td><a class="text-muted small" href="{{ site_url("submissions/all/assignment/#{assignment_id}/user/#{sc_username}/") }}" >{{ names[sc_username] }}</a></td>
 	{% for problem in problems %}
 	<td>
 		{% if scores[sc_username][problem.id].score is defined %}
-			<a href="{{ site_url("submissions/all/user/#{sc_username}/problem/#{problem.id}") }}"
+			<a href="{{ site_url("submissions/all/assignment/#{assignment_id}/user/#{sc_username}/problem/#{problem.id}") }}"
 			{% if scores[sc_username][problem.id].fullmark == true %}
 				class="text-success" >
 					{{ scores[sc_username][problem.id].score }}
@@ -56,7 +56,7 @@
 	</td>
 	{% endfor %}
 	<td>
-		<a class="text-muted" href="{{ site_url("submissions/final/user/#{sc_username}/") }}" >
+		<a class="text-muted" href="{{ site_url("submissions/final/assignment/#{assignment_id}/user/#{sc_username}/") }}" >
 			<span>{{ scoreboard['score'][loop.index0] }}</span>
 			<br>
 			<span class="small" title="Total Time + Submit Penalty">{{ time_hhmm(scoreboard['submit_penalty'][loop.index0]) }}</span>

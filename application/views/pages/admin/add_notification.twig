@@ -5,7 +5,7 @@
  #}
 {% set selected = 'notifications' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}{{ notif_edit ? 'fa-edit' : 'fa-plus' }}{% endblock %}
+{% block icon %}fas {{ notif_edit ? 'fa-edit' : 'fa-plus' }}{% endblock %}
 {% block title %}{{ notif_edit ? 'Edit' : 'New' }} Notification{% endblock %}
 {% block head_title %}{{ notif_edit ? 'Edit' : 'New' }} Notification{% endblock %}
 

@@ -53,6 +53,7 @@ class Install extends CI_Controller
 
 		if (!is_cli()) {
 			show_error("This function is meant to be called from cli only");
+			die();
 			return ;
 		}
 
@@ -100,7 +101,7 @@ class Install extends CI_Controller
 
 		$this->load->library('migration');
 
-		// if ( ! $this->migration->version(20180611171404))
+		//if ( ! $this->migration->version(20180611171404))
 		if ( ! $this->migration->latest())
 		{
 			show_error($this->migration->error_string());

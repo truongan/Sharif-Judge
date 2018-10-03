@@ -63,12 +63,12 @@ class Queue_model extends CI_Model
 		$submit_info['status'] = 'PENDING';
 
 		$this->db->insert('submissions', $submit_info);
-
+		//var_dump($this->db->last_query());die();
 		$this->db->insert('queue', array(
 			'submit_id' => $submit_info['submit_id'],
 			'username' => $submit_info['username'],
-			'assignment' => $submit_info['assignment'],
-			'problem' => $submit_info['problem'],
+			'assignment' => $submit_info['assignment_id'],
+			'problem' => $submit_info['problem_id'],
 			'type' => 'judge'
 		));
 	}
@@ -82,25 +82,19 @@ class Queue_model extends CI_Model
 	 */
 	public function rejudge($assignment_id, $problem_id)
 	{
-		$problem = $this->assignment_model->problem_info($assignment_id, $problem_id);
-		if ($problem['is_upload_only'])
-			return;
-
 		// Changing the status of all submissions of selected problem to PENDING
-
 		$this->db->where(
 			array(
-				'assignment' => $assignment_id,
-				'problem' => $problem_id
+				'assignment_id' => $assignment_id,
+				'problem_id' => $problem_id
 			)
 		)->update('submissions', array('pre_score' => 0, 'status' => 'PENDING'));
 
 		// Adding submissions to queue:
-
 		$submissions = $this->db
-			->select('submit_id, username, assignment, problem')
+			->select('submit_id, username, assignment_id, problem_id')
 			->order_by('submit_id')
-			->get_where('submissions', array('assignment'=>$assignment_id, 'problem'=>$problem_id))
+			->get_where('submissions', array('assignment_id'=>$assignment_id, 'problem_id'=>$problem_id))
 			->result_array();
 
 		foreach($submissions as $submission)
@@ -109,8 +103,8 @@ class Queue_model extends CI_Model
 				array(
 					'submit_id' => $submission['submit_id'],
 					'username' => $submission['username'],
-					'assignment' => $submission['assignment'],
-					'problem' => $submission['problem'],
+					'assignment' => $submission['assignment_id'],
+					'problem' => $submission['problem_id'],
 					'type' => 'rejudge'
 				)
 			);
@@ -127,16 +121,12 @@ class Queue_model extends CI_Model
 	 */
 	public function rejudge_single($submission)
 	{
-		$problem = $this->assignment_model->problem_info($submission['assignment'], $submission['problem']);
-		if ($problem['is_upload_only'])
-			return;
-
 		// Changing the status of submission to PENDING
 		$this->db->where(array(
 			'submit_id' => $submission['submit_id'],
 			'username' => $submission['username'],
-			'assignment' => $submission['assignment'],
-			'problem' => $submission['problem']
+			'assignment_id' => $submission['assignment'],
+			'problem_id' => $submission['problem']
 		))->update('submissions', array('pre_score'=>0, 'status'=>'PENDING'));
 
 		// Adding Submission to Queue
@@ -203,8 +193,8 @@ class Queue_model extends CI_Model
 			$this->db->where(array(
 				'is_final' => 1,
 				'username' => $submission['username'],
-				'assignment' => $submission['assignment'],
-				'problem' => $submission['problem'],
+				'assignment_id' => $submission['assignment_id'],
+				'problem_id' => $submission['problem_id'],
 			))->update('submissions', array('is_final'=>0));
 			$arr['is_final'] = 1;
 		}
@@ -212,13 +202,13 @@ class Queue_model extends CI_Model
 		$this->db->where(array(
 			'submit_id' => $submission['submit_id'],
 			'username' => $submission['username'],
-			'assignment' => $submission['assignment'],
-			'problem' => $submission['problem']
+			'assignment_id' => $submission['assignment_id'],
+			'problem_id' => $submission['problem_id']
 		))->update('submissions', $arr);
 
 		// update scoreboard:
 		$this->load->model('scoreboard_model');
-		$this->scoreboard_model->update_scoreboard($submission['assignment']);
+		$this->scoreboard_model->update_scoreboard($submission['assignment_id']);
 	}
 
 }

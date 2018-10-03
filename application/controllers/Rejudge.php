@@ -30,7 +30,6 @@ class Rejudge extends CI_Controller
 		$this->form_validation->set_rules('problem_id', 'problem id', 'required|integer');
 
 		$data = array(
-			'all_assignments' => $this->assignment_model->all_assignments(),
 			'problems' => $this->problems,
 			'msg' => array()
 		);

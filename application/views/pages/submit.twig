@@ -5,9 +5,20 @@
  #}
 {% set selected = 'submit' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}fa-location-arrow{% endblock %}
-{% block title %}Submit{% endblock %}
+{% block icon %}fas fa-code{% endblock %}
+{% block title %}
+	{% if assignment is defined %} 
+	<h5 class="ml-2">Assignment: {{assignment.name}}</h5>
+	{% else %}
+	<h5 class="ml-2">Problem: {{problems|first.name}}</h5>
+	{% endif %}
+{% endblock %}
+
 {% block head_title %}Submit{% endblock %}
+
+{% block title_menu %}
+
+{% endblock %}
 
 {% block other_assets %}
     <link rel="stylesheet" type='text/css' href="{{ base_url('assets/styles/submit_page.css') }}"/>
@@ -19,16 +30,17 @@
 <script  type="text/javascript" src="{{ base_url('assets/js/submit_page.js')   }}" charset="utf-8"></script>
 <script>
 	shj.p={};
+	{% if assignment is defined %} 
+		shj.selected_assignment = {{assignment.id}};
+	{% endif %}
+
 	{{ problems_js|raw }}
 
-	shj.selected_assignment = {{ user.selected_assignment.id }};
 	$(document).ready(function(){
 		///Select the problem from referring page
-		{% if from == '' %}
-			$("select#problems").val(1);
-		{% else  %}
-			$("select#problems").val({{ from }});
-		{% endif %}
+
+		$("select#problems").val({{ from }});
+
 		$("select#problems").change();
 	});
 </script>
@@ -39,9 +51,13 @@
 
 {% block main_content %}
 {% if error != 'none' %}
-<p>{{ error }}</p>
+<p class="text-warning"> {{ error }}</p>
 {% else %}
 	{{ form_open_multipart('submit') }}
+		{% if assignment is defined %} 
+			<input type ="hidden" value="{{assignment.id}}" name="assignment"/>
+		{% endif %}
+	<input type="hidden" value="{{ problem.id }}" name="problem"/>
 	<div class="form-inline">
 		{# <div class="inp_grp"> #}
 			<div class="form-group mr-3">

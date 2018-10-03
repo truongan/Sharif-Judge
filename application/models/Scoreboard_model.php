@@ -27,7 +27,7 @@ class Scoreboard_model extends CI_Model
 	private function _generate_scoreboard($assignment_id)
 	{
 		$assignment = $this->assignment_model->assignment_info($assignment_id);
-		$submissions = $this->db->get_where('submissions', array('is_final' => 1 , 'assignment' => $assignment_id))->result_array();
+		$submissions = $this->db->get_where('submissions', array('is_final' => 1 , 'assignment_id' => $assignment_id))->result_array();
 		$total_score = array();
 		$total_accepted_score = array();
 		$solved = array();
@@ -38,11 +38,26 @@ class Scoreboard_model extends CI_Model
 		$end = strtotime($assignment['finish_time']);
 		$submit_penalty = $this->settings_model->get_setting('submit_penalty');
 		$scores = array();
+
+		$problems = $this->assignment_model->all_problems($assignment_id);
+		/* An: 2018-08-26
+			calculate number of submission for each problems
+			to calculate wrong submission penalty
+			in a better way
+		*/
+		$tmp = $this->db->select('username, problem_id, count(*) as subcount')
+				->group_by(array('username', 'problem_id'))
+				->where('assignment_id', $assignment_id)
+				->get('submissions')
+				->result();
+		// var_dump($this->db->last_query());
+		foreach($tmp as $x){
+			$number_of_submissions[$x->username][$x->problem_id] = $x->subcount;
+		}
+
 		foreach ($submissions as $submission){
 
-			$pi = $this->assignment_model->problem_info($assignment_id, $submission['problem']);
-
-			$pre_score = ceil($submission['pre_score']*$pi['score']/10000);
+			$pre_score = ceil($submission['pre_score']*($problems[$submission['problem_id']]['score'] ?? 0 )/10000);
 			if ($submission['coefficient'] === 'error')
 				$final_score = 0;
 			else
@@ -50,10 +65,10 @@ class Scoreboard_model extends CI_Model
 			$fullmark = ($submission['pre_score'] == 10000);
 			$delay = strtotime($submission['time'])-$start;
 			$late = strtotime($submission['time'])-$end;
-			$scores[$submission['username']][$submission['problem']]['score'] = $final_score;
-			$scores[$submission['username']][$submission['problem']]['time'] = $delay;
-			$scores[$submission['username']][$submission['problem']]['late'] = $late;
-			$scores[$submission['username']][$submission['problem']]['fullmark'] = $fullmark;
+			$scores[$submission['username']][$submission['problem_id']]['score'] = $final_score;
+			$scores[$submission['username']][$submission['problem_id']]['time'] = $delay;
+			$scores[$submission['username']][$submission['problem_id']]['late'] = $late;
+			$scores[$submission['username']][$submission['problem_id']]['fullmark'] = $fullmark;
 
 			if ( ! isset($total_score[$submission['username']])){
 				$total_score[$submission['username']] = 0;
@@ -71,13 +86,9 @@ class Scoreboard_model extends CI_Model
 			$total_score[$submission['username']] += $final_score;
 			if ($fullmark) $total_accepted_score[$submission['username']] += $final_score;
 
-			$number_of_submissions = $this->db->where(array(
-				'assignment' => $submission['assignment'],
-				'problem' => $submission['problem'],
-				'username' => $submission['username'],
-			))->count_all_results('submissions');
-
-			if($fullmark) $penalty[$submission['username']] += $delay + $number_of_submissions*$submit_penalty;
+			if($fullmark) $penalty[$submission['username']] += $delay 
+					+ $number_of_submissions[$submission['username']][$submission['problem_id']]
+						*$submit_penalty;
 			$users[] = $submission['username'];
 		}
 		$scoreboard = array(

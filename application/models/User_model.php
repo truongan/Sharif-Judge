@@ -575,6 +575,13 @@ class User_model extends CI_Model
 		return $query->row();
 	}
 
+	public function get_user_by_name($user_id)
+	{
+		$query = $this->db->get_where('users', array('username'=>$user_id));
+		if ($query->num_rows() != 1)
+			return FALSE;
+		return $query->row();
+	}
 
 	// ------------------------------------------------------------------------
 

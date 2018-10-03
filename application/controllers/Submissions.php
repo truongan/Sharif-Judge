@@ -51,311 +51,81 @@ class Submissions extends CI_Controller
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 		$this->load->model('submit_model');
-		$this->problems = $this->assignment_model->all_problems($this->user->selected_assignment['id']);
+		
 
 		$input = $this->uri->uri_to_assoc();
+
 		$this->filter_user = $this->filter_problem = NULL;
+		$this->assignment = 0;
 		$this->page_number = 1;
+		
 		if (array_key_exists('user', $input) && $input['user'])
-			if ($this->user->level > 0) // students are not able to filter submissions by user
+			if ($this->user->level > 0) {
+				// Only non student user can use user filter
 				$this->filter_user = $this->form_validation->alpha_numeric($input['user'])?$input['user']:NULL;
+			}
+			
 		if (array_key_exists('problem', $input) && $input['problem'])
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
+		
+		if (array_key_exists('problem', $input) && $input['problem'])
+			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
+			
+		if (array_key_exists('assignment', $input) && $input['assignment'])
+			$this->assignment = is_numeric($input['assignment'])?$input['assignment']:0;
 
-		//var_dump($input); die();
+		$this->problems = $this->assignment_model->all_problems($this->assignment);
+		
+		// var_dump($this->db->last_query()); die();
 		if (array_key_exists('page', $input) && $input['page'])
 			$this->page_number = is_numeric($input['page'])?$input['page']:1;
 
 	}
 
-
-
-
+	private function _do_access_check($assignment_id){
+		$assignment =  $this->assignment_model->assignment_info($assignment_id);
+			
+		if ($assignment['id'] == 0 && $this->user->level < 2) {
+			show_error("Only admin can view submission without assignment", 403);
+		}
+		if ($assignment['open'] == 0  && $this->user->level < 2){
+			show_error("assignment " . $assignment['id'] . " has ben closed. Only admin can view submission", 403);
+		}
+	}
 	// ------------------------------------------------------------------------
-
-
-	/**
-	 * Uses PHPExcel library to generate excel file of submissions
-	 */
-	private function _download_excel($view)
+	public function final()
 	{
-		if ( ! in_array($view, array('all', 'final')))
-			exit;
-
-		$now = shj_now_str(); // current time
-
-		// Load PHPExcel library
-		$this->load->library('phpexcel');
-
-		// Set document properties
-		$this->phpexcel->getProperties()->setCreator('Sharif Judge')
-			->setLastModifiedBy('Sharif Judge')
-			->setTitle('Sharif Judge Users')
-			->setSubject('Sharif Judge Users')
-			->setDescription('List of Sharif Judge users ('.$now.')');
-
-		// Name of the file sent to browser
-		$output_filename = 'judge_'.$view.'_submissions';
-
-		// Set active sheet
-		$this->phpexcel->setActiveSheetIndex(0);
-		$sheet = $this->phpexcel->getActiveSheet();
-
-		// Add current assignment, time, username filter, and problem filter to document
-		$sheet->fromArray(array('Assignment:',$this->user->selected_assignment['name']), null, 'A1', true);
-		$sheet->fromArray(array('Time:',$now), null, 'A2', true);
-		$sheet->fromArray(array('Username Filter:', $this->filter_user?$this->filter_user:'No filter'), null, 'A3', true);
-		$sheet->fromArray(array('Problem Filter:', $this->filter_problem?$this->filter_problem:'No filter'), null, 'A4', true);
-
-		// Prepare header
-		if ($this->user->level === 0)
-			$header=array('Final','Problem','Submit Time','Score','Delay (HH:MM)','Coefficient','Final Score','Language','Status');
-		else{
-			$header=array('Final','Submit ID','Username','Name','Problem','Submit Time','Score','Delay (HH:MM)','Coefficient','Final Score','Language','Status');
-			if ($view === 'final'){
-				array_unshift($header, "#2");
-				array_unshift($header, "#1");
-			}
-		}
-
-		// Add header to document
-		$sheet->fromArray($header, null, 'A6', true);
-		$highest_column = $sheet->getHighestColumn();
-
-		// Set custom style for header
-		$sheet->getStyle('A6:'.$highest_column.'6')->applyFromArray(
-			array(
-				'fill' => array(
-					'type' => PHPExcel_Style_Fill::FILL_SOLID,
-					'color' => array('rgb' => '173C45')
-				),
-				'font'  => array(
-					'bold'  => true,
-					'color' => array('rgb' => 'FFFFFF'),
-					//'size'  => 14
-				)
-			)
-		);
-
-		// Prepare data (in $rows array)
-		if ($view === 'final')
-			$items = $this->submit_model->get_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, NULL, $this->filter_user, $this->filter_problem);
-		else
-			$items = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, NULL, $this->filter_user, $this->filter_problem);
-
-		$names = $this->user_model->get_names();
-
-		$finish = strtotime($this->user->selected_assignment['finish_time']);
-		$i=0; $j=0; $un='';
-		$rows = array();
-		foreach ($items as $item){
-			$i++;
-			if ($item['username'] != $un)
-				$j++;
-			$un = $item['username'];
-
-			$pi = $this->problems[$item['problem']];
-
-			$pre_score = ceil($item['pre_score']*$pi['score']/10000);
-
-			$checked='';
-			if ($item['is_final'])
-				$checked='*';
-
-			$delay = strtotime($item['time'])-$finish;
-			if ($item['coefficient'] === 'error')
-				$final_score = 0;
-			else
-				$final_score = ceil($pre_score*$item['coefficient']/100);
-
-
-			if ($this->user->level === 0)
-				$row = array(
-					$checked,
-					$item['problem'].' ('.$pi['name'].')',
-					$item['time'],
-					$pre_score,
-					($delay<=0?'No Delay':time_hhmm($delay)),
-					$item['coefficient'],
-					$final_score,
-					filetype_to_language($item['file_type']),
-					$item['status'],
-				);
-			else {
-				$row = array(
-					$checked,
-					$item['submit_id'],
-					$item['username'],
-					$names[$item['username']],
-					$item['problem'].' ('.$pi['name'].')',
-					$item['time'],
-					$pre_score,
-					($delay<=0?'No Delay':time_hhmm($delay)),
-					$item['coefficient'],
-					$final_score,
-					filetype_to_language($item['file_type']),
-					$item['status'],
-				);
-				if ($view === 'final'){
-					array_unshift($row,$j);
-					array_unshift($row,$i);
-				}
-			}
-			array_push($rows, $row);
-		}
-
-		// Add rows to document
-		$sheet->fromArray($rows, null, 'A7', true);
-		// Add alternative colors to rows
-		for ($i=7; $i<count($rows)+7; $i++){
-			$sheet->getStyle('A'.$i.':'.$highest_column.$i)->applyFromArray(
-				array(
-					'fill' => array(
-						'type' => PHPExcel_Style_Fill::FILL_SOLID,
-						'color' => array('rgb' => (($i%2)?'F0F0F0':'FAFAFA'))
-					)
-				)
-			);
-		}
-
-		// Set text align to center
-		$sheet->getStyle( $sheet->calculateWorksheetDimension() )
-			->getAlignment()
-			->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-		// Making columns autosize
-		for ($i=2;$i<count($header);$i++)
-			$sheet->getColumnDimension(chr(65+$i))->setAutoSize(true);
-
-		// Set Border
-		$sheet->getStyle('A7:'.$highest_column.$sheet->getHighestRow())->applyFromArray(
-			array(
-				'borders' => array(
-					'outline' => array(
-						'style' => PHPExcel_Style_Border::BORDER_THIN,
-						'color' => array('rgb' => '444444'),
-					),
-				)
-			)
-		);
-
-		// Send the file to browser
-
-		$ext = 'xlsx';
-		if ( ! class_exists('ZipArchive') ) // If class ZipArchive does not exist, export to excel5 instead of excel 2007
-			$ext = 'xls';
-
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment;filename="'.$output_filename.'.'.$ext.'"');
-		header('Cache-Control: max-age=0');
-		$objWriter = PHPExcel_IOFactory::createWriter($this->phpexcel, ($ext==='xlsx'?'Excel2007':'Excel5'));
-		$objWriter->save('php://output');
+		return $this->_index("final");
 	}
 
 
-
-
-	// ------------------------------------------------------------------------
-
-
-
-
-	public function final_excel()
-	{
-		$this->_download_excel('final');
+	public function index(){
+		// $last_submission = $this->submit_model->find_last_submission($this->user->username);
+		// if ($last_submission){
+		// 	return redirect('submissions/all/assignment/' .  $last_submission->assignment_id);
+		// }
+		return redirect('submissions/all/assignment/'.$this->user->selected_assignment['id']);
 	}
 
-
-
-	public function all_excel()
-	{
-		$this->_download_excel('all');
-	}
-
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	public function the_final()
-	{
-
-		if ( ! is_numeric($this->page_number))
-			show_404();
-
-		if ($this->page_number<1)
-			show_404();
-
-
-		$this->pagination_config['base_url'] = site_url('submissions/final'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
-		$this->pagination_config['cur_page'] = $this->page_number;
-		$this->pagination_config['total_rows'] = $this->submit_model->count_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem);
-		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_final');
-
-
-		if ($this->pagination_config['per_page'] == 0)
-			$this->pagination_config['per_page'] = $config['total_rows'];
-		$this->load->library('pagination');
-		$this->pagination->initialize($this->pagination_config);
-
-		//$submissions = $this->submit_model->get_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
-		$submissions = $this->submit_model->get_final_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, NULL, $this->filter_user, $this->filter_problem);
-
-		$names = $this->user_model->get_names();
-
-		foreach ($submissions as &$item)
-		{
-			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
-			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
-			$item['language'] = filetype_to_language($item['file_type']);
-			if ($item['coefficient'] === 'error')
-				$item['final_score'] = 0;
-			else
-				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
-		}
-
-
-		$data = array(
-			'view' => 'final',
-			'all_assignments' => $this->assignment_model->all_assignments(),
-			'problems' => $this->problems,
-			'submissions' => $submissions,
-			'excel_link' => site_url('submissions/final_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
-			'filter_user' => $this->filter_user,
-			'filter_problem' => $this->filter_problem,
-			'pagination' => $this->pagination->create_links(),
-			'page_number' => $this->page_number,
-			'per_page' => $this->pagination_config['per_page'],
-		);
-
-		$this->twig->display('pages/submissions.twig', $data);
-	}
-
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-
-	public function all()
-	{
-
+	private function _index($type = "all"){
 		if ( ! is_numeric($this->page_number))
 			show_404();
 
 		if ($this->page_number < 1)
 			show_404();
-
-
-		$this->pagination_config['base_url'] = site_url('submissions/all'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
+		
+		$this->_do_access_check($this->assignment);
+		$assignment =  $this->assignment_model->assignment_info($this->assignment);
+		if ($assignment['id'] != 0){
+			$this->user->select_assignment($assignment['id']);
+		}
+			// var_dump($this->assignment_model->assignment_info($this->assignment));die();
+		
+		$this->pagination_config['base_url'] = site_url("submissions/$type/assignment/".$assignment['id']."/".($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')) . "/page/";
 		$this->pagination_config['cur_page'] = $this->page_number;
-		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->filter_user, $this->filter_problem);
+		$this->pagination_config['total_rows'] = $this->submit_model->count_all_submissions($this->assignment
+						, $this->user->level, $this->user->username
+						, $this->filter_user, $this->filter_problem);
 		$this->pagination_config['per_page'] = $this->settings_model->get_setting('results_per_page_all');
 
 		if ($this->pagination_config['per_page'] == 0)
@@ -363,36 +133,49 @@ class Submissions extends CI_Controller
 		$this->load->library('pagination');
 		$this->pagination->initialize($this->pagination_config);
 
-		$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
-		//$submissions = $this->submit_model->get_all_submissions($this->user->selected_assignment['id'], $this->user->level, $this->user->username, null, $this->filter_user, $this->filter_problem);
+		if ($type == "all") 
+			$submissions = $this->submit_model->get_all_submissions($this->assignment, $this->user->level, $this->user->username, $this->page_number, $this->filter_user, $this->filter_problem);
+		else if ($type == "final")
+			$submissions = $this->submit_model->get_final_submissions($this->assignment, $this->user->level, $this->user->username, NULL, $this->filter_user, $this->filter_problem);
+		else show_404();
 
 		$names = $this->user_model->get_names();
 
 		foreach ($submissions as &$item)
 		{
+			// var_dump($this->problems); die();
 			$item['name'] = $names[$item['username']];
+			$item['problem_name'] = ($this->problems[$item['problem_id']]['problem_name']??'');
 			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
-			$item['delay'] = strtotime($item['time'])-strtotime($this->user->selected_assignment['finish_time']);
-			$item['language'] = filetype_to_language($item['file_type']);
+			$item['pre_score'] = ceil($item['pre_score']
+				*($this->problems[$item['problem_id']]['score']?? 0)
+				/10000);
+			$item['delay'] = strtotime($item['time'])-strtotime($assignment['finish_time']);
+			$item['language'] = $this->language_model->get_language($item['language_id'])->name;
 			if ($item['coefficient'] === 'error')
 				$item['final_score'] = 0;
 			else
 				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
 		}
-
+		//var_dump($assignment); die();
 		$data = array(
-			'view' => 'all',
+			'view' => $type,
 			'all_assignments' => $this->assignment_model->all_assignments(),
+			'assignment' => $assignment,
 			'problems' => $this->problems,
 			'submissions' => $submissions,
-			'excel_link' => site_url('submissions/all_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
+			// 'excel_link' => site_url('submissions/all_excel'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
 			'filter_user' => $this->filter_user,
 			'filter_problem' => $this->filter_problem,
 			'pagination' => $this->pagination->create_links(),
 		);
 
 		$this->twig->display('pages/submissions.twig', $data);
+	}
+	// ------------------------------------------------------------------------
+	public function all()
+	{
+		return $this->_index('all');
 	}
 
 
@@ -410,30 +193,33 @@ class Submissions extends CI_Controller
 	{
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
-
-		// Students cannot change their final submission after finish_time + extra_time
-		if ($this->user->level === 0)
-			if ( shj_now() > strtotime($this->user->selected_assignment['finish_time'])+$this->user->selected_assignment['extra_time'])
-			{
-				$json_result = array(
-					'done' => 0,
-					'message' => 'This assignment is finished. You cannot change your final submissions.'
-				);
-				$this->output->set_header('Content-Type: application/json; charset=utf-8');
-				echo json_encode($json_result);
-				return;
-			}
-
+			
 		$this->form_validation->set_rules('submit_id', 'Submit ID', 'integer|greater_than[0]');
 		$this->form_validation->set_rules('problem', 'problem', 'integer|greater_than[0]');
+		$this->form_validation->set_rules('assignment', 'problem', 'integer|required');
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|max_length[20]|alpha_numeric');
-
+			
 		if ($this->form_validation->run())
 		{
+			// Students can only change the final submission in assignment they can still submit.
+			if ($this->user->level === 0){
+				$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
+	
+				if ( ! $this->assignment_model->can_submit($assignment))
+				{
+					$json_result = array(
+						'done' => 0,
+						'message' => 'You can only change final submission if when you can still submit.'
+					);
+					$this->output->set_header('Content-Type: application/json; charset=utf-8');
+					echo json_encode($json_result);
+					return;
+				}
+			}
 			$username = $this->input->post('username');
 			if ($this->user->level === 0)
-				$username = $this->user->username;
-
+			$username = $this->user->username;
+			
 			$res = $this->submit_model->set_final_submission(
 				$username,
 				$this->user->selected_assignment['id'],
@@ -478,16 +264,16 @@ class Submissions extends CI_Controller
 			show_404();
 		$this->form_validation->set_rules('type','type','callback__check_type');
 		$this->form_validation->set_rules('username','username','required|min_length[3]|max_length[20]|alpha_numeric');
-		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[0]');
+		$this->form_validation->set_rules('assignment','assignment','integer');
 		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 		$this->form_validation->set_rules('submit_id','submit_id','integer|greater_than[0]');
 
 		if($this->form_validation->run())
 		{
+			$this->_do_access_check($this->input->post('assignment'));
+
 			$submission = $this->submit_model->get_submission(
-				$this->input->post('username'),
 				$this->input->post('assignment'),
-				$this->input->post('problem'),
 				$this->input->post('submit_id')
 			);
 			if ($submission === FALSE)
@@ -501,25 +287,25 @@ class Submissions extends CI_Controller
 			if ($this->user->level === 0 && $this->user->username != $submission['username'])
 				exit('Don\'t try to see submitted codes :)');
 
+			$submit_path = $this->submit_model->get_path($submission['username'], $submission['assignment_id'], $submission['problem_id']);
+			$file_extension = $this->language_model->get_language($submission['language_id'])->extension;
+			
 			if ($type === 'result')
-				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/result-{$submission['submit_id']}.html";
+				$file_path = $submit_path . "/result-{$submission['submit_id']}.html";
 			elseif ($type === 'code')
-				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
+				$file_path = $submit_path . "/{$submission['file_name']}.". $file_extension;
 			elseif ($type === 'log')
-				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-					"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/log-{$submission['submit_id']}";
+				$file_path = $submit_path . "/log-{$submission['submit_id']}";
 			else
-				$file_path = '/nowhere'; // This line is never reached!
-
+				$file_path = '/nowhere'; // This line should never be reached!
+			
 			$result = array(
-				'file_name' => $submission['main_file_name'].'.'.filetype_to_extension($submission['file_type']),
-				'text' => file_exists($file_path)?file_get_contents($file_path):'File Not Found'
+				'file_name' => $submission['file_name'].'.'. $file_extension,
+				'text' => file_exists($file_path)?file_get_contents($file_path):"File Not Found"
 			);
 
 			if ($type === 'code') {
-				$result['lang'] = $submission['file_type'];
+				$result['lang'] = $file_extension;
 				if ($result['lang'] == 'py2' || $result['lang'] == 'py3')
 					$result['lang'] = 'python';
 			}
@@ -531,65 +317,37 @@ class Submissions extends CI_Controller
 			exit('Are you trying to see other users\' codes? :)');
 	}
 
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-
-	public function download_file()
-	{
-		$username = $this->uri->segment(3);
-		$assignment = $this->uri->segment(4);
-		$problem = $this->uri->segment(5);
-		$submit_id = $this->uri->segment(6);
-
-		$submission = $this->submit_model->get_submission(
-			$username,
-			$assignment,
-			$problem,
-			$submit_id
-		);
-		if ($submission === FALSE)
-			show_404();
-
-		if ($this->user->level === 0 && $this->user->username != $submission['username'])
-			exit('Don\'t try to see submitted codes :)');
-
-		$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-		"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
-
-		$this->load->helper('download');
-		force_download(
-			"{$submission['file_name']}.".filetype_to_extension($submission['file_type']),
-			file_get_contents($file_path)
-		);
-	}
-
 	public function status(){
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 
-		$this->form_validation->set_rules('submit_id', 'submit id', 'required|integer');
-		$this->form_validation->set_rules('username', 'username', 'required|alpha_numeric');
 		$this->form_validation->set_rules('assignment', 'assignment', 'required|integer');
 		$this->form_validation->set_rules('problem', 'problem', 'required|integer');
+		$this->form_validation->set_rules('submit_id','submit_id','integer|greater_than[0]');
 
-		$submission = $this->submit_model->get_submission(
-					$this->input->post('username'),
-					$this->input->post('assignment'),
-					$this->input->post('problem'),
-					$this->input->post('submit_id')
-			);
-		$submission['fullmark'] = ($submission['pre_score'] == 10000);
-		$submission['pre_score'] = ceil($submission['pre_score']*$this->problems[$submission['problem']]['score']/10000);
-		if ($submission['coefficient'] === 'error')
-			$submission['final_score'] = 0;
-		else
-			$submission['final_score'] = ceil($submission['pre_score']*$submission['coefficient']/100);
-		echo json_encode($submission);
+		if($this->form_validation->run())
+		{
+			$this->_do_access_check($this->input->post('assignment'));
+			
+			$submission = $this->submit_model->get_submission(
+						$this->input->post('assignment'),
+						$this->input->post('submit_id')
+				);
+
+			$all_problems = $this->assignment_model->all_problems($this->input->post('assignment'));
+
+			$submission['fullmark'] = ($submission['pre_score'] == 10000);
+			$submission['pre_score'] = ceil($submission['pre_score']*
+								($all_problems[$submission['problem_id']]['score']??0)
+								/10000);
+			if ($submission['coefficient'] === 'error')
+				$submission['final_score'] = 0;
+			else
+				$submission['final_score'] = ceil($submission['pre_score']*$submission['coefficient']/100);
+			echo json_encode($submission);
+		} else {
+
+		}
 	}
 
 }

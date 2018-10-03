@@ -5,7 +5,7 @@
  #}
 {% set selected = 'settings' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}fa-gear{% endblock %}
+{% block icon %}fas fa-sliders-h{% endblock %}
 {% block title %}Settings{% endblock %}
 {% block head_title %}Settings{% endblock %}
 
@@ -82,7 +82,7 @@ $(document).ready(function(){
 					<optgroup label="Light">
 						<option value="lumen" {{ user.theme == "lumen" ? 'selected="selected"' : '' }} >lumen</option>
 						<option value="litera" {{ user.theme == "litera" ? 'selected="selected"' : '' }} >litera</option>
-						<option value="material-design" {{ user.theme == "material-design" ? 'selected="selected"' : '' }} >material-design</option>
+						{# <option value="material-design" {{ user.theme == "material-design" ? 'selected="selected"' : '' }} >material-design</option> #}
 						<option value="pulse" {{ user.theme == "pulse" ? 'selected="selected"' : '' }} >pulse</option>
 						<option value="cosmo" {{ user.theme == "cosmo" ? 'selected="selected"' : '' }} >cosmo</option>
 						<option value="journal" {{ user.theme == "journal" ? 'selected="selected"' : '' }} >journal</option>

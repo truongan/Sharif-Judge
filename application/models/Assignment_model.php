@@ -17,9 +17,6 @@ class Assignment_model extends CI_Model
 
 
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * Add New Assignment to DB / Edit Existing Assignment
 	 *
@@ -41,12 +38,11 @@ class Assignment_model extends CI_Model
 		$assignment = array(
 			'id' => $id,
 			'name' => $this->input->post('assignment_name'),
-			'problems' => $this->input->post('number_of_problems'),
 			'total_submits' => 0,
 			'open' => ($this->input->post('open')===NULL?0:1),
 			'scoreboard' => ($this->input->post('scoreboard')===NULL?0:1),
-			'javaexceptions' => ($this->input->post('javaexceptions')===NULL?0:1),
-			'description' => '', /* todo */
+			'javaexceptions' => 1, // ($this->input->post('javaexceptions')===NULL?0:1), to be removed later
+			'description' => $this->input->post('description'),
 			'start_time' => date('Y-m-d H:i:s', strtotime($this->input->post('start_time'))),
 			'finish_time' => date('Y-m-d H:i:s', strtotime($this->input->post('finish_time'))),
 			'extra_time' => $extra_time*60,
@@ -68,61 +64,25 @@ class Assignment_model extends CI_Model
 		/* **** Adding problems to "problems" table **** */
 
 		//First remove all previous problems
-		$this->db->delete('problems', array('assignment'=>$id));
+		$this->db->delete('problem_assignment', array('assignment_id'=>$id));
 
-		//Now add new problems:
-		$names = $this->input->post('name');
-		$scores = $this->input->post('score');
-		$c_tl = $this->input->post('c_time_limit');
-		$py_tl = $this->input->post('python_time_limit');
-		$java_tl = $this->input->post('java_time_limit');
-		$ml = $this->input->post('memory_limit');
-		$ft = $this->input->post('languages');
-		$dc = $this->input->post('diff_cmd');
-		$da = $this->input->post('diff_arg');
-		$uo = $this->input->post('is_upload_only');
-		if ($uo === NULL)
-			$uo = array();
-		for ($i=1; $i<=$this->input->post('number_of_problems'); $i++)
-		{
-			$items = explode(',', $ft[$i-1]);
-			$ft[$i-1] = '';
-			foreach ($items as $item){
-				$item = trim($item);
-				$item2 = strtolower($item);
-				$item = ucfirst($item2);
-				if ($item2 === 'python2')
-					$item = 'Python 2';
-				elseif ($item2 === 'python3')
-					$item = 'Python 3';
-				elseif ($item2 === 'pdf')
-					$item = 'PDF';
-				$item2 = strtolower($item);
-				if ( ! in_array($item2, array('c','c++','python 2','python 3','java','zip','pdf')))
-					continue;
-				// If the problem is not Upload-Only, its language should be one of {C,C++,Python 2, Python 3,Java}
-				if ( ! in_array($i, $uo) && ! in_array($item2, array('c','c++','python 2','python 3','java')) )
-					continue;
-				$ft[$i-1] .= $item.",";
-			}
-			$ft[$i-1] = substr($ft[$i-1],0,strlen($ft[$i-1])-1); // remove last ','
-			$problem = array(
-				'assignment' => $id,
-				'id' => $i,
-				'name' => $names[$i-1],
-				'score' => $scores[$i-1],
-				'is_upload_only' => in_array($i,$uo)?1:0,
-				'c_time_limit' => $c_tl[$i-1],
-				'python_time_limit' => $py_tl[$i-1],
-				'java_time_limit' => $java_tl[$i-1],
-				'memory_limit' => $ml[$i-1],
-				'allowed_languages' => $ft[$i-1],
-				'diff_cmd' => $dc[$i-1],
-				'diff_arg' => $da[$i-1],
-			);
-			$this->db->insert('problems', $problem);
+		$ids = $this->input->post('problem_id[]');
+		$names = $this->input->post('problem_name[]');
+		$scores = $this->input->post('problem_score[]');
+
+		$count = 1;
+		foreach($ids as $i => $pid){
+			if($pid == -1) continue; //Don't insert the dummy row.
+
+			$this->db->insert('problem_assignment', array(
+				'assignment_id' => $id,
+				'problem_id' => $pid,
+				'problem_name' => $names[$i],
+				'score' => $scores[$i],
+				'ordering' => $count++,
+			));
 		}
-
+		
 		if ($edit)
 		{
 			// We must update scoreboard of the assignment
@@ -134,6 +94,7 @@ class Assignment_model extends CI_Model
 		$this->db->trans_complete();
 
 		return $this->db->trans_status();
+		
 	}
 
 
@@ -153,8 +114,8 @@ class Assignment_model extends CI_Model
 
 		// Phase 1: Delete this assignment and its submissions from database
 		$this->db->delete('assignments', array('id'=>$assignment_id));
-		$this->db->delete('problems', array('assignment'=>$assignment_id));
-		$this->db->delete('submissions', array('assignment'=>$assignment_id));
+		$this->db->delete('problem_assignment', array('assignment_id'=>$assignment_id));
+		$this->db->delete('submissions', array('assignment_id'=>$assignment_id));
 
 		$this->db->trans_complete();
 
@@ -173,18 +134,18 @@ class Assignment_model extends CI_Model
 			// if assignment is closed, non-student users (admin, instructors) still can submit
 			$result['error_message'] = 'Selected assignment is closed.';
 		}
-		elseif (shj_now() < strtotime($this->user->selected_assignment['start_time']) && $this->user->level == 0 ){
+		elseif (!$this->started($assignment_info)){
 			// non-student users can submit to not started assignments
 			$result['error_message'] = 'Selected assignment has not started.';
 		}
-		elseif (strtotime($this->user->selected_assignment['start_time']) < strtotime($this->user->selected_assignment['finish_time'])
-		  		&& shj_now() > strtotime($this->user->selected_assignment['finish_time'])+$this->user->selected_assignment['extra_time'])
+		elseif (strtotime($assignment_info['start_time']) < strtotime($assignment_info['finish_time'])
+		  		&& shj_now() > strtotime($assignment_info['finish_time'])+$assignment_info['extra_time'])
 		{
 	  		// deadline = finish_time + extra_time
 			// but if start time is before finish time, the deadline is NEVER
 			$result['error_message'] =  'Selected assignment has finished.';
 		}
-		elseif ( ! $this->assignment_model->is_participant($this->user->selected_assignment['participants'],$this->user->username) )
+		elseif ( ! $this->assignment_model->is_participant($assignment_info,$this->user->username) )
 			$result['error_message'] = 'You are not registered for submitting.';
 		else{
 			$result['error_message'] = 'none';
@@ -195,10 +156,40 @@ class Assignment_model extends CI_Model
 
 	}
 
+	public function can_view($assigment_info){
+		return $this->started($assigment_info) && $this->is_participant($assigment_info, $this->user->username);
+	}
+
+	/**
+	 * Is Participant
+	 *
+	 * Returns TRUE if $username if one of the $participants
+	 * Examples for participants: "ALL" or "user1, user2,user3"
+	 *
+	 * @param $participants
+	 * @param $username
+	 * @return bool
+	 */
+	public function is_participant($assignment_info, $username)
+	{
+		$participants = explode(',', $assignment_info['participants']);
+		foreach ($participants as &$participant){
+			$participant = trim($participant);
+		}
+		if(in_array('ALL', $participants))
+			return TRUE;
+		if(in_array($username, $participants))
+			return TRUE;
+		return FALSE;
+	}
+
+	public function started($assignment_info){
+		return shj_now() >= strtotime($assignment_info['start_time']) //now should be larger than start time
+				|| $this->user->level > 0; ///instructor can view assignment before start time
+	}
+
+
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * All Assignments
 	 *
@@ -217,12 +208,7 @@ class Assignment_model extends CI_Model
 		return $assignments;
 	}
 
-
-
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * New Assignment ID
 	 *
@@ -245,9 +231,6 @@ class Assignment_model extends CI_Model
 
 
 	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * All Problems of an Assignment
 	 *
@@ -258,33 +241,25 @@ class Assignment_model extends CI_Model
 	 */
 	public function all_problems($assignment_id)
 	{
-		$result = $this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
+		// $result = $this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
+		$result = $this->db->from('problems')
+					->join('problem_assignment', 'problems.id = problem_assignment.problem_id')
+					->where('problem_assignment.assignment_id', $assignment_id)
+					->order_by('ordering')
+					->get()
+					->result_array()
+		;
+		// var_dump($this->db->last_query()); die();	
 		$problems = array();
 		foreach ($result as $row)
 			$problems[$row['id']] = $row;
 		return $problems;
 	}
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Problem Info
-	 *
-	 * Returns database row for given problem (from given assignment)
-	 *
-	 * @param $assignment_id
-	 * @param $problem_id
-	 * @return mixed
-	 */
-	public function problem_info($assignment_id, $problem_id)
-	{
-		return $this->db->get_where('problems', array('assignment'=>$assignment_id, 'id'=>$problem_id))->row_array();
+	public function count_no_problems($assignment_id){
+		return $result = $this->db->from('problem_assignment')
+		->where('problem_assignment.assignment_id', $assignment_id)
+		->count_all_results();
 	}
-
 
 
 	// ------------------------------------------------------------------------
@@ -305,42 +280,18 @@ class Assignment_model extends CI_Model
 		if ($query->num_rows() != 1)
 			return array(
 				'id' => 0,
-				'name' => 'Not Selected',
+				'name' => "instructors'submit",
 				'finish_time' => 0,
 				'extra_time' => 0,
-				'problems' => 0
+				'problems' => 0,
+				'open' => 0,
+				'total_submits' => $this->db->count_all_results('submissions'),
 			);
+
 		return $query->row_array();
 	}
 
 
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Is Participant
-	 *
-	 * Returns TRUE if $username if one of the $participants
-	 * Examples for participants: "ALL" or "user1, user2,user3"
-	 *
-	 * @param $participants
-	 * @param $username
-	 * @return bool
-	 */
-	public function is_participant($participants, $username)
-	{
-		$participants = explode(',', $participants);
-		foreach ($participants as &$participant){
-			$participant = trim($participant);
-		}
-		if(in_array('ALL', $participants))
-			return TRUE;
-		if(in_array($username, $participants))
-			return TRUE;
-		return FALSE;
-	}
 
 
 
@@ -408,37 +359,7 @@ class Assignment_model extends CI_Model
 	}
 
 
-
 	// ------------------------------------------------------------------------
-
-
-	/**
-	 * Save Problem Description
-	 *
-	 * Saves (Adds/Updates) problem description (html or markdown)
-	 *
-	 * @param $assignment_id
-	 * @param $problem_id
-	 * @param $text
-	 * @param $type
-	 */
-	public function save_problem_description($assignment_id, $problem_id, $text, $type)
-	{
-		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
-
-		if ($type === 'html')
-		{
-			if (file_put_contents("$assignments_root/assignment_{$assignment_id}/p{$problem_id}/desc.html", $text) ) {
-				return true;
-			} else return false;
-		}
-	}
-
-
-	// ------------------------------------------------------------------------
-
-
-
 	/**
 	 * Update Coefficients
 	 *
@@ -454,7 +375,7 @@ class Assignment_model extends CI_Model
 	 */
 	private function _update_coefficients($assignment_id, $extra_time, $finish_time, $new_late_rule)
 	{
-		$submissions = $this->db->get_where('submissions', array('assignment'=>$assignment_id))->result_array();
+		$submissions = $this->db->get_where('submissions', array('assignment_id'=>$assignment_id))->result_array();
 
 		$finish_time = strtotime($finish_time);
 
@@ -483,15 +404,16 @@ class Assignment_model extends CI_Model
 					if ($j+1<1000*($i+1) && $j+1<$size )
 						$query.=",\n";
 				}
-				else
-					$query.="WHEN assignment='$assignment_id' AND problem='{$item['problem']}' AND username='{$item['username']}' AND submit_id='{$item['submit_id']}' THEN {$item['coefficient']}\n";
+				else{
+					$query.="WHEN assignment_id='$assignment_id' AND problem_id='{$item['problem_id']}' AND username='{$item['username']}' AND submit_id='{$item['submit_id']}' THEN {$item['coefficient']}\n";
+				}
 			}
 
 			if ($this->db->dbdriver === 'postgre')
 				$query.=") AS c(assignment, problem, username, submit_id, coeff)\n"
 				."WHERE t.assignment=c.assignment AND t.problem=c.problem AND t.username=c.username AND t.submit_id=c.submit_id;";
 			else
-				$query.="ELSE coefficient \n END \n WHERE assignment='$assignment_id';";
+				$query.="ELSE coefficient \n END \n WHERE assignment_id='$assignment_id';";
 			$this->db->query($query);
 		}
 	}

@@ -51,8 +51,9 @@ class Assignments extends CI_Controller
 			ob_end_clean();
 			$item['coefficient'] = $coefficient;
 			$item['finished'] = ($delay > $extra_time);
+			$item['no_of_problems'] = $this->assignment_model->count_no_problems($item['id']);
 		}
-
+		// var_dump($item);die();
 		$this->twig->display('pages/assignments.twig', $data);
 
 	}
@@ -88,108 +89,23 @@ class Assignments extends CI_Controller
 		echo json_encode($json_result);
 	}
 
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Download pdf file of an assignment (or problem) to browser
-	 */
-	public function pdf($assignment_id, $problem_id = NULL)
-	{
-		// Find pdf file
-		if ($problem_id === NULL)
-			$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/*.pdf";
-		else
-			$pattern = rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/*.pdf";
-		$pdf_files = glob($pattern);
-		if ( ! $pdf_files )
-			show_error("File not found");
-
-		// Download the file to browser
-		$this->load->helper('download')->helper('file');
-		$filename = shj_basename($pdf_files[0]);
-		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
-	}
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Compressing and downloading test data and descriptions of an assignment to the browser
-	 */
-	public function downloadtestsdesc($assignment_id = FALSE)
-	{
-		if ($assignment_id === FALSE)
+	
+	public function download_all_submissions($assignment_id){
+		if ($assignment_id === FALSE || ! is_numeric($assignment_id))
 			show_404();
-		if ( $this->user->level <= 1) // permission denied
+		if ( $this->user->level == 0) // permission denied
 			show_404();
-
+		$this->load->model('submit_model');
 		$this->load->library('zip');
 
-		$assignment = $this->assignment_model->assignment_info($assignment_id);
+		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
 
-		$number_of_problems = $assignment['problems'];
-
-		$root_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-			"/assignment_{$assignment_id}";
-
-		for ($i=1 ; $i<=$number_of_problems ; $i++)
-		{
-
-			$path = "$root_path/p{$i}/in";
-			$this->zip->read_dir($path, FALSE, $root_path);
-
-			$path = "$root_path/p{$i}/out";
-			$this->zip->read_dir($path, FALSE, $root_path);
-
-			$path = "$root_path/p{$i}/tester.cpp";
-			if (file_exists($path))
-				$this->zip->add_data("p{$i}/tester.cpp", file_get_contents($path));
-
-			$pdf_files = glob("$root_path/p{$i}/*.pdf");
-			if ($pdf_files)
-			{
-				$path = $pdf_files[0];
-				$this->zip->add_data("p{$i}/".shj_basename($path), file_get_contents($path));
-			}
-
-			$template_files = glob("$root_path/p{$i}/template.*");
-			if ($template_files){
-				foreach ($template_files as $file )
-				{
-					$this->zip->add_data("p{$i}/".shj_basename($file), file_get_contents($file));
-				}
-			}
-
-			$path = "$root_path/p{$i}/desc.html";
-			if (file_exists($path))
-				$this->zip->add_data("p{$i}/desc.html", file_get_contents($path));
-
-			$path = "$root_path/p{$i}/desc.md";
-			if (file_exists($path))
-				$this->zip->add_data("p{$i}/desc.md", file_get_contents($path));
-		}
-
-		$pdf_files = glob("$root_path/*.pdf");
-		if ($pdf_files)
-		{
-			$path = $pdf_files[0];
-			$this->zip->add_data(shj_basename($path), file_get_contents($path));
-		}
-
-		$this->zip->download("assignment{$assignment_id}_tests_desc_".date('Y-m-d_H-i', shj_now()).'.zip');
+		$this->zip->read_dir(
+			$assignment_root . "/assignment_" . $assignment_id
+			, FALSE
+		);
+		$this->zip->download("assignment{$assignment_id}.".date('Y-m-d_H-i',shj_now()).'.zip');
 	}
-
-
-	// ------------------------------------------------------------------------
-
-
 	/**
 	 * Compressing and downloading final codes of an assignment to the browser
 	 */
@@ -207,20 +123,25 @@ class Assignments extends CI_Controller
 
 		$this->load->library('zip');
 
-		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-
+		$lang = $this->language_model->all_languages();
+		
 		foreach ($items as $item)
 		{
-			$file_path = $assignments_root.
-				"/assignment_{$item['assignment']}/p{$item['problem']}/{$item['username']}/{$item['file_name']}."
-				.filetype_to_extension($item['file_type']);
+			$file_path = $this->submit_model->get_path($item['username'], $item['assignment_id'], $item['problem_id']) 
+			. "/{$item['file_name']}." 
+			. $lang[$item['language_id']]->extension
+			;
+			// var_dump($file_path); die();
+			// $file_path = $assignments_root.
+			// 	"/assignment_{$item['assignment']}/p{$item['problem']}/{$item['username']}/{$item['file_name']}."
+			// 	.filetype_to_extension($item['file_type']);
 			if ( ! file_exists($file_path))
 				continue;
 			$file = file_get_contents($file_path);
 			if ($type === 'by_user')
-				$this->zip->add_data("{$item['username']}/p{$item['problem']}.".filetype_to_extension($item['file_type']), $file);
+				$this->zip->add_data("{$item['username']}/problem_{$item['problem_id']}.".$lang[$item['language_id']]->extension, $file);
 			elseif ($type === 'by_problem')
-				$this->zip->add_data("problem_{$item['problem']}/{$item['username']}.".filetype_to_extension($item['file_type']), $file);
+				$this->zip->add_data("problem_{$item['problem_id']}/{$item['username']}.".$lang[$item['language_id']]->extension, $file);
 		}
 
 		$this->zip->download("assignment{$assignment_id}_submissions_{$type}_".date('Y-m-d_H-i',shj_now()).'.zip');
@@ -294,81 +215,46 @@ class Assignments extends CI_Controller
 			show_404();
 
 		$this->load->library('upload');
-		//if ($_POST){ var_dump($_POST) ; die(); };
+
 		if ( ! empty($_POST) )
-			//echo("<pre>"); print_r($_POST); echo("</pre>"); die();
 			if ($this->_add()) // add/edit assignment
 			{
-				//if ( ! $this->edit) // if adding assignment (not editing)
-				//{
-				//   goto Assignments page
-					$this->index();
-					return;
-				//}
+				$this->index();
+				return;
 			}
 
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
+			'all_problems' => $this->problem_model->all_problems(),
 			'messages' => $this->messages,
 			'edit' => $this->edit,
 			'default_late_rule' => $this->settings_model->get_setting('default_late_rule'),
 		);
+
+		$data['problems'][-1] = array('id' => -1, 'name' => 'dummy', 'score'=>0);
 
 		if ($this->edit)
 		{
 			$data['edit_assignment'] = $this->assignment_model->assignment_info($this->edit_assignment);
 			if ($data['edit_assignment']['id'] === 0)
 				show_404();
-			$data['problems'] = $this->assignment_model->all_problems($this->edit_assignment);
+			$data['problems'] += $this->assignment_model->all_problems($this->edit_assignment) ;
 		}
 		else
 		{
-			$names = $this->input->post('name');
-			if ($names === NULL)
-				$data['problems'] = array(
-					array(
-						'id' => 1,
-						'name' => 'Problem ',
-						'score' => 100,
-						'c_time_limit' => 500,
-						'python_time_limit' => 1500,
-						'java_time_limit' => 2000,
-						'memory_limit' => 50000,
-						'allowed_languages' => 'C++',
-						'diff_cmd' => 'diff',
-						'diff_arg' => '-bB',
-						'is_upload_only' => 0
-					)
-				);
-			else
+			$names = $this->input->post('problem_name[]');
+			if ($names !== NULL)
 			{
-				$names = $this->input->post('name');
-				$scores = $this->input->post('score');
-				$c_tl = $this->input->post('c_time_limit');
-				$py_tl = $this->input->post('python_time_limit');
-				$java_tl = $this->input->post('java_time_limit');
-				$ml = $this->input->post('memory_limit');
-				$ft = $this->input->post('languages');
-				$dc = $this->input->post('diff_cmd');
-				$da = $this->input->post('diff_arg');
-				$data['problems'] = array();
-				$uo = $this->input->post('is_upload_only');
-				if ($uo === NULL)
-					$uo = array();
+				$id = $this->input->post('problem_id[]');
+				$names = $this->input->post('problem_name[]');
+				$scores = $this->input->post('problem_score[]');
+
 				for ($i=0; $i<count($names); $i++){
-					array_push($data['problems'], array(
-						'id' => $i+1,
+					$data['problems'][$id[$i]] = array(
+						'id' => $id[$i],
 						'name' => $names[$i],
-						'score' => $scores[$i],
-						'c_time_limit' => $c_tl[$i],
-						'python_time_limit' => $py_tl[$i],
-						'java_time_limit' => $java_tl[$i],
-						'memory_limit' => $ml[$i],
-						'allowed_languages' => $ft[$i],
-						'diff_cmd' => $dc[$i],
-						'diff_arg' => $da[$i],
-						'is_upload_only' => in_array($i+1,$uo)?1:0,
-					));
+						'score' => $scores[$i],		
+					);
 				}
 			}
 		}
@@ -390,26 +276,18 @@ class Assignments extends CI_Controller
 		if ($this->user->level <= 1) // permission denied
 			show_404();
 
-		$this->form_validation->set_rules('assignment_name', 'assignment name', 'required|max_length[50]');
+		$this->form_validation->set_rules('assignment_name', 'assignment name', 'required|max_length[150]');
 		$this->form_validation->set_rules('start_time', 'start time', 'required');
 		$this->form_validation->set_rules('finish_time', 'finish time', 'required');
 		$this->form_validation->set_rules('extra_time', 'extra time', 'required');
 		$this->form_validation->set_rules('participants', 'participants', '');
 		$this->form_validation->set_rules('late_rule', 'coefficient rule', 'required');
-		$this->form_validation->set_rules('name[]', 'problem name', 'required|max_length[50]');
+		$this->form_validation->set_rules('name[]', 'problem name', 'required|max_length[150]');
 		$this->form_validation->set_rules('score[]', 'problem score', 'required|integer');
-		$this->form_validation->set_rules('c_time_limit[]', 'C/C++ time limit', 'required|integer');
-		$this->form_validation->set_rules('python_time_limit[]', 'python time limit', 'required|integer');
-		$this->form_validation->set_rules('java_time_limit[]', 'java time limit', 'required|integer');
-		$this->form_validation->set_rules('memory_limit[]', 'memory limit', 'required|integer');
-		$this->form_validation->set_rules('languages[]', 'languages', 'required');
-		$this->form_validation->set_rules('diff_cmd[]', 'diff command', 'required');
-		$this->form_validation->set_rules('diff_arg[]', 'diff argument', 'required');
 
 		// Validate input data
 		if ( ! $this->form_validation->run())
 			return FALSE;
-
 
 		// Preparing variables
 		if ($this->edit)
@@ -437,7 +315,7 @@ class Assignments extends CI_Controller
 		
 		// Create assignment directory
 		if ( ! file_exists($assignment_dir) )
-		mkdir($assignment_dir, 0700);
+			mkdir($assignment_dir, 0700, TRUE);
 		
 		$this->_take_test_file_upload($assignments_root, $assignment_dir);
 
@@ -445,31 +323,6 @@ class Assignments extends CI_Controller
 	}
 
 	private function _take_test_file_upload($assignments_root, $assignment_dir){
-		// Upload Tests (zip file)
-		shell_exec('rm -f '.$assignments_root.'/*.zip');
-		$config = array(
-			'upload_path' => $assignments_root,
-			'allowed_types' => 'zip',
-		);
-		$this->upload->initialize($config);
-		$zip_uploaded = $this->upload->do_upload('tests_desc');
-		$u_data = $this->upload->data();
-		if ( $_FILES['tests_desc']['error'] === UPLOAD_ERR_NO_FILE )
-			$this->messages[] = array(
-				'type' => 'notice',
-				'text' => "Notice: You did not upload any zip file for tests. If needed, upload by editing assignment."
-			);
-		elseif ( ! $zip_uploaded )
-			$this->messages[] = array(
-				'type' => 'error',
-				'text' => "Error: Error uploading tests zip file: ".$this->upload->display_errors('', '')
-			);
-		else
-			$this->messages[] = array(
-				'type' => 'success',
-				'text' => "Tests (zip file) uploaded successfully."
-			);
-
 		// Upload PDF File of Assignment
 		$config = array(
 			'upload_path' => $assignment_dir,
@@ -497,68 +350,7 @@ class Assignments extends CI_Controller
 				'text' => 'PDF file uploaded successfully.'
 			);
 		}
-
-		if ($zip_uploaded) $this->unload_zip_test_file($assignments_root, $assignment_dir, $u_data);
 	}
-
-	private function unload_zip_test_file($assignments_root, $assignment_dir, $u_data){
-		// Create a temp directory
-		$tmp_dir_name = "shj_tmp_directory";
-		$tmp_dir = "$assignments_root/$tmp_dir_name";
-		shell_exec("rm -rf $tmp_dir; mkdir $tmp_dir;");
-
-		// Extract new test cases and descriptions in temp directory
-		$this->load->library('unzip');
-		$this->unzip->allow(array('txt', 'cpp', 'html', 'md', 'pdf'));
-		$extract_result = $this->unzip->extract($u_data['full_path'], $tmp_dir);
-
-		// Remove the zip file
-		unlink($u_data['full_path']);
-
-		if ( $extract_result )
-		{
-			// Remove previous test cases and descriptions
-			$remove = 
-			"cd $tmp_dir; for i in p*; do "
-				."[ -e \$i ] || continue;"
-				." rm -rf $assignment_dir/\$i/in $assignment_dir/\$i/out $assignment_dir/\$i/tester*"
-				."  $assignment_dir/\$i/template.* "
-				."  $assignment_dir/\$i/desc.*  $assignment_dir/\$i/*.pdf; done";
-			//echo "cp -R $tmp_dir/* $assignment_dir;";			
-			//echo $remove; die();			
-			shell_exec($remove);
-
-			if (glob("$tmp_dir/*.pdf"))
-				shell_exec("cd $assignment_dir; rm -f *.pdf");
-			// Copy new test cases from temp dir
-			// echo $tmp_dir . "<br/>";
-			// echo $assignment_dir . "<br/>";
-			// echo shell_exec("ls $tmp_dir/*");
-			// echo "cp -R $tmp_dir/* $assignment_dir;";
-			//die();
-			shell_exec("cp -R $tmp_dir/* $assignment_dir;");
-			$this->messages[] = array(
-				'type' => 'success',
-				'text' => 'Tests (zip file) extracted successfully.'
-			);
-		}
-		else
-		{
-			$this->messages[] = array(
-				'type' => 'error',
-				'text' => 'Error: Error extracting zip archive.'
-			);
-			foreach($this->unzip->errors_array() as $msg)
-				$this->messages[] = array(
-					'type' => 'error',
-					'text' => " Zip Extraction Error: ".$msg
-				);
-		}
-
-		// Remove temp directory
-		shell_exec("rm -rf $tmp_dir");
-	}
-	// ------------------------------------------------------------------------
 
 
 	public function edit($assignment_id)

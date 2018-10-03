@@ -43,10 +43,7 @@ $(document).ready(function () {
 		var button = $(this);
 		var row = button.parents('tr');
 		var type = button.data('type');
-		if (type == 'download') {
-			window.location = shj.site_url + 'submissions/download_file/' + row.data('u') + '/' + row.data('a') + '/' + row.data('p') + '/' + row.data('s');
-			return;
-		}
+
 		var view_code_request = $.ajax({
 			cache: true,
 			type: 'POST',
@@ -125,13 +122,14 @@ $(document).ready(function () {
 					submit_id: submit_id,
 					problem: problem,
 					username: username,
+					assignment : row.data('a'),
 					wcj_csrf_name: shj.csrf_token
 				},
 				error: shj.loading_error,
 				success: function (response) {
 					if (response.done) {
-						$("tr[data-u='" + username + "'][data-p='" + problem + "'] i.set_final").removeClass('fa-check-circle-o color11').addClass('fa-circle-o');
-						$("tr[data-u='" + username + "'][data-p='" + problem + "'][data-s='" + submit_id + "'] i.set_final").removeClass('fa-circle-o').addClass('fa-check-circle-o color11');
+						$("tr[data-u='" + username + "'][data-p='" + problem + "'] i.set_final").removeClass('fa-check-circle color11').addClass('fa-circle');
+						$("tr[data-u='" + username + "'][data-p='" + problem + "'][data-s='" + submit_id + "'] i.set_final").removeClass('fa-circle').addClass('fa-check-circle color11');
 					}
 					else
 						shj.loading_failed(response.message);

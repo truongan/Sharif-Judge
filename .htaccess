@@ -8,3 +8,6 @@
 RewriteEngine on
 RewriteCond $1 !^(index\.php|assets|robots\.txt)
 RewriteRule ^(.*)$ index.php?/$1 [L]
+
+# to enable whole test directory upload we need large number of file upload
+php_value max_file_uploads 1000

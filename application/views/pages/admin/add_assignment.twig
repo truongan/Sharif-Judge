@@ -5,7 +5,7 @@
  #}
 {% set selected = 'assignments' %}
 {% extends 'templates/base.twig' %}
-{% block icon %}{{ edit ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
+{% block icon %}fas {{ edit ? 'fa-edit' : 'fa-plus-square' }}{% endblock %}
 {% block title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
 {% block head_title %}{{ edit ? 'Edit' : 'Add' }} Assignment{% endblock %}
 
@@ -13,29 +13,15 @@
 
 {% block other_assets %}
 <link rel="stylesheet" type="text/css" href="{{ base_url('assets/select2/select2.min.css') }}">
-<style type="text/css">
-form {
-	width: 100%;
-	margin-bottom: 1em;
+<style>
+.select2-selection__choice{
+	display:none !important;
 }
-form  select{
-	width: 180px;
-}
-
-input[type='number'].short_text{
-	width: 80px!important;
-}
-.short_text{
-	width: 90px!important;
-}
-.medium_text{
-	min-width: 150px!important;
-}
-
 </style>
 {% endblock %}
 
 {% block body_end %}
+<script type="text/javascript" src="{{ base_url('assets/js/Sortable.min.js') }}"></script>
 <script type="text/javascript" src="{{ base_url('assets/select2/select2.min.js') }}"></script>
 <script type="text/javascript" src="{{ base_url('assets/js/add_assignments.js') }}"></script>
 <script type='text/javascript' src="{{ base_url('assets/js/taboverride.min.js') }}"></script>
@@ -136,7 +122,7 @@ input[type='number'].short_text{
 						</label>
 					</div>
 					<div class="col-sm-8">
-						<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="form-control" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time', 0) }}" />
+						<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="form-control" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time', 0)|extra_time_formatter }}" />
 						{{ form_error('extra_time', '<div class="alert alert-danger">', '</div>') }}
 					</div>
 				</div>
@@ -145,34 +131,15 @@ input[type='number'].short_text{
 				<div class="form-row">
 					<div class="col-sm-4">
 						<label for="form_participants">Participants<br>
-							<small class="form-text text-muted">Enter username of participants here (comma separated).
-								Only these users are able to submit. You can use keyword <code>ALL</code>.</small>
+							<small class="form-text text-muted">Only the users in this list (comma separated) are able to submit.
+								You can use keyword <code>ALL</code>.</small>
 						</label>
 					</div>
 					<div class="col-sm-8">
-				<textarea id="form_participants" name="participants" rows="5" class="form-control">{{ edit ? edit_assignment.participants : set_value('participants', 'ALL') }}</textarea>
+				<textarea id="form_participants" name="participants" rows="2" class="form-control">{{ edit ? edit_assignment.participants : set_value('participants', 'ALL') }}</textarea>
 					</div>
 				</div>
 			</fieldset>
-
-			<fieldset class="form-group">
-				<div class="form-row">
-					<div class="col-sm-4">
-						<label for="form_tests_desc">Tests and Descriptions (zip file)<br>
-							<small class="form-text text-muted">
-								<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/tests_structure.md" target="_blank"><i class="fa fa-question-circle" aria-hidden="true"></i> Use this structure</a>
-							</small>
-						</label>
-					</div>
-					<div class="col-sm-8">
-						<div class="custom-file">
-							<input id="form_tests_desc" type="file" name="tests_desc" class="custom-file-input" />
-							<label class="custom-file-label text-muted"><small>Test and description zip file</small></label>
-						</div>
-					</div>
-				</div>
-			</fieldset>
-
 
 			<fieldset class="form-group">
 				<div class="form-row">
@@ -193,6 +160,14 @@ input[type='number'].short_text{
 
 		<div class="col-sm-6">
 			<fieldset class="form-group">
+				<div class="form-row">
+						<label for="form_late_rule">Description
+						<small class="form-text text-muted medium clear" style="display: block;"></small>
+						</label>
+				<textarea id="form_late_rule" name="description" rows="3" class="form-control add_text">{{ edit ? edit_assignment.description : set_value('late_rule', description, false) }}</textarea>
+				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
+			</fieldset>
+			<fieldset class="form-group">
 				<div class="custom-control custom-checkbox">
 					<input id="form_a_open" class="custom-control-input" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
 					<label for="form_a_open" class="custom-control-label">Open</label>
@@ -206,89 +181,81 @@ input[type='number'].short_text{
 					<input id="form_a_scoreboard" class="custom-control-input" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
 					<span {#for="form_a_scoreboard"#} class="custom-control-label">Scoreboard</span>
 				</label>
-				<small class="form-text text-muted ">Check this to publish scoreboard to student</small>
+				<small class="form-text text-muted ">Check this to publish scoreboard to student, lecturer can always see scoreboard</small>
 				{{ form_error('scoreboard', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
-			<fieldset class="form-group">
-				<div class="custom-control custom-checkbox">
-					<input id="form_a_javaexceptions" class="custom-control-input" type="checkbox" name="javaexceptions" value="1" {{ edit ? (edit_assignment.javaexceptions ? 'checked') : set_checkbox('javaexceptions', '1')|raw }} />
-					<label for="form_a_javaexceptions" class="custom-control-label">Java Exceptions</label>
-				</div>
-				<small class="form-text text-muted ">Check this to show Java exceptions to users</small>
-				{{ form_error('javaexceptions', '<div class="alert alert-danger">', '</div>') }}
-			</fieldset>
+
 			<fieldset class="form-group">
 				<div class="form-row">
 						<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)
 						<small class="form-text text-muted medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</small>
 						</label>
-				<textarea id="form_late_rule" name="late_rule" rows="15" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
+				<textarea id="form_late_rule" name="late_rule" rows="8" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
 				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 		</div>
 	</div>
 
-<span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span>
+{# <span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span> #}
+<fieldset class="form-group">
+<label> Select problem(s) for this assignment
+<small class="form-text text-muted">You can type in the box below to search for problems
+</small></label>
+<select class="all_problems form-control" multiple="multiple">
+	{% for p in all_problems %}
+		<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}" data-note="{{ p.admin_note }}"
+		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.id}} - {{p.name}} </option>
+	{% endfor %}
+</select>
+</fieldset>
 
-<table id="problems_table">
-	<thead>
-	<tr>
-		<th rowspan="2"></th>
-		<th rowspan="2">Name</th>
-		<th rowspan="2">Score</th>
-		<th colspan="3" style="border-bottom: 1px solid #BDBDBD">Time Limit (ms)</th>
-		<th rowspan="2">Memory<br>Limit (kB)</th>
-		<th rowspan="2">Allowed<br>Languages <a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#allowed-languages"><i class="fa fa-question-circle" aria-hidden="true"></a></th>
-		<th rowspan="2">Diff<br>Command <a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#diff-command"><i class="fa fa-question-circle" aria-hidden="true"></a></th>
-		<th rowspan="2">Diff<br>Argument <a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#diff-arguments"><i class="fa fa-question-circle" aria-hidden="true"></a></th>
-		<th rowspan="2">Upload<br>Only <a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#upload-only"><i class="fa fa-question-circle" aria-hidden="true"></a></th>
-		<th rowspan="2"></th>
-	</tr>
-	<tr>
-		<th>C/C++</th><th>Python</th><th>Java</th>
-	</tr>
-	</thead class="form-inline">
-	<tbody>
-
+<fieldset class="form-group">
+<label> Set alias, score and order for problems in this assignment  <small class="form-text text-muted">Problem's alias will be displayed when student view this assignment instead of the problem's original name<br/>
+You can drag the handle to re-order the problems.<br/>
+Remove one problem from assignment won't remove the submissions of that problem but will reset its alias and score to default if you re-add it later.
+</small></label>
+<ul id="problem_list" class="list-group">
 	{% set i = 0 %}
 	{% for problem in problems %}
-		<tr>
-			<td>{{ problem.id }}</td>
-			<td><input type="text" name="name[]" class="form-control medium_text" value="{{ problem.name }}"/></td>
-			<td><input type="number" name="score[]" class="form-control short_text" value="{{ problem.score }}"/></td>
-			<td><input type="number" name="c_time_limit[]" class="form-control short_text" value="{{ problem.c_time_limit }}"/></td>
-			<td><input type="number" name="python_time_limit[]" class="form-control short_text" value="{{ problem.python_time_limit }}"/></td>
-			<td><input type="number" name="java_time_limit[]" class="form-control short_text" value="{{ problem.java_time_limit }}"/></td>
-			<td><input type="number" name="memory_limit[]" class="form-control short_text" value="{{ problem.memory_limit }}"/></td>
-			<input id="allowed_lang{{i}}" type="hidden" name="allowed_languages[{{i}}]" class="form-control" value="{{ problem.allowed_languages }}"/>
-			<input id="submit_lang{{i}}" type="hidden" name="languages[{{i}}]" class="form-control"/>
-			<td>
-				<select id="lang{{i}}" name="select_languages[{{i}}][]" class="" multiple>
-					<option value="C">C</option>
-					<option value="C++">C++</option>
-					<option value="Python 2">Python 2</option>
-					<option value="Python 3">Python 3</option>
-					<option value="Java">Java</option>
-				</select>
-			</td>
-			<td><input type="text" name="diff_cmd[]" class="form-control short_text" value="{{ problem.diff_cmd }}"/></td>
-			<td><input type="text" name="diff_arg[]" class="form-control short_text" value="{{ problem.diff_arg }}"/></td>
-			<td><label class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" class="custom-control-input" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/><span class="custom-control-label"></span></label></td>
-			<td><span class="btn btn-danger delete_problem"><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></td>
-		</tr>
+	<li   class="list-group-item {{problem.id == -1 ? 'd-none' : ''}} "><div class="row align-items-center">
+		<div class="col-auto list_handle p-3 pointer">
+			<span><i class="fa fa-grip-vertical fa-lg fa-fw"></i></span>
+		</div>
+		<div class="col">
+			<div class="row  align-items-center" >			
+				<input type="hidden" name="problem_id[]" value="{{problem.id}}"/>
+				<span class="lead">{{ problem.name }}
+					<span class="badge badge-light">{{ problem.id }}</span>
+				</span>
+			</div>
+			<div class="row  align-items-center" >			
+				<div class="form-inline">
+					<div class="input-group input-group-sm mr-2">
+						<div class="input-group-prepend">
+							<label class="input-group-text">Alias</label>
+						</div>
+						<input type="text" name="problem_name[]" class="form-control form-control-sm " value="{{ problem.problem_name }}"/>
+					</div>
+					
+					<div class="input-group input-group-sm mr-2">
+						<div class="input-group-prepend">
+						<label class="input-group-text">Score</label>
+						</div>
+						<input type="number" name="problem_score[]" class="form-control form-control-sm" value="{{ problem.score }}"/>
+					</div>
+					<span class="text-muted admin_note">{{ problem.admin_note }}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-auto">
+				<button class="btn btn-danger list_remover"><span><i class="fa fa-times-circle fa-lg fa-fw pointer"></i></span></button>
+		</div>
 		{% set i = i + 1 %}
+	</div></li>
 	{% endfor %}
-	</tbody>
-</table>
-{{ form_error('name[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('score[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('c_time_limit[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('python_time_limit[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('java_time_limit[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('memory_limit[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('languages[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('diff_cmd[]', '<div class="alert alert-danger">', '</div>') }}
-{{ form_error('diff_arg[]', '<div class="alert alert-danger">', '</div>') }}
+<ul class="list-group">
+</fieldset>
+
 <fieldset class="form-group mt-2">
 	<input type="submit" value="{{ edit ? 'Edit' : 'Add' }} Assignment" class="sharif_input btn btn-primary"/>
 </p>

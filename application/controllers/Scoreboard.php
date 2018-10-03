@@ -15,6 +15,7 @@ class Scoreboard extends CI_Controller
 			return;
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
+		$this->load->model('scoreboard_model');
 	}
 
 
@@ -23,19 +24,22 @@ class Scoreboard extends CI_Controller
 
 	public function index()
 	{
-		$this->load->model('scoreboard_model');
+		redirect('scoreboard/full/'.$this->user->selected_assignment['id']);
+	}
+	public function full($assignment_id){
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
 		$data = array(
-			'all_assignments' => $this->assignment_model->all_assignments(),
-			'scoreboard' => $this->scoreboard_model->get_scoreboard($this->user->selected_assignment['id'])
+			'assignment' => $assignment,
+			'scoreboard' => $this->scoreboard_model->get_scoreboard($assignment_id)
 		);
 
 		$this->twig->display('pages/scoreboard.twig', $data);
+
 	}
+	public function simplify($assignment_id){
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
 
-	public function simplify(){
-		$this->load->model('scoreboard_model');
-
-		$a = $this->scoreboard_model->get_scoreboard($this->user->selected_assignment['id']);
+		$a = $this->scoreboard_model->get_scoreboard($assignment_id);
 
 		//Remove excess info
 		$a = preg_replace('/[0-9]+:[0-9]+(\*\*)?/', '', $a);
@@ -53,7 +57,7 @@ class Scoreboard extends CI_Controller
 		$a = substr($a, 0, $i);
 
 		$data = array(
-			'all_assignments' => $this->assignment_model->all_assignments(),
+			'assignment' => $assignment,
 			'scoreboard' => $a
 		);
 
