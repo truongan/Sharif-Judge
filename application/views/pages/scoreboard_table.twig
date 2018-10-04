@@ -13,7 +13,7 @@
 		<th>Name</th>
 		{% for problem in problems %}
 		<th>
-			<a class="small" href="{{ site_url("view_problem/#{assignment_id}/#{problem.id}") }}">{{ problem.name }}</a>
+			<a class="small" href="{{ site_url("view_problem/#{assignment_id}/#{problem.id}") }}">{{ problem.problem_name }}</a>
 			<br>
 			<a class="text-light" href="{{ site_url("submissions/final/assignment/#{assignment_id}/problem/#{problem.id}") }}">{{ problem.score }}</a>
 		</th>
