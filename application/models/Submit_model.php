@@ -150,6 +150,17 @@ class Submit_model extends CI_Model {
 		return TRUE;
 	}
 
+	public function get_final_submission($username, $assignment, $problem_id)
+	{
+		return $this->db->where(array(
+			'is_final' => 1,
+			'username' => $username,
+			'assignment_id' => $assignment,
+			'problem_id' => $problem_id,
+		))->get('submissions')->row();
+
+
+	}
 
 	public function get_path($username, $assignment, $problem){
 		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');

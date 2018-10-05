@@ -32,7 +32,8 @@ class Moss extends CI_Controller
 		
 		$this->form_validation->set_rules('detect', 'detect', 'required');
 		
-		if ($this->form_validation->run()
+		if ($this->form_validation->run() /// Don't know why form submit from update mosss ID can pass this check
+										/// So I add the below check just to be sure.
 			&& $this->input->post('detect') == 'detect'
 		)
 		{
