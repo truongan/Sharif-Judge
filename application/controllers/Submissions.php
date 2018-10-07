@@ -204,8 +204,9 @@ class Submissions extends CI_Controller
 			// Students can only change the final submission in assignment they can still submit.
 			if ($this->user->level === 0){
 				$assignment = $this->assignment_model->assignment_info($this->input->post('assignment'));
+				// var_dump($this->assignment_model->can_submit($assignment));die();
 	
-				if ( ! $this->assignment_model->can_submit($assignment))
+				if ( ! $this->assignment_model->can_submit($assignment)['can_submit'])
 				{
 					$json_result = array(
 						'done' => 0,
