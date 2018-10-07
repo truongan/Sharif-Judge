@@ -190,20 +190,27 @@ class Queue_model extends CI_Model
 
 		// if ($type === 'judge')
 		// {
-		// 	$this->db->where(array(
-		// 		'is_final' => 1,
-		// 		'username' => $submission['username'],
-		// 		'assignment_id' => $submission['assignment_id'],
-		// 		'problem_id' => $submission['problem_id'],
-		// 	))->update('submissions', array('is_final'=>0));
-		// 	$arr['is_final'] = 1;
+
 		// }
 
 		$final_sub = $this->submit_model->get_final_submission(
 			$submission['username'], $submission['assignment_id'], $submission['problem_id']
 		);
 
-		if ($final_sub->pre_score * $final_sub->coefficient < $submission['pre_score'] * $submission['coefficient']){
+		if (
+			$final_sub == NULL 
+			|| 
+			(	$final_sub->pre_score < $submission['pre_score']
+				|| $final_sub->pre_score * $final_sub->coefficient < $submission['pre_score'] * $submission['coefficient']
+			)
+		){
+			$this->db->where(array(
+				'is_final' => 1,
+				'username' => $submission['username'],
+				'assignment_id' => $submission['assignment_id'],
+				'problem_id' => $submission['problem_id'],
+			))->update('submissions', array('is_final'=>0));
+
 			$arr['is_final'] = 1;
 		}
 
