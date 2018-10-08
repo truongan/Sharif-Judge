@@ -114,7 +114,7 @@ class Moss extends CI_Controller
 			// echo "list='$list'; cd $assignment_path; $tester_path/moss \$list 2>&1 >p{$problem_id}/moss_link.txt &"; 			die();
 
 			exec("list='$list'; cd $assignment_path; $tester_path/moss \$list > problem_{$problem_id}/moss_link.txt  2>&1 &");
-			exec("cd $assignment_path/p_problem{$problem_id}; touch moss_running");
+			exec("cd $assignment_path/problem_{$problem_id}; touch moss_running");
 
 		}
 		$this->assignment_model->set_moss_time($assignment_id);
