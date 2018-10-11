@@ -57,7 +57,11 @@ class Test extends CI_Controller
 	}
 	public function adhoc(){
 		$this->load->model('submit_model');
-		var_dump($this->language_model->all_languages());die();
+		var_dump(
+			$this->submit_model->get_final_submission(
+				'def', '2', 5
+			)
+		);die();
 		
 	}
 }
