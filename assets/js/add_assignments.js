@@ -4,6 +4,17 @@
 	date: 20160330
 */
 
+function format_problem(prob){
+	if (!prob.id) return prob.text; // THis is necessary because one dummy options with "searching" text will be created by select2
+
+	console.log(prob );
+	var $prob = $('<span class="badge badge-primary">'+ prob.element.dataset.id +'</span>'
+		+ prob.element.dataset.name
+		+ '<span class="text-small text-secondary">('+ prob.element.dataset.note +')</span>'
+	);
+	return $prob
+}
+
 $(document).ready(function(){
 	$("form").submit(function(event){	
 		$("#start_time").val($("#start_date").val() + " " + $("#start__time").val());
@@ -33,7 +44,8 @@ $(document).ready(function(){
 	});
 
 	$('.all_problems').select2({
-		placeholder : "Select problem to add to this assignment"
+		placeholder : "Select problem to add to this assignment",
+		templateResult : format_problem,
 	});
 	$('.all_problems').on('select2:select', function (e){
 

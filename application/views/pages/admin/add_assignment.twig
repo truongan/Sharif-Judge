@@ -204,7 +204,7 @@
 <select class="all_problems form-control" multiple="multiple">
 	{% for p in all_problems %}
 		<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}" data-note="{{ p.admin_note }}"
-		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.id}} - {{p.name}} </option>
+		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.id}} - {{p.name}} ({{ p.admin_note }}) </option>
 	{% endfor %}
 </select>
 </fieldset>
