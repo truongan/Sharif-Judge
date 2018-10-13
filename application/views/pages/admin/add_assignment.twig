@@ -188,7 +188,7 @@
 			<fieldset class="form-group">
 				<div class="form-row">
 						<label for="form_late_rule">Coefficient rule (<a target="_blank" href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/add_assignment.md#coefficient-rule">?</a>)
-						<small class="form-text text-muted medium clear" style="display: block;">PHP script without &lt;?php ?&gt; tags</small>
+						<small class="form-text text-muted medium clear">PHP script without &lt;?php ?&gt; tags. You can use 3 variables: <code>$extra_time</code>, <code>$delay</code>, <code>$submit_time</code></small>
 						</label>
 				<textarea id="form_late_rule" name="late_rule" rows="8" class="form-control add_text">{{ edit ? edit_assignment.late_rule : set_value('late_rule', default_late_rule, false) }}</textarea>
 				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
@@ -223,13 +223,14 @@ Remove one problem from assignment won't remove the submissions of that problem 
 		</div>
 		<div class="col">
 			<div class="row  align-items-center" >			
-				<input type="hidden" name="problem_id[]" value="{{problem.id}}"/>
-				<span class="lead">{{ problem.name }}
-					<span class="badge badge-light">{{ problem.id }}</span>
-				</span>
-			</div>
-			<div class="row  align-items-center" >			
 				<div class="form-inline">
+					<input type="hidden" name="problem_id[]" value="{{problem.id}}"/>
+					<span class="lead mr-2">
+						<span class="badge badge-light">{{ problem.id }}</span>
+						{{ problem.name }}
+					</span>
+			{# </div>
+			<div class="row  align-items-center" >			 #}
 					<div class="input-group input-group-sm mr-2">
 						<div class="input-group-prepend">
 							<label class="input-group-text">Alias</label>
