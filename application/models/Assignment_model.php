@@ -56,7 +56,7 @@ class Assignment_model extends CI_Model
 			$this->db->where('id', $id)->update('assignments', $assignment);
 			// each time we edit an assignment, we should update coefficient of all submissions of that assignment
 			if ($assignment['extra_time']!=$before['extra_time'] OR $assignment['start_time']!=$before['start_time'] OR $assignment['finish_time']!=$before['finish_time'] OR $assignment['late_rule']!=$before['late_rule'])
-				$this->_update_coefficients($id, $assignment['extra_time'], $assignment['finish_time'], $assignment['late_rule']);
+				$this->_update_coefficients($id, $assignment['extra_time'], $assignment['start_time'], $assignment['finish_time'], $assignment['late_rule']);
 		}
 		else
 			$this->db->insert('assignments', $assignment);
@@ -373,14 +373,16 @@ class Assignment_model extends CI_Model
 	 * @param $finish_time
 	 * @param $new_late_rule
 	 */
-	private function _update_coefficients($assignment_id, $extra_time, $finish_time, $new_late_rule)
+	private function _update_coefficients($assignment_id, $extra_time, $start_time, $finish_time, $new_late_rule)
 	{
 		$submissions = $this->db->get_where('submissions', array('assignment_id'=>$assignment_id))->result_array();
 
 		$finish_time = strtotime($finish_time);
+		$start_time = strtotime($start_time);
 
 		foreach ($submissions as $i => $item) {
 			$delay = strtotime($item['time'])-$finish_time;
+			$submit_time = strtotime($item['time'])-$start_time;
 			ob_start();
 			if ( eval($new_late_rule) === FALSE )
 				$coefficient = "error";

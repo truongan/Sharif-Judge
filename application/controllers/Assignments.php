@@ -43,6 +43,7 @@ class Assignments extends CI_Controller
 		{
 			$extra_time = $item['extra_time'];
 			$delay = shj_now()-strtotime($item['finish_time']);;
+			$submit_time = shj_now()-strtotime($item['start_time']);;
 			ob_start();
 			if ( eval($item['late_rule']) === FALSE )
 				$coefficient = "error";

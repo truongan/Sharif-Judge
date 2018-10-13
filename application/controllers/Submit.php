@@ -184,7 +184,8 @@ class Submit extends CI_Controller
 	
 	private function eval_coefficient($assignment){
 		$extra_time = $assignment['extra_time'];
-		$delay = shj_now()-strtotime($assignment['finish_time']);;
+		$delay = shj_now()-strtotime($assignment['finish_time']);
+		$submit_time = shj_now()-strtotime($assignment['start_time']);
 		ob_start();
 		if ( eval($assignment['late_rule']) === FALSE )
 			$coefficient = "error";
