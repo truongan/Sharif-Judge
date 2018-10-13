@@ -17,6 +17,10 @@
 .select2-selection__choice{
 	display:none !important;
 }
+input[type='number']{
+	width:8em!important;
+}
+
 </style>
 {% endblock %}
 
@@ -212,7 +216,7 @@
 <fieldset class="form-group">
 <label> Set alias, score and order for problems in this assignment  <small class="form-text text-muted">Problem's alias will be displayed when student view this assignment instead of the problem's original name<br/>
 You can drag the handle to re-order the problems.<br/>
-Remove one problem from assignment won't remove the submissions of that problem but will reset its alias and score to default if you re-add it later.
+Remove one problem from assignment won't remove the submissions of that problem but will reset its alias and score to default if you re-add it later. Total score of current problems: <span class="badge badge-info sum_score">0</span>
 </small></label>
 <ul id="problem_list" class="list-group">
 	{% set i = 0 %}

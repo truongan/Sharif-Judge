@@ -57,10 +57,11 @@ $(document).ready(function(){
 		new_row.find('input[name="problem_id[]"]').val(selected_data.id);
 		new_row.find('input[name="problem_name[]"]').val(selected_data.name);
 
-		new_row.find('.lead').html(selected_data.name 
-				+ '<span class="badge badge-light">'
+		new_row.find('.lead').html(
+				'<span class="badge badge-light">'
 				+ selected_data.id
 				+'</span>'
+				+selected_data.name 
 			);
 		new_row.find('.admin_note').html(selected_data.note);
 
@@ -70,5 +71,14 @@ $(document).ready(function(){
 	})
 	$('.all_problems').on('select2:unselecting', function (e){
 		e.preventDefault();
+	})
+	$('input[type="number"]').change(function(){
+		$('.sum_score').html('0');
+		var i = 0;
+		$('input[type="number"]').each(function(){
+			console.log(i);
+			i = i + parseInt($(this).val());
+		})
+		$('.sum_score').html(i);
 	})
 });
