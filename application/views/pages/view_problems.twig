@@ -107,7 +107,9 @@ $(document).ready(function(){
 				</tr>
 				</thead>
 				{% for one_problem in all_problems %}
-					<tr{{ problem.id == one_problem.id ? ' class="table-active"' }}>
+					<tr class=" {{ problem.id == one_problem.id ? ' table-active ' }} 
+						{{ problem_status[one_problem.id] }} "
+					>
 						{# <td>{{ one_problem.id }}</td> #}
 						<td>
 							<a href="{{ site_url("view_problem/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.problem_name }}</a>

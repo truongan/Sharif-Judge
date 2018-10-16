@@ -58,10 +58,11 @@ class Test extends CI_Controller
 	public function adhoc(){
 		$this->load->model('submit_model');
 		var_dump(
-			$this->submit_model->get_final_submission(
-				'def', '2', 5
+			$this->submit_model->get_final_submissions(
+				'2', '0', 'def'
 			)
-		);die();
+		);
+		die();
 		
 	}
 }

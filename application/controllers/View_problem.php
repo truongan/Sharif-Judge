@@ -84,6 +84,21 @@ class View_problem extends CI_Controller
 			//Select that assignment
 			$this->user->select_assignment($assignment['id']);
 			
+			/// Problems status
+			$this->load->model('submit_model');
+			$subs = $this->submit_model->get_final_submissions($assignment['id'], 0, $this->user->username);
+			// var_dump($subs);die();
+			$probs = array();
+			foreach($subs as $sub){
+				$class = "";
+				if($sub['status'] == 'SCORE'){
+					if ($sub['pre_score'] == 10000) $class = 'table-success';
+					else $class = "table-danger";
+				} 
+				$probs[$sub['problem_id']] = $class;
+			}
+			$data['problem_status'] = $probs;
+			// var_dump($data);die();
 			break;
 
 		}
