@@ -4,6 +4,17 @@
 	date: 20160330
 */
 
+function format_problem(prob){
+	if (!prob.id) return prob.text; // THis is necessary because one dummy options with "searching" text will be created by select2
+
+	console.log(prob );
+	var $prob = $('<span class="badge badge-primary">'+ prob.element.dataset.id +'</span>'
+		+ prob.element.dataset.name
+		+ '<span class="text-small text-secondary">('+ prob.element.dataset.note +')</span>'
+	);
+	return $prob
+}
+
 $(document).ready(function(){
 	$("form").submit(function(event){	
 		$("#start_time").val($("#start_date").val() + " " + $("#start__time").val());
@@ -33,7 +44,8 @@ $(document).ready(function(){
 	});
 
 	$('.all_problems').select2({
-		placeholder : "Select problem to add to this assignment"
+		placeholder : "Select problem to add to this assignment",
+		templateResult : format_problem,
 	});
 	$('.all_problems').on('select2:select', function (e){
 
@@ -45,10 +57,11 @@ $(document).ready(function(){
 		new_row.find('input[name="problem_id[]"]').val(selected_data.id);
 		new_row.find('input[name="problem_name[]"]').val(selected_data.name);
 
-		new_row.find('.lead').html(selected_data.name 
-				+ '<span class="badge badge-light">'
+		new_row.find('.lead').html(
+				'<span class="badge badge-light">'
 				+ selected_data.id
 				+'</span>'
+				+selected_data.name 
 			);
 		new_row.find('.admin_note').html(selected_data.note);
 
@@ -58,5 +71,14 @@ $(document).ready(function(){
 	})
 	$('.all_problems').on('select2:unselecting', function (e){
 		e.preventDefault();
+	})
+	$('input[type="number"]').change(function(){
+		$('.sum_score').html('0');
+		var i = 0;
+		$('input[type="number"]').each(function(){
+			console.log(i);
+			i = i + parseInt($(this).val());
+		})
+		$('.sum_score').html(i);
 	})
 });
