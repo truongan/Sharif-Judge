@@ -72,6 +72,7 @@ $(document).ready(function(){
 	$('.all_problems').on('select2:unselecting', function (e){
 		e.preventDefault();
 	})
+	
 	$('input[type="number"]').change(function(){
 		$('.sum_score').html('0');
 		var i = 0;
@@ -81,4 +82,5 @@ $(document).ready(function(){
 		})
 		$('.sum_score').html(i);
 	})
+	$('input[type="number"]').change();
 });
