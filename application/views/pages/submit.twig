@@ -64,7 +64,7 @@
 				<label for="problems" class="">Problem:</label>
 				<select id="problems" name ="problem" class="form-control custom-select">
 					{% for problem in problems %}
-						<option value="{{ problem.id }}">#{{problem.id}}--{{ problem.name }}
+						<option value="{{ problem.id }}">#{{problem.id}}--{{ problem.problem_name }}
 						</option>
 					{% endfor %}
 				</select>
