@@ -91,10 +91,10 @@ class View_problem extends CI_Controller
 			$probs = array();
 			foreach($subs as $sub){
 				$class = "";
-				if($sub['status'] == 'SCORE'){
-					if ($sub['pre_score'] == 10000) $class = 'table-success';
-					else $class = "table-danger";
-				} 
+				if($sub['status'] != 'PENDING'){
+					if ($sub['pre_score'] == 10000) $class = 'text-light bg-success';
+					else $class = "text-light bg-danger";
+				} else $class = "text-light bg-secondary";
 				$probs[$sub['problem_id']] = $class;
 			}
 			$data['problem_status'] = $probs;
