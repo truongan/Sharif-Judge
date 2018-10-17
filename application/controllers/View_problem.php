@@ -64,7 +64,9 @@ class View_problem extends CI_Controller
 
 			$a = $this->assignment_model->can_submit($assignment);
 			$data['can_submit'] = $a['can_submit'];
-
+			$data['sum_score'] = array_reduce($data['all_problems'], function($carry, $item){
+				return $carry + $item['score'];
+			});
 
 			if ($problem_id == NULL){
 				if (count($data['all_problems']) > 0) $problem_id = array_keys($data['all_problems'])[0];

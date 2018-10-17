@@ -96,7 +96,8 @@ $(document).ready(function(){
 	<div class="col-md-5 col-lg-4 ">
 		{% if all_problems is defined %}
 		<div class="problems_widget row">
-			<p><i class="fa fa-file-text fa-lg color9"></i> {{ assignment.name }}<br/> {{ all_problems|length }} problems</p>
+			<p><i class="fa fa-file-text fa-lg color9"></i> {{ assignment.name }}</p>
+			<p class="text-muted"><span class="badge badge-secondary count_problems">{{ all_problems|length }}</span> problems with a total score of <span class="badge badge-secondary sum_score">{{ sum_score}}</span></p>
 			<table class="wecode_table table  table-bordered">
 				<thead>
 				<tr>
