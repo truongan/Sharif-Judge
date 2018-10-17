@@ -216,13 +216,14 @@ input[type='number']{
 <fieldset class="form-group">
 <label> Set alias, score and order for problems in this assignment  <small class="form-text text-muted">Problem's alias will be displayed when student view this assignment instead of the problem's original name<br/>
 You can drag the handle to re-order the problems.<br/>
-Remove one problem from assignment won't remove the submissions of that problem but will reset its alias and score to default if you re-add it later. Total score of current problems: <span class="badge badge-info sum_score">0</span>
+Remove one problem from assignment won't remove the submissions of that problem but will reset its alias and score to default if you re-add it later.
+<br/>Currently: <span class="badge badge-info count_problems">0</span> problems with a total score of <span class="badge badge-info sum_score">0</span>
 </small></label>
 <ul id="problem_list" class="list-group">
 	{% set i = 0 %}
 	{% for problem in problems %}
 	<li   class="list-group-item {{problem.id == -1 ? 'd-none' : ''}} "><div class="row align-items-center">
-		<div class="col-auto list_handle p-3 pointer">
+		<div class="col-auto list_handle pointer">
 			<span><i class="fa fa-grip-vertical fa-lg fa-fw"></i></span>
 		</div>
 		<div class="col">
