@@ -14,6 +14,9 @@ function format_problem(prob){
 	);
 	return $prob
 }
+function update_problem_count(){
+	$('.count_problems').html($('.list-group-item').length - 1);
+}
 
 $(document).ready(function(){
 	$("form").submit(function(event){	
@@ -40,6 +43,7 @@ $(document).ready(function(){
 			if (Sortable.utils.is(ctrl, ".list_remover")) {  // Click on remove button
 				item.parentNode.removeChild(item); // remove sortable item
 			}
+			update_problem_count();
 		}
 	});
 
@@ -68,6 +72,7 @@ $(document).ready(function(){
 
 		new_row.insertAfter(dummy_row).slideDown();
 
+		update_problem_count();
 	})
 	$('.all_problems').on('select2:unselecting', function (e){
 		e.preventDefault();
@@ -77,10 +82,10 @@ $(document).ready(function(){
 		$('.sum_score').html('0');
 		var i = 0;
 		$('input[type="number"]').each(function(){
-			console.log(i);
 			i = i + parseInt($(this).val());
 		})
 		$('.sum_score').html(i);
 	})
 	$('input[type="number"]').change();
+	update_problem_count();
 });

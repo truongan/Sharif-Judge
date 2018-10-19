@@ -97,7 +97,8 @@ $(document).ready(function(){
 		{% if all_problems is defined %}
 		<div class="problems_widget row">
 			<p><i class="fa fa-file-text fa-lg color9"></i> {{ assignment.name }}</p>
-			<table class="wecode_table table table-striped table-bordered">
+			<p class="text-muted"><span class="badge badge-secondary count_problems">{{ all_problems|length }}</span> problems with a total score of <span class="badge badge-secondary sum_score">{{ sum_score}}</span></p>
+			<table class="wecode_table table  table-bordered">
 				<thead>
 				<tr>
 					{# <th>#</th> #}
@@ -108,13 +109,13 @@ $(document).ready(function(){
 				</thead>
 				{% for one_problem in all_problems %}
 					<tr class=" {{ problem.id == one_problem.id ? ' table-active ' }} 
-						{{ problem_status[one_problem.id] }} "
+						 "
 					>
 						{# <td>{{ one_problem.id }}</td> #}
 						<td>
 							<a href="{{ site_url("view_problem/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.problem_name }}</a>
 						</td>
-						<td>{{ one_problem.score }}</td>
+						<td  class="{{ problem_status[one_problem.id] }}"><span>{{ one_problem.score }}</span></td>
 						{# <td>{{ one_problem.is_upload_only ? 'Yes' : 'No' }}</td> #}
 					</tr>
 				{% endfor %}

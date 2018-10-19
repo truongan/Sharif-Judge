@@ -63,7 +63,9 @@ class View_problem extends CI_Controller
 
 			$a = $this->assignment_model->can_submit($assignment);
 			$data['can_submit'] = $a['can_submit'];
-
+			$data['sum_score'] = array_reduce($data['all_problems'], function($carry, $item){
+				return $carry + $item['score'];
+			});
 
 			if ($problem_id == NULL){
 				if (count($data['all_problems']) > 0) $problem_id = array_keys($data['all_problems'])[0];
@@ -91,10 +93,10 @@ class View_problem extends CI_Controller
 			$probs = array();
 			foreach($subs as $sub){
 				$class = "";
-				if($sub['status'] == 'SCORE'){
-					if ($sub['pre_score'] == 10000) $class = 'table-success';
-					else $class = "table-danger";
-				} 
+				if($sub['status'] != 'PENDING'){
+					if ($sub['pre_score'] == 10000) $class = 'text-light bg-success';
+					else $class = "text-light bg-danger";
+				} else $class = "text-light bg-secondary";
 				$probs[$sub['problem_id']] = $class;
 			}
 			$data['problem_status'] = $probs;
