@@ -65,9 +65,10 @@ class Problem_model extends CI_Model
 		// 	$problems[$item['id']] = $item;
 		// }	
 	
-		// return $problems;
+		//  return $problems;
 		foreach($a as &$prob){
-			$prob['assignments'] = explode(', ', $prob['assignments']);
+			if ($prob['assignments'] != NULL)
+				$prob['assignments'] = explode(',', $prob['assignments']);
 		}
 		return $a;
 	
