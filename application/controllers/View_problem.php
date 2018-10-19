@@ -42,7 +42,6 @@ class View_problem extends CI_Controller
 			$assignment = $this->assignment_model->assignment_info($assignment_id);
 
 			if($assignment['id'] == 0){
-				//show_error('Can not find your assignment', 404);				die();
 				if ($this->user->level > 1 && $problem_id != 0) redirect('problems/show/'.$problem_id);
 				$data['error'] = "There is nothing to submit to. Please select assignment and problem.";
 				break;
@@ -76,10 +75,11 @@ class View_problem extends CI_Controller
 			else if ( ! isset($data['all_problems'][$problem_id]))
 				show_404();
 
-			$data['problem'] = $this->problem_model->problem_info($problem_id);
+			$data['problem'] = $data['all_problems'][$problem_id];
+			$data['problem'] = array_merge($data['problem'], $this->problem_model->problem_info($problem_id));
 			$data['problem'] = array_merge($data['problem'], $this->problem_model->get_description($problem_id));
-
 			$data['error'] = 'none';
+			// var_dump($data);die();
 
 			//Select that assignment
 			$this->user->select_assignment($assignment['id']);

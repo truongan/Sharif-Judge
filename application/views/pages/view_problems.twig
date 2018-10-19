@@ -6,8 +6,8 @@
 {% set selected = 'problems' %}
 {% extends 'templates/base.twig' %}
 {% block icon %}fas fa-puzzle-piece{% endblock %}
-{% block title %}{{ problem.name }}{% endblock %}
-{% block head_title %}Problem {{ problem.id }}{% endblock %}
+{% block title %}{{ all_problems ? problem.problem_name : problem.name }}{% endblock %}
+{% block head_title %}Problem {{  all_problems ? problem.problem_name : problem.name  }}{% endblock %}
 
 {% block other_assets %}
 <style media="screen">
