@@ -42,6 +42,7 @@
 	<th style="width: 20%">Name</th>
 	<th style="width: 20%">Note</th>
 	<th>Languages</th>
+	<th>Used in assignmnets</th>
 	<th>diff<br/>command</th>
 	<th>diff<br/>argument</th>
 	<th>Tools</th>
@@ -54,6 +55,10 @@
 	<td><a href="{{ site_url("problems/show/#{item.id}") }}">{{ item.name }}</a></td>
 	<td>{{item.admin_note}}</td>
 	<td>{{item.languages}}</td>
+	<td>{% for ass_id in item.assignments %}
+			<a href="{{ site_url("assignments/edit/#{ass_id}") }}" class="badge badge-primary">prob {{ ass_id}}</a>
+		{% endfor %}
+	</td>
 	<td>{{ item.diff_cmd }}</td>
 	<td>{{ item.diff_arg }}</td>
 	

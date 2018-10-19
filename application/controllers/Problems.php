@@ -46,6 +46,7 @@ class Problems extends CI_Controller
 			'messages' => $this->messages,
 		);
 
+		// var_dump($data);die();
 		$this->twig->display('pages/admin/list_problem.twig', $data);
 
 	}
