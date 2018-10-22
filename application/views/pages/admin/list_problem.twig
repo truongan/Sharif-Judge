@@ -56,7 +56,7 @@
 	<td>{{item.admin_note}}</td>
 	<td>{{item.languages}}</td>
 	<td>{% for ass_id in item.assignments %}
-			<a href="{{ site_url("assignments/edit/#{ass_id}") }}" class="badge badge-primary">prob {{ ass_id}}</a>
+			<a href="{{ site_url("assignments/edit/#{ass_id}") }}" class="badge badge-primary">asgmt {{ ass_id}}</a>
 		{% endfor %}
 	</td>
 	<td>{{ item.diff_cmd }}</td>

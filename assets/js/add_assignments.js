@@ -78,7 +78,7 @@ $(document).ready(function(){
 		e.preventDefault();
 	})
 	
-	$('input[type="number"]').change(function(){
+	$('ul').on("change", 'input[type="number"]', function(){
 		$('.sum_score').html('0');
 		var i = 0;
 		$('input[type="number"]').each(function(){
