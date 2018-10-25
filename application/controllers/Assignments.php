@@ -90,6 +90,21 @@ class Assignments extends CI_Controller
 		echo json_encode($json_result);
 	}
 
+	public function pdf($assignment_id){
+		if ($assignment_id === FALSE || ! is_numeric($assignment_id))
+			show_404();		
+		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
+
+		$assignment_dir = $assignment_root . "/assignment_" . $assignment_id;
+		
+		$pdf_files = glob("$assignment_dir/*.pdf");
+
+		if ($pdf_files == FALSE) show_404();
+
+		$filename = shj_basename($pdf_files[0]);
+		$this->load->helper('download')->helper('file');
+		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
+	}
 	
 	public function download_all_submissions($assignment_id){
 		if ($assignment_id === FALSE || ! is_numeric($assignment_id))
