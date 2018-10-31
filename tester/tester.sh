@@ -142,9 +142,6 @@ hash perl 2>/dev/null || PERL_EXISTS=false
 if ! $PERL_EXISTS; then
 	shj_log "Warning: perl not found. We continue without perl..."
 fi
-
-TST="$(ls $PROBLEMPATH/in/input*.txt | wc -l)"  # Number of Test Cases
-
 JAIL=jail-$RANDOM
 if ! mkdir $JAIL; then
 	shj_log "Error: Folder 'tester' is not writable! Exiting..."
@@ -183,6 +180,9 @@ fi
 ########################################################################################################
 ################################################ TESTING ###############################################
 ########################################################################################################
+
+TST="$(ls $PROBLEMPATH/in/input*.txt | wc -l)"  # Number of Test Cases
+
 
 shj_log "\nTesting..."
 shj_log "$TST test cases found"
