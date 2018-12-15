@@ -50,6 +50,7 @@ $(document).ready(function(){
 	$('.all_problems').select2({
 		placeholder : "Select problem to add to this assignment",
 		templateResult : format_problem,
+		closeOnSelect : false,
 	});
 	$('.all_problems').on('select2:select', function (e){
 
