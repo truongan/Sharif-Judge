@@ -137,6 +137,9 @@ function shj_finish
 shj_log "Starting tester..."
 shj_log $@
 # detecting existence of perl
+
+shj_log "diff argu $DIFFOPTION"
+
 PERL_EXISTS=true
 hash perl 2>/dev/null || PERL_EXISTS=false
 if ! $PERL_EXISTS; then
