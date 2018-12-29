@@ -172,7 +172,7 @@ input[type='number']{
 				{{ form_error('late_rule', '<div class="alert alert-danger">', '</div>') }}
 			</fieldset>
 			<fieldset class="form-group">
-				<div class="custom-control custom-checkbox">
+				<div class="custom-control custom-switch">
 					<input id="form_a_open" class="custom-control-input" type="checkbox" name="open" value="1" {{ edit ? (edit_assignment.open ? 'checked') : set_checkbox('open', '1', true)|raw }} />
 					<label for="form_a_open" class="custom-control-label">Open</label>
 				</div>
@@ -181,7 +181,7 @@ input[type='number']{
 			</fieldset>
 
 			<fieldset class="form-group">
-				<label class="custom-control custom-checkbox">
+				<label class="custom-control custom-switch">
 					<input id="form_a_scoreboard" class="custom-control-input" type="checkbox" name="scoreboard" value="1" {{ edit ? (edit_assignment.scoreboard ? 'checked') : set_checkbox('scoreboard', '1')|raw }} />
 					<span {#for="form_a_scoreboard"#} class="custom-control-label">Scoreboard</span>
 				</label>
