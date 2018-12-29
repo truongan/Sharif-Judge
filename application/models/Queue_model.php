@@ -27,6 +27,15 @@ class Queue_model extends CI_Model
 		$query = $this->db->get_where('queue', array('username'=>$username, 'assignment'=>$assignment, 'problem'=>$problem));
 		return ($query->num_rows() > 0);
 	}
+	/**
+	 * Returns TRUE if the submission with $assignment and $submit_id
+	 * is already in queue (for preventing multiple submission)
+	 */
+	public function submission_in_queue($submit_id, $assignment)
+	{
+		$query = $this->db->get_where('queue', array('submit_id'=> $submit_id, 'assignment'=>$assignment));
+		return ($query->num_rows() > 0);
+	}
 
 
 	// ------------------------------------------------------------------------

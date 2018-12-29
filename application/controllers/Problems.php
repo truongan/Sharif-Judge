@@ -46,6 +46,7 @@ class Problems extends CI_Controller
 			'messages' => $this->messages,
 		);
 
+		// var_dump($data['all_problems']);die();
 		$this->twig->display('pages/admin/list_problem.twig', $data);
 
 	}
@@ -157,8 +158,7 @@ class Problems extends CI_Controller
 			show_404();
 
 		$this->form_validation->set_rules('problem_name', 'Problem name', 'required|max_length[150]' );
-		$this->form_validation->set_rules('diff_cmd', 'Problem name', 'required|max_length[20]' );
-		$this->form_validation->set_rules('diff_arg', 'Problem name', 'required|max_length[20]' );
+		$this->form_validation->set_rules('diff_cmd', 'Diff command', 'required|max_length[200]' );
 		$this->form_validation->set_rules('admin_note', 'Problem name', 'max_length[1500]' );
 		
 		if($this->form_validation->run() == FALSE){

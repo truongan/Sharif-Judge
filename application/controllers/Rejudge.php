@@ -63,16 +63,24 @@ class Rejudge extends CI_Controller
 		if ($this->form_validation->run())
 		{
 			$this->load->model('queue_model');
-			$this->queue_model->rejudge_single(
-				array(
-					'submit_id' => $this->input->post('submit_id'),
-					'username' => $this->input->post('username'),
-					'assignment' => $this->input->post('assignment'),
-					'problem' => $this->input->post('problem'),
-				)
-			);
-			process_the_queue();
-			$json_result = array('done' => 1);
+
+			if ($this->queue_model->submission_in_queue(
+					$this->input->post('submit_id')
+					, $this->input->post('assignment')
+			)){
+				$json_result = array('done' => 0, 'message' => 'Submission is already in queue for judging');
+			} else {
+				$this->queue_model->rejudge_single(
+					array(
+						'submit_id' => $this->input->post('submit_id'),
+						'username' => $this->input->post('username'),
+						'assignment' => $this->input->post('assignment'),
+						'problem' => $this->input->post('problem'),
+					)
+				);
+				process_the_queue();
+				$json_result = array('done' => 1);
+			}
 		}
 		else
 			$json_result = array('done' => 0, 'message' => 'Input Error');

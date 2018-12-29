@@ -39,17 +39,18 @@ class Problem_model extends CI_Model
 	public function all_problems_detailed(){
 		$problem_language = $this->db->dbprefix('problem_language');
 		$languages = $this->db->dbprefix('languages');
+		$problem_assignment = $this->db->dbprefix('problem_assignment');
 		$submissions = $this->db->dbprefix('submissions');
 		$problems = array();
 		$a =  $this->db
-				->select("problems.id, problems.name, diff_cmd, diff_arg, admin_note, group_concat(distinct $languages.name SEPARATOR ', ') as languages, "
+				->select("problems.id, problems.name, diff_cmd, diff_arg, admin_note, group_concat(distinct $languages.name SEPARATOR ', ') as languages, , group_concat(distinct $problem_assignment.assignment_id SEPARATOR ',') as assignments,"
 					// ." count(distinct $problem_assignment.assignment_id) as no_of_ass,"
 					//." count(distinct $submissions.submit_id) as no_of_sub "
 				)
 				->from('problems')
 				->join('problem_language', 'problems.id = problem_language.problem_id', 'left')
 				->join('languages', 'problem_language.language_id = languages.id', 'left')
-				// ->join('problem_assignment', 'problems.id = problem_assignment.problem_id', 'left')
+				->join('problem_assignment', 'problems.id = problem_assignment.problem_id', 'left')
 				// ->join('submissions', 'problems.id = submissions.problem_id', 'left')
 				->group_by('problems.id')
 				->order_by('problems.id', 'DESC')
@@ -64,7 +65,11 @@ class Problem_model extends CI_Model
 		// 	$problems[$item['id']] = $item;
 		// }	
 	
-		// return $problems;
+		//  return $problems;
+		foreach($a as &$prob){
+			if ($prob['assignments'] != NULL)
+				$prob['assignments'] = explode(',', $prob['assignments']);
+		}
 		return $a;
 	
 	}

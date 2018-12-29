@@ -50,6 +50,7 @@ $(document).ready(function(){
 	$('.all_problems').select2({
 		placeholder : "Select problem to add to this assignment",
 		templateResult : format_problem,
+		closeOnSelect : false,
 	});
 	$('.all_problems').on('select2:select', function (e){
 
@@ -78,7 +79,7 @@ $(document).ready(function(){
 		e.preventDefault();
 	})
 	
-	$('input[type="number"]').change(function(){
+	$('ul').on("change", 'input[type="number"]', function(){
 		$('.sum_score').html('0');
 		var i = 0;
 		$('input[type="number"]').each(function(){
