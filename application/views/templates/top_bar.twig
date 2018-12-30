@@ -113,22 +113,7 @@
 				</div>
 			</li>
 			{% endif %}
-			{# <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="{{ site_url('assignments') }}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="assignment_name">{{ user.selected_assignment.name|length > 30 ? user.selected_assignment.name|slice(0, 30) ~ '...' : user.selected_assignment.name }}</span>
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-					{% for assignment_item in all_assignments|reverse[:5] %}
-						<a class="dropdown-item select_assignment">
-							<i class="fa fa-fw fa-lg {{ assignment_item.id == user.selected_assignment.id ? 'fa-check-square-o color6' : 'fa-square-o' }}" data-id="{{ assignment_item.id }}"></i>
-							{{ assignment_item.name }}
-						</a>
-					{% endfor %}
 
-					<a  class="dropdown-item" href="{{ site_url('assignments') }}">All Assignments</a>
-
-				</div>
-			</li> #}
 		</ul>
 
 
@@ -148,7 +133,8 @@
 
 		<ul class="nav navbar-nav navbar-right">
 			<li class="nav-item dropdown">
-				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-fw fa-user"></i></a>
+				<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" id="profile_link"><i class="fa fa-fw fa-user"></i></a>
+				{# <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-fw fa-user"></i></a> #}
 				<div class="dropdown-menu dropdown-menu-right logout-menu">
 					<div class="d-flex pr-3 pl-3">
 						<div class="mr-3">
@@ -157,8 +143,8 @@
 						<div class="">
 							<div class="name h4"><i class="fa fa-fw fa-user"></i> {{ user.username }}</div>
 							<div class="d-inline-flex">
-								<a href="{{ site_url('logout') }}" class="btn btn-danger mr-2"><i class="fa fa-fw fa-sign-out"></i> Sign Out</a>
-								<a href="{{ site_url('profile') }}" class="btn btn-info"><i class="fa fa-fw fa-wrench"></i> Profile</a>
+								<a href="{{ site_url('logout') }}" class="btn btn-danger mr-2 text-nowrap"><i class="fas fa-fw fa-sign-out-alt"></i> Signout</a>
+								<a href="{{ site_url('profile') }}" class="btn btn-info text-nowrap" ><i class="fas fa-fw fa-wrench"></i> Profile</a>
 							</div>
 						</div>
 					</div>
