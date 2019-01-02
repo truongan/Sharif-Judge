@@ -17,7 +17,35 @@
 	<span class="title_menu_item"><a href="{{ site_url('users/list_excel') }}"><i class="fa fa-download color9"></i> Excel</a></span>
 {% endblock %}
 
+{% block other_assets %}
+<style>
 
+tbody{
+	/* turn tbody to block so it can have separate scroll */
+	display: block;
+	height: calc(100vh - 187px);
+	overflow: scroll;
+}
+tr{
+	/* turn every row to a flex row to distribute column evenly */
+	display: flex;
+}
+td, th{
+	/* distribute column evenly */
+	flex: 1 auto;
+	width: 1px;
+	word-wrap: break-word;
+}
+thead tr:after {
+	/* add one character after thead to align it with tbody */
+	content: '';
+	overflow-y: scroll;
+	visibility: hidden;
+	height: 0;
+  }
+  
+</style>
+{% endblock %}
 
 {% block main_content %}
 <div class="col">
@@ -27,22 +55,23 @@
 {% if deleted_submissions %}
 	<p class="shj_ok">Submissions of selected user deleted successfully.</p>
 {% endif %}
-<div style="height:15px"></div>
-<table class="wecode_table table table-striped table-bordered">
-	<thead class="thead-dark">
-		<tr>
-			<th>#</th>
-			<th>User ID</th>
-			<th>Username</th>
-			<th>Display Name</th>
-			<th>Email</th>
-			<th>Role</th>
-			<th>First Login</th>
-			<th>Last Login</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	{% for user in users %}
+
+<div class="table-responsive">
+	<table class="table table-striped table-bordered">
+		<thead class="thead-dark">
+			<tr>
+				<th>#</th>
+				<th>User ID</th>
+				<th>Username</th>
+				<th>Display Name</th>
+				<th>Email</th>
+				<th>Role</th>
+				<th>First Login</th>
+				<th>Last Login</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		{% for user in users %}
 		<tr data-id="{{ user.id }}">
 			<td>{{ loop.index }}</td>
 			<td>{{ user.id }}</td>
@@ -59,14 +88,15 @@
 				<span title="Delete Submissions" class="delete-btn delete_submissions pointer"><i class="fa fa-times-circle fa-lg color1"></i></span>
 			</td>
 		</tr>
-	{% endfor %}
-</table>
-
-{% endblock %}  {# main_content #}
-{% block body_end %}
-<div class="modal fade" id="user_delete" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
+		{% endfor %}
+	</table>
+</div>
+	
+	{% endblock %}  {# main_content #}
+	{% block body_end %}
+	<div class="modal fade" id="user_delete" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Are you sure you want to delete this user?</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
