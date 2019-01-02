@@ -200,18 +200,29 @@ input[type='number']{
 		</div>
 	</div>
 
-{# <span class="btn btn-success pointer mb-2 " id="add">Add Problems <i class="fa fa-plus-circle fa-lg fa-fw pointer" ></i></span> #}
-<fieldset class="form-group">
-<label> Select problem(s) for this assignment
-<small class="form-text text-muted">You can type in the box below to search for problems
-</small></label>
-<select class="all_problems form-control" multiple="multiple">
-	{% for p in all_problems %}
-		<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}" data-note="{{ p.admin_note }}"
-		 {{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.id}} - {{p.name}} ({{ p.admin_note }}) </option>
-	{% endfor %}
-</select>
-</fieldset>
+<div class="row">
+	<div class="col-sm-8">
+		<fieldset class="form-group">
+			<label> Select problem(s) for this assignment
+				<small class="form-text text-muted">You can type in the box below to search for problems
+				</small>
+			</label>
+			<select class="all_problems form-control" multiple="multiple">
+				{% for p in all_problems %}
+				<option value="{{ p.id }}" data-name="{{p.name}}" data-id="{{p.id}}" data-note="{{ p.admin_note }}" data-no_of_assignment="{{ p.no_of_assignment }}"
+				{{ problems[p.id] ? 'selected="selected"' : ''  }}>{{p.id}} - {{p.name}} ({{ p.admin_note }}) </option>
+				{% endfor %}
+			</select>
+		</fieldset>
+	</div>
+	<div class="col-sm-4">
+		<div class="form-group">
+		  <label for="min_assignment_to_select">Select all problems</label>
+		  <input type="number" name="min_assignment_to_select" id="min_assignment_to_select" class="form-control" placeholder="" aria-describedby="helpId">
+		  <small id="helpId" class="text-muted">Help text</small>
+		</div>
+	</div>
+</div>
 
 <fieldset class="form-group">
 <label> Set alias, score and order for problems in this assignment  <small class="form-text text-muted">Problem's alias will be displayed when student view this assignment instead of the problem's original name<br/>

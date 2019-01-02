@@ -27,7 +27,11 @@ class Problem_model extends CI_Model
 	
 
 	public function all_problems(){
-		$result = $this->db->order_by('id', 'DESC')->get('problems')->result_array();
+		$result = $this->db->order_by('id', 'DESC')->select('id, name,admin_note, count(assignment_id) as no_of_assignment')
+		->from('problems')
+		->join('problem_assignment', 'problems.id = problem_assignment.problem_id', 'left')
+		->group_by('id')
+		->get()->result_array();
 		$problems = array();
 		foreach ($result as $item)
 		{
