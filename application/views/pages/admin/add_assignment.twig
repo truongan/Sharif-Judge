@@ -17,7 +17,7 @@
 .select2-selection__choice{
 	display:none !important;
 }
-input[type='number']{
+.problem-score{
 	width:8em!important;
 }
 
@@ -218,8 +218,19 @@ input[type='number']{
 	<div class="col-sm-4">
 		<div class="form-group">
 		  <label for="min_assignment_to_select">Select all problems</label>
-		  <input type="number" name="min_assignment_to_select" id="min_assignment_to_select" class="form-control" placeholder="" aria-describedby="helpId">
-		  <small id="helpId" class="text-muted">Help text</small>
+
+			<div class="input-group input-group-sm">
+				<div class="input-group-prepend">
+					<span class="input-group-text" >used in less than</span>
+				</div>
+				<input type="number" class="form-control" value="2" id="multiple_problems_min" >
+				<div class="input-group-append">
+					<span class="input-group-text" >assignments</span>
+					<button class="btn btn-outline-primary" type="button" id="select_multiple_problems">Add</button>
+				</div>
+			</div>
+
+		  <small id="helpId" class="text-muted">Use this to select every problems that have been used in no more than a specific number of assignments. You can still fine tuning the selection afterward </small>
 		</div>
 	</div>
 </div>
@@ -258,7 +269,7 @@ Remove one problem from assignment won't remove the submissions of that problem 
 						<div class="input-group-prepend">
 						<label class="input-group-text">Score</label>
 						</div>
-						<input type="number" name="problem_score[]" class="form-control form-control-sm" value="{{ problem.score }}"/>
+						<input type="number" name="problem_score[]" class="form-control form-control-sm problem-score" value="{{ problem.score }}"/>
 					</div>
 					<span class="text-muted admin_note">{{ problem.admin_note }}</span>
 				</div>

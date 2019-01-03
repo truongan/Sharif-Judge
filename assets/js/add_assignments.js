@@ -7,7 +7,6 @@
 function format_problem(prob){
 	if (!prob.id) return prob.text; // THis is necessary because one dummy options with "searching" text will be created by select2
 
-	console.log(prob );
 	var $prob = $('<span class="badge badge-primary">'+ prob.element.dataset.id +'</span>'
 		+ prob.element.dataset.name
 		+ '<span class="text-small text-secondary">('+ prob.element.dataset.note +')</span>'
@@ -53,7 +52,7 @@ $(document).ready(function(){
 		closeOnSelect : false,
 	});
 	$('.all_problems').on('select2:select', function (e){
-
+		console.log(e);
 		console.log(selected_data = $(e.params.data.element).data());
 		var dummy_row = $('.list-group-item.d-none');
 		var new_row = dummy_row.clone()
@@ -77,16 +76,38 @@ $(document).ready(function(){
 	})
 	$('.all_problems').on('select2:unselecting', function (e){
 		e.preventDefault();
-	})
+	});
+
+	$('#select_multiple_problems').click(function(){
+		console.log('shit');
+		var min = document.getElementById('multiple_problems_min').value;
+		var will_select = [];
+		$('option').each(function(idx, obj){
+			console.log(obj.selected);
+			console.log(obj.dataset.no_of_assignment);
+			if(obj.dataset.no_of_assignment <= min && obj.selected == false){
+				obj.selected = true;
+				$('.all_problems').trigger('change');
+				$('.all_problems').trigger({
+					type : 'select2:select',
+					params : {
+						data : {element : obj}
+					}
+				});
+
+			}
+		})
+
+	});
 	
-	$('ul').on("change", 'input[type="number"]', function(){
+	$('ul').on("change", '.problem-score', function(){
 		$('.sum_score').html('0');
 		var i = 0;
-		$('input[type="number"]').each(function(){
+		$('.problem-score').each(function(){
 			i = i + parseInt($(this).val());
 		})
 		$('.sum_score').html(i);
 	})
-	$('input[type="number"]').change();
+	$('.problem-score').change();
 	update_problem_count();
 });
