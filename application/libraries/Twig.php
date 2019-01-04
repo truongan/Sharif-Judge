@@ -172,7 +172,14 @@ class Twig
 				'extra_time_formatter',
 				function ($extra_time) {
 					// convert to minutes
-					$extra_time = floor($extra_time/60);
+					// var_dump ($extra_time); die();
+					try {
+						$a = floor($extra_time/60);
+					} catch (Exception $e){
+						return $extra_time;
+						die();
+					}
+					$extra_time = $a;
 					// convert to H*60
 					if ($extra_time % 60 == 0 )
 						$extra_time = ($extra_time/60) . '*60';
