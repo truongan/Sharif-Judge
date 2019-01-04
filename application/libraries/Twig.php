@@ -171,14 +171,11 @@ class Twig
 			new Twig_SimpleFilter(
 				'extra_time_formatter',
 				function ($extra_time) {
+					// If not number, do nothing
+					if (!preg_match('/^[0-9]+$/',$extra_time)) return $extra_time;
+					
 					// convert to minutes
-					// var_dump ($extra_time); die();
-					try {
-						$a = floor($extra_time/60);
-					} catch (Exception $e){
-						return $extra_time;
-						die();
-					}
+					$a = floor($extra_time/60);
 					$extra_time = $a;
 					// convert to H*60
 					if ($extra_time % 60 == 0 )
