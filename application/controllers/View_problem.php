@@ -52,6 +52,11 @@ class View_problem extends CI_Controller
 				break;
 			}
 			
+			if ($assignment['open'] == 0  && $this->user->level < 2){
+				$data['error'] =("assignment " . $assignment['id'] . " has ben closed");
+				break;
+			}
+
 			if (! $this->assignment_model->is_participant($assignment,$this->user->username)){
 				$data['error'] = "You are not registered to participate in this assignment";
 				break;
