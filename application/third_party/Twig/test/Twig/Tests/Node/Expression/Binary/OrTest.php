@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_Binary_OrTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Binary_Or::__construct
-     */
     public function testConstructor()
     {
         $left = new Twig_Node_Expression_Constant(1, 1);
@@ -24,24 +21,14 @@ class Twig_Tests_Node_Expression_Binary_OrTest extends Twig_Test_NodeTestCase
         $this->assertEquals($right, $node->getNode('right'));
     }
 
-    /**
-     * @covers Twig_Node_Expression_Binary_Or::compile
-     * @covers Twig_Node_Expression_Binary_Or::operator
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-    }
-
     public function getTests()
     {
         $left = new Twig_Node_Expression_Constant(1, 1);
         $right = new Twig_Node_Expression_Constant(2, 1);
         $node = new Twig_Node_Expression_Binary_Or($left, $right, 1);
 
-        return array(
-            array($node, '(1 || 2)'),
-        );
+        return [
+            [$node, '(1 || 2)'],
+        ];
     }
 }

@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2011 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,14 +18,9 @@ class Twig_Node_ForLoop extends Twig_Node
 {
     public function __construct($lineno, $tag = null)
     {
-        parent::__construct(array(), array('with_loop' => false, 'ifexpr' => false, 'else' => false), $lineno, $tag);
+        parent::__construct([], ['with_loop' => false, 'ifexpr' => false, 'else' => false], $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         if ($this->getAttribute('else')) {
@@ -53,3 +48,5 @@ class Twig_Node_ForLoop extends Twig_Node
         }
     }
 }
+
+class_alias('Twig_Node_ForLoop', 'Twig\Node\ForLoopNode', false);

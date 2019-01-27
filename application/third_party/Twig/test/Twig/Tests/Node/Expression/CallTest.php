@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
+class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetArguments()
     {
-        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $this->assertEquals(array('U', null), $node->getArguments('date', array('format' => 'U', 'timestamp' => null)));
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'date']);
+        $this->assertEquals(['U', null], $node->getArguments('date', ['format' => 'U', 'timestamp' => null]));
     }
 
     /**
@@ -23,8 +23,8 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
      */
     public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments()
     {
-        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $node->getArguments('date', array('timestamp' => 123456, 'Y-m-d'));
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'date']);
+        $node->getArguments('date', ['timestamp' => 123456, 'Y-m-d']);
     }
 
     /**
@@ -33,28 +33,93 @@ class Twig_Tests_Node_Expression_CallTest extends PHPUnit_Framework_TestCase
      */
     public function testGetArgumentsWhenArgumentIsDefinedTwice()
     {
-        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $node->getArguments('date', array('Y-m-d', 'format' => 'U'));
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'date']);
+        $node->getArguments('date', ['Y-m-d', 'format' => 'U']);
     }
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Unknown argument "unknown" for function "date".
+     * @expectedExceptionMessage Unknown argument "unknown" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentName()
     {
-        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $node->getArguments('date', array('Y-m-d', 'timestamp' => null, 'unknown' => ''));
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'date']);
+        $node->getArguments('date', ['Y-m-d', 'timestamp' => null, 'unknown' => '']);
     }
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for function "date".
+     * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentNames()
     {
-        $node = new Twig_Tests_Node_Expression_Call(array(), array('type' => 'function', 'name' => 'date'));
-        $node->getArguments('date', array('Y-m-d', 'timestamp' => null, 'unknown1' => '', 'unknown2' => ''));
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'date']);
+        $node->getArguments('date', ['Y-m-d', 'timestamp' => null, 'unknown1' => '', 'unknown2' => '']);
+    }
+
+    /**
+     * @expectedException        Twig_Error_Syntax
+     * @expectedExceptionMessage Argument "case_sensitivity" could not be assigned for function "substr_compare(main_str, str, offset, length, case_sensitivity)" because it is mapped to an internal PHP function which cannot determine default value for optional argument "length".
+     */
+    public function testResolveArgumentsWithMissingValueForOptionalArgument()
+    {
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'substr_compare']);
+        $node->getArguments('substr_compare', ['abcd', 'bc', 'offset' => 1, 'case_sensitivity' => true]);
+    }
+
+    public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction()
+    {
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'custom_function']);
+
+        $this->assertEquals(['arg1'], $node->getArguments([$this, 'customFunction'], ['arg1' => 'arg1']));
+    }
+
+    public function testGetArgumentsForStaticMethod()
+    {
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'custom_static_function']);
+        $this->assertEquals(['arg1'], $node->getArguments(__CLASS__.'::customStaticFunction', ['arg1' => 'arg1']));
+    }
+
+    /**
+     * @expectedException        LogicException
+     * @expectedExceptionMessage The last parameter of "Twig_Tests_Node_Expression_CallTest::customFunctionWithArbitraryArguments" for function "foo" must be an array with default value, eg. "array $arg = []".
+     */
+    public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
+    {
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
+        $node->getArguments([$this, 'customFunctionWithArbitraryArguments'], []);
+    }
+
+    public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = [])
+    {
+    }
+
+    public function customFunction($arg1, $arg2 = 'default', $arg3 = [])
+    {
+    }
+
+    public function customFunctionWithArbitraryArguments()
+    {
+    }
+
+    /**
+     * @expectedException              LogicException
+     * @expectedExceptionMessageRegExp #^The last parameter of "custom_Twig_Tests_Node_Expression_CallTest_function" for function "foo" must be an array with default value, eg\. "array \$arg \= \[\]"\.$#
+     */
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
+    {
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
+        $node->getArguments('custom_Twig_Tests_Node_Expression_CallTest_function', []);
+    }
+
+    /**
+     * @expectedException              LogicException
+     * @expectedExceptionMessageRegExp #^The last parameter of "CallableTestClass\:\:__invoke" for function "foo" must be an array with default value, eg\. "array \$arg \= \[\]"\.$#
+     */
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
+    {
+        $node = new Twig_Tests_Node_Expression_Call([], ['type' => 'function', 'name' => 'foo', 'is_variadic' => true]);
+        $node->getArguments(new CallableTestClass(), []);
     }
 }
 
@@ -64,4 +129,15 @@ class Twig_Tests_Node_Expression_Call extends Twig_Node_Expression_Call
     {
         return parent::getArguments($callable, $arguments);
     }
+}
+
+class CallableTestClass
+{
+    public function __invoke($required)
+    {
+    }
+}
+
+function custom_Twig_Tests_Node_Expression_CallTest_function($required)
+{
 }

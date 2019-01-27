@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_Test::__construct
-     */
     public function testConstructor()
     {
         $expr = new Twig_Node_Expression_Constant('foo', 1);
@@ -26,43 +23,60 @@ class Twig_Tests_Node_Expression_TestTest extends Twig_Test_NodeTestCase
         $this->assertEquals($name, $node->getAttribute('name'));
     }
 
-    /**
-     * @covers Twig_Node_Expression_Test::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-    }
-
     public function getTests()
     {
-        $tests = array();
+        $environment = new Twig_Environment($this->getMockBuilder('Twig_LoaderInterface')->getMock());
+        $environment->addTest(new Twig_SimpleTest('barbar', 'twig_tests_test_barbar', ['is_variadic' => true, 'need_context' => true]));
+
+        $tests = [];
 
         $expr = new Twig_Node_Expression_Constant('foo', 1);
-        $node = new Twig_Node_Expression_Test_Null($expr, 'null', new Twig_Node(array()), 1);
-        $tests[] = array($node, '(null === "foo")');
+        $node = new Twig_Node_Expression_Test_Null($expr, 'null', new Twig_Node([]), 1);
+        $tests[] = [$node, '(null === "foo")'];
 
         // test as an anonymous function
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
-            $node = $this->createTest(new Twig_Node_Expression_Constant('foo', 1), 'anonymous', array(new Twig_Node_Expression_Constant('foo', 1)));
-            $tests[] = array($node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), array("foo", "foo"))');
+        if (PHP_VERSION_ID >= 50300) {
+            $node = $this->createTest(new Twig_Node_Expression_Constant('foo', 1), 'anonymous', [new Twig_Node_Expression_Constant('foo', 1)]);
+            $tests[] = [$node, 'call_user_func_array($this->env->getTest(\'anonymous\')->getCallable(), ["foo", "foo"])'];
         }
+
+        // arbitrary named arguments
+        $string = new Twig_Node_Expression_Constant('abc', 1);
+        $node = $this->createTest($string, 'barbar');
+        $tests[] = [$node, 'twig_tests_test_barbar("abc")', $environment];
+
+        $node = $this->createTest($string, 'barbar', ['foo' => new Twig_Node_Expression_Constant('bar', 1)]);
+        $tests[] = [$node, 'twig_tests_test_barbar("abc", null, null, ["foo" => "bar"])', $environment];
+
+        $node = $this->createTest($string, 'barbar', ['arg2' => new Twig_Node_Expression_Constant('bar', 1)]);
+        $tests[] = [$node, 'twig_tests_test_barbar("abc", null, "bar")', $environment];
+
+        $node = $this->createTest($string, 'barbar', [
+            new Twig_Node_Expression_Constant('1', 1),
+            new Twig_Node_Expression_Constant('2', 1),
+            new Twig_Node_Expression_Constant('3', 1),
+            'foo' => new Twig_Node_Expression_Constant('bar', 1),
+        ]);
+        $tests[] = [$node, 'twig_tests_test_barbar("abc", "1", "2", [0 => "3", "foo" => "bar"])', $environment];
 
         return $tests;
     }
 
-    protected function createTest($node, $name, array $arguments = array())
+    protected function createTest($node, $name, array $arguments = [])
     {
         return new Twig_Node_Expression_Test($node, $name, new Twig_Node($arguments), 1);
     }
 
     protected function getEnvironment()
     {
-        if (version_compare(phpversion(), '5.3.0', '>=')) {
+        if (PHP_VERSION_ID >= 50300) {
             return include 'PHP53/TestInclude.php';
         }
 
         return parent::getEnvironment();
     }
+}
+
+function twig_tests_test_barbar($string, $arg1 = null, $arg2 = null, array $args = [])
+{
 }

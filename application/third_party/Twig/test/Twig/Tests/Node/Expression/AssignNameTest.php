@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_Expression_AssignNameTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Expression_AssignName::__construct
-     */
     public function testConstructor()
     {
         $node = new Twig_Node_Expression_AssignName('foo', 1);
@@ -21,21 +18,12 @@ class Twig_Tests_Node_Expression_AssignNameTest extends Twig_Test_NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    /**
-     * @covers Twig_Node_Expression_AssignName::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-    }
-
     public function getTests()
     {
         $node = new Twig_Node_Expression_AssignName('foo', 1);
 
-        return array(
-            array($node, '$context["foo"]'),
-        );
+        return [
+            [$node, '$context["foo"]'],
+        ];
     }
 }

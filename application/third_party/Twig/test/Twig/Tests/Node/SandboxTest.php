@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_SandboxTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_Sandbox::__construct
-     */
     public function testConstructor()
     {
         $body = new Twig_Node_Text('foo', 1);
@@ -22,25 +19,16 @@ class Twig_Tests_Node_SandboxTest extends Twig_Test_NodeTestCase
         $this->assertEquals($body, $node->getNode('body'));
     }
 
-    /**
-     * @covers Twig_Node_Sandbox::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-    }
-
     public function getTests()
     {
-        $tests = array();
+        $tests = [];
 
         $body = new Twig_Node_Text('foo', 1);
         $node = new Twig_Node_Sandbox($body, 1);
 
-        $tests[] = array($node, <<<EOF
+        $tests[] = [$node, <<<EOF
 // line 1
-\$sandbox = \$this->env->getExtension('sandbox');
+\$sandbox = \$this->env->getExtension('Twig_Extension_Sandbox');
 if (!\$alreadySandboxed = \$sandbox->isSandboxed()) {
     \$sandbox->enableSandbox();
 }
@@ -49,7 +37,7 @@ if (!\$alreadySandboxed) {
     \$sandbox->disableSandbox();
 }
 EOF
-        );
+        ];
 
         return $tests;
     }

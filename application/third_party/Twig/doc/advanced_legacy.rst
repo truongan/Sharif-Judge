@@ -227,7 +227,7 @@ The ``Twig_Filter`` classes take options as their last argument. For instance,
 if you want access to the current environment instance in your filter, set the
 ``needs_environment`` option to ``true``::
 
-    $filter = new Twig_Filter_Function('str_rot13', array('needs_environment' => true));
+    $filter = new Twig_Filter_Function('str_rot13', ['needs_environment' => true]);
 
 Twig will then pass the current environment as the first argument to the
 filter call::
@@ -248,14 +248,14 @@ before printing. If your filter acts as an escaper (or explicitly outputs HTML
 or JavaScript code), you will want the raw output to be printed. In such a
 case, set the ``is_safe`` option::
 
-    $filter = new Twig_Filter_Function('nl2br', array('is_safe' => array('html')));
+    $filter = new Twig_Filter_Function('nl2br', ['is_safe' => ['html']]);
 
 Some filters may need to work on input that is already escaped or safe, for
 example when adding (safe) HTML tags to originally unsafe output. In such a
 case, set the ``pre_escape`` option to escape the input data before it is run
 through your filter::
 
-    $filter = new Twig_Filter_Function('somefilter', array('pre_escape' => 'html', 'is_safe' => array('html')));
+    $filter = new Twig_Filter_Function('somefilter', ['pre_escape' => 'html', 'is_safe' => ['html']]);
 
 Dynamic Filters
 ~~~~~~~~~~~~~~~
@@ -465,7 +465,7 @@ The ``Project_Set_Node`` class itself is rather simple::
     {
         public function __construct($name, Twig_Node_Expression $value, $lineno, $tag = null)
         {
-            parent::__construct(array('value' => $value), array('name' => $name), $lineno, $tag);
+            parent::__construct(['value' => $value], ['name' => $name], $lineno, $tag);
         }
 
         public function compile(Twig_Compiler $compiler)
@@ -529,7 +529,7 @@ to host all the specific tags and filters you want to add to Twig.
 .. note::
 
     Before writing your own extensions, have a look at the Twig official
-    extension repository: http://github.com/fabpot/Twig-extensions.
+    extension repository: https://github.com/twigphp/Twig-extensions.
 
 An extension is a class that implements the following interface::
 
@@ -539,50 +539,48 @@ An extension is a class that implements the following interface::
          * Initializes the runtime environment.
          *
          * This is where you can load some file that contains filter functions for instance.
-         *
-         * @param Twig_Environment $environment The current Twig_Environment instance
          */
         function initRuntime(Twig_Environment $environment);
 
         /**
          * Returns the token parser instances to add to the existing list.
          *
-         * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
+         * @return (Twig_TokenParserInterface|Twig_TokenParserBrokerInterface)[]
          */
         function getTokenParsers();
 
         /**
          * Returns the node visitor instances to add to the existing list.
          *
-         * @return array An array of Twig_NodeVisitorInterface instances
+         * @return Twig_NodeVisitorInterface[]
          */
         function getNodeVisitors();
 
         /**
          * Returns a list of filters to add to the existing list.
          *
-         * @return array An array of filters
+         * @return Twig_SimpleFilter[]
          */
         function getFilters();
 
         /**
          * Returns a list of tests to add to the existing list.
          *
-         * @return array An array of tests
+         * @return Twig_SimpleTest[]
          */
         function getTests();
 
         /**
          * Returns a list of functions to add to the existing list.
          *
-         * @return array An array of functions
+         * @return Twig_SimpleFunction[]
          */
         function getFunctions();
 
         /**
          * Returns a list of operators to add to the existing list.
          *
-         * @return array An array of operators
+         * @return array<array> First array of unary operators, second array of binary operators
          */
         function getOperators();
 
@@ -650,9 +648,9 @@ method::
     {
         public function getGlobals()
         {
-            return array(
+            return [
                 'text' => new Text(),
-            );
+            ];
         }
 
         // ...
@@ -668,9 +666,9 @@ method::
     {
         public function getFunctions()
         {
-            return array(
+            return [
                 'lipsum' => new Twig_Function_Function('generate_lipsum'),
-            );
+            ];
         }
 
         // ...
@@ -687,9 +685,9 @@ environment::
     {
         public function getFilters()
         {
-            return array(
+            return [
                 'rot13' => new Twig_Filter_Function('str_rot13'),
-            );
+            ];
         }
 
         // ...
@@ -711,9 +709,9 @@ when defining a filter to use a method::
     {
         public function getFilters()
         {
-            return array(
+            return [
                 'rot13' => new Twig_Filter_Method($this, 'rot13Filter'),
-            );
+            ];
         }
 
         public function rot13Filter($string)
@@ -743,10 +741,10 @@ want to override::
     {
         public function getFilters()
         {
-            return array(
+            return [
                 'date' => new Twig_Filter_Method($this, 'dateFilter'),
                 // ...
-            );
+            ];
         }
 
         public function dateFilter($timestamp, $format = 'F j, Y H:i')
@@ -778,7 +776,7 @@ to the Twig environment::
     {
         public function getTokenParsers()
         {
-            return array(new Project_Set_TokenParser());
+            return [new Project_Set_TokenParser()];
         }
 
         // ...
@@ -798,15 +796,15 @@ The ``getOperators()`` methods allows to add new operators. Here is how to add
     {
         public function getOperators()
         {
-            return array(
-                array(
-                    '!' => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'),
+            return [
+                [
+                    '!' => ['precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'],
                 ),
-                array(
-                    '||' => array('precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                    '&&' => array('precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                ),
-            );
+                [
+                    '||' => ['precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT],
+                    '&&' => ['precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT],
+                ],
+            ];
         }
 
         // ...
@@ -821,9 +819,9 @@ The ``getTests()`` methods allows to add new test functions::
     {
         public function getTests()
         {
-            return array(
+            return [
                 'even' => new Twig_Test_Function('twig_test_even'),
-            );
+            ];
         }
 
         // ...
@@ -859,10 +857,10 @@ The ``IntegrationTest.php`` file should look like this::
     {
         public function getExtensions()
         {
-            return array(
+            return [
                 new Project_Twig_Extension1(),
                 new Project_Twig_Extension2(),
-            );
+            ];
         }
 
         public function getFixturesDir()
@@ -881,7 +879,7 @@ Testing the node visitors can be complex, so extend your test cases from
 ``Twig_Test_NodeTestCase``. Examples can be found in the Twig repository
 `tests/Twig/Node`_ directory.
 
-.. _`spl_autoload_register()`: http://www.php.net/spl_autoload_register
-.. _`rot13`:                   http://www.php.net/manual/en/function.str-rot13.php
-.. _`tests/Twig/Fixtures`:     https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Fixtures
-.. _`tests/Twig/Node`:         https://github.com/fabpot/Twig/tree/master/test/Twig/Tests/Node
+.. _`spl_autoload_register()`: https://secure.php.net/spl_autoload_register
+.. _`rot13`:                   https://secure.php.net/manual/en/function.str-rot13.php
+.. _`tests/Twig/Fixtures`:     https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Fixtures
+.. _`tests/Twig/Node`:         https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Node

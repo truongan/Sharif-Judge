@@ -3,11 +3,13 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2010 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+@trigger_error('The Twig_Function class is deprecated since version 1.12 and will be removed in 2.0. Use Twig_SimpleFunction instead.', E_USER_DEPRECATED);
 
 /**
  * Represents a template function.
@@ -15,20 +17,21 @@
  * Use Twig_SimpleFunction instead.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
  * @deprecated since 1.12 (to be removed in 2.0)
  */
 abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCallableInterface
 {
     protected $options;
-    protected $arguments = array();
+    protected $arguments = [];
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
-        $this->options = array_merge(array(
+        $this->options = array_merge([
             'needs_environment' => false,
-            'needs_context'     => false,
-            'callable'          => null,
-        ), $options);
+            'needs_context' => false,
+            'callable' => null,
+        ], $options);
     }
 
     public function setArguments($arguments)
@@ -61,7 +64,7 @@ abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCal
             return call_user_func($this->options['is_safe_callback'], $functionArgs);
         }
 
-        return array();
+        return [];
     }
 
     public function getCallable()

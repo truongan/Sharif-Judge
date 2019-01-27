@@ -11,9 +11,6 @@
 
 class Twig_Tests_Node_SandboxedPrintTest extends Twig_Test_NodeTestCase
 {
-    /**
-     * @covers Twig_Node_SandboxedPrint::__construct
-     */
     public function testConstructor()
     {
         $node = new Twig_Node_SandboxedPrint($expr = new Twig_Node_Expression_Constant('foo', 1), 1);
@@ -21,24 +18,15 @@ class Twig_Tests_Node_SandboxedPrintTest extends Twig_Test_NodeTestCase
         $this->assertEquals($expr, $node->getNode('expr'));
     }
 
-    /**
-     * @covers Twig_Node_SandboxedPrint::compile
-     * @dataProvider getTests
-     */
-    public function testCompile($node, $source, $environment = null)
-    {
-        parent::testCompile($node, $source, $environment);
-    }
-
     public function getTests()
     {
-        $tests = array();
+        $tests = [];
 
-        $tests[] = array(new Twig_Node_SandboxedPrint(new Twig_Node_Expression_Constant('foo', 1), 1), <<<EOF
+        $tests[] = [new Twig_Node_SandboxedPrint(new Twig_Node_Expression_Constant('foo', 1), 1), <<<EOF
 // line 1
-echo \$this->env->getExtension('sandbox')->ensureToStringAllowed("foo");
+echo \$this->env->getExtension('Twig_Extension_Sandbox')->ensureToStringAllowed("foo");
 EOF
-        );
+        ];
 
         return $tests;
     }
