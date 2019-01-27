@@ -51,7 +51,7 @@ class Assignments extends CI_Controller
 				$coefficient = "error";
 			ob_end_clean();
 			$item['coefficient'] = $coefficient;
-			$item['finished'] = ($delay > $extra_time);
+			$item['finished'] = ($item['start_time'] < $item['finish_time'] &&  $delay > $extra_time);
 			$item['no_of_problems'] = $this->assignment_model->count_no_problems($item['id']);
 		}
 		// var_dump($item);die();
