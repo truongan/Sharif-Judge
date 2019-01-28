@@ -23,6 +23,7 @@ class Assignments extends CI_Controller
 		if ( ! $this->user->logged_in()) // if not logged in
 			redirect('login');
 
+		
 		$this->messages = array();
 		$this->edit_assignment = array();
 		$this->edit = FALSE;
@@ -57,6 +58,33 @@ class Assignments extends CI_Controller
 		// var_dump($item);die();
 		$this->twig->display('pages/assignments.twig', $data);
 
+	}
+
+
+
+	public function scores(){
+		$this->load->model('submit_model');
+
+		$all_assignments = $this->assignment_model->all_assignments();
+		
+		$all_user = $this->user_model->get_all_users();
+		foreach($all_user as $user){
+			$tmp[$user['id']] = $user;
+		}
+		$all_user = $tmp;
+		var_dump($all_user); die();
+		
+		foreach($all_assignments as $id => $ass){
+			$all_sub = $this->submit_model->get_final_submissions($id, 4, NULL);
+			foreach ($all_sub as $id => $sub){
+				
+			}
+			var_dump($all_sub); 
+		}
+		die();
+
+		$data = array();
+		$this->twig->display('pages/assignments_score.twig', $data);
 	}
 
 
@@ -219,8 +247,6 @@ class Assignments extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
-
 	/**
 	 * This method gets inputs from user for adding/editing assignment
 	 */
