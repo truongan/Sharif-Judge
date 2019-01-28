@@ -70,12 +70,12 @@ $(document).ready(function () {
 				{% for notification in notifications %}
 					<div class="notif" id="number{{ notification.id }}" data-id="{{ notification.id }}">
 						<div class="notif_title">
-							<span class="anchor ttl_n">{{ notification.title }}</span>
+							<span class="pointer ttl_n">{{ notification.title }}</span>
 							<span class="notif_meta" dir="ltr">
 							{{ notification.time }}
 								{% if user.level >= 2 %}
-									<span class="anchor edt_n">Edit</span>
-									<span class="anchor del_n">Delete</span>
+									<span class="pointer edt_n">Edit</span>
+									<span class="pointer del_n">Delete</span>
 								{% endif %}
 							</span>
 						</div>
