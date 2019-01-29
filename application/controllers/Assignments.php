@@ -71,7 +71,7 @@ class Assignments extends CI_Controller
 		foreach($all_user as $user){
 			$user['assignments'] = array();
 			foreach($all_assignments as $id => $ass){
-				$user['assignments'][$id] = new class{public $accepted = 0; public $total = 0;};
+				$user['assignments'][$id] = new class{public $accepted = ""; public $total = "";};
 			}
 			$tmp[$user['username']] = $user;
 			// var_dump($user['assignments']);
