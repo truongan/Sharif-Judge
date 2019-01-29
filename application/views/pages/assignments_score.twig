@@ -29,83 +29,31 @@
 	<p style="text-align: center;">Nothing to show...</p>
 {% else %}
 <br/>
-<table class="wecode_table table table-striped table-bordered">
+<table class="wecode_table table table-striped table-bordered table-sm">
 <thead class="thead-dark">
-<tr>
-	<th>Select</th>
-	<th>Name<br/> </th>
-	{# <th>Problems</th> #}
-	<th>Submissions</th>
-	<th>Coefficient</th>
-	<th>Start Time</th>
-	<th>Finish Time</th>
-	<th>Scoreboard</th>
-	<th>PDF</th>
-	{% if user.level > 0 %}
-	<th>Status</th>
-	<th>Actions</th>
-	{% endif %}
-</tr>
+	<tr>
+		<th>User</th>
+		{% for item in all_assignments %}
+		<th class="table-secondary"><small>  {{ item.name|ellipsis(9) }} </small></th>
+		{% endfor %}
+		{% for item in all_assignments %}
+		<th class="table-success"><small>  {{ item.name|ellipsis(9) }} </small></th>
+		{% endfor %}
+	</tr>
 </thead>
-{% for item in all_assignments|reverse if (item.open or user.level > 0) %}
-<tr>
-	<td><span data-toggle="tooltip" title="View an assignment's problem or submission will set it as your default assignment"><i  class=" far {{ item.id == user.selected_assignment.id ? 'fa-check-square color6' : 'fa-square' }} fa-2x" data-id="{{ item.id }}"></i></span></td>
-	<td><a href="{{ site_url('view_problem/'~item.id) }}" data-toggle="tooltip" title="Click to view problem(s)"><strong>{{ item.name }}</strong><br/>({{ item.no_of_problems }} problems)</a></td>
-	{# <td>View problem(s)</td> #}
-	<td><a href="{{ site_url('submissions/all/assignment/'~item.id) }}" data-toggle="tooltip" title="View all submissions">
-		<small>{{ item.total_submits }} submission{{ item.total_submits > 1 ? 's' }}</small>
-		</a>
-	</td>
-	<td>
-		{% if item.finished %}
-			<span style="color: red;">Finished</span>
-		{% else %}
-			{{ item.coefficient }} %
-		{% endif %}
-	</td>
-	<td>{{ item.start_time }}</td>
-	<td>{{ item.finish_time }}</td>
-	<td>{% if item.scoreboard %}
-		<a href="{{ site_url('scoreboard/full/'~item.id)}}" data-toggle="tooltip" title="Click to viewa assignment's scoreboard">View<i class="fas fa-external-link-alt"></i></a>
-		{% else %}
-			{% if user.level > 0 %}
-			<a href="{{ site_url('scoreboard/full/'~item.id)}}"  data-toggle="tooltip" title="Scoreboard closed, admin view only" ><span class="text-secondary">View<i class="fas fa-external-link-alt "></i></span></a>
-			{% endif %}
-		{% endif %}
-	</td>
-	<td>
-		<a href="{{ site_url('assignments/pdf/'~item.id) }}"><i class="far fa-lg fa-file-pdf"></i></a>
-	</td>
-	{% if user.level > 0 %}
-	<td>
-		{% if item.open %}
-			<span class="text-success">Open</span>
-		{% else %}
-			<span class="text-danger">Close</span>
-		{% endif %}
-	</td>
-	<td>
-		{% if user.level >= 1 %}
-			<a href="{{ site_url("assignments/download_submissions/by_user/#{item.id}") }}"><i title="Download Final Submissions (by user)" class="fa fa-download fa-lg color12"></i></a>
-			<a href="{{ site_url("assignments/download_submissions/by_problem/#{item.id}") }}"><i title="Download Final Submissions (by problem)" class="fa fa-download fa-lg color2"></i></a>
-			<a href="{{ site_url("assignments/download_all_submissions/#{item.id}")}}"><i title="Download all submissions" class="fas fa-cloud-download-alt"></i></a>
-		{% endif %}
-		{% if user.level >= 2 %}
-			<a href="{{ site_url('moss/'~item.id) }}"><i title="Detect Similar Codes" class="fa fa-user-secret fa-lg color7"></i></a>
-		{% endif %}
-		{% if user.level >= 2 %}
-			<a href="{{ site_url('assignments/reload_scoreboard/'~item.id) }}"><i title="Force reload scoreboard" class="fa fa-retweet fa-lg color11"></i></a>
-		{% endif %}
-		{% if user.level >= 2 %}
-			<a href="{{ site_url('assignments/edit/'~item.id) }}"><i title="Edit" class="fa fa-edit fa-lg color3"></i></a>
-		{% endif %}
-		{% if user.level >= 2 %}
-			<a href="{{ site_url('assignments/delete/'~item.id) }}"><i title="Delete" class="fa fa-times fa-lg color1"></i></a>
-		{% endif %}
-	</td>
-	{% endif %}
-</tr>
-{% endfor %}
+<tbody>
+	{% for user in all_user %}
+	<tr>
+		<td>{{ user.username }}</td>
+		{% for item in all_assignments %}
+		<td class="table-success">  {{ user.assignments[item.id].accepted }} </td>
+		{% endfor %}
+		{% for item in all_assignments %}
+		<td class="table-warning">  {{ user.assignments[item.id].total }} </td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</tbody>
 </table>
 {% endif %}
 </div>

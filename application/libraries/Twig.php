@@ -184,6 +184,16 @@ class Twig
 				}
 			)
 		);
+		$this->twig->addFilter(
+			new Twig_SimpleFilter(
+				'ellipsis',
+				function ($string, $length) {
+					if ($length < 4) throw new Exception('length too short to ellipsis');
+					if (mb_strlen($string) <= $length) return $string;
+					return mb_substr($string, 0, $length - 3) ."…";
+				}
+			)
+		);
 
 		$this->_ci->load->model('user');
 		$this->twig->addGlobal('user', $this->_ci->user);

@@ -69,21 +69,44 @@ class Assignments extends CI_Controller
 		
 		$all_user = $this->user_model->get_all_users();
 		foreach($all_user as $user){
-			$tmp[$user['id']] = $user;
+			$user['assignments'] = array();
+			foreach($all_assignments as $id => $ass){
+				$user['assignments'][$id] = new class{public $accepted = 0; public $total = 0;};
+			}
+			$tmp[$user['username']] = $user;
+			// var_dump($user['assignments']);
 		}
 		$all_user = $tmp;
-		var_dump($all_user); die();
+		// var_dump($all_user); die();
 		
-		foreach($all_assignments as $id => $ass){
-			$all_sub = $this->submit_model->get_final_submissions($id, 4, NULL);
-			foreach ($all_sub as $id => $sub){
-				
-			}
-			var_dump($all_sub); 
-		}
-		die();
 
-		$data = array();
+
+		foreach($all_assignments as  $ass){
+
+			$all_sub = $this->submit_model->get_final_submissions($ass['id'], 4, NULL);
+			$problems = $this->assignment_model->all_problems($ass['id']);
+			foreach ($all_sub as &$item)
+			{
+				$item['fullmark'] = ($item['pre_score'] == 10000);
+				$item['pre_score'] = ceil($item['pre_score']
+				*($problems[$item['problem_id']]['score']?? 0)
+				/10000);
+				// var_dump($item); die();
+				
+				if ($item['coefficient'] === 'error')
+				$item['final_score'] = 0;
+				else
+				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
+				
+				$all_user[$item['username']]['assignments'][$item['assignment_id']]->total += $item['final_score'];
+				if ($item['fullmark']) 
+				$all_user[$item['username']]['assignments'][$item['assignment_id']]->accepted += $item['final_score'];
+				// var_dump($item['pre_score']);
+			}
+		}
+		// var_dump($all_user); die();
+
+		$data = array('all_user' => $all_user, 'all_assignments' => $all_assignments);
 		$this->twig->display('pages/assignments_score.twig', $data);
 	}
 
