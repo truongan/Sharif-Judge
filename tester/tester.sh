@@ -305,7 +305,7 @@ for((i=1;i<=TST;i++)); do
 	t=`grep "SHJ_" err|cut -d" " -f3`
 	m=`grep "SHJ_" err|cut -d" " -f5`
 	m2=`grep "SHJ_" err|cut -d" " -f7`
-
+	m=$((m>m2?m:m2))
 	echo "<span class=\"text-muted\"><small>$t s and $m KiB</small></span>" >>$USERDIR/result.html
 	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$USERDIR/result.html
 	found_error=0
