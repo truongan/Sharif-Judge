@@ -21,7 +21,6 @@ class Scoreboard extends CI_Controller
 
 	// ------------------------------------------------------------------------
 
-
 	public function index()
 	{
 		redirect('scoreboard/full/'.$this->user->selected_assignment['id']);
@@ -29,6 +28,7 @@ class Scoreboard extends CI_Controller
 	public function full($assignment_id){
 		$assignment = $this->assignment_model->assignment_info($assignment_id);
 		$data = array(
+			'place' => 'full',
 			'assignment' => $assignment,
 			'scoreboard' => $this->scoreboard_model->get_scoreboard($assignment_id)
 		);
@@ -36,9 +36,7 @@ class Scoreboard extends CI_Controller
 		$this->twig->display('pages/scoreboard.twig', $data);
 
 	}
-	public function simplify($assignment_id){
-		$assignment = $this->assignment_model->assignment_info($assignment_id);
-
+	private function _strip_scoreboard($assignment_id){
 		$a = $this->scoreboard_model->get_scoreboard($assignment_id);
 
 		//Remove excess info
@@ -56,11 +54,27 @@ class Scoreboard extends CI_Controller
 		}
 		$a = substr($a, 0, $i);
 
+		return $a;
+	}
+	public function simplify($assignment_id){
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
+
 		$data = array(
+			'place' => 'simplify',
 			'assignment' => $assignment,
-			'scoreboard' => $a
+			'scoreboard' => $this->_strip_scoreboard($assignment_id)
 		);
 
+		$this->twig->display('pages/scoreboard.twig', $data);
+	}
+	public function plain($assignment_id){
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
+
+		$data = array(
+			'place' => 'plain',
+			'assignment' => $assignment,
+			'scoreboard' => strip_tags( $this->_strip_scoreboard($assignment_id), "<table><thead><th><tbody><tr><td><br>")
+		);
 
 		$this->twig->display('pages/scoreboard.twig', $data);
 	}

@@ -10,13 +10,28 @@
 {% block head_title %}Scoreboard{% endblock %}
 
 {% block title_menu %}
-<span class="title_menu_item">
-	<a href="{{ site_url('scoreboard/full/'~assignment.id) }}">
+<small>
+<ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link {% if place=="full" %}active{% endif %} " href="{{ site_url('scoreboard/full/'~assignment.id) }}">
 	<i class="fas fa-star color10"></i> Full information </a>
+  </li>
+  <li class="nav-item  ">
+    <a class="nav-link {% if place=="simplify" %}active{% endif %}" href="{{ site_url('scoreboard/simplify/'~assignment.id) }}">
+	<i class="fas fa-star-half-alt color10"></i> Minimal information </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if place=="plain" %}active{% endif %} " href="{{ site_url('scoreboard/plain/'~assignment.id) }}">
+	<i class="fas fa-star-half-alt color10"></i> Plain text Minimal </a>
+  </li>
+</ul>
+</small>
+
+<span class="title_menu_item">
+	
 </span>
 <span class="title_menu_item">
-	<a href="{{ site_url('scoreboard/simplify/'~assignment.id) }}">
-	<i class="fas fa-star-half-alt color10"></i> Minimal information </a>
+	
 </span>
 {% endblock %} {# title_menu #}
 
