@@ -13,8 +13,15 @@
 
 {% block title_menu %}
 {% if user.level >= 2 %}
-<span class="title_menu_item"><a href="{{ site_url('assignments/add') }}"><i class="fa fa-plus color8"></i> Add</a></span>
-<span class="title_menu_item"><a href="{{ site_url('assignments/') }}"><i class="far fa-star color1"></i>Assingments setting</a></span>
+<small>
+	<nav class="nav nav-pills">
+		<a class="nav-link" href="{{ site_url('assignments/add') }}"><i class="fa fa-plus color8"></i> Add</a>
+		<a class="nav-link" href="{{ site_url('assignments/') }}"><i class="far fa-star color1"></i>Assingments setting</a>
+		<a class="nav-link {% if mode == 'accepted' %}active {% endif %}" href="{{ site_url('assignments/scores/accepted') }}"><i class="far fa-star color1"></i>Assignments score accepted</a>
+		<a class="nav-link {% if mode == 'sum' %}active {% endif %}" href="{{ site_url('assignments/scores/sum') }}"><i class="far fa-star color1"></i>Assignments score olp</a>
+	</nav>
+</small>
+
 {% endif %}
 {% endblock %}
 
@@ -33,24 +40,25 @@
 <thead class="thead-dark">
 	<tr>
 		<th>User</th>
-		{% for item in all_assignments %}
-		<th class="table-secondary"><small>  {{ item.name|ellipsis(9) }} </small></th>
-		{% endfor %}
-		{% for item in all_assignments %}
-		<th class="table-success"><small>  {{ item.name|ellipsis(9) }} </small></th>
-		{% endfor %}
+		{% if mode == 'accepted' %}{% for item in all_assignments %}
+		<th class="table-secondary"><small>  {{ item.name|ellipsis(99) }} </small></th>
+		{% endfor %}{% endif %}
+		{% if mode == 'sum' %}{% for item in all_assignments %}
+		<th class="table-success"><small>  {{ item.name|ellipsis(99) }} </small></th>
+		{% endfor %}{% endif %}
 	</tr>
 </thead>
 <tbody>
 	{% for user in all_user %}
 	<tr>
 		<td>{{ user.username }}</td>
-		{% for item in all_assignments %}
+		
+		{% if mode == 'accepted' %}{% for item in all_assignments %}
 		<td class="table-success">  {{ user.assignments[item.id].accepted }} </td>
-		{% endfor %}
-		{% for item in all_assignments %}
+		{% endfor %}{% endif %}
+		{% if mode == 'sum' %}{% for item in all_assignments %}
 		<td class="table-warning">  {{ user.assignments[item.id].total }} </td>
-		{% endfor %}
+		{% endfor %}{% endif %}
 	</tr>
 	{% endfor %}
 </tbody>

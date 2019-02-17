@@ -62,7 +62,7 @@ class Assignments extends CI_Controller
 
 
 
-	public function scores(){
+	public function scores($mode){
 		$this->load->model('submit_model');
 
 		$all_assignments = $this->assignment_model->all_assignments();
@@ -106,7 +106,7 @@ class Assignments extends CI_Controller
 		}
 		// var_dump($all_user); die();
 
-		$data = array('all_user' => $all_user, 'all_assignments' => $all_assignments);
+		$data = array('all_user' => $all_user, 'all_assignments' => $all_assignments, 'mode' => $mode);
 		$this->twig->display('pages/assignments_score.twig', $data);
 	}
 

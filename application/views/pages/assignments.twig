@@ -13,8 +13,12 @@
 
 {% block title_menu %}
 {% if user.level >= 2 %}
-<span class="title_menu_item"><a href="{{ site_url('assignments/add') }}"><i class="fa fa-plus color8"></i> Add</a></span>
-<span class="title_menu_item"><a href="{{ site_url('assignments/scores') }}"><i class="far fa-star color1"></i>Assignments score</a></span>
+<small><nav class="nav nav-pills">
+	<a class="nav-link" href="{{ site_url('assignments/add') }}"><i class="fa fa-plus color8"></i> Add</a>
+	<a class="nav-link active" href="{{ site_url('assignments/') }}"><i class="far fa-star color1"></i>Assingments setting</a>
+	<a class="nav-link" href="{{ site_url('assignments/scores/accepted') }}"><i class="far fa-star color1"></i>Assignments score accepted</a>
+	<a class="nav-link" href="{{ site_url('assignments/scores/sum') }}"><i class="far fa-star color1"></i>Assignments score olp</a>
+</nav></small>
 {% endif %}
 {% endblock %}
 
