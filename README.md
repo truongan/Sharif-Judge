@@ -50,8 +50,8 @@ For running Wecode judge, a Linux server with following requirements is needed:
 
 Since wecode-jduge use docker to isolate the submitted code, you have to setup docker and other settings so that judge can call it.
  1. Install docker-ce in your server. The instruction for Ubuntu can be found on docker guide: https://docs.docker.com/install/linux/docker-ce/ubuntu/
- 2. Copy (or more preferably, make a soft link) the file `tester/run_judge_in_docker.sh` to `/usr/bin`. This script make sure you will only expose the tester's jail directory to docker guest OS.
- 3. Edit your sudoers settings so that the user running wecode-judge can call `sudo run_judge_in_docker.sh` WITHOUT PASSOWRD.
+ 2. Follow docker instruction to allow http user manage docker: https://docs.docker.com/install/linux/linux-postinstall/
+ 
 
 
 
