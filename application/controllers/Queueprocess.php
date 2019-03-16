@@ -90,7 +90,7 @@ class Queueprocess extends CI_Controller
 			$diff_arg = $problem['diff_arg'];
 			$output_size_limit = $this->settings_model->get_setting('output_size_limit') * 1024;
 
-			$cmd = "cd $tester_path;\n./tester.sh $problemdir $userdir ".escapeshellarg($raw_filename)." $file_extension $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd '$diff_arg' $op1 ";
+			$cmd = "bash && cd $tester_path;\n./tester.sh $problemdir $userdir ".escapeshellarg($raw_filename)." $file_extension $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd '$diff_arg' $op1 ";
 
 			file_put_contents($userdir.'/log', $cmd);
 
@@ -99,6 +99,7 @@ class Queueprocess extends CI_Controller
 			///////////////////////////////////////
 			putenv('LANG=en_US.UTF-8');
 			putenv('PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games');
+			putenv('APP_ENV=local');
 			$output = trim(shell_exec($cmd));
 
 

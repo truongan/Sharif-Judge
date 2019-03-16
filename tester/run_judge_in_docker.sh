@@ -12,7 +12,7 @@ docker_image=${2}
 shift 2
 command=$@
 owner=`stat -c '%U' $share_directory`
-
+USER=`whoami`
 dockername="$USER-$(basename $share_directory)"
 
 if  [ "$owner" = "$USER" ] || [ "$owner" = "$SUDO_USER" ]
