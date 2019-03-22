@@ -45,7 +45,6 @@ $(document).ready(function(){
             url: shj.site_url + 'submit/template',
             data: {
                 wcj_csrf_name: shj.csrf_token,
-                assignment: shj.selected_assignment ,
                 problem: problem_id
             },
             success : function(data){
