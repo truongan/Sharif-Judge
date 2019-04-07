@@ -48,7 +48,7 @@ if [ $NEEDCOMPILE -eq 0 ]; then
     EXITCODE=110
 else
     mv code.c code.$EXT
-    sudo run_judge_in_docker.sh `pwd` gcc:6 $COMPILER code.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
+    $tester_dir/run_judge_in_docker.sh `pwd` gcc:6 $COMPILER code.$EXT $C_OPTIONS $C_WARNING_OPTION -o $EXEFILE >/dev/null 2>cerr
     EXITCODE=$?
 
 fi

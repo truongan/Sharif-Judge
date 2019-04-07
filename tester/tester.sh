@@ -233,7 +233,6 @@ for((i=1;i<=TST;i++)); do
 	cp $tester_dir/timeout ./timeout
 	chmod +x timeout
 	cp $tester_dir/runcode.sh ./runcode.sh
-	cp $tester_dir/run_judge_in_docker.sh ./run_judge_in_docker.sh
 	chmod +x runcode.sh
 	cp $PROBLEMPATH/in/input$i.txt ./input.txt
 
@@ -259,9 +258,9 @@ for((i=1;i<=TST;i++)); do
 		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input.txt $command"
 	fi
 
-	shj_log "./run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $runcode"
+	shj_log "$tester_dir/run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $runcode"
 	
-	./run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} > run_judge_error $runcode 2>&1
+	$tester_dir/run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} > run_judge_error $runcode 2>&1
 	EXITCODE=$?
 
 	shj_log `cat run_judge_error`

@@ -3,8 +3,8 @@
 cp ../java.policy java.policy
 cp $USERDIR/$FILENAME.java $FILENAME.java
 shj_log "Compiling as Java"
-shj_log "sudo run_judge_in_docker.sh "`pwd` " ${languages_to_docker[$EXT]} javac $FILENAME.java >/dev/null 2>cerr"
-sudo run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} javac $FILENAME.java >/dev/null 2>cerr
+shj_log "$tester_dir/run_judge_in_docker.sh "`pwd` " ${languages_to_docker[$EXT]} javac $FILENAME.java >/dev/null 2>cerr"
+$tester_dir/run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} javac $FILENAME.java >/dev/null 2>cerr
 
 EXITCODE=$?
 COMPILE_END_TIME=$(($(date +%s%N)/1000000));

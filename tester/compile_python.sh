@@ -10,8 +10,8 @@ cp $USERDIR/$FILENAME.$EXT $FILENAME.$EXT
 shj_log "Checking Python Syntax"
 # shj_log "$python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr"
 
-shj_log "sudo run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr"
-sudo run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} $python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr
+shj_log "$tester_dir/run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr"
+$tester_dir/run_judge_in_docker.sh `pwd` ${languages_to_docker[$EXT]} $python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr
 # $python -O -m py_compile $FILENAME.$EXT >/dev/null 2>cerr
 EXITCODE=$?
 COMPILE_END_TIME=$(($(date +%s%N)/1000000));
