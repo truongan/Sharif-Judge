@@ -223,6 +223,8 @@ PASSEDTESTS=0
 ######################## CODE RUNNING #############################
 ###################################################################
 
+cp $PROBLEMPATH/in/input*.txt ./
+
 for((i=1;i<=TST;i++)); do
 	shj_log "\n=== TEST $i ==="
 	echo "<span class=\"text-primary\">Test $i</span>" >>$USERDIR/result.html
@@ -235,7 +237,7 @@ for((i=1;i<=TST;i++)); do
 	chmod +x timeout
 	cp $tester_dir/runcode.sh ./runcode.sh
 	chmod +x runcode.sh
-	cp $PROBLEMPATH/in/input$i.txt ./input.txt
+	
 
 	declare -A languages_to_comm
 	languages_to_comm["c"]="./$EXEFILE"
@@ -254,9 +256,9 @@ for((i=1;i<=TST;i++)); do
 
 	runcode=""
 	if $PERL_EXISTS; then
-		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input.txt ./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT $command"
+		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input$i.txt ./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT $command"
 	else
-		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input.txt $command"
+		runcode="./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT ./input$i.txt $command"
 	fi
 
 	shj_log "$tester_dir/run_judge_in_docker.sh "`pwd` "${languages_to_docker[$EXT]} $runcode"
@@ -351,9 +353,10 @@ for((i=1;i<=TST;i++)); do
 	ACCEPTED=false
 	if [ -f shj_tester ]; then
 		ulimit -t $TIMELIMITINT
-		./shj_tester $PROBLEMPATH/in/input$i.txt $PROBLEMPATH/out/output$i.txt out
+		./shj_tester $PROBLEMPATH/in/input$i.txt $PROBLEMPATH/out/output$i.txt out 2>cerr
 		EC=$?
 		shj_log "$EC"
+		shj_log `cat cerr`
 		if [ $EC -eq 0 ]; then
 			ACCEPTED=true
 		fi
