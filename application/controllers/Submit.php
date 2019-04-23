@@ -41,12 +41,10 @@ class Submit extends CI_Controller
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 
-		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[0]');
 		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 
 		if($this->form_validation->run())
 		{
-			$assignment_id = $this->input->post('assignment');
 			$problem_id = $this->input->post('problem');
 
 			$template_file = $this->problem_model->get_template_path($problem_id);
