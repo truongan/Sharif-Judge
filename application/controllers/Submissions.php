@@ -48,8 +48,7 @@ class Submissions extends CI_Controller
 		$this->pagination_config['last_tagl_close'] 	= '</li>';
 
 		parent::__construct();
-		if ( ! $this->user->logged_in()) // if not logged in
-			redirect('login');
+		$this->user->login_redirect();
 		$this->load->model('submit_model');
 		
 

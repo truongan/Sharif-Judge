@@ -13,8 +13,7 @@ class Scoreboard extends CI_Controller
 		parent::__construct();
 		if ($this->input->is_cli_request())
 			return;
-		if ( ! $this->user->logged_in()) // if not logged in
-			redirect('login');
+		$this->user->login_redirect();
 		$this->load->model('scoreboard_model');
 	}
 

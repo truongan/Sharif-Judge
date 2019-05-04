@@ -13,8 +13,7 @@ class Rejudge extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		if ( ! $this->user->logged_in()) // if not logged in
-			redirect('login');
+		$this->user->login_redirect();
 		if ( $this->user->level <= 1) // permission denied
 			show_404();
 		$this->problems = $this->assignment_model->all_problems($this->user->selected_assignment['id']);

@@ -26,8 +26,6 @@ if ( ! function_exists('shj_now'))
 	}
 }
 
-
-
 if ( ! function_exists('shj_now_str'))
 {
 	/**
@@ -38,6 +36,16 @@ if ( ! function_exists('shj_now_str'))
 		if ( ! defined('SHJ_NOW_STR') )
 			define('SHJ_NOW_STR', date("Y-m-d H:i:s", shj_now()));
 		return SHJ_NOW_STR;
+	}
+}
+if ( ! function_exists('full_uri'))
+{
+	/**
+	 * Returns server time (uses time zone in settings table)
+	 */
+	function full_uri()
+	{
+		return $_SERVER['REQUEST_URI'];
 	}
 }
 

@@ -78,6 +78,12 @@ class User extends CI_Model
 		return false;
 	}
 
+	public function login_redirect(){
+		if (! $this->logged_in()){
+			$redirect_to = base_url(uri_string());
+			redirect('login?redirect=' . urldecode($redirect_to));
+		}
+	}
 
 	// ------------------------------------------------------------------------
 

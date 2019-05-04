@@ -15,8 +15,7 @@ class Dashboard extends CI_Controller
 		parent::__construct();
 		if ( ! $this->db->table_exists('sessions'))
 			redirect('install');
-		if ( ! $this->user->logged_in()) // if not logged in
-			redirect('login');
+		$this->user->login_redirect();
 		$this->load->model('notifications_model')->helper('text');
 	}
 

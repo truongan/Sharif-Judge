@@ -40,8 +40,10 @@ class Login extends CI_Controller
 	 */
 	public function index()
 	{
-		if ($this->user->logged_in()) // if logged in
+		// echo  $this->agent->referrer();
+		if ($this->user->logged_in()) { // if logged in
 			redirect('dashboard');
+		}
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|max_length[20]|alpha_numeric|lowercase');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[200]');
 		$data = array(
@@ -60,6 +62,9 @@ class Login extends CI_Controller
 				);
 				$this->session->set_userdata($login_data);
 				$this->user_model->update_login_time($username);
+				if($this->input->get('redirect')){
+					redirect($this->input->get('redirect'));
+				}
 				redirect('/');
 			}
 			else

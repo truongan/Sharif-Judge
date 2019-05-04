@@ -21,8 +21,7 @@ class Problems extends CI_Controller
 
 		$this->messages = array();
 
-		if ( ! $this->user->logged_in()) // if not logged in
-			redirect('login');
+		$this->user->login_redirect();
 		$this->load->model('language_model');
         $this->notif_edit = FALSE;
 

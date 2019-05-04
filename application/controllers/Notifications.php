@@ -18,8 +18,7 @@ class Notifications extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		if ( ! $this->user->logged_in()) // if not logged in
-			redirect('login');
+		$this->user->login_redirect();
 		$this->load->model('notifications_model');
 		$this->notif_edit = FALSE;
 	}
