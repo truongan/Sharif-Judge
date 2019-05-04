@@ -63,7 +63,7 @@ class Login extends CI_Controller
 				$this->session->set_userdata($login_data);
 				$this->user_model->update_login_time($username);
 				if($this->input->get('redirect')){
-					redirect($this->input->get('redirect'));
+					redirect(base_url($this->input->get('redirect')));
 				}
 				redirect('/');
 			}
