@@ -11,9 +11,7 @@ class Migration_Multi_queue extends CI_Migration {
 
     public function down()
     {
-        $this->dbforge->drop_column('languages', 'sorting');
-        //Can not be downed. 
-        //This is the first imgrations. 
+        $this->dbforge->drop_column('queue', 'process_id');
     }
 }
 ?>

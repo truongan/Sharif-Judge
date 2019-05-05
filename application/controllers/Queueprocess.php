@@ -33,27 +33,30 @@ class Queueprocess extends CI_Controller
 	 */
 	public function run()
 	{
-
 		// Set correct base_url
 		// Because we are in cli mode, base_url is not available, and we get
 		// it from an environment variable that we have set in shj_helper.php
 		$this->config->set_item('base_url', getenv('SHJ_BASE_URL'));
 	
-		$queue_item = $this->queue_model->get_first_item();
+		// $queue_item = $this->queue_model->get_first_item();
+		// if ($queue_item === NULL) {
+		// 	$this->settings_model->set_setting('queue_is_working', '0');
+		// 	exit;
+		// }
+		$queue_item = $this->queue_model->acquire($this->settings_model->get_setting('no_of_queue', 2));
 		if ($queue_item === NULL) {
-			$this->settings_model->set_setting('queue_is_working', '0');
+			// Queue is full, exit this process
 			exit;
 		}
 
 		//To pause the queue when debugging, just exit here
 		// exit;
 
-		if ($this->settings_model->get_setting('queue_is_working'))
-		 	exit;
-
-		$this->settings_model->set_setting('queue_is_working', '1');
-
-
+		// Not only this boolean control settings is weak
+		// It is inadequate! We need multi queue.
+		// if ($this->settings_model->get_setting('queue_is_working'))
+		//  	exit;
+		// $this->settings_model->set_setting('queue_is_working', '1');
 
 		do { // loop over queue items
 
