@@ -51,26 +51,29 @@ tester_dir="$(pwd)"
 PROBLEMPATH=${1}
 # username
 USERDIR=${2}
+
+RESULTFILE=${3}
+LOGFILE=${4}
 # main file name (used only for java)
 #MAINFILENAME=${3}
 # file name without extension
-FILENAME=${3}
+FILENAME=${5}
 # file extension
-EXT=${4}
+EXT=${6}
 # time limit in seconds
-TIMELIMIT=${5}
+TIMELIMIT=${7}
 # integer time limit in seconds (should be an integer greater than TIMELIMIT)
-TIMELIMITINT=${6}
+TIMELIMITINT=${8}
 # memory limit in kB
-MEMLIMIT=${7}
+MEMLIMIT=${9}
 # output size limit in Bytes
-OUTLIMIT=${8}
+OUTLIMIT=${10}
 # diff tool (default: diff)
-DIFFTOOL=${9}
+DIFFTOOL=${11}
 # diff options (default: -bB)
-DIFFOPTION=${10}
+DIFFOPTION=${12}
 # enable/disable judge log
-if [ ${11} = "1" ]; then
+if [ ${13} = "1" ]; then
 	LOG_ON=true
 else
 	LOG_ON=false
@@ -111,12 +114,11 @@ if [[ "$DIFFOPTION" != "identical" && "$DIFFOPTION" != "ignore" ]]; then
 	DIFFARGUMENT=$DIFFOPTION
 fi
 
-
-LOG="$USERDIR/log"; echo "" >$LOG
+echo "" >$LOGFILE
 function shj_log
 {
 	if $LOG_ON; then
-		echo -e "$@" >>$LOG
+		echo -e "$@" >>$LOGFILE
 	fi
 }
 
@@ -190,7 +192,7 @@ TST="$(ls $PROBLEMPATH/in/input*.txt | wc -l)"  # Number of Test Cases
 shj_log "\nTesting..."
 shj_log "$TST test cases found"
 
-echo "" >$USERDIR/result.html
+echo "" >$RESULTFILE
 
 if [ -f "$PROBLEMPATH/tester.cpp" ] && [ ! -f "$PROBLEMPATH/tester.executable" ]; then
 	shj_log "Tester file found. Compiling tester..."
@@ -227,7 +229,7 @@ cp $PROBLEMPATH/in/input*.txt ./
 
 for((i=1;i<=TST;i++)); do
 	shj_log "\n=== TEST $i ==="
-	echo "<span class=\"text-primary\">Test $i</span>" >>$USERDIR/result.html
+	echo "<span class=\"text-primary\">Test $i</span>" >>$RESULTFILE
 
 	touch err
 
@@ -278,7 +280,7 @@ for((i=1;i<=TST;i++)); do
 	if [ "$EXT" = "java" ]; then
 		if grep -iq -m 1 "Too small initial heap" out || grep -q -m 1 "java.lang.OutOfMemoryError" err; then
 			shj_log "Memory Limit Exceeded"
-			echo "<span class=\"text-warning\">Memory Limit Exceeded</span>" >>$USERDIR/result.html
+			echo "<span class=\"text-warning\">Memory Limit Exceeded</span>" >>$RESULTFILE
 			continue
 		fi
 		if grep -q -m 1 "Exception in" err; then # show Exception
@@ -287,9 +289,9 @@ for((i=1;i<=TST;i++)); do
 			shj_log "Exception: $javaexceptionname\nMaybe at:$javaexceptionplace"
 			# if DISPLAY_JAVA_EXCEPTION_ON is true and the exception is in the trusted list, we show the exception name
 			if $DISPLAY_JAVA_EXCEPTION_ON && grep -q -m 1 "^$javaexceptionname\$" ../java_exceptions_list; then
-				echo "<span class=\"text-warning\">Runtime Error ($javaexceptionname)</span>" >>$USERDIR/result.html
+				echo "<span class=\"text-warning\">Runtime Error ($javaexceptionname)</span>" >>$RESULTFILE
 			else
-				echo "<span class=\"text-warning\">Runtime Error</span>" >>$USERDIR/result.html
+				echo "<span class=\"text-warning\">Runtime Error</span>" >>$RESULTFILE
 			fi
 			continue
 		fi
@@ -309,8 +311,8 @@ for((i=1;i<=TST;i++)); do
 	m=`grep "SHJ_" err|cut -d" " -f5`
 	m2=`grep "SHJ_" err|cut -d" " -f7`
 	m=$((m>m2?m:m2))
-	echo "<span class=\"text-muted\"><small>$t s and $m KiB</small></span>" >>$USERDIR/result.html
-	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$USERDIR/result.html
+	echo "<span class=\"text-muted\"><small>$t s and $m KiB</small></span>" >>$RESULTFILE
+	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$RESULTFILE
 	found_error=0
 	if ! grep -q "FINISHED" err; then
 
@@ -318,7 +320,7 @@ for((i=1;i<=TST;i++)); do
 		do
 			if grep -q "$K" err; then
 				shj_log ${errors[$K]}
-				echo "<span class=\"text-warning\">${errors[$K]}</span>" >>$USERDIR/result.html
+				echo "<span class=\"text-warning\">${errors[$K]}</span>" >>$RESULTFILE
 				found_error=1
 				break
 			fi
@@ -336,13 +338,13 @@ for((i=1;i<=TST;i++)); do
 
 	if [ $EXITCODE -eq 137 ]; then
 		shj_log "Killed"
-		echo "<span class=\"text-warning\">Killed</span>" >>$USERDIR/result.html
+		echo "<span class=\"text-warning\">Killed</span>" >>$RESULTFILE
 		continue
 	fi
 
 	if [ $EXITCODE -ne 0 ]; then
 		shj_log "Runtime Error"
-		echo "<span class=\"text-warning\">Runtime Error</span>" >>$USERDIR/result.html
+		echo "<span class=\"text-warning\">Runtime Error</span>" >>$RESULTFILE
 		continue
 	fi
 ############################################################################
@@ -382,11 +384,11 @@ for((i=1;i<=TST;i++)); do
 
 	if $ACCEPTED; then
 		shj_log "ACCEPTED"
-		echo "<span class=\"text-success\">ACCEPT</span>" >>$USERDIR/result.html
+		echo "<span class=\"text-success\">ACCEPT</span>" >>$RESULTFILE
 		((PASSEDTESTS=PASSEDTESTS+1))
 	else
 		shj_log "WRONG"
-		echo "<span class=\"text-danger\">WRONG</span>" >>$USERDIR/result.html
+		echo "<span class=\"text-danger\">WRONG</span>" >>$RESULTFILE
 	fi
 done
 
@@ -397,8 +399,8 @@ done
 # show place of exception. So I commented following lines:
 	## Print last java exception (if enabled)
 	#if $DISPLAY_JAVA_EXCEPTION_ON && [ "$javaexceptionname" != "" ]; then
-	#	echo -e "\n<span class=\"text-primary\">Last Java Exception:</span>" >>$USERDIR/result.html
-	#	echo -e "$javaexceptionname\n$javaexceptionplace" >>$USERDIR/result.html
+	#	echo -e "\n<span class=\"text-primary\">Last Java Exception:</span>" >>$RESULTFILE
+	#	echo -e "$javaexceptionname\n$javaexceptionplace" >>$RESULTFILE
 	#fi
 
 
