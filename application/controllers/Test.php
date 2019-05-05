@@ -55,13 +55,15 @@ class Test extends CI_Controller
 			$role
 		);
 	}
+	public function remove_duplicate_theme_settings(){
+		$a = $this->settings_model->get_setting('theme', 'default');
+		$this->db->delete('settings', array('shj_key' => 'theme'));
+		$this->db->insert('settings', array('shj_key' => 'theme', 'shj_value' => $a));
+	}
 	public function adhoc(){
-		$this->load->model('submit_model');
-		var_dump(
-			$this->submit_model->get_final_submissions(
-				'2', '0', 'def'
-			)
-		);
+		$this->load->model('settings_model');
+		echo ("abc");
+		echo ( $this->db->get_where('settings', array('shj_key' => "theme"))->num_rows()  );
 		die();
 		
 	}
