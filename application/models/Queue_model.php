@@ -161,7 +161,7 @@ class Queue_model extends CI_Model
 	{
 		$this->db->trans_start(); // We use the queue table as a mutex, so this function must be atomic
 		$result = NULL;
-		var_dump($limit);
+		// var_dump($limit);
 		if ($this->db->where('process_id is not NULL')->get('queue')->num_rows() < $limit){
 			//The number of item being process is below limit
 			
@@ -178,7 +178,7 @@ class Queue_model extends CI_Model
 			}
 
 		}
-		// var_dump($result);
+		var_dump($result);
 		$this->db->trans_complete();
 		return $result;
 	}

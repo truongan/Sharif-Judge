@@ -43,9 +43,11 @@ class Queueprocess extends CI_Controller
 		// 	$this->settings_model->set_setting('queue_is_working', '0');
 		// 	exit;
 		// }
-		$queue_item = $this->queue_model->acquire($this->settings_model->get_setting('no_of_queue', 2));
+		$limit = $this->settings_model->get_setting('no_of_queue', 2);
+		$queue_item = $this->queue_model->acquire($limit);
 		if ($queue_item === NULL) {
 			// Queue is full, exit this process
+			var_dump("Exit casue no item");
 			exit;
 		}
 
@@ -109,13 +111,12 @@ class Queueprocess extends CI_Controller
 			// Deleting the jail folder, if still exists
 			//shell_exec("cd $tester_path; rm -rf jail*");
 
-			echo $output;
-
+			
 			// Saving judge result
-
+			
 			shell_exec("mv $userdir/result.html $userdir/result-{$submit_id}.html");
 			shell_exec("mv $userdir/log $userdir/log-{$submit_id}");
-
+			
 			if (is_numeric($output)) {
 				$submission['pre_score'] = $output;
 				$submission['status'] = 'SCORE';
@@ -124,6 +125,7 @@ class Queueprocess extends CI_Controller
 				$submission['pre_score'] = 0;
 				$submission['status'] = $output;
 			}
+			var_dump($output);
 
 			//reconnect to database incase we have run test for a long time.
 			$this->db->reconnect();
@@ -132,14 +134,14 @@ class Queueprocess extends CI_Controller
 			$this->queue_model->save_judge_result_in_db($submission, $type);
 
 			// Remove the judged item from queue
-			$this->queue_model->remove_item($username, $assignment, $problem['id'], $submit_id);
+			$this->queue_model->remove_item($queue_item['id']);
 
 			// Get next item from queue
-			$queue_item = $this->queue_model->get_first_item();
+			$queue_item = $this->queue_model->acquire($limit);
 
-		}while($queue_item !== NULL && $this->settings_model->get_setting('queue_is_working'));
+		}while($queue_item !== NULL);
 
-		$this->settings_model->set_setting('queue_is_working', '0');
+		var_dump("Exit, no more item");
 
 	}
 
