@@ -197,6 +197,9 @@ class Queue_model extends CI_Model
 		));
 	}
 
+	public function unlock($id){
+		$this->db->where('id', $id)->update('queue', array('process_id'=> null));
+	}
 
 	// ------------------------------------------------------------------------
 

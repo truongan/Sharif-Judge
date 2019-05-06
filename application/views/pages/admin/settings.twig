@@ -133,8 +133,8 @@ $(document).ready(function(){
 				<small class="form-text text-muted">Enable tester Log. This options is highly recommended</small>
 			</fieldset> #}
 			<fieldset class="form-group col-md-3">
-				<label for="form_log">Number of queue process</label>
-				<input id="form_log" type="number" name="concurent_queue_process" value="{{ concurent_queue_process }}" />
+				<label for="form_concurent_queue_process">Number of queue process</label>
+				<input id="form_concurent_queue_process" type="number" name="concurent_queue_process" class="form-control" value="{{ concurent_queue_process }}" />
 				<small class="form-text text-muted">The number of queue process to run at the same time. This settings is sensitive to the server hardware capabilities. Set this to 0 will disable queue and stop judging all submissions</small>
 			</fieldset>
 

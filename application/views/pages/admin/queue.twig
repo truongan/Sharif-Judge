@@ -16,10 +16,12 @@
 	$(document).ready(function(){
 		$(".shj_act").click(function(){
 			var action=$(this).attr('id');
+			console.log(action);
 			$.post(
 					'{{ site_url('queue') }}/'+action,
 					{wcj_csrf_name: shj.csrf_token},
 					function(data){
+						console.log(data);
 						if (data=='success')
 							location.reload();
 					}
@@ -64,7 +66,7 @@
 					<td>{{ item.type }}</td>
 					<td>{{ item.process_id }}</td>
 					<td>{% if item.process_id %}
-							<a href="#" class="shj_act btn btn-danger" id="unlock/{{ item.id }}"  data-toggle="tooltip" data-placement="right" title="Unlock this queue item, allow it to be processed. Should only be used if its processor process has terminated someho"><i class="fas fa-lock-open"></i>Unlock</a>
+							<a href="#" class="shj_act btn btn-danger" id="unlock/{{ item.id }}"  data-toggle="tooltip" data-placement="right" title="Unlock this queue item, allow it to be processed. Should only be used if its processor process has terminated somehow. MUST DOUBLE CHECK BEFORE USE"><i class="fas fa-lock-open"></i></a>
 						{% endif %}</td>
 				</tr>
 			{% endfor %}

@@ -74,7 +74,7 @@ class Queue extends CI_Controller
 	{
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
-		$this->queue_model->empty_queue();
+		$this->queue_model->unlock($id);
 		echo 'success';
 	}
 }

@@ -43,7 +43,7 @@ class Queueprocess extends CI_Controller
 		// 	$this->settings_model->set_setting('queue_is_working', '0');
 		// 	exit;
 		// }
-		$limit = $this->settings_model->get_setting('no_of_queue', 2);
+		$limit = $this->settings_model->get_setting('concurent_queue_process', 2);
 		$queue_item = $this->queue_model->acquire($limit);
 		if ($queue_item === NULL) {
 			// Queue is full, exit this process

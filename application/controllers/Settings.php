@@ -105,7 +105,7 @@ class Settings extends CI_Controller
 					'enable_py2_shield' => $this->input->post('enable_py2_shield')===NULL?0:1,
 					'enable_py3_shield' => $this->input->post('enable_py3_shield')===NULL?0:1,
 					'enable_java_policy' => $this->input->post('enable_java_policy')===NULL?0:1,
-					'enable_log' => $this->input->post('enable_log')===NULL?0:1,
+					// 'enable_log' => $this->input->post('enable_log')===NULL?0:1,
 					'enable_registration' => $this->input->post('enable_registration')===NULL?0:1,
 					'registration_code' => $this->input->post('registration_code'),
 					'mail_from' => $this->input->post('mail_from'),
