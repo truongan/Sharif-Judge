@@ -34,17 +34,12 @@
 {% block main_content %}
 	<div class="col-12">
 		<p>
-			{% if working %}
-				<i class="fa fa-play fa-lg color6"></i> Queue is working
-			{% else %}
-				<i class="fa fa-pause fa-lg color10"></i> Queue is not working
-			{% endif %}
-			| Total submissions in queue: {{ queue|length }}
+			Total submissions in queue: {{ queue|length }}
 		</p>
 		<p>
-			<a href="#" class="shj_act" id="pause"><i class="fa fa-pause"></i> Pause</a> |
-			<a href="#" class="shj_act" id="resume"><i class="fa fa-play"></i> Resume</a> |
-			<a href="#" class="shj_act" id="empty_queue"><i class="fa fa-times-circle"></i> Empty Queue</a>
+			{# <a href="#" class="shj_act" id="pause"><i class="fa fa-pause"></i> Pause</a> | #}
+			<a href="#" class="shj_act btn btn-primary" id="spawn" data-toggle="tooltip" data-placement="right" title="A queue processor process is spawned every time there is a submission or rejudging request. You can manually spawn one with this link"><i class="fa fa-play"></i> Spawn new queue process </a>
+			<a href="#" class="shj_act btn btn-danger" id="empty_queue"  data-toggle="tooltip" data-placement="right" title="Empty the queue, all queue processor process should exit on their own, leaving submission in PENDING state"><i class="fa fa-times-circle"></i> Empty Queue</a>
 		</p>
 		<table class="wecode_table table table-striped table-bordered">
 			<thead class="thead-dark">
@@ -56,6 +51,7 @@
 				<th>Problem</th>
 				<th>Type (judge/rejudge)</th>
 				<th>Process PID</th>
+				<th><i class="fas fa-toolbox"></i></th>
 			</tr>
 			</thead>
 			{% for item in queue %}
@@ -67,6 +63,9 @@
 					<td>{{ item.problem }}</td>
 					<td>{{ item.type }}</td>
 					<td>{{ item.process_id }}</td>
+					<td>{% if item.process_id %}
+							<a href="#" class="shj_act btn btn-danger" id="unlock/{{ item.id }}"  data-toggle="tooltip" data-placement="right" title="Unlock this queue item, allow it to be processed. Should only be used if its processor process has terminated someho"><i class="fas fa-lock-open"></i>Unlock</a>
+						{% endif %}</td>
 				</tr>
 			{% endfor %}
 		</table>

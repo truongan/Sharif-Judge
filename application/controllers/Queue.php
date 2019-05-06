@@ -28,8 +28,8 @@ class Queue extends CI_Controller
 
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
-			'queue' => $this->queue_model->get_queue(),
-			'working' => $this->settings_model->get_setting('queue_is_working')
+			'queue' => $this->queue_model->get_queue()
+			// 'working' => $this->settings_model->get_setting('queue_is_working')
 		);
 
 		$this->twig->display('pages/admin/queue.twig', $data);
@@ -51,7 +51,7 @@ class Queue extends CI_Controller
 	// ------------------------------------------------------------------------
 
 
-	public function resume()
+	public function spawn()
 	{
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
@@ -64,6 +64,13 @@ class Queue extends CI_Controller
 
 
 	public function empty_queue()
+	{
+		if ( ! $this->input->is_ajax_request() )
+			show_404();
+		$this->queue_model->empty_queue();
+		echo 'success';
+	}
+	public function unlock($id)
 	{
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
