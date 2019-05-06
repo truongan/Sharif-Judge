@@ -95,8 +95,6 @@ class Queueprocess extends CI_Controller
 			$diff_arg = $problem['diff_arg'];
 			$output_size_limit = $this->settings_model->get_setting('output_size_limit') * 1024;
 
-			shell_exec("mv $userdir/result.html $userdir/result-{$submit_id}.html");
-			shell_exec("mv $userdir/log $userdir/log-{$submit_id}");
 			$result_file = "$userdir/result-{$submit_id}.html";
 			$log_file = "$userdir/log-{$submit_id}";
 
@@ -119,9 +117,6 @@ class Queueprocess extends CI_Controller
 
 			
 			// Saving judge result
-			
-
-			
 			if (is_numeric($output)) {
 				$submission['pre_score'] = $output;
 				$submission['status'] = 'SCORE';
