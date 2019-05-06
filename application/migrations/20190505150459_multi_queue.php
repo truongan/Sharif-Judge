@@ -7,6 +7,7 @@ class Migration_Multi_queue extends CI_Migration {
         $this->dbforge->add_column('queue', array(
             'process_id' => array('type' =>'INT', 'constraint' => 11, 'unsigned' => TRUE, 'null' => TRUE)
         ));
+        $this->db->insert('settings', array('shj_key' => 'concurent_queue_process', 'shj_value' => 2));
     }
 
     public function down()

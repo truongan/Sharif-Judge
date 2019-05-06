@@ -117,21 +117,25 @@ $(document).ready(function(){
 
 		<br><h5>System settings</h5><hr>
 		<div class="form-row">
-			<fieldset class="form-group col-md-5">
+			<fieldset class="form-group col-md">
 				<label for="form_t_path">Full Path to <code>tester</code></label>
 				<input id="form_t_path" type="text" name="tester_path" class="form-control medium" value="{{ tester_path }}"/>
 			</fieldset>
-			<fieldset class="form-group col-md-5">
+			<fieldset class="form-group col-md">
 				<label for="form_a_path">Full Path to <code>assignments</code></label>
 				<input id="form_a_path" type="text" name="assignments_root" class="form-control medium" value="{{ assignments_root }}"/>
 			</fieldset>
-			<fieldset class="form-group col-md-2">
+			{# <fieldset class="form-group col-md-2">
 				<div class="custom-control custom-switch">
 					<input id="form_log" type="checkbox" class="custom-control-input" name="enable_log" value="1" {{ enable_log ? 'checked' }}/>
 					<label for="form_log" class="custom-control-label">Log</label>
 				</div>
 				<small class="form-text text-muted">Enable tester Log. This options is highly recommended</small>
-
+			</fieldset> #}
+			<fieldset class="form-group col-md-3">
+				<label for="form_log">Number of queue process</label>
+				<input id="form_log" type="number" name="concurent_queue_process" value="{{ concurent_queue_process }}" />
+				<small class="form-text text-muted">The number of queue process to run at the same time. This settings is sensitive to the server hardware capabilities</small>
 			</fieldset>
 
 		</div>
