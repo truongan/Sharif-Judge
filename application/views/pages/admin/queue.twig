@@ -49,22 +49,24 @@
 		<table class="wecode_table table table-striped table-bordered">
 			<thead class="thead-dark">
 			<tr>
-				<th>#</th>
+				<th>id</th>
 				<th>Submit ID</th>
 				<th>Usename</th>
 				<th>Assignment</th>
 				<th>Problem</th>
 				<th>Type (judge/rejudge)</th>
+				<th>Process PID</th>
 			</tr>
 			</thead>
 			{% for item in queue %}
 				<tr>
-					<td>{{ loop.index }}</td>
+					<td>{{ item.id }}</td>
 					<td>{{ item.submit_id }}</td>
 					<td>{{ item.username }}</td>
 					<td>{{ item.assignment }} (<span>{{ all_assignments[item.assignment].name }}</span>)</td>
 					<td>{{ item.problem }}</td>
 					<td>{{ item.type }}</td>
+					<td>{{ item.process_id }}</td>
 				</tr>
 			{% endfor %}
 		</table>
