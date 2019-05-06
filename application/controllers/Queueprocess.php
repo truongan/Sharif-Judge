@@ -95,7 +95,13 @@ class Queueprocess extends CI_Controller
 			$diff_arg = $problem['diff_arg'];
 			$output_size_limit = $this->settings_model->get_setting('output_size_limit') * 1024;
 
-			$cmd = "bash && cd $tester_path;\n./tester.sh $problemdir $userdir ".escapeshellarg($raw_filename)." $file_extension $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd '$diff_arg' $op1 ";
+			shell_exec("mv $userdir/result.html $userdir/result-{$submit_id}.html");
+			shell_exec("mv $userdir/log $userdir/log-{$submit_id}");
+			$result_file = "$userdir/result-{$submit_id}.html";
+			$log_file = "$userdir/log-{$submit_id}";
+
+			// AN - note: Since cmd start bash, this process have to be exit when run from cli to debugg
+			$cmd = "bash && cd $tester_path;\n./tester.sh $problemdir $userdir $result_file $log_file ".escapeshellarg($raw_filename)." $file_extension $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd '$diff_arg' $op1 ";
 
 			file_put_contents($userdir.'/log', $cmd);
 
@@ -114,8 +120,7 @@ class Queueprocess extends CI_Controller
 			
 			// Saving judge result
 			
-			shell_exec("mv $userdir/result.html $userdir/result-{$submit_id}.html");
-			shell_exec("mv $userdir/log $userdir/log-{$submit_id}");
+
 			
 			if (is_numeric($output)) {
 				$submission['pre_score'] = $output;
