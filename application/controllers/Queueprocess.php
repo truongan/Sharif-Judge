@@ -99,7 +99,7 @@ class Queueprocess extends CI_Controller
 			$log_file = "$userdir/log-{$submit_id}";
 
 			// AN - note: Since cmd start bash, this process have to be exit when run from cli to debugg
-			$cmd = "bash && cd $tester_path;\n./tester.sh $problemdir $userdir $result_file $log_file ".escapeshellarg($raw_filename)." $file_extension $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd '$diff_arg' $op1 ";
+			$cmd = "cd $tester_path;\n./tester.sh $problemdir $userdir $result_file $log_file ".escapeshellarg($raw_filename)." $file_extension $time_limit $time_limit_int $memory_limit $output_size_limit $diff_cmd '$diff_arg' $op1 ";
 
 			file_put_contents($userdir.'/log', $cmd);
 

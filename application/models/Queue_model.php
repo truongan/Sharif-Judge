@@ -183,6 +183,14 @@ class Queue_model extends CI_Model
 		return $result;
 	}
 
+	/*
+	* 	Permanent pending submission are PENDING submissions
+	*	that are not inlcude in the queue. Perma pending should
+	*	only appear when admin manually
+	*/
+	public function perma_pending(){
+
+	}
 
 	// ------------------------------------------------------------------------
 
