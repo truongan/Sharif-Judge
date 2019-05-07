@@ -59,8 +59,8 @@ if [ $EXITCODE -ne 0 ]; then
     shj_log "Compile Error"
     #shj_log "$(cat cerr | head -10)"
     shj_log "$(cat cerr )"
-    echo '<span class="text-primary">Compile Error<br>Error Messages: (line numbers are not correct)</span>' >$USERDIR/result.html
-    echo '<span class="text-danger">' >> $USERDIR/result.html
+    echo '<span class="text-primary">Compile Error<br>Error Messages: (line numbers are not correct)</span>' >$RESULTFILE
+    echo '<span class="text-danger">' >> $RESULTFILE
 
     echo -e "\n" >> cerr
     echo "" > cerr2
@@ -77,8 +77,8 @@ if [ $EXITCODE -ne 0 ]; then
 
     (cat cerr2 | head -10 | sed 's/themainmainfunction/main/g' ) > cerr;
 
-    (cat cerr | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $USERDIR/result.html
-    echo "</span>" >> $USERDIR/result.html
+    (cat cerr | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g') >> $RESULTFILE
+    echo "</span>" >> $RESULTFILE
     cd ..
     rm -r $JAIL >/dev/null 2>/dev/null
     shj_finish "Compilation Error"
