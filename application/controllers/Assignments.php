@@ -143,6 +143,16 @@ class Assignments extends CI_Controller
 	public function pdf($assignment_id){
 		if ($assignment_id === FALSE || ! is_numeric($assignment_id))
 			show_404();		
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
+
+		if ($this->user->level < 2){
+			if(! $this->assignment_model->started($assignment) 
+				// || ! $assignment['open']
+			){
+				show_404();
+			}
+		}
+
 		$assignment_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
 
 		$assignment_dir = $assignment_root . "/assignment_" . $assignment_id;
