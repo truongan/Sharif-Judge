@@ -25,7 +25,7 @@ CMD=$@
 TIMEOUT_EXISTS=true
 hash timeout 2>/dev/null || TIMEOUT_EXISTS=false
 
-
+echo SHIT
 if [ $EXT == "py2" ]; then
         mem=$(pid=$(python2 >/dev/null 2>/dev/null & echo $!) && ps -p $pid -o vsz=; kill $pid >/dev/null 2>/dev/null;)
         MEMLIMIT=$((MEMLIMIT+mem+5000))
@@ -36,15 +36,16 @@ fi
 
 
 # Imposing memory limit with ulimit
-if [ "$EXT" != "java" ]; then
+# if [ "$EXT" != "java" ]; then
 	ulimit -v $((MEMLIMIT+34500))
 	ulimit -m $((MEMLIMIT+34500))
 	ulimit -s $((MEMLIMIT+34500))
-fi
+# fi
 
 # Imposing time limit with ulimit
 ulimit -t $TIMELIMITINT
 
+	echo "timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err"
 if $TIMEOUT_EXISTS; then
 	# Run the command with REAL time limit of TIMELIMITINT*2
 	timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err

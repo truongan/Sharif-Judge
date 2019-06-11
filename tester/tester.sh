@@ -105,6 +105,7 @@ languages_to_docker["cpp"]="gcc:6"
 languages_to_docker["py2"]="python:2"
 languages_to_docker["py3"]="python:3"
 languages_to_docker["java"]="openjdk:8"
+languages_to_docker["pas"]="nacyot/pascal-fp_compiler:apt"
 
 # DIFFOPTION can also be "ignore" or "exact".
 # ignore: In this case, before diff command, all newlines and whitespaces will be removed from both files
@@ -180,6 +181,8 @@ elif [ "$EXT" = "py3"  ] || [ "$EXT" = "py2" ]; then
 	source $tester_dir/compile_python.sh
 elif [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 	source $tester_dir/compile_c.sh
+elif [ "$EXT" = "pas" ]; then
+	source $tester_dir/compile_pascal.sh
 fi
 
 ########################################################################################################
@@ -244,6 +247,7 @@ for((i=1;i<=TST;i++)); do
 	declare -A languages_to_comm
 	languages_to_comm["c"]="./$EXEFILE"
 	languages_to_comm["cpp"]="./$EXEFILE"
+	languages_to_comm["pas"]="./$EXEFILE"
 	languages_to_comm["py2"]="python2 -O $FILENAME.py2"
 	languages_to_comm["py3"]="python3 -O $FILENAME.py3"
 	languages_to_comm["java"]="java -mx${MEMLIMIT}k $FILENAME"
@@ -279,7 +283,8 @@ for((i=1;i<=TST;i++)); do
 
 	if [ "$EXT" = "java" ]; then
 		if grep -iq -m 1 "Too small initial heap" out || grep -q -m 1 "java.lang.OutOfMemoryError" err; then
-			shj_log "Memory Limit Exceeded"
+			shj_log "Memory Limit Exceeded java"
+			shj_log `cat out`
 			echo "<span class=\"text-warning\">Memory Limit Exceeded</span>" >>$RESULTFILE
 			continue
 		fi
@@ -314,6 +319,7 @@ for((i=1;i<=TST;i++)); do
 	echo "<span class=\"text-muted\"><small>$t s and $m KiB</small></span>" >>$RESULTFILE
 	# echo "<span class=\"text-secondary\">Used $m KiB</span>" >>$RESULTFILE
 	found_error=0
+
 	if ! grep -q "FINISHED" err; then
 
 		for K in "${!errors[@]}"
@@ -406,7 +412,7 @@ done
 
 
 cd ..
-#cp -r $JAIL "debug-jail-backup"
+# cp -r $JAIL "debug-jail-backup"
 rm -r $JAIL >/dev/null 2>/dev/null # removing files
 
 
