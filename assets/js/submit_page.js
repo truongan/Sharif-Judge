@@ -122,6 +122,7 @@ $(document).ready(function(){
             , "C":"c_pp"
             , "Python 2":"python"
             , "Python 3":"python"
+            , "Free Pascal":"pascal"
         };
 
         mode = "ace/mode/" + lang_to_mode[$(this).val()];
