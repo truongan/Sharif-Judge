@@ -308,6 +308,8 @@ class Submissions extends CI_Controller
 				$result['lang'] = $file_extension;
 				if ($result['lang'] == 'py2' || $result['lang'] == 'py3')
 					$result['lang'] = 'python';
+				else if ($result['lang'] == 'pas')
+					$result['lang'] = 'pascal';
 			}
 
 			$this->output->set_content_type('application/json')->set_output(json_encode($result));

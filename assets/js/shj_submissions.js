@@ -59,10 +59,12 @@ $(document).ready(function () {
 			success: function (data) {
 				if (type == 'code')
 					 data.text = shj.html_encode(data.text);
-				$('.modal-body').html('<pre class="code-column">'+data.text+'</pre>');
+				$('.modal-body').html('<pre class="code-column"><code class="code-column">'+data.text+'</code></pre>');
 				$('.modal-title').html('<code>'+data.file_name+' | Submit ID: '+row.data('s')+' | Username: '+row.data('u')+' | Problem: '+row.data('p')+'</code>');
 				if (type == 'code'){
-					$('pre.code-column').snippet(data.lang, {style: shj.color_scheme});
+					// $('code.code-column').snippet(data.lang, {style: shj.color_scheme});
+					$('code.code-column').addClass('lang-' + data.lang);
+					Prism.highlightAll();
 				}
 				else
 					$('pre.code-column').addClass('shj_code');

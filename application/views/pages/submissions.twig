@@ -12,8 +12,9 @@
 
 
 {% block other_assets %}
-	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
-	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/>
+	{# <link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/jquery.snippet.css") }}'/>
+	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/snippet/themes/github.css") }}'/> #}
+	<link rel='stylesheet' type='text/css' href='{{ base_url("assets/prismjs/prism.css") }}'/>
 	<link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css'/>
 	<style type="text/css">
 .status_button{
@@ -48,7 +49,7 @@
 </div>
 
 	<script type='text/javascript' src="{{ base_url("assets/js/shj_submissions.js") }}"></script>
-	<script type='text/javascript' src="{{ base_url("assets/snippet/jquery.snippet.js") }}"></script>
+	<script type='text/javascript' src="{{ base_url("assets/prismjs/prism.js") }}"></script>
 	<script type='text/javascript' src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 	<script type='text/javascript' src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
