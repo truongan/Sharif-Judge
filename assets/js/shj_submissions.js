@@ -8,7 +8,27 @@
 
 shj.modal_open = false;
 
+Prism.plugins.toolbar.registerButton('select-code', function(env) {
+	var button = document.createElement('button');
+	button.innerHTML = 'Select Code';
 
+	button.addEventListener('click', function () {
+		// Source: http://stackoverflow.com/a/11128179/2757940
+		if (document.body.createTextRange) { // ms
+			var range = document.body.createTextRange();
+			range.moveToElementText(env.element);
+			range.select();
+		} else if (window.getSelection) { // moz, opera, webkit
+			var selection = window.getSelection();
+			var range = document.createRange();
+			range.selectNodeContents(env.element);
+			selection.removeAllRanges();
+			selection.addRange(range);
+		}
+	});
+
+	return button;
+});
 // selectText is used for "Select All" when viewing a submitted code
 jQuery.fn.selectText = function(){
 	var doc = document
@@ -59,15 +79,14 @@ $(document).ready(function () {
 			success: function (data) {
 				if (type == 'code')
 					 data.text = shj.html_encode(data.text);
-				$('.modal-body').html('<pre class="code-column"><code class="code-column">'+data.text+'</code></pre>');
+				$('.modal-body').html('<pre class="code-column line-numbers"><code>'+data.text+'</code></pre>');
 				$('.modal-title').html('<code>'+data.file_name+' | Submit ID: '+row.data('s')+' | Username: '+row.data('u')+' | Problem: '+row.data('p')+'</code>');
 				if (type == 'code'){
 					// $('code.code-column').snippet(data.lang, {style: shj.color_scheme});
-					$('code.code-column').addClass('lang-' + data.lang);
+					$('pre.code-column').addClass('lang-' + data.lang);
 					Prism.highlightAll();
 				}
-				else
-					$('pre.code-column').addClass('shj_code');
+
 				if(type == 'log') $('pre.code-column').addClass('wcj_log');
 
 			}

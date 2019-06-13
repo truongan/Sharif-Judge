@@ -1,0 +1,67 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="prism.css">
+
+</head>
+
+<body>
+  <pre class="lang-pascal"><code>
+    var n,i:integer;
+    a:array[1..1000] of integer;
+    max:int64;
+    f:boolean;
+ 
+procedure solve;
+var k,j:integer;
+    s:int64;
+    x:array[1..1000] of integer;
+begin
+	for k:=n downto 1 do
+	begin
+		for i:=1 to k do x[i]:=i;
+		repeat
+			s:=1;
+			for i:=1 to k do s:=s*a[x[i]];
+			if max&lt;s then max:=s;
+ 
+			i:=k;
+			while (i&gt;0) and (x[i]=n-k+i) do dec(i);
+			if i&gt;0 then
+			begin	
+				inc(x[i]);
+				for j:=i+1 to n do x[j]:=x[j-1]+1;
+			end;
+		until i=0;
+	end;
+end;
+ 
+begin
+	f:=true;
+	readln(n);
+	max:=1;
+	for i:=1 to n do
+	begin
+		read(a[i]);
+		if a[i]&lt;0 then f:=false;
+		if a[i]&lt;&gt;0 then max:=(max*a[i]) mod 1000000007;
+	end;
+	if f=true then write(max)
+	else
+	begin
+		max:=a[1];
+		solve;
+		write(max mod 1000000007);
+	end;
+end.
+</code></pre>
+  <script src="prism.js"></script>
+</body>
+</html>
