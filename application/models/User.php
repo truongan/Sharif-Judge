@@ -107,22 +107,5 @@ class User extends CI_Model
 
 	// ------------------------------------------------------------------------
 
-	/**
-	 * Save Widget Positions
-	 *
-	 * Updates position of dashboard widgets in database
-	 *
-	 * @param $positions
-	 */
-	public function save_widget_positions($positions)
-	{
-		$this->db
-			->where('username', $this->username)
-			->update('users', array('dashboard_widget_positions'=>$positions));
-	}
-
-
-	// ------------------------------------------------------------------------
-
 
 }
