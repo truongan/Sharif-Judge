@@ -61,7 +61,7 @@ class Submissions extends CI_Controller
 		if (array_key_exists('user', $input) && $input['user'])
 			if ($this->user->level > 0) {
 				// Only non student user can use user filter
-				$this->filter_user = $this->form_validation->alpha_numeric($input['user'])?$input['user']:NULL;
+				$this->filter_user = isset($input['user'])?$input['user']:NULL;
 			}
 			
 		if (array_key_exists('problem', $input) && $input['problem'])
@@ -196,7 +196,6 @@ class Submissions extends CI_Controller
 		$this->form_validation->set_rules('submit_id', 'Submit ID', 'integer|greater_than[0]');
 		$this->form_validation->set_rules('problem', 'problem', 'integer|greater_than[0]');
 		$this->form_validation->set_rules('assignment', 'problem', 'integer|required');
-		$this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|max_length[20]|alpha_numeric');
 			
 		if ($this->form_validation->run())
 		{
@@ -263,7 +262,6 @@ class Submissions extends CI_Controller
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 		$this->form_validation->set_rules('type','type','callback__check_type');
-		$this->form_validation->set_rules('username','username','required|min_length[3]|max_length[20]|alpha_numeric');
 		$this->form_validation->set_rules('assignment','assignment','integer');
 		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 		$this->form_validation->set_rules('submit_id','submit_id','integer|greater_than[0]');

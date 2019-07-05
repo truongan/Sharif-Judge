@@ -55,7 +55,6 @@ class Rejudge extends CI_Controller
 			show_404();
 
 		$this->form_validation->set_rules('submit_id', 'submit id', 'required|integer');
-		$this->form_validation->set_rules('username', 'username', 'required|alpha_numeric');
 		$this->form_validation->set_rules('assignment', 'assignment', 'required|integer');
 		$this->form_validation->set_rules('problem', 'problem', 'required|integer');
 

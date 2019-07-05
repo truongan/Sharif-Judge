@@ -85,7 +85,7 @@ class Login extends CI_Controller
 		if ( ! $this->settings_model->get_setting('enable_registration'))
 			show_error('Registration is closed.');
 		$this->form_validation->set_rules('registration_code', 'registration code', 'callback__registration_code', array('_registration_code' => 'Invalid %s'));
-		$this->form_validation->set_rules('username', 'username', 'required|min_length[3]|max_length[20]|alpha_numeric|lowercase|is_unique[users.username]', array('is_unique' => 'This %s already exists.'));
+		$this->form_validation->set_rules('username', 'username', 'required|min_length[3]|max_length[20]|lowercase|is_unique[users.username]', array('is_unique' => 'This %s already exists.'));
 		$this->form_validation->set_rules('email', 'email address', 'required|max_length[40]|valid_email|lowercase|is_unique[users.email]', array('is_unique' => 'This %s already exists.'));
 		$this->form_validation->set_rules('password', 'password', 'required|min_length[6]|max_length[200]');
 		$this->form_validation->set_rules('password_again', 'password confirmation', 'required|matches[password]');
