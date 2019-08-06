@@ -14,20 +14,6 @@ class Problem_files_model extends CI_Model
 		parent::__construct();
 	}
 
-   
-
-	public function all_languages($id = NULL){
-		$query =  $this->db->from('languages')
-						->join('problem_language', 'languages.id = problem_language.language_id')
-						->where('problem_language.problem_id' , $id)
-						->get()->result();
-		$a = array();
-		foreach($query as $lang){
-			$a[$lang->id] = $lang;
-		}
-		return $a;
-	}
-
 	public function get_directory_path($id = NULL){
 		if ($id === NULL) return NULL;
 		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
@@ -73,12 +59,12 @@ class Problem_files_model extends CI_Model
 	}
 
 	public function get_template_path($problem_id = NULL){
-		$pattern1 = rtrim($this->problem_model->get_directory_path($problem_id)
+		$pattern1 = rtrim($this->problem_files_model->get_directory_path($problem_id)
 		."/template.public.cpp");
 
 		$template_file = glob($pattern1);
 		if ( ! $template_file ){
-			$pattern = rtrim($this->problem_model->get_directory_path($problem_id)
+			$pattern = rtrim($this->problem_files_model->get_directory_path($problem_id)
 						."/template.cpp");
 
 			$template_file = glob($pattern);
@@ -102,48 +88,17 @@ class Problem_files_model extends CI_Model
 		else return false;
 	}
 
-	// ------------------------------------------------------------------------
-	public function replace_problem($problem_id = NULL){
-		$this->db->trans_start();
-		$id = $problem_id ? $problem_id : $this->new_problem_id();;
-		
-		//Now add new problems:
-		$name = $this->input->post('problem_name');
-		$admin_note = $this->input->post('admin_note');
-		$dc = $this->input->post('diff_cmd');
-		$da = $this->input->post('diff_arg');
-
-		$problem = array(
-			'id' => $id,
-			'name' => $name,
-			'admin_note' => $admin_note,
-			'diff_cmd' => $dc,
-			'diff_arg' => $da,
-		);
-		$this->db->replace('problems', $problem);
-		
-		$this->db->where('problem_id', $id)->delete('problem_language');
-
-		$enable = $this->input->post('enable');
-		$time_limit = $this->input->post('time_limit');
-		$memory_limit = $this->input->post('memory_limit');
-		foreach($this->input->post('language_id') as $i => $lang_id){
-			if($enable[$i]){
-				$this->db->insert('problem_language', array(
-					'language_id' => $lang_id,
-					'problem_id' => $id,
-					'time_limit' => $time_limit[$i],
-					'memory_limit' => $memory_limit[$i],
-				));
-			}
-		}
-		$this->db->trans_complete();
-		return $id;
-	}
-
 
 //#region bring from old problem controller
-	private function _take_test_file_upload($assignments_root, $problem_dir){
+	public function _take_test_file_upload($the_id, & $messages){
+
+		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
+		$problem_dir = $this->get_directory_path($the_id);
+
+		// Create assignment directory
+		if ( ! file_exists($problem_dir) )
+			mkdir($problem_dir, 0700, TRUE);
+
 		$this->load->library('upload');
 		$up_dir = $_FILES['tests_dir'];
 		$up_zip = $_FILES['tests_zip'];
@@ -152,7 +107,7 @@ class Problem_files_model extends CI_Model
 		if ( $up_dir['error'][0] === UPLOAD_ERR_NO_FILE 
 			&& $up_zip['error'] === UPLOAD_ERR_NO_FILE 
 		){
-			$this->messages[] = array(
+			$messages[] = array(
 				'type' => 'notice',
 				'text' => "Notice: You did not upload test case and description. If needed, upload by editing assignment."
 			);

@@ -109,7 +109,7 @@ class Problem_model extends CI_Model
 
 	
 	public function delete_problem($id){
-		$cmd = 'rm -rf '.$this->get_directory_path($id);
+		$cmd = 'rm -rf '.$this->problem_files_model->get_directory_path($id);
 		//var_dump($cmd);die();
 		$this->db->trans_start();
 
@@ -124,13 +124,17 @@ class Problem_model extends CI_Model
 		if ($this->db->trans_status())
 		{
 			// Phase 2: Delete assignment's folder (all test cases and submitted codes)
-			$cmd = 'rm -rf '.$this->get_directory_path($id);
+			$cmd = 'rm -rf '.$this->problem_files_model->get_directory_path($id);
 
 			shell_exec($cmd);
 		}
 	}
 
 	// ------------------------------------------------------------------------
+	/*
+	* This function call the sql command replace in to problems
+	* Use when editing or inserting problems
+	*/
 	public function replace_problem($problem_id = NULL){
 		$this->db->trans_start();
 		$id = $problem_id ? $problem_id : $this->new_problem_id();;

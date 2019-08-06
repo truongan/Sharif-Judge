@@ -23,6 +23,7 @@ class Problems extends CI_Controller
 
 		$this->user->login_redirect();
 		$this->load->model('language_model');
+		$this->load->model('problem_files_model');
         $this->notif_edit = FALSE;
 
         if ($this->user->level <= 1) {
@@ -58,7 +59,7 @@ class Problems extends CI_Controller
 			'assignment' => NULL,
 		);
 
-		$data['problem'] = array_merge($data['problem'], $this->problem_model->get_description($id));
+		$data['problem'] = array_merge($data['problem'], $this->problem_files_model->get_description($id));
 
 		$data['error'] = 'none';
 
@@ -82,15 +83,15 @@ class Problems extends CI_Controller
 			$lang->time_limit = $data['all_languages'][$lang->id]->default_time_limit;
 			$lang->memory_limit = $data['all_languages'][$lang->id]->default_memory_limit;
 		}
-		// var_dump($data['languages']); die();
+
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}
 	public function show_edit_form($problem_id)
 	{
 		$problem = $this->problem_model->problem_info($problem_id);
 		if (!$problem) show_404();
-		$root_path = $this->problem_model->get_directory_path($problem_id);
-		// var_dump(("tree " . $root_path));die();
+		$root_path = $this->problem_files_model->get_directory_path($problem_id);
+		
 		$tree_dump = shell_exec("tree -h " . $root_path);
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
@@ -141,7 +142,7 @@ class Problems extends CI_Controller
 		$this->form_validation->set_rules('content', 'text' ,'required'); /* todo: xss clean */
 		if ($this->form_validation->run())
 		{
-			if ($this->problem_model->save_problem_description($problem_id, $this->input->post('content'))){
+			if ($this->problem_files_model->save_problem_description($problem_id, $this->input->post('content'))){
 				echo "success";
 				return ;
 			}
@@ -172,15 +173,8 @@ class Problems extends CI_Controller
 				if($problem == NULL) show_404();
 			}
 			$the_id = $this->problem_model->replace_problem($problem_id ? $problem_id : NULL);
-
-			$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-			$problem_dir = $this->problem_model->get_directory_path($the_id);
 			
-			// Create assignment directory
-			if ( ! file_exists($problem_dir) )
-				mkdir($problem_dir, 0700, TRUE);
-			
-			$this->_take_test_file_upload($assignments_root, $problem_dir);
+			$this->problem_files_model->_take_test_file_upload($the_id, $this->messages);
 			
 			$this->index();
 		}
@@ -216,7 +210,7 @@ class Problems extends CI_Controller
 		if ($assignment_id == NULL && $this->user->level < 2)
 			show_error("Only admin can view template without assignment", 403);
 
-		$pdf_files = $this->problem_model->get_template_path($problem_id);
+		$pdf_files = $this->problem_files_model->get_template_path($problem_id);
 		if(!$pdf_files)
 			show_error("File not found");
 
@@ -237,7 +231,7 @@ class Problems extends CI_Controller
 			show_403();
 		$this->load->library('zip');
 
-		$root_path = $this->problem_model->get_directory_path($problem_id);
+		$root_path = $this->problem_files_model->get_directory_path($problem_id);
 
 		$path = "$root_path/in";
 		$this->zip->read_dir($path, FALSE, $root_path);
@@ -280,7 +274,7 @@ class Problems extends CI_Controller
 		if ($problem_id === NULL)
 			show_404();
 		else
-			$pattern = $this->problem_model->get_directory_path()."/*.pdf";
+			$pattern = $this->problem_files_model->get_directory_path()."/*.pdf";
 			// rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/*.pdf";
 		
 		$pdf_files = glob($pattern);

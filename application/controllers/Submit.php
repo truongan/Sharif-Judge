@@ -44,9 +44,10 @@ class Submit extends CI_Controller
 
 		if($this->form_validation->run())
 		{
+			$this->load->model('problem_files_model');
 			$problem_id = $this->input->post('problem');
 
-			$template_file = $this->problem_model->get_template_path($problem_id);
+			$template_file = $this->problem_files_model->get_template_path($problem_id);
 
 			if(!$template_file){
 				return NULL;
@@ -67,8 +68,8 @@ class Submit extends CI_Controller
 	*/
 	public function template(){
 		// Find pdf file
+		$this->load->model('problem_files_model');
 		$template = $this->get_request_template_content();
-		
 		if ($template == NULL)
 			$result = array('banned' => '', 'before'  => '', 'after' => '');
 
