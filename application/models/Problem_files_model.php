@@ -184,6 +184,8 @@ class Problem_files_model extends CI_Model
 		$tmp_dir = "$assignments_root/$tmp_dir_name";
 		shell_exec("rm -rf $tmp_dir; mkdir $tmp_dir;");
 
+		$rename_inputoutput = $this->input->post('rename_zip');
+
 		// Extract new test cases and descriptions in temp directory
 		$this->load->library('unzip');
 		$this->unzip->allow(array('txt', 'cpp', 'html', 'md', 'pdf'));
@@ -198,12 +200,7 @@ class Problem_files_model extends CI_Model
 
 			if (glob("$tmp_dir/*.pdf"))
 				shell_exec("cd $problem_dir; rm -f *.pdf");
-			// Copy new test cases from temp dir
-			// echo $tmp_dir . "<br/>";
-			// echo $problem_dir . "<br/>";
-			// echo shell_exec("ls $tmp_dir/*");
-			// echo "cp -R $tmp_dir/* $problem_dir;";
-			//die();
+
 			shell_exec("cp -R $tmp_dir/* $problem_dir;");
 			$this->messages[] = array(
 				'type' => 'success',

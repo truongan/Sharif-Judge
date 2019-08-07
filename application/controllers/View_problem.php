@@ -17,6 +17,7 @@ class View_problem extends CI_Controller
 	{
 		parent::__construct();
 		$this->user->login_redirect();
+		$this->load->model('problem_files_model');
 	}
 
 
@@ -83,7 +84,7 @@ class View_problem extends CI_Controller
 
 			$data['problem'] = $data['all_problems'][$problem_id];
 			$data['problem'] = array_merge($data['problem'], $this->problem_model->problem_info($problem_id));
-			$data['problem'] = array_merge($data['problem'], $this->problem_model->get_description($problem_id));
+			$data['problem'] = array_merge($data['problem'], $this->problem_files_model->get_description($problem_id));
 			$data['error'] = 'none';
 			// var_dump($data);die();
 

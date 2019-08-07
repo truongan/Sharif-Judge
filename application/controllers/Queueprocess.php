@@ -23,10 +23,6 @@ class Queueprocess extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
-
-
-
 	/**
 	 * This is the main function for processing the queue
 	 * This function judges queue items one by one
@@ -38,11 +34,6 @@ class Queueprocess extends CI_Controller
 		// it from an environment variable that we have set in shj_helper.php
 		$this->config->set_item('base_url', getenv('SHJ_BASE_URL'));
 	
-		// $queue_item = $this->queue_model->get_first_item();
-		// if ($queue_item === NULL) {
-		// 	$this->settings_model->set_setting('queue_is_working', '0');
-		// 	exit;
-		// }
 		$limit = $this->settings_model->get_setting('concurent_queue_process', 2);
 		$queue_item = $this->queue_model->acquire($limit);
 		if ($queue_item === NULL) {
@@ -53,12 +44,6 @@ class Queueprocess extends CI_Controller
 
 		//To pause the queue when debugging, just exit here
 		// exit;
-
-		// Not only this boolean control settings is weak
-		// It is inadequate! We need multi queue.
-		// if ($this->settings_model->get_setting('queue_is_working'))
-		//  	exit;
-		// $this->settings_model->set_setting('queue_is_working', '1');
 
 		do { // loop over queue items
 

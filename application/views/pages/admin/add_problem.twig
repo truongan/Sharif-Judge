@@ -137,6 +137,14 @@ input[type='number']{
 					<label for="admin_note">Admin's note</label>
 					<textarea id="admin_note" name="admin_note" rows="3" class="form-control add_text">{{ edit_problem ? edit_problem.admin_note : set_value('admin_note', "", false) }}</textarea>
 						{{ form_error('admin_note', '<div class="alert alert-danger">', '</div>') }}
+				</div>
+			</fieldset>
+			<fieldset class="form-group" data-toggle="tooltip" data-html="true" title="Rename all files in <strong>in</strong> and <strong>out</strong> folder after unziping. This is assuming that all files in these two folder are perfectly corresponding to each when sorted by file name. This could useful when importing dataset from another format but should be use with care ">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="customSwitch1" name="rename_zip">
+					<label class="custom-control-label" for="customSwitch1">Re-order files in <strong>in</strong> and <strong>out</strong> folder after upload<br/><small>This could useful when importing dataset from another format but should be use with care </small>
+					</label>
+				</div>
 			</fieldset>
 			<fieldset class="form-group">
 				<div class="form-row">
