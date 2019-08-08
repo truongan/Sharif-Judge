@@ -140,6 +140,7 @@ class Problem_files_model extends CI_Model
 				$files[$name] = $up_dir['tmp_name'][$i];
 			}
 		}
+		var_dump($files);
 		if (!isset($files['desc.html'])){
 			$messages[] = array('type' => 'error', 'text' => "Your test folder doesn't have desc.html file for problem description");
 		}
@@ -207,13 +208,10 @@ class Problem_files_model extends CI_Model
 			);
 			$in = glob("$problem_dir/in/*");
 			$out = glob("$problem_dir/out/*");
-			var_dump($in);
-			// var_dump($out);
-			// var_dump(glob("$problem_dir/out/*"));
+
 			if ($in){
 				//rename input and output file base on file name order
-				if (true){
-
+				if ($rename_inputoutput){
 					if (count($in) != count($out)){
 						$messages[] = array(
 							'type' => 'error',
@@ -228,7 +226,15 @@ class Problem_files_model extends CI_Model
 					}
 				} else {
 					//Check input and output file but won't rename
-
+					for($i = 1; $i < count($in); $i++){
+						if (!isset($in["input$i.txt"])){
+							$messages[] = array('type' => 'error', 'text' => "A file name input$i.txt seem to be missing in your folder");
+						} else {
+							if (!isset($out["output$i.txt"])){
+								$messages[] = array('type' => 'error', 'text' => "A file name output$i.txt seem to be missing in your folder");
+							}
+						}
+					}
 				}
 			}
 		}

@@ -274,9 +274,8 @@ class Problems extends CI_Controller
 		if ($problem_id === NULL)
 			show_404();
 		else
-			$pattern = $this->problem_files_model->get_directory_path()."/*.pdf";
+			$pattern = $this->problem_files_model->get_directory_path($problem_id)."/*.pdf";
 			// rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/*.pdf";
-		
 		$pdf_files = glob($pattern);
 		if ( ! $pdf_files )
 			show_error("File not found");
