@@ -198,17 +198,16 @@ class Problem_files_model extends CI_Model
 
 			if (glob("$tmp_dir/*.pdf"))
 				shell_exec("cd $problem_dir; rm -f *.pdf");
-			// Copy new test cases from temp dir
-			// echo $tmp_dir . "<br/>";
-			// echo $problem_dir . "<br/>";
-			// echo shell_exec("ls $tmp_dir/*");
-			// echo "cp -R $tmp_dir/* $problem_dir;";
-			//die();
+
 			shell_exec("cp -R $tmp_dir/* $problem_dir;");
 			$this->messages[] = array(
 				'type' => 'success',
 				'text' => 'Tests (zip file) extracted successfully.'
 			);
+
+			// if ($this->input->post()){
+
+			// }
 		}
 		else
 		{
