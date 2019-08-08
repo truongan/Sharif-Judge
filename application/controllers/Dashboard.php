@@ -51,17 +51,4 @@ class Dashboard extends CI_Controller
 	}
 
 
-	// ------------------------------------------------------------------------
-
-	/**
-	 * Used by ajax request, for saving the user's Dashboard widget positions
-	 */
-	public function widget_positions()
-	{
-		if ( ! $this->input->is_ajax_request() )
-			show_404();
-		if ($this->input->post('positions') !== NULL)
-			$this->user->save_widget_positions($this->input->post('positions'));
-	}
-
 }

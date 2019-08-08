@@ -30,7 +30,7 @@ class Assignments extends CI_Controller
 
 
 	// ------------------------------------------------------------------------
-
+//#region
 
 	public function index()
 	{
@@ -166,7 +166,8 @@ class Assignments extends CI_Controller
 		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
 	}
 	
-	public function download_all_submissions($assignment_id){
+	public function download_all_submissions($assignment_id)
+	{
 		if ($assignment_id === FALSE || ! is_numeric($assignment_id))
 			show_404();
 		if ( $this->user->level == 0) // permission denied
@@ -182,6 +183,7 @@ class Assignments extends CI_Controller
 		);
 		$this->zip->download("assignment{$assignment_id}.".date('Y-m-d_H-i',shj_now()).'.zip');
 	}
+
 	/**
 	 * Compressing and downloading final codes of an assignment to the browser
 	 */
@@ -257,6 +259,7 @@ class Assignments extends CI_Controller
 		$this->twig->display('pages/admin/delete_assignment.twig', $data);
 
 	}
+
 	public function reload_scoreboard($assignment_id = FALSE)
 	{
 		if ($assignment_id === FALSE)

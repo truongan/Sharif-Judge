@@ -23,6 +23,7 @@ class Problems extends CI_Controller
 
 		$this->user->login_redirect();
 		$this->load->model('language_model');
+		$this->load->model('problem_files_model');
         $this->notif_edit = FALSE;
 
         if ($this->user->level <= 1) {
@@ -58,7 +59,7 @@ class Problems extends CI_Controller
 			'assignment' => NULL,
 		);
 
-		$data['problem'] = array_merge($data['problem'], $this->problem_model->get_description($id));
+		$data['problem'] = array_merge($data['problem'], $this->problem_files_model->get_description($id));
 
 		$data['error'] = 'none';
 
@@ -82,15 +83,15 @@ class Problems extends CI_Controller
 			$lang->time_limit = $data['all_languages'][$lang->id]->default_time_limit;
 			$lang->memory_limit = $data['all_languages'][$lang->id]->default_memory_limit;
 		}
-		// var_dump($data['languages']); die();
+
 		$this->twig->display('pages/admin/add_problem.twig', $data);
 	}
 	public function show_edit_form($problem_id)
 	{
 		$problem = $this->problem_model->problem_info($problem_id);
 		if (!$problem) show_404();
-		$root_path = $this->problem_model->get_directory_path($problem_id);
-		// var_dump(("tree " . $root_path));die();
+		$root_path = $this->problem_files_model->get_directory_path($problem_id);
+		
 		$tree_dump = shell_exec("tree -h " . $root_path);
 		$data = array(
 			'all_assignments' => $this->assignment_model->all_assignments(),
@@ -141,7 +142,7 @@ class Problems extends CI_Controller
 		$this->form_validation->set_rules('content', 'text' ,'required'); /* todo: xss clean */
 		if ($this->form_validation->run())
 		{
-			if ($this->problem_model->save_problem_description($problem_id, $this->input->post('content'))){
+			if ($this->problem_files_model->save_problem_description($problem_id, $this->input->post('content'))){
 				echo "success";
 				return ;
 			}
@@ -172,171 +173,14 @@ class Problems extends CI_Controller
 				if($problem == NULL) show_404();
 			}
 			$the_id = $this->problem_model->replace_problem($problem_id ? $problem_id : NULL);
-
-			$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'),'/');
-			$problem_dir = $this->problem_model->get_directory_path($the_id);
 			
-			// Create assignment directory
-			if ( ! file_exists($problem_dir) )
-				mkdir($problem_dir, 0700, TRUE);
-			
-			$this->_take_test_file_upload($assignments_root, $problem_dir);
+			$this->problem_files_model->_take_test_file_upload($the_id, $this->messages);
 			
 			$this->index();
 		}
 	}
 
 
-	private function _take_test_file_upload($assignments_root, $problem_dir){
-		$this->load->library('upload');
-		$up_dir = $_FILES['tests_dir'];
-		$up_zip = $_FILES['tests_zip'];
-
-		//var_dump($_FILES); die();
-		if ( $up_dir['error'][0] === UPLOAD_ERR_NO_FILE 
-			&& $up_zip['error'] === UPLOAD_ERR_NO_FILE 
-		){
-			$this->messages[] = array(
-				'type' => 'notice',
-				'text' => "Notice: You did not upload test case and description. If needed, upload by editing assignment."
-			);
-			return;
-		}
-
-		if ($up_dir['error'][0] === UPLOAD_ERR_NO_FILE ) {
-			// Upload Tests (zip file)
-			shell_exec('rm -f '.$assignments_root.'/*.zip');
-			$config = array(
-				'upload_path' => $assignments_root,
-				'allowed_types' => 'zip',
-			);
-			$this->upload->initialize($config);
-			$zip_uploaded = $this->upload->do_upload('tests_zip');
-			$u_data = $this->upload->data();
-			
-			if ( ! $zip_uploaded )
-				$this->messages[] = array(
-					'type' => 'error',
-					'text' => "Error: Error uploading tests zip file: ".$this->upload->display_errors('', '')
-				);
-			else
-				$this->messages[] = array(
-					'type' => 'success',
-					'text' => "Tests (zip file) uploaded successfully."
-				);
-
-			if ($zip_uploaded) $this->unload_zip_test_file($assignments_root, $problem_dir, $u_data);
-
-		} else {
-			return $this->handle_test_dir_upload($up_dir, $problem_dir);
-		}
-	}
-	private function handle_test_dir_upload($up_dir, $problem_dir){
-		$in = array();
-		$out = array();
-
-		$files = array();
-		foreach($up_dir['name'] as $i => $name){
-			if ($up_dir['error'][$i] !== UPLOAD_ERR_OK){
-				$this->messages[] = array(
-					'type' => 'error',
-					'text' => "Error {$up_dir['error'][$i]} when uploading file $name",
-				);
-			}
-			if (substr($name, 0, 5) == 'input') {
-				$in[$name] = $up_dir['tmp_name'][$i];
-			} else if (substr($name, 0, 6) == 'output'){
-				$out[$name] = $up_dir['tmp_name'][$i];
-			} else {
-				$files[$name] = $up_dir['tmp_name'][$i];
-			}
-		}
-		if (!isset($files['desc.html'])){
-			$this->messages[] = array('type' => 'error', 'text' => "Your test folder doesn't have desc.html file for problem description");
-		}
-		for($i = 1; $i < count($in); $i++){
-			if (!isset($in["input$i.txt"])){
-				$this->messages[] = array('type' => 'error', 'text' => "A file name input$i.txt seem to be missing in your folder");
-			} else {
-				if (!isset($out["output$i.txt"])){
-					$this->messages[] = array('type' => 'error', 'text' => "A file name output$i.txt seem to be missing in your folder");
-				}
-			}
-		}
-
-		$this->clean_up_old_problem_dir($problem_dir);
-		//var_dump($in); var_dump($out); var_dump($files); var_dump($this->messages);die();
-		foreach($in as $name => $tmp_name ){
-			move_uploaded_file($tmp_name, "$problem_dir/in/$name");
-		}
-		foreach($out as $name => $tmp_name ){
-			move_uploaded_file($tmp_name, "$problem_dir/out/$name");
-		}
-		foreach($files as $name => $tmp_name ){
-			move_uploaded_file($tmp_name, "$problem_dir/$name");
-		}
-	}
-	private function clean_up_old_problem_dir($problem_dir){
-		$remove = 
-		" rm -rf $problem_dir/in $problem_dir/out $problem_dir/tester*"
-			."  $problem_dir/template.* "
-			."  $problem_dir/desc.*  $problem_dir/*.pdf; done";
-		//echo "cp -R $tmp_dir/* $problem_dir;";			
-		//echo $remove; die();			
-		shell_exec($remove); 
-
-		mkdir("$problem_dir/in", 0700, TRUE);
-		mkdir("$problem_dir/out", 0700, TRUE);
-			
-	}
-	private function unload_zip_test_file($assignments_root, $problem_dir, $u_data){
-		// Create a temp directory
-		$tmp_dir_name = "shj_tmp_directory";
-		$tmp_dir = "$assignments_root/$tmp_dir_name";
-		shell_exec("rm -rf $tmp_dir; mkdir $tmp_dir;");
-
-		// Extract new test cases and descriptions in temp directory
-		$this->load->library('unzip');
-		$this->unzip->allow(array('txt', 'cpp', 'html', 'md', 'pdf'));
-		$extract_result = $this->unzip->extract($u_data['full_path'], $tmp_dir);
-
-		// Remove the zip file
-		unlink($u_data['full_path']);
-
-		if ( $extract_result )
-		{
-			$this->clean_up_old_problem_dir($problem_dir);
-
-			if (glob("$tmp_dir/*.pdf"))
-				shell_exec("cd $problem_dir; rm -f *.pdf");
-			// Copy new test cases from temp dir
-			// echo $tmp_dir . "<br/>";
-			// echo $problem_dir . "<br/>";
-			// echo shell_exec("ls $tmp_dir/*");
-			// echo "cp -R $tmp_dir/* $problem_dir;";
-			//die();
-			shell_exec("cp -R $tmp_dir/* $problem_dir;");
-			$this->messages[] = array(
-				'type' => 'success',
-				'text' => 'Tests (zip file) extracted successfully.'
-			);
-		}
-		else
-		{
-			$this->messages[] = array(
-				'type' => 'error',
-				'text' => 'Error: Error extracting zip archive.'
-			);
-			foreach($this->unzip->errors_array() as $msg)
-				$this->messages[] = array(
-					'type' => 'error',
-					'text' => " Zip Extraction Error: ".$msg
-				);
-		}
-
-		// Remove temp directory
-		shell_exec("rm -rf $tmp_dir");
-	}
 
 	// ------------------------------------------------------------------------
 	public function delete()
@@ -366,7 +210,7 @@ class Problems extends CI_Controller
 		if ($assignment_id == NULL && $this->user->level < 2)
 			show_error("Only admin can view template without assignment", 403);
 
-		$pdf_files = $this->problem_model->get_template_path($problem_id);
+		$pdf_files = $this->problem_files_model->get_template_path($problem_id);
 		if(!$pdf_files)
 			show_error("File not found");
 
@@ -387,7 +231,7 @@ class Problems extends CI_Controller
 			show_403();
 		$this->load->library('zip');
 
-		$root_path = $this->problem_model->get_directory_path($problem_id);
+		$root_path = $this->problem_files_model->get_directory_path($problem_id);
 
 		$path = "$root_path/in";
 		$this->zip->read_dir($path, FALSE, $root_path);
@@ -430,7 +274,7 @@ class Problems extends CI_Controller
 		if ($problem_id === NULL)
 			show_404();
 		else
-			$pattern = $this->problem_model->get_directory_path()."/*.pdf";
+			$pattern = $this->problem_files_model->get_directory_path()."/*.pdf";
 			// rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/*.pdf";
 		
 		$pdf_files = glob($pattern);

@@ -16,7 +16,7 @@ class Queueprocess extends CI_Controller
 		// This controller should not be called from a browser
 		if ( ! is_cli() )
 			show_404();
-		$this->load->model('queue_model')->model('submit_model');
+		$this->load->model('queue_model')->model('submit_model')->model('problem_files_model');
 	}
 
 
@@ -80,12 +80,10 @@ class Queueprocess extends CI_Controller
 
 			$tester_path = rtrim($this->settings_model->get_setting('tester_path'), '/');
 			
-			$problemdir = $this->problem_model->get_directory_path($problem['id']);
+			$problemdir = $this->problem_files_model->get_directory_path($problem['id']);
 			$userdir = $this->submit_model->get_path($username, $assignment, $problem['id']);
 			
-
 			$op1 = $this->settings_model->get_setting('enable_log');
-
 
 			$time_limit = $language->time_limit/1000;
 			$time_limit = round($time_limit, 3);

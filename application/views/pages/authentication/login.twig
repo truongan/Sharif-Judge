@@ -20,7 +20,7 @@
 			<div class="login1">
 				<p>
 					<label for="form_username">Username</label><br/>
-					<input id="form_username" type="text" name="username" required="required" pattern="[0-9a-z]{3,20}" title="The Username field must be between 3 and 20 characters in length, and contain only digits and lowercase letters" class="sharif_input" value="{{ set_value('username') }}" autofocus="autofocus"/>
+					<input id="form_username" type="text" name="username" required="required" pattern=".{3,20}" title="The Username field must be between 3 and 20 characters in length, and contain only digits and lowercase letters" class="sharif_input" value="{{ set_value('username') }}" autofocus="autofocus"/>
 					{{ form_error('username', '<div class="shj_error">', '</div>') }}
 				</p>
 				<p>
