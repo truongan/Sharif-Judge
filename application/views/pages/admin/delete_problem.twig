@@ -3,7 +3,7 @@
  # file: delete_assignment.twig
  # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
  #}
-{% set selected = 'assignments' %}
+{% set selected = 'Problems' %}
 {% extends 'templates/base.twig' %}
 {% block icon %}fas fa-times{% endblock %}
 {% block title %}Delete Problems{% endblock %}
@@ -24,7 +24,7 @@
 			{{ form_open('problems/destroy/'~problem.id) }}
 				<input type="hidden" name="delete" value="delete"/>
 				<p class="input_p">
-					<input type="submit" class="btn btn-danger" value="Delete this assignment"/>
+					<input type="submit" class="btn btn-danger" value="Delete this problems"/>
 					<a href="{{ site_url('assignments') }}" class="btn btn-primary">Do not delete</a>
 				</p>
 			</form>
