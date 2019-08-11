@@ -67,6 +67,22 @@ class Problem_files_model extends CI_Model
 	}
 
 
+	public function download_pdf($problem_id){
+		// Find pdf file
+		if ($problem_id === NULL)
+			show_404();
+		else
+			$pattern = $this->problem_files_model->get_directory_path($problem_id)."/*.pdf";
+			// rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/*.pdf";
+		$pdf_files = glob($pattern);
+		if ( ! $pdf_files )
+			show_error("File not found");
+
+		// Download the file to browser
+		$this->load->helper('download')->helper('file');
+		$filename = shj_basename($pdf_files[0]);
+		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
+	}
 //#region bring from old problem controller
 	public function _take_test_file_upload($the_id, &$messages){
 
@@ -140,7 +156,6 @@ class Problem_files_model extends CI_Model
 				$files[$name] = $up_dir['tmp_name'][$i];
 			}
 		}
-		var_dump($files);
 		if (!isset($files['desc.html'])){
 			$messages[] = array('type' => 'error', 'text' => "Your test folder doesn't have desc.html file for problem description");
 		}

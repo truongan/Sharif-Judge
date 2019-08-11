@@ -147,7 +147,7 @@ class Assignments extends CI_Controller
 
 		if ($this->user->level < 2){
 			if(! $this->assignment_model->started($assignment) 
-				// || ! $assignment['open']
+				|| ! $assignment['open']
 			){
 				show_404();
 			}

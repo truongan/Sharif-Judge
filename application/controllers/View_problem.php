@@ -130,6 +130,14 @@ class View_problem extends CI_Controller
 		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
 	}
 
+	public function pdf($problem_id, $assignment_id){
+		$assignment = $this->assignment_model->assignment_info($assignment_id);
+		if ($this->assignment_model->can_view($assignment)){
+			$this->problem_files_model->download_pdf($problem_id);
+		} else {
+			show_404();
+		}
+	}
 
 	// ------------------------------------------------------------------------
 
