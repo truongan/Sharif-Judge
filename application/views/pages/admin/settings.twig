@@ -40,9 +40,9 @@ $(document).ready(function(){
 {% for error in errors %}
 	<div class="alert alert-danger">{{ error }}</div>
 {% endfor %}
-{% if not defc %}
+{# {% if not defc %}
 	<div class="alert alert-danger">"Tester path" is not correct.</div>
-{% endif %}
+{% endif %} #}
 <div class="col-12">
 	{{ form_open('settings/update') }}
 		<h5>Display settings</h5><hr>
@@ -260,7 +260,7 @@ $(document).ready(function(){
 		</p>
 	#}
 
-
+{# 
 		<br><h4 >
 			Shield settings <span class="title_menu_item">
 				<a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/shield.md" target="_blank"><i class="fa fa-question-circle color11"></i> Help</a>
@@ -311,7 +311,7 @@ $(document).ready(function(){
 					<textarea id="form_shield_py3" name="shield_py3" rows="15" class="form-control add_text clear">{{ shield_py3 }}</textarea>
 				</div>
 			</fieldset>
-		</div>
+		</div> #}
 
 		<div class="row mb-2">
 			<div class="offset-sm-8 col-sm-4">

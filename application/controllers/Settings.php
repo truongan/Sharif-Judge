@@ -42,10 +42,10 @@ class Settings extends CI_Controller
 			)
 		);
 		ob_start();
-		$data ['defc'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/defc.h');
-		$data ['defcpp'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/defcpp.h');
-		$data ['shield_py2'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/shield_py2.py');
-		$data ['shield_py3'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/shield_py3.py');
+		// $data ['defc'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/defc.h');
+		// $data ['defcpp'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/defcpp.h');
+		// $data ['shield_py2'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/shield_py2.py');
+		// $data ['shield_py3'] = file_get_contents(rtrim($settings['tester_path'], '/').'/shield/shield_py3.py');
 		ob_end_clean();
 		$this->twig->display('pages/admin/settings.twig', $data);
 	}
@@ -66,22 +66,22 @@ class Settings extends CI_Controller
 			ob_start();
 			$this->form_status = 'ok';
 			$tester_path = rtrim($this->settings_model->get_setting('tester_path'), '/');
-			$defc_path = $tester_path.'/shield/defc.h';
-			$defcpp_path = $tester_path.'/shield/defcpp.h';
-			$shpy2_path = $tester_path.'/shield/shield_py2.py';
-			$shpy3_path = $tester_path.'/shield/shield_py3.py';
-			if ($this->input->post('def_c') !== file_get_contents($defc_path))
-				if (file_exists($defc_path) && file_put_contents($defc_path,$this->input->post('def_c')) === FALSE)
-					array_push($this->errors, 'File defc.h is not writable. Edit it manually.');
-			if ($this->input->post('def_cpp') !== file_get_contents($defcpp_path))
-				if (file_exists($defcpp_path) && file_put_contents($defcpp_path,$this->input->post('def_cpp')) === FALSE)
-					array_push($this->errors, 'File defcpp.h is not writable. Edit it manually.');
-			if ($this->input->post('shield_py2') !== file_get_contents($shpy2_path))
-				if (file_exists($shpy2_path) && file_put_contents($shpy2_path,$this->input->post('shield_py2')) === FALSE)
-					array_push($this->errors, 'File shield_py2.py is not writable. Edit it manually.');
-			if ($this->input->post('shield_py3') !== file_get_contents($shpy3_path))
-				if (file_exists($shpy3_path) && file_put_contents($shpy3_path,$this->input->post('shield_py3')) === FALSE)
-					array_push($this->errors, 'File shield_py3.py is not writable. Edit it manually.');
+			// $defc_path = $tester_path.'/shield/defc.h';
+			// $defcpp_path = $tester_path.'/shield/defcpp.h';
+			// $shpy2_path = $tester_path.'/shield/shield_py2.py';
+			// $shpy3_path = $tester_path.'/shield/shield_py3.py';
+			// if ($this->input->post('def_c') !== file_get_contents($defc_path))
+			// 	if (file_exists($defc_path) && file_put_contents($defc_path,$this->input->post('def_c')) === FALSE)
+			// 		array_push($this->errors, 'File defc.h is not writable. Edit it manually.');
+			// if ($this->input->post('def_cpp') !== file_get_contents($defcpp_path))
+			// 	if (file_exists($defcpp_path) && file_put_contents($defcpp_path,$this->input->post('def_cpp')) === FALSE)
+			// 		array_push($this->errors, 'File defcpp.h is not writable. Edit it manually.');
+			// if ($this->input->post('shield_py2') !== file_get_contents($shpy2_path))
+			// 	if (file_exists($shpy2_path) && file_put_contents($shpy2_path,$this->input->post('shield_py2')) === FALSE)
+			// 		array_push($this->errors, 'File shield_py2.py is not writable. Edit it manually.');
+			// if ($this->input->post('shield_py3') !== file_get_contents($shpy3_path))
+			// 	if (file_exists($shpy3_path) && file_put_contents($shpy3_path,$this->input->post('shield_py3')) === FALSE)
+			// 		array_push($this->errors, 'File shield_py3.py is not writable. Edit it manually.');
 			ob_end_clean();
 			$site_name = $this->input->post('site_name');
 			$timezone = $this->input->post('timezone');
@@ -100,11 +100,11 @@ class Settings extends CI_Controller
 					'output_size_limit' => $this->input->post('output_size_limit'),
 					'default_late_rule' => $this->input->post('default_late_rule'),
 					// 'enable_easysandbox' => $this->input->post('enable_easysandbox')===NULL?0:1,
-					'enable_c_shield' => $this->input->post('enable_c_shield')===NULL?0:1,
-					'enable_cpp_shield' => $this->input->post('enable_cpp_shield')===NULL?0:1,
-					'enable_py2_shield' => $this->input->post('enable_py2_shield')===NULL?0:1,
-					'enable_py3_shield' => $this->input->post('enable_py3_shield')===NULL?0:1,
-					'enable_java_policy' => $this->input->post('enable_java_policy')===NULL?0:1,
+					// 'enable_c_shield' => $this->input->post('enable_c_shield')===NULL?0:1,
+					// 'enable_cpp_shield' => $this->input->post('enable_cpp_shield')===NULL?0:1,
+					// 'enable_py2_shield' => $this->input->post('enable_py2_shield')===NULL?0:1,
+					// 'enable_py3_shield' => $this->input->post('enable_py3_shield')===NULL?0:1,
+					// 'enable_java_policy' => $this->input->post('enable_java_policy')===NULL?0:1,
 					// 'enable_log' => $this->input->post('enable_log')===NULL?0:1,
 					'enable_registration' => $this->input->post('enable_registration')===NULL?0:1,
 					'registration_code' => $this->input->post('registration_code'),
