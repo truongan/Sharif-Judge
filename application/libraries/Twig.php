@@ -68,8 +68,11 @@ class Twig
 		$loader = new Twig_Loader_Filesystem($this->template_dir);
 		$this->twig = new Twig_Environment($loader, array(
 			'cache' => $this->cache_dir,
-			'auto_reload' => TRUE
+			'auto_reload' => TRUE,
+			'debug' => true
 		));
+		$this->twig->addExtension(new \Twig\Extension\DebugExtension());
+
 		$this->ci_function_init();
 	}
 

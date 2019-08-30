@@ -24,7 +24,7 @@ class Languages extends CI_Controller
 	{
 
 		$data = array(
-			'all_languages' => $this->language_model->all_languages(),
+			'all_languages' => $this->language_model->all_languages_array(),
 		);
 		// var_dump($data);die();
 		$this->twig->display('pages/admin/languages.twig', $data);

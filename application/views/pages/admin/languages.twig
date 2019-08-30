@@ -29,32 +29,21 @@
 {% if deleted_submissions %}
 	<p class="shj_ok">Submissions of selected user deleted successfully.</p>
 {% endif %}
-{{dump(all_languages|first)}}
+{# {{ dump(all_languages|first|keys) }} #}
 <div class="table-responsive">
 	<table class="table table-striped table-bordered">
 		<thead class="thead-dark">
 			<tr>
-{% for field in all_languages|first %}
-	<td>{{ field }}</td>
+{% for field in all_languages|first|keys %}
+	<th>{{ field }} {#{ attribute(all_languages|first, field) }#}</th>
 {% endfor %}
 			</tr>
 		</thead>
-		{% for user in users %}
+		{% for lang in all_languages %}
 		<tr data-id="{{ user.id }}">
-			<td>{{ loop.index }}</td>
-			<td>{{ user.id }}</td>
-			<td id="un">{{ user.username }}</td>
-			<td>{{ user.display_name }}</td>
-			<td>{{ user.email }}</td>
-			<td>{{ user.role }}</td>
-			<td>{{ user.first_login_time ? user.first_login_time : 'Never' }}</td>
-			<td>{{ user.last_login_time ? user.last_login_time : 'Never' }}</td>
-			<td>
-				<a title="Edit" href="{{ site_url('profile/'~user.id) }}"><i class="fas fa-user-edit fa-lg color9"></i></a>
-				{# <a title="Submissions" href="{{ site_url('submissions/all/user/'~user.username) }}"><i class="fa fa-bars fa-lg color12"></i></a> #}
-				<span title="Delete User" class="delete-btn delete_user pointer"><i title="Delete User" class="fa fa-user-times fa-lg color2"></i></span>
-				<span title="Delete Submissions" class="delete-btn delete_submissions pointer"><i class="fa fa-times-circle fa-lg color1"></i></span>
-			</td>
+			{% for field in all_languages|first|keys %}
+				<td>{{ attribute(lang, field) }}</td>
+			{% endfor %}
 		</tr>
 		{% endfor %}
 	</table>

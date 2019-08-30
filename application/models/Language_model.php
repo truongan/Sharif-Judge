@@ -21,10 +21,18 @@ class Language_model extends CI_Model
 		return $this->db->get_where('languages', array('id'=>$id))->row();
 	}
 	public function all_languages(){
-		$temp = $this->db->get('languages')->result();
+		$temp = $this->db->order_by('sorting', 'ASC')->get('languages')->result();
 		$a = array();
 		foreach ($temp as $lang){
 			$a[$lang->id] = $lang;
+		}
+		return $a;
+	}
+	public function all_languages_array(){
+		$temp = $this->db->order_by('sorting', 'ASC')->get('languages')->result_array();
+		$a = array();
+		foreach ($temp as $lang){
+			$a[$lang['id']] = $lang;
 		}
 		return $a;
 	}
