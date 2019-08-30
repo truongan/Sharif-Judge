@@ -24,6 +24,7 @@ class Settings extends CI_Controller
 			show_404();
 		$this->form_status = '';
 		$this->errors = array();
+		$this->load->model('language_model');
 	}
 
 

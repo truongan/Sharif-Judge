@@ -18,7 +18,7 @@
 			var action=$(this).attr('id');
 			console.log(action);
 			$.post(
-					'{{ site_url('queue') }}/'+action,
+					'{{ site_url("queue") }}/'+action,
 					{wcj_csrf_name: shj.csrf_token},
 					function(data){
 						console.log(data);
