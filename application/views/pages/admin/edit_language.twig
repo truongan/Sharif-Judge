@@ -1,0 +1,43 @@
+{#
+ # wecode Judge
+ # file: users.twig
+ # author: Mohammad Javad Naderi <mjnaderi@gmail.com>
+ #}
+{% set selected = '' %}
+{% extends 'templates/base.twig' %}
+{% block icon %}fas fa-laptop-code{% endblock %}
+{% block title %}Language{% endblock %}
+{% block head_title %}Language{% endblock %}
+
+{% block title_menu %}
+	<span class="title_menu_item"><a href="https://github.com/truongan/wecode-judge/blob/docs/v1.4/users.md" target="_blank"><i class="fa fa-question-circle color6"></i> Help</a></span>
+{% endblock %}
+
+
+{% block main_content %}
+<div class="col">
+	{% if error is not empty  %}
+	
+	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			<span class="sr-only">Close</span>
+		</button>
+		{{ error|raw }}
+	</div>
+	{% endif %}
+	{{ form_open('languages/edit/'~id)}}
+		{% for field in lang|keys %}
+		<div class="form-group row">
+		  <label class="col-4" for="{{field}}">{{field}}</label>
+		  <input class="col" type="text" name="{{field}}" id="{{field}}" class="form-control" placeholder="" aria-describedby="{{field}}" value="{{ attribute(lang, field) }}">
+		  {#<small id="{{field}}" class="text-muted">{{field}}</small>#}
+		</div>
+		{% endfor %}
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+	
+</div>
+	
+{% endblock %}  {# main_content #}
+

@@ -17,9 +17,10 @@ class Language_model extends CI_Model
     public function get_language($id){
 		return $this->db->get_where('languages', array('id'=>$id))->row();
 	}
-    public function language_info($id){
-		return $this->db->get_where('languages', array('id'=>$id))->row();
+    public function get_language_array($id){
+		return $this->db->get_where('languages', array('id'=>$id))->row_array();
 	}
+
 	public function all_languages(){
 		$temp = $this->db->order_by('sorting', 'ASC')->get('languages')->result();
 		$a = array();
@@ -40,6 +41,14 @@ class Language_model extends CI_Model
 		
 		return $this->db->order_by('sorting', 'ASC')->get('languages')->row();;
 	
+	}
+
+	public function edit_language($id, $data){
+		$filtered_data = array();
+		foreach (array("name", "default_time_limit", "default_memory_limit", "sorting") as $field){
+			$filtered_data[$field] = $data[$field];
+		}
+		$this->db->where('id', $id)->update('languages', $filtered_data);
 	}
 }
 
