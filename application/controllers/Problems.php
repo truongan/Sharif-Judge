@@ -265,6 +265,51 @@ class Problems extends CI_Controller
 		$this->zip->download("problem{$problem_id}_tests_and_desccription_".date('Y-m-d_H-i', shj_now()).'.zip');
 	}
 
+	public function download_all(){
+		if ( $this->user->level <= 1) // permission denied
+			show_403();
+		$this->load->library('zip');
+
+
+		$all = $this->problem_model->all_problems_detailed();
+		
+		
+
+		$root_path = $assignments_root . "/problems/";
+
+
+
+		$path = "$root_path/in";
+		$this->zip->read_dir($path, FALSE, $root_path);
+
+		$path = "$root_path/out";
+		$this->zip->read_dir($path, FALSE, $root_path);
+
+
+		$folders = glob("$root_path/*");
+		foreach($folders as $f){
+			$this->read_dir($f, FALSE, $root_path);
+		}
+		if ($folders)
+		{
+			$path = $pdf_files[0];
+			$this->zip->add_data(shj_basename($path), file_get_contents($path));
+		}
+
+		$template_files = glob("$root_path/template.*");
+		if ($template_files){
+			foreach ($template_files as $file )
+			{
+				$this->zip->add_data(shj_basename($file), file_get_contents($file));
+			}
+		}
+
+		$path = "$root_path/desc.html";
+		if (file_exists($path))
+			$this->zip->add_data("desc.html", file_get_contents($path));
+
+		$this->zip->download("problem{$problem_id}_tests_and_desccription_".date('Y-m-d_H-i', shj_now()).'.zip');
+	}
 	/**
 	 * Download pdf file of an assignment (or problem) to browser
 	 */
