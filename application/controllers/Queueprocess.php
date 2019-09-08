@@ -96,7 +96,7 @@ class Queueprocess extends CI_Controller
 
 
 			// Deleting the jail folder, if still exists
-			//shell_exec("cd $tester_path; rm -rf jail*");
+			shell_exec("cd $tester_path; rm -rf jail*");
 
 			
 			// Saving judge result

@@ -26,20 +26,37 @@ class Languages extends CI_Controller
 		$data = array(
 			'all_languages' => $this->language_model->all_languages_array(),
 		);
-		// var_dump($data);die();
 		$this->twig->display('pages/admin/languages.twig', $data);
 	}
 
 	// ------------------------------------------------------------------------
 
-	public function add()
+	public function edit($language_id)
 	{
-		
+		$this->form_validation->set_rules('name', 'name', 'required|max_length[45]');
+		$this->form_validation->set_rules('default_time_limit', 'default_time_limit', 'required|greater_than[100]');
+		$this->form_validation->set_rules('default_memory_limit', 'default_memory_limit', 'required|greater_than[100]');
+		$this->form_validation->set_rules('sorting', 'sorting', 'required|greater_than[0]');
+
+		if ($this->form_validation->run() == FALSE){
+			$lang = $this->language_model->get_language_array($language_id);
+			// var_dump($lang);
+			// var_dump($language_id); die();
+			if ($lang == null) show_404();
+			unset($lang['id']);unset($lang['extension']);
+			$data = array(
+				'id' => $language_id,
+				'lang' => $lang,
+				'error' => validation_errors(),
+			);
+
+			$this->twig->display('pages/admin/edit_language.twig', $data);
+		} else {
+			$this->language_model->edit_language($language_id, $this->input->post());
+			redirect(base_url('languages'));
+		}
 	}
 	// ------------------------------------------------------------------------
-
-
-
 
 	/**
 	 * Controller for deleting a user
@@ -60,13 +77,5 @@ class Languages extends CI_Controller
 		$this->output->set_header('Content-Type: application/json; charset=utf-8');
 		echo json_encode($json_result);
 	}
-
-
-
-
 	// ------------------------------------------------------------------------
-
-
-
-
 }
