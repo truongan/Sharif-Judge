@@ -37,10 +37,17 @@ class Language_model extends CI_Model
 		}
 		return $a;
 	}
-	public function first_language(){
-		
-		return $this->db->order_by('sorting', 'ASC')->get('languages')->row();;
-	
+	public function default_language($number = 1){
+		$temp = $this->db
+						->limit($number)
+						->order_by('sorting', 'ASC')
+						->get('languages')
+						->result();
+		$a = array();
+		foreach ($temp as $lang){
+			$a[$lang->id] = $lang;
+		}
+		return $a;
 	}
 
 	public function edit_language($id, $data){

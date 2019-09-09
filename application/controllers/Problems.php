@@ -70,12 +70,11 @@ class Problems extends CI_Controller
 
 	public function show_add_form()
 	{
-		$first_language = $this->language_model->first_language();
-		
-		
+		$default_language = $this->language_model->default_language($this->settings_model->get_setting('default_language_number',1));
+
 		$data = array(
 			'all_languages' => $this->language_model->all_languages(),
-			'languages' =>  array($first_language->id => $first_language),
+			'languages' =>  $default_language,
 			'max_file_uploads' => ini_get('max_file_uploads'),
 		);
 		foreach($data['languages'] as $lang){

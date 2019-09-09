@@ -97,6 +97,7 @@ class Settings extends CI_Controller
 					'assignments_root' => $this->input->post('assignments_root'),
 					'file_size_limit' => $this->input->post('file_size_limit'),
 					'concurent_queue_process' => $this->input->post('concurent_queue_process'),
+					'default_language_number' => $this->input->post('default_language_number'),
 					'output_size_limit' => $this->input->post('output_size_limit'),
 					'default_late_rule' => $this->input->post('default_late_rule'),
 					// 'enable_easysandbox' => $this->input->post('enable_easysandbox')===NULL?0:1,
