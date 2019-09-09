@@ -36,7 +36,6 @@ class Settings extends CI_Controller
 		$settings = $this->settings_model->get_all_settings();
 		$data = array_merge($settings,
 			array(
-				'all_assignments' => $this->assignment_model->all_assignments(),
 				// 'sandbox_built' => file_exists(rtrim($settings['tester_path'], '/').'/easysandbox/EasySandbox.so'),
 				'form_status' => $this->form_status,
 				'errors' => $this->errors

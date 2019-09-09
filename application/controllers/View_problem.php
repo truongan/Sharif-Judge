@@ -120,7 +120,7 @@ class View_problem extends CI_Controller
 		if ($assignment_id == NULL && $this->user->level < 2)
 			show_error("Only admin can view template without assignment", 403);
 
-		$pdf_files = $this->problem_model->get_template_path($problem_id);
+		$pdf_files = $this->problem_files_model->get_template_path($problem_id);
 		if(!$pdf_files)
 			show_error("File not found");
 
