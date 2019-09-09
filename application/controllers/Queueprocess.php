@@ -95,8 +95,8 @@ class Queueprocess extends CI_Controller
 			$output = trim(shell_exec($cmd));
 
 
-			// Deleting the jail folder, if still exists
-			shell_exec("cd $tester_path; rm -rf jail*");
+			// Deleting the jail folder, if still exists. Cannot run along wtih multiple concurent queueprocess
+			// shell_exec("cd $tester_path; rm -rf jail*");
 
 			
 			// Saving judge result
