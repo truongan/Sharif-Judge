@@ -133,7 +133,12 @@ class View_problem extends CI_Controller
 	public function pdf($problem_id, $assignment_id){
 		$assignment = $this->assignment_model->assignment_info($assignment_id);
 		if ($this->assignment_model->can_view($assignment)){
-			$this->problem_files_model->download_pdf($problem_id);
+			$all_prob = $this->assignment_model->all_problems($assignment_id);
+			$name = $all_prob[$problem_id]['problem_name'];
+
+			$name = preg_replace('/[^A-Za-z0-9_\-]/', '_', $name) . '.pdf';
+
+			$this->problem_files_model->download_pdf($problem_id, $name);
 		} else {
 			show_404();
 		}
