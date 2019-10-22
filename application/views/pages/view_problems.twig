@@ -20,12 +20,14 @@
 {% block title_menu %}
 
 {% if problem.has_pdf %}
+	<span class="title_menu_item"><a href="
 	{% if all_problems is defined %}
-		<span class="title_menu_item"><a href="{{ site_url("view_problem/pdf/#{problem.id}/#{assignment.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
-
+		{{ site_url("view_problem/pdf/#{problem.id}/#{assignment.id}") }}
 	{% else %}
-		<span class="title_menu_item"><a href="{{ site_url("problems/pdf/#{problem.id}") }}"><i class="fa fa-file-pdf-o color1"></i> PDF</a></span>
+		{{ site_url("problems/pdf/#{problem.id}") }}
 	{% endif %}
+	"><i class="fas fa-file-pdf color1"></i> PDF</a></span>
+
 {% endif %}
 
 {% if problem.has_template %}

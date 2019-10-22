@@ -144,6 +144,8 @@ class Problems extends CI_Controller
 				return ;
 			}
 			else show_error("Error saving", 501);
+		} else {
+			show_error(validation_errors(), 501);
 		}
 	}
 	

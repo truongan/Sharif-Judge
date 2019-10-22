@@ -67,7 +67,7 @@ class Problem_files_model extends CI_Model
 	}
 
 
-	public function download_pdf($problem_id){
+	public function download_pdf($problem_id, $filename = NULL){
 		// Find pdf file
 		if ($problem_id === NULL)
 			show_404();
@@ -80,7 +80,7 @@ class Problem_files_model extends CI_Model
 
 		// Download the file to browser
 		$this->load->helper('download')->helper('file');
-		$filename = shj_basename($pdf_files[0]);
+		if ($filename === NULL) $filename = shj_basename($pdf_files[0]);
 		force_download($filename, file_get_contents($pdf_files[0]), TRUE);
 	}
 //#region bring from old problem controller
