@@ -56,33 +56,6 @@ $(document).ready(function(){
 	shj.setup_save('.save-button'
 	, '{{ site_url("problems/edit_description/#{problem.id}") }}'
 	, CKEDITOR.instances.problem_description);
-	
-	{# $('.save-button').click(function(){
-		$.ajax({
-			type: 'POST',
-			url: '{{ site_url("problems/edit/plain/#{problem.id}") }}',
-			data: {
-				wcj_csrf_name: shj.csrf_token,
-				text : CKEDITOR.instances.problem_description.getData()
-			},
-			success: function (response) {
-				$.notify('Change sucessfully saved'
-					, {position: 'bottom right', className: 'success', autoHideDelay: 3500});
-				$('.save-button').removeClass('btn-primary').addClass('btn-secondary');
-				//$.notify()
-			},
-			error: function(response){
-				$.notify('Error while saving'
-					, {position: 'bottom right', className: 'error', autoHideDelay: 3500});
-				alert('There was problem saving change. You can backup by pressing "Source" button and copy the content out');
-			}
-		});
-	});
-	CKEDITOR.on('instanceReady', function(){
-		CKEDITOR.instances.problem_description.on('change', function(){
-			$('.save-button').removeClass('btn-secondary').addClass('btn-primary');
-		});
-	}); #}
 
 });
 </script>
