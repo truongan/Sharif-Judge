@@ -100,6 +100,7 @@ $(document).ready(function(){
 
 	<div class="col-md-5 col-lg-4 ">
 		{% if all_problems is defined %}
+		{% set i = 0 %}
 		<div class="problems_widget row">
 			<p><i class="fa fa-file-text fa-lg color9"></i> {{ assignment.name }}</p>
 			<p class="text-muted"><span class="badge badge-secondary count_problems">{{ all_problems|length }}</span> problems with a total score of <span class="badge badge-secondary sum_score">{{ sum_score}}</span></p>
@@ -107,16 +108,19 @@ $(document).ready(function(){
 				<thead>
 				<tr>
 					{# <th>#</th> #}
+					<th>STT</th>
 					<th>Problem</th>
 					<th>Score</th>
 					{# <th><i class="fa fa-upload fa-fw"></i>Only</th> #}
 				</tr>
 				</thead>
 				{% for one_problem in all_problems %}
+				{% set i = i + 1 %}
 					<tr class=" {{ problem.id == one_problem.id ? ' table-active ' }} 
 						 "
 					>
 						{# <td>{{ one_problem.id }}</td> #}
+						<td>{{ i }}</td>
 						<td>
 							<a href="{{ site_url("view_problem/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.problem_name }}</a>
 						</td>
