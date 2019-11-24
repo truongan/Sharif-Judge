@@ -236,7 +236,7 @@ languages_to_comm["cpp"]="./$EXEFILE"
 languages_to_comm["pas"]="./$EXEFILE"
 languages_to_comm["py2"]="python2 -O $FILENAME.py2"
 languages_to_comm["py3"]="python3 -O $FILENAME.py3"
-languages_to_comm["java"]="java -mx${MEMLIMIT}k $FILENAME"
+languages_to_comm["java"]="java -mx${MEMLIMIT}k solution"
 declare -A errors
 errors["SHJ_TIME"]="Time Limit Exceeded"
 errors["SHJ_MEM"]="Memory Limit Exceeded"
