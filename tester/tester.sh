@@ -230,6 +230,20 @@ PASSEDTESTS=0
 
 cp $PROBLEMPATH/in/input*.txt ./
 
+declare -A languages_to_comm
+languages_to_comm["c"]="./$EXEFILE"
+languages_to_comm["cpp"]="./$EXEFILE"
+languages_to_comm["pas"]="./$EXEFILE"
+languages_to_comm["py2"]="python2 -O $FILENAME.py2"
+languages_to_comm["py3"]="python3 -O $FILENAME.py3"
+languages_to_comm["java"]="java -mx${MEMLIMIT}k solution"
+declare -A errors
+errors["SHJ_TIME"]="Time Limit Exceeded"
+errors["SHJ_MEM"]="Memory Limit Exceeded"
+errors["SHJ_HANGUP"]="Process hanged up"
+errors["SHJ_SIGNAL"]="Killed by a signal"
+errors["SHJ_OUTSIZE"]="Output Size Limit Exceeded"
+
 for((i=1;i<=TST;i++)); do
 	shj_log "\n=== TEST $i ==="
 	echo "<span class=\"text-primary\">Test $i</span>" >>$RESULTFILE
@@ -242,15 +256,6 @@ for((i=1;i<=TST;i++)); do
 	chmod +x timeout
 	cp $tester_dir/runcode.sh ./runcode.sh
 	chmod +x runcode.sh
-	
-
-	declare -A languages_to_comm
-	languages_to_comm["c"]="./$EXEFILE"
-	languages_to_comm["cpp"]="./$EXEFILE"
-	languages_to_comm["pas"]="./$EXEFILE"
-	languages_to_comm["py2"]="python2 -O $FILENAME.py2"
-	languages_to_comm["py3"]="python3 -O $FILENAME.py3"
-	languages_to_comm["java"]="java -mx${MEMLIMIT}k $FILENAME"
 
 	if [ ! ${languages_to_comm[$EXT]+_} ]; then
 		shj_log "File Format Not Supported"
@@ -302,13 +307,6 @@ for((i=1;i<=TST;i++)); do
 		fi
 	fi
 
-	declare -A errors
-	errors["SHJ_TIME"]="Time Limit Exceeded"
-	errors["SHJ_MEM"]="Memory Limit Exceeded"
-	errors["SHJ_HANGUP"]="Process hanged up"
-	errors["SHJ_SIGNAL"]="Killed by a signal"
-	errors["SHJ_OUTSIZE"]="Output Size Limit Exceeded"
-
 	shj_log "Exit Code = $EXITCODE"
 	shj_log "err file:`cat err`"
 
@@ -341,7 +339,6 @@ for((i=1;i<=TST;i++)); do
 		shj_log "found error"
 	fi
 
-
 	if [ $EXITCODE -eq 137 ]; then
 		shj_log "Killed"
 		echo "<span class=\"text-warning\">Killed</span>" >>$RESULTFILE
@@ -356,7 +353,6 @@ for((i=1;i<=TST;i++)); do
 ############################################################################
 #################	# checking correctness of output #######################
 ############################################################################
-
 
 	ACCEPTED=false
 	if [ -f shj_tester ]; then
