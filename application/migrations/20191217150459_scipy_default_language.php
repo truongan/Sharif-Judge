@@ -6,9 +6,9 @@ class Migration_scipy_default_language extends CI_Migration {
     public function up(){
         $this->db->insert('languages'
                             , array(
-                                'name' => 'Scipy - using jupyter scipy-notebook image',
+                                'name' => 'numpy-mp',
                                 'sorting' => 70,
-                                'extension' => 'scipy'
+                                'extension' => 'numpy'
                             )
                         );
     }
