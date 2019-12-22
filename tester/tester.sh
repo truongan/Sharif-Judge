@@ -104,7 +104,7 @@ languages_to_docker["c"]="gcc:6"
 languages_to_docker["cpp"]="gcc:6"
 languages_to_docker["py2"]="python:2"
 languages_to_docker["py3"]="python:3"
-languages_to_docker["numpy"]="clearlinux/numpy-mp"
+languages_to_docker["numpy"]="OMP_NUM_THREADS=1 clearlinux/numpy-mp"
 languages_to_docker["java"]="openjdk:8"
 languages_to_docker["pas"]="nacyot/pascal-fp_compiler:apt"
 
