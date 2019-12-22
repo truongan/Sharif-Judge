@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_pascal_default_languages extends CI_Migration {
+class Migration_scipy_default_language extends CI_Migration {
     public function up(){
         $this->db->insert('languages'
                             , array(
