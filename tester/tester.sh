@@ -358,7 +358,9 @@ for((i=1;i<=TST;i++)); do
 
 	ACCEPTED=false
 	if [ -f shj_tester ]; then
-		ulimit -t $TIMELIMITINT
+		#Limit the amount of time tester run.
+		#Perhaps 5 times longer than the solution timelimit is enough
+		ulimit -t $(($TIMELIMITINT*5))
 		./shj_tester $PROBLEMPATH/in/input$i.txt $PROBLEMPATH/out/output$i.txt out 2>cerr
 		EC=$?
 		shj_log "$EC"
