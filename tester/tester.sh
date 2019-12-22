@@ -178,7 +178,7 @@ COMPILE_BEGIN_TIME=$(($(date +%s%N)/1000000));
 
 if [ "$EXT" = "java" ]; then
 	source $tester_dir/compile_java.sh
-elif [ "$EXT" = "py3"  ] || [ "$EXT" = "py2" ]; then
+elif [ "$EXT" = "py3"  ] || [ "$EXT" = "py2" ] || [ "$EXT" = "numpy" ]; then
 	source $tester_dir/compile_python.sh
 elif [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 	source $tester_dir/compile_c.sh

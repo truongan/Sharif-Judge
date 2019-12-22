@@ -1,10 +1,12 @@
 #!/bin/bash
-
-if [ "$EXT" = "py3" ]; then
-	python="python3"
-else
+python="python"
+if [ "$EXT" = "py2" ]; then
 	python="python2"
 fi
+if [ "$EXT" = "py3" ]; then
+	python="python3"
+fi
+
 
 cp $USERDIR/$FILENAME.$EXT $FILENAME.$EXT
 shj_log "Checking Python Syntax"
