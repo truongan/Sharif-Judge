@@ -30,10 +30,10 @@ class Test extends CI_Controller
 		
 		//return;
 		// if ( ! $this->migration->version(20180611171404))
-		// if ( ! $this->migration->latest())
+		if ( ! $this->migration->latest())
 		// if ( ! $this->migration->version(20180615113739))
 		// if ( ! $this->migration->version(20180927200459))
-		if ( ! $this->migration->version(20190907150459))
+		// if ( ! $this->migration->version(20190907150459))
 		{
 			show_error($this->migration->error_string());
 		}

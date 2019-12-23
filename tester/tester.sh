@@ -104,6 +104,7 @@ languages_to_docker["c"]="gcc:6"
 languages_to_docker["cpp"]="gcc:6"
 languages_to_docker["py2"]="python:2"
 languages_to_docker["py3"]="python:3"
+languages_to_docker["numpy"]="'-e OMP_NUM_THREADS=1 clearlinux/numpy-mp'"
 languages_to_docker["java"]="openjdk:8"
 languages_to_docker["pas"]="nacyot/pascal-fp_compiler:apt"
 
@@ -177,7 +178,7 @@ COMPILE_BEGIN_TIME=$(($(date +%s%N)/1000000));
 
 if [ "$EXT" = "java" ]; then
 	source $tester_dir/compile_java.sh
-elif [ "$EXT" = "py3"  ] || [ "$EXT" = "py2" ]; then
+elif [ "$EXT" = "py3"  ] || [ "$EXT" = "py2" ] || [ "$EXT" = "numpy" ]; then
 	source $tester_dir/compile_python.sh
 elif [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 	source $tester_dir/compile_c.sh
@@ -236,6 +237,7 @@ languages_to_comm["cpp"]="./$EXEFILE"
 languages_to_comm["pas"]="./$EXEFILE"
 languages_to_comm["py2"]="python2 -O $FILENAME.py2"
 languages_to_comm["py3"]="python3 -O $FILENAME.py3"
+languages_to_comm["numpy"]="python3 -O $FILENAME.numpy"
 languages_to_comm["java"]="java -mx${MEMLIMIT}k solution"
 declare -A errors
 errors["SHJ_TIME"]="Time Limit Exceeded"
