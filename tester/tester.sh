@@ -376,11 +376,12 @@ for((i=1;i<=TST;i++)); do
 			tr -d ' \t\n\r\f' <correctout >tmp1 && mv tmp1 correctout;
 		fi
 		# Add a newline at the end of both files
+		shj_log `ls -la`
 		echo "" >> out
 		echo "" >> correctout
 		if [ "$DIFFTOOL" = "diff" ]; then
 			# Add -q to diff options (for faster diff)
-			DIFFARGUMENT="-q $DIFFARGUMENT"
+			DIFFTOOL="diff -q "
 		fi
 		# Compare output files
 		if $DIFFTOOL $DIFFARGUMENT out correctout >/dev/null 2>/dev/null; then

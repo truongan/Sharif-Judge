@@ -21,6 +21,7 @@ then
 		-v $share_directory:/work:rw \
 		--name=$dockername \
 		--network none \
+		-u$UID
 		-w /work \
 		$docker_image \
 		$command "
@@ -28,6 +29,7 @@ then
 		-v $share_directory:/work:rw \
 		--name=$dockername \
 		--network none \
+		-u$UID
 		-w /work \
 		$docker_image \
 		$command
