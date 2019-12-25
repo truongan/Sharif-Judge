@@ -376,9 +376,12 @@ for((i=1;i<=TST;i++)); do
 			tr -d ' \t\n\r\f' <correctout >tmp1 && mv tmp1 correctout;
 		fi
 		# Add a newline at the end of both files
-		shj_log `ls -la`
+
 		echo "" >> out
 		echo "" >> correctout
+
+		shj_log `diff out correctout | grep -e "^[0-9]" | head -n 5 `
+
 		if [ "$DIFFTOOL" = "diff" ]; then
 			# Add -q to diff options (for faster diff)
 			DIFFTOOL="diff -q "
