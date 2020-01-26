@@ -91,16 +91,13 @@ $(document).ready(function(){
 				</thead>
 				{% for one_problem in all_problems %}
 				{% set i = i + 1 %}
-					<tr class=" {{ problem.id == one_problem.id ? ' table-active ' }} 
-						 "
-					>
+					<tr class=" {{ problem.id == one_problem.id ? ' table-active ' }} ">
 						{# <td>{{ one_problem.id }}</td> #}
 						<td>{{ i }}</td>
 						<td>
 							<a href="{{ site_url("view_problem/#{assignment.id}/#{one_problem.id}") }}">{{ one_problem.problem_name }}</a>
 						</td>
 						<td  class="{{ problem_status[one_problem.id] }}"><span>{{ one_problem.score }}</span></td>
-						{# <td>{{ one_problem.is_upload_only ? 'Yes' : 'No' }}</td> #}
 					</tr>
 				{% endfor %}
 			</table>
