@@ -98,8 +98,8 @@ class Assignments extends CI_Controller
 				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
 				
 				$all_user[$item['username']]['assignments'][$item['assignment_id']]->total = (int)($all_user[$item['username']]['assignments'][$item['assignment_id']]->total) + $item['final_score'];
-				if ($item['fullmark']) 
-					$all_user[$item['username']]['assignments'][$item['assignment_id']]->accepted = (int)($all_user[$item['username']]['assignments'][$item['assignment_id']]->accepted) + $item['final_score'];
+				
+				$all_user[$item['username']]['assignments'][$item['assignment_id']]->accepted = (int)($all_user[$item['username']]['assignments'][$item['assignment_id']]->accepted) + ( ($item['fullmark'])  ?  $item['final_score'] : 0);
 				// var_dump($item['pre_score']);
 			}
 		}
