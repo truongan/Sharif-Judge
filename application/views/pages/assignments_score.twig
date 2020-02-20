@@ -49,23 +49,36 @@
 			<small>  {{ item.name|ellipsis(99) }} </small></th>
 		{% endfor %}
 		<th>Sum percentage</th>
-		<th>Sum percentage</th>
-		<th>Average percentage</th>
+		<th>Average percentage<br/>above all assignment</th>
+		<th>Average percentage<br/>above submitted assignment</th>
 	</tr>
 </thead>
 <tbody>
 	{% for user in all_user %}
 	<tr>
 		<td>{{ user.username }}</td>
+		{% for item in all_assignments %}
 		
-		{% if mode == 'accepted' %}{% for item in all_assignments %}
-		<td class="table-success">  {{ user.assignments[item.id].accepted }} </td>
-		{% endfor %}{% endif %}
-		{% if mode == 'sum' %}{% for item in all_assignments %}
-		<td class="table-warning">  {{ user.assignments[item.id].total }} </td>
-		{% endfor %}{% endif %}
-
+			{% if mode == 'accepted' %}
+			<td class="table-success">  {{ user.assignments[item.id].accepted }} </td>
+			{% endif %}
+			
+			{% if mode == 'sum' %}
+			<td class="table-warning">  {{ user.assignments[item.id].total }} </td>
+			{% endif %}
+			
+		{% endfor %}
 		
+		{% if mode == 'accepted' %}
+		<td>user.sum.accepted</td>
+		<td>user.avga.accepted</td>
+		<td>user.avgn.accepted</td>
+		{% endif %}
+		{% if mode == 'sum' %}
+		<td>user.sum.total</td>
+		<td>user.avga.total</td>
+		<td>user.avgn.total</td>
+		{% endif %}
 	</tr>
 	{% endfor %}
 </tbody>
