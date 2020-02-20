@@ -106,6 +106,9 @@ class Assignments extends CI_Controller
 		// Sum and average
 		foreach($all_user as $user){
 			$c = 0;
+			$user['sum'] = new class{public $accepted = ""; public $total = "";};
+			$user['avg'] = new class{public $accepted = ""; public $total = "";};
+			$user['avgn'] = new class{public $accepted = ""; public $total = "";};
 			foreach($all_assignments as $id => $ass){
 				if (isset($user['assignments'][$id])){
 					$c += 1;
