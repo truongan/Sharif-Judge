@@ -112,8 +112,8 @@ class Assignments extends CI_Controller
 			foreach($all_assignments as $id => $ass){
 				if (isset($user['assignments'][$id])){
 					$c += 1;
-					$user['sum']->accepted += (int)$user['assignments'][$id]->accepted;
-					$user['sum']->total += (int)$user['assignments'][$id]->total;
+					$user['sum']->accepted =  (int)$user['sum']->accepted + (int)$user['assignments'][$id]->accepted;
+					$user['sum']->total = (int)$user['sum']->total + (int)($user['assignments'][$id]->total);
 				}
 			}
 
