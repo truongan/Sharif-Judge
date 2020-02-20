@@ -104,26 +104,29 @@ class Assignments extends CI_Controller
 		// var_dump($all_user); die();
 
 		// Sum and average
-		foreach($all_user as $user){
+		foreach($all_user as &$user){
 			$c = 0;
-			$user['sum'] = new class{public $accepted = ""; public $total = "";};
-			$user['avg'] = new class{public $accepted = ""; public $total = "";};
+			$user['sum'] = new class{public $accepted = 0; public $total = 0;};
+			$user['avga'] = new class{public $accepted = ""; public $total = "";};
 			$user['avgn'] = new class{public $accepted = ""; public $total = "";};
 			foreach($all_assignments as $id => $ass){
-				if (isset($user['assignments'][$id])){
+				if ($user['assignments'][$id]->total !== ''){
+					// var_dump("shit");
 					$c += 1;
 					$user['sum']->accepted =  (int)$user['sum']->accepted + (int)$user['assignments'][$id]->accepted;
 					$user['sum']->total = (int)$user['sum']->total + (int)($user['assignments'][$id]->total);
 				}
 			}
-
-			$user['avg']->accepted = $user['sum']->accepted / $c;
-			$user['avg']->total = $user['sum']->total / $c;
 			
-			$user['avgn']->accepted = $user['sum']->accepted / count($all_assignments);
-			$user['avgn']->total = $user['sum']->total / count($all_assignments);
+			$user['avga']->accepted = round( $user['sum']->accepted / max($c,1), 2);
+			$user['avga']->total = round( $user['sum']->total / max($c, 1), 2);
+			
+			
+			$user['avgn']->accepted = round( $user['sum']->accepted / count($all_assignments), 2);
+			$user['avgn']->total = round( $user['sum']->total / count($all_assignments), 2);
+			// var_dump($user);die();
 		}
-
+		// var_dump($all_user['truonganpn']); die();
 		$data = array('all_user' => $all_user, 'all_assignments' => $all_assignments, 'mode' => $mode);
 		$this->twig->display('pages/assignments_score.twig', $data);
 	}
