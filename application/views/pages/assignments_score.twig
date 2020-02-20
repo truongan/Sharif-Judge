@@ -70,14 +70,14 @@
 		{% endfor %}
 		
 		{% if mode == 'accepted' %}
-		<td>user.sum.accepted</td>
-		<td>user.avga.accepted</td>
-		<td>user.avgn.accepted</td>
+		<td>{{ user.sum.accepted }}</td>
+		<td>{{ user.avga.accepted }}</td>
+		<td>{{ user.avgn.accepted }}</td>
 		{% endif %}
 		{% if mode == 'sum' %}
-		<td>user.sum.total</td>
-		<td>user.avga.total</td>
-		<td>user.avgn.total</td>
+		<td>{{ user.sum.total }}</td>
+		<td>{{ user.avga.total }}</td>
+		<td>{{ user.avgn.total }}</td>
 		{% endif %}
 	</tr>
 	{% endfor %}
