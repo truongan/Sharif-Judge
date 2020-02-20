@@ -40,12 +40,17 @@
 <thead class="thead-dark">
 	<tr>
 		<th>User</th>
-		{% if mode == 'accepted' %}{% for item in all_assignments %}
-		<th class="table-secondary"><small>  {{ item.name|ellipsis(99) }} </small></th>
-		{% endfor %}{% endif %}
-		{% if mode == 'sum' %}{% for item in all_assignments %}
-		<th class="table-success"><small>  {{ item.name|ellipsis(99) }} </small></th>
-		{% endfor %}{% endif %}
+		{% for item in all_assignments %}
+			{% if mode == 'accepted' %}
+				<th class="table-secondary">
+			{% else %}
+				<th class="table-success">
+			{% endif %}
+			<small>  {{ item.name|ellipsis(99) }} </small></th>
+		{% endfor %}
+		<th>Sum percentage</th>
+		<th>Sum percentage</th>
+		<th>Average percentage</th>
 	</tr>
 </thead>
 <tbody>
@@ -59,6 +64,8 @@
 		{% if mode == 'sum' %}{% for item in all_assignments %}
 		<td class="table-warning">  {{ user.assignments[item.id].total }} </td>
 		{% endfor %}{% endif %}
+
+		
 	</tr>
 	{% endfor %}
 </tbody>

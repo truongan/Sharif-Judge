@@ -77,8 +77,6 @@ class Assignments extends CI_Controller
 		}
 		$all_user = $tmp;
 		// var_dump($all_user); die();
-		
-
 
 		foreach($all_assignments as  $ass){
 
@@ -104,6 +102,24 @@ class Assignments extends CI_Controller
 			}
 		}
 		// var_dump($all_user); die();
+
+		// Sum and average
+		foreach($all_user as $user){
+			$c = 0;
+			foreach($all_assignments as $id => $ass){
+				if (isset($user['assignments'][$id])){
+					$c += 1;
+					$user['sum']->accepted += $user['assignments'][$id]->accepted;
+					$user['sum']->total += $user['assignments'][$id]->total;
+				}
+			}
+
+			$user['avg']->accepted = $user['sum']->accepted / $c;
+			$user['avg']->total = $user['sum']->total / $c;
+			
+			$user['avgn']->accepted = $user['sum']->accepted / count($all_assignments);
+			$user['avgn']->total = $user['sum']->total / count($all_assignments);
+		}
 
 		$data = array('all_user' => $all_user, 'all_assignments' => $all_assignments, 'mode' => $mode);
 		$this->twig->display('pages/assignments_score.twig', $data);
